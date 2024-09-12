@@ -1,6 +1,5 @@
 name: VitePress-hope Github Deploy
 on:
-
   push:
     branches:
       - main
@@ -32,5 +31,8 @@ jobs:
       - name: Deploy 🚀
         uses: JamesIves/github-pages-deploy-action@v4
         with:
+          ssh-key: ${{secrets.DOCS_SECRET}}
           folder: docs/.vitepress/dist
+          git-config-name: xiaolinstar
+          git-config-email: xing.xiaolin@foxmail.com
 
