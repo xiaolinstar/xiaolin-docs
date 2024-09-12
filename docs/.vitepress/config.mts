@@ -1,16 +1,17 @@
 import { defineConfig } from 'vitepress'
 
-// const base = process.env.GITHUB_ACTIONS === 'true' ? '/xiaolin-docs/' : '/'
+// 网站基础路径，区分GitHub部署和常规部署
+const basePath = process.env.GITHUB_ACTIONS === 'true' ? '/xiaolin-docs/' : '/'
 
 // https://vitepress.dev/reference/site-config
 export default defineConfig({
-  // base,
+  base: basePath,
   title: "持续运维",
   description: "千万用户级软件系统运维经验交流与分享",
   themeConfig: {
     // https://vitepress.dev/reference/default-theme-config
     nav: [
-      { text: '首页', link: `/` },
+      { text: '首页', link: `` },
       { text: '运维经验', link: `dev-exp/index` },
       { text: '前沿科技', link: `latest-tech/index` },
       { text: '高效办公', link: `easy-office/index` }
