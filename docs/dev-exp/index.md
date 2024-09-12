@@ -4,7 +4,7 @@ Zookeeper故障摘要
 
 ## 背景
 
-Zookeeper微服务中的注册中线，天然高可用。
+Zookeeper微服务中的注册中心，原生高可用。
 
 **Input**
 
