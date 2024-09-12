@@ -11,18 +11,18 @@ export default defineConfig({
     // https://vitepress.dev/reference/default-theme-config
     nav: [
       { text: '首页', link: `${base}` },
-      { text: '运维经验', link: `${base}dev-exp/index` },
-      { text: '前沿科技', link: `${base}latest-tech/index` },
-      { text: '高效办公', link: `${base}easy-office/index` }
+      { text: '运维经验', link: `dev-exp/index` },
+      { text: '前沿科技', link: `latest-tech/index` },
+      { text: '高效办公', link: `easy-office/index` }
     ],
 
     sidebar: [
       {
         text: '运维经验',
         items: [
-          { text: '推荐使用Markdown', link: `${base}dev-exp/index` },
-          { text: '运行API', link: `${base}dev-exp/index` },
-          { text: '网站背景', link: `${base}dev-exp/index` }
+          { text: '推荐使用Markdown', link: `dev-exp/index` },
+          { text: '运行API', link: `dev-exp/index` },
+          { text: '网站背景', link: `dev-exp/index` }
         ]
       }
     ],
