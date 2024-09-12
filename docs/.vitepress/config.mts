@@ -1,10 +1,10 @@
 import { defineConfig } from 'vitepress'
 
-const base = process.env.GITHUB_ACTIONS === 'true' ? '/xiaolin-docs/' : '/'
+// const base = process.env.GITHUB_ACTIONS === 'true' ? '/xiaolin-docs/' : '/'
 
 // https://vitepress.dev/reference/site-config
 export default defineConfig({
-  base,
+  // base,
   title: "持续运维",
   description: "千万用户级软件系统运维经验交流与分享",
   themeConfig: {
