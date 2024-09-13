@@ -12,7 +12,7 @@ COPY . .
 RUN npm install -g pnpm
 
 # 安装依赖
-RUN pnpm install
+RUN pnpm install --registry=https://registry.npm.taobao.org
 
 # 构建生产环境下到Vue项目
 RUN pnpm run docs:build
