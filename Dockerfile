@@ -9,10 +9,10 @@ WORKDIR /app
 COPY . .
 
 # 安装 pnpm
-RUN npm install -g pnpm --registry=https://registry.npm.taobao.org
+RUN npm install -g pnpm --registry=http://mirrors.cloud.tencent.com/npm/
 
 # 安装依赖
-RUN pnpm install --registry=https://registry.npm.taobao.org
+RUN pnpm install --registry=http://mirrors.cloud.tencent.com/npm/
 
 # 构建生产环境下到Vue项目
 RUN pnpm run docs:build
