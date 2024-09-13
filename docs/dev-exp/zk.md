@@ -12,25 +12,7 @@ Zookeeper微服务中的注册中心，原生高可用。
 **Input**
 
 ```md
-::: info
-This is an info box.
-:::
-
-::: tip
-This is a tip.
-:::
-
-::: warning
-This is a warning.
-:::
-
-::: danger
-This is a dangerous warning.
-:::
-
-::: details
-This is a details block.
-:::
+这是一条zookeeper持久化消息
 ```
 
 **Output**
