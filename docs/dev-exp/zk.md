@@ -1,35 +1,11 @@
-# 运维经验
+# Zookeeper一定高可用吗
 
-运维工作中故障分析、团队管理经典案例分享
+Zookeeper故障摘要
 
 ## 背景
 
 Zookeeper微服务中的注册中心，原生高可用。
 测试11
-
-**Input**
-
-```js{4}
-export default {
-  data () {
-    return {
-      msg: 'Highlighted!'
-    }
-  }
-}
-```
-
-**Output**
-
-```js{4}
-export default {
-  data () {
-    return {
-      msg: 'Highlighted!'
-    }
-  }
-}
-```
 
 ## Zookeeper持久化
 

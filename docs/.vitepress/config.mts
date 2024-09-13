@@ -1,6 +1,6 @@
 import { defineConfig } from 'vitepress'
 
-// 网站基础路径，区分GitHub部署和常规部署
+// @ts-ignore 网站基础路径，区分GitHub部署和常规部署
 const basePath = process.env.GITHUB_ACTIONS === 'true' ? '/xiaolin-docs/' : '/'
 
 // https://vitepress.dev/reference/site-config
