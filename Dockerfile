@@ -9,7 +9,7 @@ WORKDIR /app
 COPY . .
 
 # 安装 pnpm
-RUN npm install -g pnpm
+RUN npm install -g pnpm --registry=https://registry.npm.taobao.org
 
 # 安装依赖
 RUN pnpm install --registry=https://registry.npm.taobao.org
