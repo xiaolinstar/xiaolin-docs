@@ -14,7 +14,8 @@ export default defineConfig({
       { text: '首页', link: `` },
       { text: '运维经验', link: `dev-exp/index` },
       { text: '前沿科技', link: `latest-tech/index` },
-      { text: '高效办公', link: `easy-office/index` }
+      { text: '高效办公', link: `easy-office/index` },
+      { text: '南京生活', link: `life-nanjing/index` }
     ],
 
     sidebar: [
