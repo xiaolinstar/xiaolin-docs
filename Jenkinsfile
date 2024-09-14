@@ -24,14 +24,14 @@ pipeline {
 
         stage('Build Docker Image') {
             steps {
-                sh '''
+                sh """
                 // 停止并删除之前的容器，如果存在
                 docker ps -a | grep ${CONTAINER_NAME} && docker stop ${CONTAINER_NAME} && docker rm ${CONTAINER_NAME}
                 // 删除旧的Docker镜像
-                sh docker ps -a | grep ${DOCKER_REGISTRY}:${VERSION} && docker rmi ${DOCKER_REGISTRY}:${VERSION}
+                docker ps -a | grep ${DOCKER_REGISTRY}:${VERSION} && docker rmi ${DOCKER_REGISTRY}:${VERSION}
                 // 构建 Docker 镜像
-                sh docker buildx -t ${DOCKER_REGISTRY}:${VERSION} .
-                '''
+                docker buildx -t ${DOCKER_REGISTRY}:${VERSION} .
+                """
             }
         }
 
