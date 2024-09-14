@@ -35,7 +35,7 @@ pipeline {
                         sh "docker rmi ${DOCKER_REGISTRY}:${VERSION}"
                     }
                     // 构建 Docker 镜像
-                    sh 'docker buildx -t ${DOCKER_REGISTRY}:${VERSION}.'
+                    sh 'docker build -t ${DOCKER_REGISTRY}:${VERSION}.'
                 }
             }
         }
