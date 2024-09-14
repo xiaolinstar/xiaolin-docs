@@ -24,12 +24,19 @@ pipeline {
 
         stage('Build Image') {
             steps {
-                // 停止并删除之前的容器，如果存在
-                sh 'docker ps -a | grep ${CONTAINER_NAME} && docker stop ${CONTAINER_NAME} && docker rm ${CONTAINER_NAME}'
-                // 删除旧的Docker镜像
-                sh 'docker ps -a | grep ${DOCKER_REGISTRY}:${VERSION} && docker rmi ${DOCKER_REGISTRY}:${VERSION}'
-                // 构建 Docker 镜像
-                sh 'docker buildx -t ${DOCKER_REGISTRY}:${VERSION} .'
+                script {
+                    def containerExists = sh(script: "docker ps -a --format '{{.Names}}' | grep -q ${CONTAINER_NAME}", returnStatus: true) == 0
+                    def imageExists = sh(script: "docker images --format '{{.Repository}}:{{.Tag}}' | grep -q ${DOCKER_REGISTRY}:${VERSION}", returnStatus: true) == 0
+                    if (containerExists) {
+                        sh "docker stop ${CONTAINER_NAME}"
+                        sh "docker rm ${CONTAINER_NAME}"
+                    }
+                    if (imageExists) {
+                        sh "docker rmi ${DOCKER_REGISTRY}:${VERSION}"
+                    }
+                    // 构建 Docker 镜像
+                    sh 'docker buildx -t ${DOCKER_REGISTRY}:${VERSION}.'
+                }
             }
         }
 
@@ -44,7 +51,7 @@ pipeline {
         stage('Deploy') {
             steps {
                 // 部署到服务器
-                sh 'docker run -d ${CONTAINER_NAME} -p 80:8080 --name ${DOCKER_REGISTRY}:${VERSION}'
+                sh "docker run -d --name ${CONTAINER_NAME} -p 80:8080 ${DOCKER_REGISTRY}:${VERSION}"
             }
         }
     }
