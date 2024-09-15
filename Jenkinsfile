@@ -43,7 +43,7 @@ pipeline {
         stage('Push Docker Image') {
             steps {
                 // 推送 Docker 镜像到仓库
-                sh 'docker login -u xxl1997 -p 123456xxl'
+                sh 'echo 1123456xxl | docker login -u xxl1997 -p --password-stdin'
                 sh 'docker push ${DOCKER_REGISTRY}:${VERSION}'
             }
         }
