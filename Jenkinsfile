@@ -40,13 +40,13 @@ pipeline {
             }
         }
 
-//         stage('Push Docker Image') {
-//             steps {
-//                 // 推送 Docker 镜像到仓库
-//                 sh 'docker login -u ${xxl1997} -p ${123456xxl}'
-//                 sh 'docker push ${DOCKER_REGISTRY}:${VERSION}'
-//             }
-//         }
+        stage('Push Docker Image') {
+            steps {
+                // 推送 Docker 镜像到仓库
+                sh 'docker login -u xxl1997 -p 123456xxl'
+                sh 'docker push ${DOCKER_REGISTRY}:${VERSION}'
+            }
+        }
 
         stage('Deploy') {
             steps {
