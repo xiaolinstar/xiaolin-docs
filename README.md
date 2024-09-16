@@ -6,7 +6,7 @@
 * [x]  大家Jenkins docker in docker平台
 * [x]  Jenkins持续集成
 * [ ]  持续部署
-* [ ]  持续集成、持续部署
+* [ ]  持续集成
 
 ## 更新日志
 
