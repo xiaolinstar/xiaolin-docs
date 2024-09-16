@@ -3,7 +3,7 @@
 > 运维管理员工作经验分享
 
 ## 代办
-
+* [x]  大家Jenkins docker in docker平台
 * [x]  Jenkins持续集成
 * [ ]  持续部署
 
