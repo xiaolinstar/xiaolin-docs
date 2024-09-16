@@ -10,6 +10,7 @@
 ## 更新日志
 
 2024-09-13：支持Dockerfile构建镜像，添加Jenkinsfile
+更新「Workflow permissions」为第二个，测试是否可以正常运行
 
 ## 关于运维
 
