@@ -15,10 +15,10 @@ hero:
       link: /easy-office/index
 
 features:
-  - title: 故障发现
-    details: 故障发现详情
-  - title: 自动报警
-    details: 自动报警详情
+  - title: 南京生活
+    details: 分享南京吃喝玩乐
+  - title: 轻松办公
+    details: 让工具为日常办公赋能
   - title: 数据治理
     details: 数据治理详情
 ---

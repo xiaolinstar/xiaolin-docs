@@ -18,7 +18,7 @@ pipeline {
 
         stage('Test') {
             steps {
-                sh 'echo HelloWorld'
+                sh 'echo 开始测试'
             }
         }
 
