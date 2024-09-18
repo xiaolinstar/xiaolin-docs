@@ -40,3 +40,10 @@ This is a details block.
 ## 宕机恢复
 
 Check out the documentation for the [full list of markdown extensions](https://vitepress.dev/guide/markdown).
+
+
+## 联系作者
+
+内容修改，技术支持，意见反馈。
+
+xing.xiaolin@foxmail.com

@@ -8,18 +8,16 @@ hero:
   tagline: 运维技术团队分享
   actions:
     - theme: brand
-      text: 运维经验
-      link: /dev-exp/index
+      text: 开发运维
+      link: /devops/index
     - theme: alt
-      text: 高效办公
+      text: 轻松办公
       link: /easy-office/index
 
 features:
   - title: 南京生活
-    details: 分享南京吃喝玩乐
-  - title: 轻松办公
-    details: 让工具为日常办公赋能
-  - title: 数据治理
-    details: 数据治理详情
+    details: 水韵南京，文明南京
+  - title: 前沿科技
+    details: 前沿科技速看
 ---
 
