@@ -3,9 +3,9 @@
 layout: home
 
 hero:
-  name: "持续运维"
-  text: "千万级用户 百亿级流量"
-  tagline: 运维技术团队分享
+  name: "开发运维管理"
+  text: "安全 稳定 高效 敏捷"
+  tagline: 开发运维团队长期运转经验交流与分享
   actions:
     - theme: brand
       text: 开发运维

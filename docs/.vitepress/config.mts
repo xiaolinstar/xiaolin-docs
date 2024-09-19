@@ -8,11 +8,13 @@ export default defineConfig({
   base: basePath,
   title: "持续运维",
   description: "系统运维管理员日常工作经验交流与分享",
+  head: [['link', { rel: 'icon', href: '/static/bird.svg' }]],
   themeConfig: {
     // https://vitepress.dev/reference/default-theme-config
+    logo: 'static/bird.svg',
     nav: [
-      { text: '首页', link: `` },
-      { text: '运维经验', link: `devops/index` },
+      { text: '首页', link: `/` },
+      { text: '开发运维', link: `devops/index` },
       { text: '轻松办公', link: `easy-office/index` },
       { text: '南京生活', link: `life-nanjing/index` },
       { text: '前沿科技', link: `latest-tech/index` }
@@ -20,15 +22,14 @@ export default defineConfig({
 
     sidebar: [
       {
-        text: 'DevOps',
+        text: '开发运维', link: `devops/index`,
         items: [
-          { text: '开发运维', link: `devops/index` },
           { text: '你好Jenkins', link: `devops/hello-jenkins/index` },
           { text: 'Zookeeper宕机恢复', link: `devops/zookeeper-restore/index` },
         ]
       },
       {
-        text: 'Easy-Office',
+        text: '轻松办公', link: `easy-office/index`,
         items: [
           { text: '轻松办公', link: `easy-office/index` },
           { text: 'Thunderbird解放收件箱', link: `easy-office/email-thunderbird/index` },
@@ -36,15 +37,15 @@ export default defineConfig({
         ]
       },
       {
-        text: 'Latest-Tech',
+        text: '前沿科技', link: `latest-tech/index`,
         items: [
-          { text: '前沿科技', link: `latest-tech/index` },
         ]
       },
       {
-        text: 'Life-Nanjing',
+        text: '南京生活', link: `life-nanjing/index`,
         items: [
-          { text: '南京生活', link: `life-nanjing/index` },
+          { text: '南京大学', link: `life-nanjing/university/nju/index` },
+          { text: '南京师范大学', link: `life-nanjing/university/nnu/index` },
         ]
       }
     ],
