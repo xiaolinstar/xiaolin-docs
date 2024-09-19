@@ -31,7 +31,6 @@ export default defineConfig({
       {
         text: '轻松办公', link: `easy-office/index`,
         items: [
-          { text: '轻松办公', link: `easy-office/index` },
           { text: 'Thunderbird解放收件箱', link: `easy-office/email-thunderbird/index` },
           { text: '推荐使用Markdown', link: `easy-office/markdown/index` },
         ]
