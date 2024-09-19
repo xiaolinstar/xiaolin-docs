@@ -17,11 +17,16 @@ RUN pnpm install --registry=http://mirrors.cloud.tencent.com/npm/
 # 构建生产环境下到Vue项目
 RUN pnpm run docs:build
 
+# 复制静态资源到dist包
+COPY docs/static/ docs/.vitepress/dist/static
+
+
 FROM nginx:alpine3.20-perl
 
 COPY nginx.conf /etc/nginx/conf.d/default.conf
 
 COPY --from=build-stage /app/docs/.vitepress/dist /usr/share/nginx/html
+
 
 # 暴露端口
 EXPOSE 8080
