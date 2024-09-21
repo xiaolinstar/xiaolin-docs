@@ -7,7 +7,7 @@ hero:
   text: "安全 稳定 高效 敏捷"
   tagline: 开发运维团队长期实践经验交流与分享
   image:
-    src: static/bird.svg
+    src: static/sparrow.svg
     alt: VitePress
   actions:
     - theme: brand

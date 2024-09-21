@@ -8,10 +8,10 @@ export default defineConfig({
   base: basePath,
   title: "持续运维",
   description: "系统运维管理员日常工作经验交流与分享",
-  head: [['link', { rel: 'icon', href: 'static/bird.svg' }]],
+  head: [['link', { rel: 'icon', href: 'static/sparrow.svg' }]],
   themeConfig: {
     // https://vitepress.dev/reference/default-theme-config
-    logo: 'static/bird.svg',
+    logo: 'static/sparrow.svg',
     nav: [
       { text: '首页', link: `/` },
       { text: '开发运维', link: `devops/index` },

@@ -18,36 +18,38 @@ pipeline {
 
         stage('Test') {
             steps {
-                sh 'echo 开始测试'
+                sh 'echo 项目测试'
             }
         }
-
-        stage('Build Image') {
+        stage('Cleanup') {
             steps {
                 script {
-                    def containerExists = sh(script: "docker ps -a --format '{{.Names}}' | grep -q ${CONTAINER_NAME}", returnStatus: true) == 0
-                    def imageExists = sh(script: "docker images --format '{{.Repository}}:{{.Tag}}' | grep -q ${DOCKER_REGISTRY}:${VERSION}", returnStatus: true) == 0
-                    if (containerExists) {
-                        sh "docker stop ${CONTAINER_NAME}"
-                        sh "docker rm ${CONTAINER_NAME}"
-                    }
-                    if (imageExists) {
-                        sh "docker rmi ${DOCKER_REGISTRY}:${VERSION}"
-                    }
-                    // 构建 Docker 镜像
-                    sh 'docker build -t ${DOCKER_REGISTRY}:${VERSION} .'
+                    // 停止容器
+                    sh "docker stop ${CONTAINER_NAME} || true"
+                    // 删除容器
+                    sh "docker rm ${CONTAINER_NAME} || true"
+                    // 删除docker镜像
+                    sh "docker rmi ${DOCKER_REGISTRY}:${VERSION} || true"
                 }
             }
         }
 
-//         stage('Push Docker Image') {
-//             steps {
-//                 // 推送 Docker 镜像到仓库
-//                 sh 'echo 123456xxl | docker login -u xxl1997 --password-stdin'
-//                 sh 'docker push ${DOCKER_REGISTRY}:${VERSION}'
-//             }
-//         }
+        stage('Build') {
+            steps {
+                // 构建 Docker 镜像
+                sh "docker build -t ${DOCKER_REGISTRY}:${VERSION} ."
+            }
+        }
 
+/*
+        stage('Push Docker Image') {
+            steps {
+                // 推送 Docker 镜像到仓库
+                sh 'echo 123456xxl | docker login -u xxl1997 --password-stdin'
+                sh 'docker push ${DOCKER_REGISTRY}:${VERSION}'
+            }
+        }
+*/
         stage('Deploy') {
             steps {
                 // 部署到服务器

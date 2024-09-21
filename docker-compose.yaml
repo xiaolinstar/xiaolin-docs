@@ -1,0 +1,16 @@
+networks:
+  tiny-sparrow-network:
+    external: false
+services:
+  tiny-sparrow:
+    image: xxl1997/xiaolin-docs:0.0.1
+    container_name: xiaolin-website
+    ports:
+      # http默认端口
+      - "80:8080"
+
+    networks:
+      - tiny-sparrow-network
+    environment:
+      # 设置中国时区
+      TZ: Asia/Shanghai
