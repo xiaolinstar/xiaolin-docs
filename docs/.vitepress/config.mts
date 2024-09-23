@@ -5,7 +5,7 @@ const basePath = process.env.GITHUB_ACTIONS === 'true' ? '/xiaolin-docs/' : '/'
 
 // https://vitepress.dev/reference/site-config
 export default defineConfig({
-  base: basePath,
+  base: basePath, // (*)设置域名前缀
   title: "持续运维",
   description: "系统运维管理员日常工作经验交流与分享",
   head: [['link', { rel: 'icon', href: 'static/sparrow.svg' }]],

@@ -1,17 +1,19 @@
-# VitePress持续运维
+# 基于VitePress搭建个人网站
 
-> 运维管理员工作经验分享
+> 个人文档运维相关工作经验分享
 
 ## 代办TODO
-* [x]  大家Jenkins docker in docker平台
-* [x]  Jenkins持续集成
-* [ ]  持续部署
-* [ ]  持续集成
-* [ ]  这是一条测试40
+
+* [X]  大家Jenkins docker in docker平台
+* [X]  Jenkins持续集成、持续部署
+* [ ]  变更时区为Asia/Shanghai，自适应黑白主题
+* [ ]  docker compose启动容器
+* [ ]  完善项目README
 
 ## 配置
 
 本项目依赖以下技术：
+
 - VitePress: VitePress 是一个静态站点生成器 (SSG)，专为构建快速、以内容为中心的站点而设计。简而言之，VitePress 获取用 Markdown 编写的内容，对其应用主题，并生成可以轻松部署到任何地方的静态 HTML 页面。
 - Jenkins: 一款开源 CI&CD 软件，用于自动化各种任务，包括构建、测试和部署软件。
 - Docker和Docker Compose: 容器，环境隔离
@@ -19,7 +21,8 @@
 
 ## 更新日志
 
-2024-09-13：支持Dockerfile构建镜像，添加Jenkinsfile
+2024-09-13：支持`Dockerfile`构建镜像，添加`Jenkinsfile`
+
 
 ## 关于运维
 

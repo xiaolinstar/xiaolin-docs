@@ -109,6 +109,7 @@ Thunderbird无需手动协议，输入授权码则可自动协议匹配👍
 
 根据网站提示定义模板，生成签名HTML文件，可以使用「文本编辑器」打开，并全选复制。
 
+
 #### 设置模板
 
 签名模板是以邮箱为单位的，QQ邮箱和网易邮箱（个人邮箱和上午邮箱）可以设置不同的模板。
@@ -120,6 +121,43 @@ Thunderbird无需手动协议，输入授权码则可自动协议匹配👍
 ![设置邮箱签名](assets/mail-setting-signature.png)
 
 新建邮件时，会自动在邮件末尾生成个人专属签名。
+
+**中国移动模版示例**
+```html
+<html>
+ <head></head>
+ <body>
+  <table border="0" cellpadding="0" cellspacing="0" style="font-family:Palatino;font-size:16px;margin-left:0;margin-right:auto;width:440px" width="100%">
+   <tbody>
+    <tr>
+     <td>
+      <div>
+       <table border="0" cellpadding="0" cellspacing="0" style="margin-bottom:10px;margin-left:0;margin-right:auto;width:auto" width="100%">
+        <tbody>
+         <tr>
+          <td style="padding-right:20px;border-right:3px solid #1aa1ed"><img src="https://www.logosc.cn/ubrand/oss/signatures/HsbElZ5z5K.png" style="display:block;outline:0;border:none;text-decoration:none;border-radius:10px;height:90px;max-width:134px;object-fit:contain" /></td>
+          <td style="padding-left:20px"><h3 style="font-size:1.125em;font-weight:700;line-height:1.75;margin:0;color:#1aa1ed">张三</h3><p style="font-size:.75em;line-height:1;margin:0 0 12px">人力资源部（党委组织部） | 培训中心</p><p style="font-size:.75em;line-height:2;margin:0"><img src="https://www.logosc.cn/email-signature-generator/_next/static/media/email.1d842d7e.png" style="display:inline;outline:0;border:none;text-decoration:none;height:14px;vertical-align:-3px;width:14px;background:#1aa1ed;margin-right:4px" /><a href="mailto:xingxiaolin@js.chinamobile.com" style="color:#333;text-decoration:none">xingxiaolin@js.chinamobile.com</a></p><p style="font-size:.75em;line-height:2;margin:0"><img src="https://www.logosc.cn/email-signature-generator/_next/static/media/mobile.326f1fab.png" style="display:inline;outline:0;border:none;text-decoration:none;height:14px;vertical-align:-3px;width:14px;background:#1aa1ed;margin-right:4px" /><a href="tel:139xxxxxxxx（69xxx）" style="color:#333;text-decoration:none">13905187151（69656）</a></p></td>
+         </tr>
+        </tbody>
+       </table>
+       <div>
+        <p style="font-size:.75em;line-height:2;margin:0"><img src="https://www.logosc.cn/email-signature-generator/_next/static/media/address.cda8427d.png" style="display:inline;outline:0;border:none;text-decoration:none;height:14px;vertical-align:-3px;width:14px;background:#1aa1ed;margin-right:4px" />南京市鼓楼区虎踞路81号x楼</p>
+       </div>
+       <table border="0" cellpadding="0" cellspacing="0" style="margin-left:0;margin-right:auto;width:auto" width="100%">
+        <tbody>
+         <tr>
+          <td style="padding-right:26px"><p style="font-size:.75em;line-height:2;margin:0"><img src="https://www.logosc.cn/email-signature-generator/_next/static/media/company.a55f2700.png" style="display:inline;outline:0;border:none;text-decoration:none;height:14px;vertical-align:-3px;width:14px;background:#1aa1ed;margin-right:4px" />中国移动通信集团江苏有限公司</p></td>
+         </tr>
+        </tbody>
+       </table>
+      </div></td>
+    </tr>
+   </tbody>
+  </table>
+ </body>
+</html>
+
+```
 
 ## 联系作者
 
