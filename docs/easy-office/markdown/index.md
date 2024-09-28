@@ -38,15 +38,7 @@ $$段落数学公式$$
 > 引用
 [超链接](https://baidu.com/)
 ```
-# 一级标题
-## 二级标题
-### 三级标题
-*字体加粗*
-=字体高亮=
-$段内数学公式$
-$$段落数学公式$$
-> 引用
-[超链接](https://baidu.com/)
+
 
 ## 推荐使用Markdown
 
@@ -121,18 +113,9 @@ $$
 
 可阅读性好：
 即使没有Markdown编辑器，纯文本方式打开也**无障碍阅读**
-以源代码方式编辑轻松**复制** **粘贴**。
+以源代码方式编辑轻松**复制**、**粘贴**。
 
-<table>
-  <tr>
-    <td><img src="assets/txt-markdown.png" alt="以文本方式打开markdown" width="300"/></td>
-    <td><img src="assets/wechat-markdown.jpg" alt="微信中打开markdown" width="200"/></td>
-  </tr>
-  <tr>
-    <td>文本编辑器打开markdown格式文件</td>
-    <td>微信中打开markdown格式文件</td>
-  </tr>
-</table>
+<img src="assets/txt-markdown.png" alt="Markdown文本源代码" style="zoom: 33%;" />
 
 综上所述，Markdown的易读、易写、易扩展和功能丰富这三大优点，使其成为了编写和分享文本内容的理想选择。
 
