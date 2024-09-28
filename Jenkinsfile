@@ -51,6 +51,12 @@ pipeline {
         }
 */
         stage('Deploy') {
+            // https://www.jenkins.io/zh/doc/book/pipeline/jenkinsfile/
+            when {
+                expression {
+                    currentBuild.result == null || currentBuild.result == 'SUCCESS'
+                }
+            }
             steps {
                 // 部署到服务器
                 sh "docker run -d --name ${CONTAINER_NAME} -p 80:8080 ${DOCKER_REGISTRY}:${VERSION}"

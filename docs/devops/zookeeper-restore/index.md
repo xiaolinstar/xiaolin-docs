@@ -1,11 +1,11 @@
 # Zookeeper一定高可用吗
 
 Zookeeper故障摘要
+- [ ] 10月5日完成
 
 ## 背景
 
 Zookeeper微服务中的注册中心，原生高可用。
-测试11
 
 ## Zookeeper持久化
 

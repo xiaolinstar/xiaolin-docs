@@ -1,4 +1,4 @@
-# Markdown扩展
+# 认真思考的大模型，OpenAI o1
 
 This page demonstrates some of the built-in markdown extensions provided by VitePress.
 该页面展示了VitePress提供的一些内置markdown扩展能力。

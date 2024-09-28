@@ -1,16 +1,28 @@
-# 高效办公
+# 轻松办公
 
-高效办公草台班子，持续集成持续部署
+使用最先进的工具，为职场打工人带来轻松和便利，专注于工作内容本身。
 
-## 大模型
+**通用语言大模型**
+
 - 豆包
 - Kimi
 - Coze
 
+**图像生成大模型**
 
-## Custom Containers
+- 通义万象
+
+**邮箱客户端**
+
+- Thunderbird
+- Foxmail
+
+**文本编辑**
+推荐使用markdown
+- MarkText
+- Typora
+- 飞书文档
 
 
-## More
+更多内容，持续更新中...
 
-Check out the documentation for the [full list of markdown extensions](https://vitepress.dev/guide/markdown).
