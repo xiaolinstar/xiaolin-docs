@@ -47,7 +47,7 @@ Markdown，作为一种轻量级的标记语言，已经成为现代文本编辑
 
 Markdown的易写性体现在它的语法简单，无需复杂的操作即可添加标题、列表、链接和格式化文本，即使是新手也能在5分钟内快速上手。Markdown的简单性使得用户快速上手，但这并不意味着Markdown功能简单，Markdown支持非常丰富的功能，如常用的图片插入、目录生成、链接引用、字体高亮、数学公式、代码块等。
 
-易扩展性是Markdown的另一个显著特点。Markdown是结构化语言，方便git进行版本追踪，编程语言如Python、Java、JavaScript也可以方便读取其结构，很轻松地进行格式转换，如Markdown转PDF、Markdown转Word、Markdown转智能图形、Markdown转知识树等，支持各种插件和扩展以增强其功能。它适应场景广泛，从技术文档到学术论文，Markdown都能轻松应对。此外，随着大模型时代的到来，Markdown成为一种「标准格式」。
+易扩展性是Markdown的另一个显著特点。Markdown是结构化语言，编程语言如Python、Java、JavaScript可以方便读取其结构，很轻松地进行格式转换，如Markdown转PDF、Markdown转Word、Markdown转智能图形、Markdown转知识树等，支持各种插件和扩展以增强其功能。它适应场景广泛，从技术文档到学术论文，Markdown都能轻松应对。此外，随着大模型时代的到来，Markdown成为一种「标准格式」。
 
 **Markdown功能快浏：**
 
