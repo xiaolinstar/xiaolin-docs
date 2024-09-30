@@ -109,7 +109,7 @@ $$
 
 即使没有Markdown编辑器，纯文本方式打开也**无障碍阅读**，同时文本格式也意味着markdown非常易于复制粘贴。
 
-![Markdown文本源代码](assets/txt-markdown.png)
+![Markdown文本源代码](./img-markdown/txt-markdown.png)
 
 综上所述，Markdown的易读、易写、易扩展和功能丰富这三大优点，使其成为了编写和分享文本内容的理想选择。
 
@@ -151,11 +151,11 @@ Markdown作为轻量级的标记语言，很容易实现编程扩展
 
 1. [markmap](https://markmap.js.org/) Markdown和思维导图之间轻松转换。
 
-![markmap](assets/markmap.png)
+![markmap](./img-markdown/markmap.png)
 
 2. [aippt](https://www.aippt.cn) 基于Markdown文本大纲格式快速生成PPT。
 
-![aippt](assets/aippt.png)
+![aippt](./img-markdown/aippt.png)
 
 3. [mermaid](https://mermaid.nodejs.cn/) 基于JavaScript的图标工具，支持流程图、时序图、类图、状态图、实体关系图、甘特图等。
 

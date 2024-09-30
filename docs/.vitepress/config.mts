@@ -11,50 +11,70 @@ export default withMermaid({
   base: basePath, // (*)设置域名前缀
   title: "持续运维",
   description: "系统运维管理员日常工作经验交流与分享",
-  head: [['link', { rel: 'icon', href: 'static/sparrow.svg' }]],
+  head: [['link', { rel: 'icon', href: '/sparrow.svg' }]],
   themeConfig: {
     // https://vitepress.dev/reference/default-theme-config
-    logo: 'static/sparrow.svg',
+    logo: '/sparrow.svg',
     nav: [
       { text: '首页', link: `/` },
-      { text: '开发运维', link: `devops/index` },
-      { text: '轻松办公', link: `easy-office/index` },
-      { text: '南京生活', link: `life-nanjing/index` },
-      { text: '前沿科技', link: `latest-tech/index` }
+      { text: '开发运维', link: `/devops/` },
+      { text: '轻松办公', link: `/easy-office/` },
+      { text: '南京生活', link: `/life-nanjing/` },
+      { text: '前沿科技', link: `/latest-tech/` }
     ],
 
-    sidebar: [
-      {
-        text: '开发运维', link: `devops/index`,
-        items: [
-          { text: '你好Jenkins', link: `devops/hello-jenkins/index` },
-          { text: 'Zookeeper宕机恢复', link: `devops/zookeeper-restore/index` },
-        ]
-      },
-      {
-        text: '轻松办公', link: `easy-office/index`,
-        items: [
-          { text: 'Thunderbird解放收件箱', link: `easy-office/email-thunderbird/index` },
-          { text: '易读易写Markdown', link: `easy-office/markdown/index` },
-        ]
-      },
-      {
-        text: '前沿科技', link: `latest-tech/index`,
-        items: [
-        ]
-      },
-      {
-        text: '南京生活', link: `life-nanjing/index`,
-        items: [
-          { text: '南京大学', link: `life-nanjing/university/nju/index` },
-          { text: '南京师范大学', link: `life-nanjing/university/nnu/index` },
-        ]
-      }
-    ],
+    sidebar: {
+      '/devops/': [
+        {
+          text: '开发运维', link: `/devops/`,
+          items: [
+            { text: '你好Jenkins', link: `/devops/hello-jenkins` },
+            { text: 'Zookeeper宕机恢复', link: `/devops/zookeeper-restore` },
+          ]
+        }
+      ],
+
+      '/easy-office/': [
+        {
+          text: '轻松办公', link: `/easy-office/`,
+          items: [
+            { text: 'Thunderbird解放收件箱', link: `/easy-office/email-thunderbird` },
+            { text: '易读易写Markdown', link: `/easy-office/markdown` },
+          ]
+        }
+      ],
+
+      '/latest-tech/': [
+        {
+          text: '前沿科技', link: `/latest-tech/`,
+          items: [
+          ]
+        }
+      ],
+
+      '/life-nanjing/': [
+        {
+          text: '南京生活', link: `/life-nanjing/`,
+          items: [
+            { text: '南京大学', link: `/life-nanjing/university/nju` },
+            { text: '南京师范大学', link: `/life-nanjing/university/nnu` },
+          ]
+        }
+      ]
+    },
 
     socialLinks: [
       { icon: 'github', link: 'https://github.com/xiaolinstar?tab=repositories' }
-    ]
+    ],
+    // 页脚
+    footer: {
+      message: '感谢关注',
+      copyright: 'Copyright © 2024  XingXiaolin'
+    },
+    // 支持模糊搜索
+    search: {
+      provider: 'local'
+    }
   },
   // 支持mermaid
   mermaid: {
@@ -73,5 +93,8 @@ export default withMermaid({
     config: (md) => {
       md.use(markdownItTaskListPlus)
     }
-  }
+  },
+
+  // 上次更新
+  lastUpdated: true
 })

@@ -14,11 +14,19 @@ RUN npm install -g pnpm --registry=http://mirrors.cloud.tencent.com/npm/
 # 安装依赖 Qcloud腾讯云加速
 RUN pnpm install --registry=http://mirrors.cloud.tencent.com/npm/
 
+# 安装Git，lastUpdated=true需要
+RUN apk update && \
+    apk upgrade && \
+    apk add --no-cache bash git openssh
+
+
 # 构建生产环境下到Vue项目
 RUN pnpm run docs:build
 
+
+
 # 复制静态资源到dist包
-COPY docs/static/ docs/.vitepress/dist/static
+#COPY docs/public/ docs/.vitepress/dist/
 
 
 FROM nginx:alpine3.20-perl
