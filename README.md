@@ -9,6 +9,7 @@
 * [ ]  变更时区为Asia/Shanghai，自适应黑白主题
 * [ ]  docker compose启动容器
 * [ ]  完善项目README
+* [X]  支持SSL，使用https访问，将端口号改为443
 
 ## 配置
 
