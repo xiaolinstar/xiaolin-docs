@@ -10,6 +10,14 @@
 * [ ]  docker compose启动容器
 * [ ]  完善项目README
 * [X]  支持SSL，使用https访问，将端口号改为443
+* [ ]  GitHub Pages文件标签显示
+
+
+## 问题记录
+- 配置Https：端口号、nginx.conf配置文件
+- VitePress中图片等静态文件build
+- Dockerfile中使用国内镜像安装
+- 时区问题
 
 ## 配置
 
