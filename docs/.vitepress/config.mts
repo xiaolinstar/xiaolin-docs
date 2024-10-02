@@ -68,7 +68,7 @@ export default withMermaid({
     ],
     // 页脚
     footer: {
-      message: '感谢关注',
+      message: '欢迎关注微信公众号：持续运维',
       copyright: 'Copyright © 2024  XingXiaolin'
     },
     // 支持模糊搜索

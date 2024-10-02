@@ -6,10 +6,10 @@
 
 * [X]  大家Jenkins docker in docker平台
 * [X]  Jenkins持续集成、持续部署
-* [ ]  变更时区为Asia/Shanghai，自适应黑白主题
-* [ ]  docker compose启动容器
-* [ ]  完善项目README
 * [X]  支持SSL，使用https访问，将端口号改为443
+* [X]  变更时区为Asia/Shanghai，自适应黑白主题
+* [X]  docker compose启动容器
+* [ ]  完善项目README
 * [ ]  GitHub Pages文件标签显示
 
 
@@ -18,6 +18,7 @@
 - VitePress中图片等静态文件build
 - Dockerfile中使用国内镜像安装
 - 时区问题
+- 阿里云「HTTPS加速网关」配置，不需要修改原项目任何配置信息，包括80端口
 
 ## 配置
 
