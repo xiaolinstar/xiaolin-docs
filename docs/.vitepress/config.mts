@@ -30,6 +30,11 @@ export default withMermaid({
           items: [
             { text: '你好Jenkins', link: `/devops/hello-jenkins` },
             { text: 'Zookeeper宕机恢复', link: `/devops/zookeeper-restore` },
+            { text: 'VitePress快速搭建个人网站', link: `/devops/vitepress-docs`},
+            { text: 'CI/CD初体验', link: `/devops/cicd-taste`},
+            { text: '连接资源泄露', link: `/devops/conn-leak`},
+            { text: '内存泄露', link: `/devops/memory-leak`},
+            { text: '小步快跑，餐饮中的「持续集成」', link: `/devops/catering-ops`},
           ]
         }
       ],
@@ -40,6 +45,7 @@ export default withMermaid({
           items: [
             { text: 'Thunderbird解放收件箱', link: `/easy-office/email-thunderbird` },
             { text: '易读易写Markdown', link: `/easy-office/markdown` },
+            { text: '协同办公', link: `/easy-office/wework` },
           ]
         }
       ],
