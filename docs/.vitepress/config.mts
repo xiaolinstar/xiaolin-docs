@@ -102,5 +102,6 @@ export default withMermaid({
   },
 
   // 上次更新
-  lastUpdated: true
+  lastUpdated: true,
+  ignoreDeadLinks: 'localhostLinks'
 })
