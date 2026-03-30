@@ -7,7 +7,6 @@ docs/.vitepress/cache
 
 volumes/website/logs/
 volumes/website/geoip
-.qoder/**/*.py
 .qoder/**/__pycache__/
 .qoder/**/*.pyc
 cert/

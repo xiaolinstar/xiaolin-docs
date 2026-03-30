@@ -1,6 +1,6 @@
 # Exception异常的架构设计
 
-在[上一章节](when-exception.md)描述了异常处理的架构设计，这一章节将从编码实践中详细介绍。。
+在[上一章节](exception-design.md)描述了异常处理的架构设计，这一章节将从编码实践中详细介绍。。
 
 > 特别地，本文从空指针异常(NullPointerException, NPE)的处理角度，以 Python 代码为例，分享关于 Exception 处理的编码实践。
 
