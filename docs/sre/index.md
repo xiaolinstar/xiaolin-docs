@@ -2,30 +2,19 @@
 
 运维工作中故障分析、团队管理经典案例分享。
 
-## 背景
+## 分类导航
 
-**保留内容**
+- [SRE 实践](./practice/) - 系统可靠性工程实践案例与方法论
+- [架构设计](./architecture/) - 系统架构设计与演进策略
+- [DevOps 实践](./devops/) - DevOps 方法论与实践经验
+- [运维工具](./tools/) - 运维工具使用指南与最佳实践
+- [运营规划](./planning/) - 网站运营规划与内容策略
+- [CI/CD 与 DevOps](./devops/) - CI/CD 流水线建设与实践
+- [Jenkins](./jenkins/) - Jenkins 实战经验
+- [可观测性](./observability/) - 日志、监控、追踪体系
 
-::: info
-This is an info box.
-:::
+## 学习与思考
 
-::: tip
-This is a tip.
-:::
+历史学习笔记与思考内容。
 
-::: warning
-This is a warning.
-:::
-
-::: danger
-This is a dangerous warning.
-:::
-
-::: details
-This is a details block.
-:::
-
-## 宕机恢复
-
-Check out the documentation for the [full list of markdown extensions](https://vitepress.dev/guide/markdown).
+- [学习与思考](./forward/) - 课程感悟与思考记录

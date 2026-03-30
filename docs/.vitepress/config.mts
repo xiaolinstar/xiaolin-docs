@@ -52,25 +52,55 @@ export default withMermaid({
                     text: '运维', link: `/sre/`,
                     items: [
                         {
-                            text: '学习与思考',
-                            link: `/sre/forward`,
+                            text: 'SRE 实践',
+                            link: `/sre/practice/`,
                             items: [
-                                { text: 'SRE 实践：服务可靠性案例', link: `/sre/forward/time-geek` },
-                                { text: '阿里云 ACP 微服务', link: `/sre/forward/acp-microservice` },
-                                { text: '透明，看得见还是看不见', link: `/sre/forward/transparency` },
-                                { text: '健康感知，监控、拨测与巡检', link: `/sre/forward/availability-safeguard` },
-                                { text: '遗留系统的演进策略', link: `/sre/forward/legacy-system` },
-                                { text: '发布变更，AI 价值', link: `/sre/forward/change-control-value` },
-                                { text: '项目管理思考', link: `/sre/forward/project-management` },
-                                { text: '异常处理架构设计', link: `/sre/forward/when-exception` },
-                                { text: 'Linux 起手式', link: `/sre/forward/linux-guide` },
-                                { text: 'DevOps 平台思考', link: `/sre/forward/devops-platform` },
-                                { text: 'Git Submodule 父子项目协作', link: `/sre/forward/git-submodule` },
-                                { text: '2026 运营规划', link: `/sre/forward/2026mp` },
-                                { text: '云原生CI/CD全局视角', link: `/sre/forward/cloud-native-ci-cd` },
-                                { text: '手机存储不够用', link: `/sre/forward/phone-storage` },
-                                { text: '流程的副作用', link: `/sre/forward/process-side-effects.md`},
-                                { text: '自动生成 Skill 的价值', link: `/sre/forward/skill-autogen`},
+                                { text: 'SRE 实践：服务可靠性案例', link: `/sre/practice/service-reliability` },
+                                { text: '阿里云 ACP 微服务', link: `/sre/practice/acp-microservice` },
+                                { text: '健康感知，监控、拨测与巡检', link: `/sre/practice/monitoring-health` },
+                                { text: '透明，看得见还是看不见', link: `/sre/practice/transparency` },
+                                { text: '监控层次：IaaS 层还是基础设施层', link: `/sre/practice/monitoring-layers` },
+                                { text: '监控流程：健康感知实践', link: `/sre/practice/monitoring-process` },
+                            ]
+                        },
+                        {
+                            text: '架构设计',
+                            link: `/sre/architecture/`,
+                            items: [
+                                { text: '异常处理架构设计', link: `/sre/architecture/exception-design` },
+                                { text: '遗留系统的演进策略', link: `/sre/architecture/legacy-system` },
+                                { text: '流程的副作用', link: `/sre/architecture/process-effects` },
+                                { text: '异常处理指南', link: `/sre/architecture/exception-guide` },
+                                { text: '异常处理备份', link: `/sre/architecture/exception-backup` },
+                            ]
+                        },
+                        {
+                            text: 'DevOps 实践',
+                            link: `/sre/devops/`,
+                            items: [
+                                { text: '发布变更，AI 价值', link: `/sre/devops/change-control` },
+                                { text: '云原生CI/CD全局视角', link: `/sre/devops/cloud-native-cicd` },
+                                { text: 'DevOps 平台思考', link: `/sre/devops/devops-platform` },
+                                { text: 'Git Submodule 父子项目协作', link: `/sre/devops/git-submodule` },
+                                { text: '环境管理', link: `/sre/devops/environment` },
+                                { text: 'DevOps 核心能力', link: `/sre/devops/devops-core` },
+                            ]
+                        },
+                        {
+                            text: '运维工具',
+                            link: `/sre/tools/`,
+                            items: [
+                                { text: 'Linux 起手式', link: `/sre/tools/linux-guide` },
+                                { text: '项目管理思考', link: `/sre/tools/project-management` },
+                            ]
+                        },
+                        {
+                            text: '运营规划',
+                            link: `/sre/planning/`,
+                            items: [
+                                { text: '项目优化规划', link: `/sre/planning/optimization-plan` },
+                                { text: '2026 运营规划', link: `/sre/planning/2026-plan` },
+                                { text: '自动生成 Skill 的价值', link: `/sre/planning/skill-value` },
                             ]
                         },
                         {
