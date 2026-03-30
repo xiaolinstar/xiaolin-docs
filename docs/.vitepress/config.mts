@@ -40,11 +40,10 @@ export default withMermaid({
         logo: '/sparrow.svg',
         nav: [
             { text: '首页', link: `/` },
-            { text: '运维', link: `/sre/` },
-            { text: '开发', link: `/software-development/` },
-            { text: '人工智能', link: `/ai/` },
-            { text: '轻松办公', link: `/easy-office/` },
-            { text: '南京生活', link: `/life-nanjing/` },
+            { text: 'SRE运维', link: `/sre/` },
+            { text: '开发架构', link: `/software-development/` },
+            { text: 'AI实践', link: `/ai/` },
+            { text: '效率工具', link: `/easy-office/` },
         ],
 
         sidebar: {
@@ -201,54 +200,13 @@ export default withMermaid({
 
             '/easy-office/': [
                 {
-                    text: '轻松办公', link: `/easy-office/`,
+                    text: '效率工具', link: `/easy-office/`,
                     items: [
-                        { text: 'Thunderbird 解放收件箱', link: `/easy-office/email-thunderbird` },
-                        { text: '易读易写 Markdown', link: `/easy-office/markdown` },
-                        { text: '二进制考试', link: `/easy-office/binary-exam` },
+                        { text: 'Thunderbird 邮件管理', link: `/easy-office/email-thunderbird` },
+                        { text: 'Markdown 语法', link: `/easy-office/markdown` },
                         { text: 'Linux 学习', link: `/easy-office/linux-learn` },
-                        { text: 'Mac办公体验', link: `/easy-office/mac` }
+                        { text: 'Mac 办公体验', link: `/easy-office/mac` }
                     ]
-                }
-            ],
-
-            '/life-nanjing/': [
-                {
-                    text: '南京生活', link: `/life-nanjing/`,
-                    items: [
-                        {
-                            text: '风景名胜',
-                            link: `/life-nanjing/entertainment`,
-                            items: [
-                                { text: "鼓楼滨江", link: `/life-nanjing/entertainment/gulou-riverfront` }
-                            ]
-                        },
-                        {
-                            text: '南京高校',
-                            link: `/life-nanjing/university`,
-                            items: [
-                                { text: '南京大学', link: `/life-nanjing/university/nju` },
-                                { text: '南京师范大学', link: `/life-nanjing/university/nnu` }
-                            ]
-                        },
-                        {
-                            text: '桌游聚会',
-                            link: `/life-nanjing/table-game`,
-                            items: [
-                                { text: '阿瓦隆', link: `/life-nanjing/table-game/avalon` },
-                                { text: '掼蛋', link: `/life-nanjing/table-game/guandan` },
-                                { text: '谁是卧底', link: `/life-nanjing/table-game/undercover` },
-                                { text: '升级', link: `/life-nanjing/table-game/upgrade` }
-                            ]
-                        },
-                        {
-                            text: '生活思考',
-                            link: `/life-nanjing/thinks`,
-                            items: [
-                                { text: '人人都是博主', link: `/life-nanjing/thinks/blogger` }
-                            ]
-                        }
-                    ],
                 }
             ]
         },
