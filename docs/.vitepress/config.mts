@@ -7,17 +7,29 @@ import llms from 'vitepress-plugin-llms'
 // @ts-ignore 网站基础路径，区分GitHub部署和常规部署
 const basePath = process.env.GITHUB_ACTIONS === 'true' ? '/xiaolin-docs/' : '/'
 
+// @ts-ignore 百度统计 ID
+const baiduAnalyticsId = process.env.VITE_BAIDU_ANALYTICS_ID || 'YOUR_BAIDU_ANALYTICS_ID'
+
 // https://vitepress.dev/reference/site-config
 // export default defineConfig({
 export default withMermaid({
     base: basePath, // (*)设置域名前缀
     title: "AI持续运维",
-    description: "系统运维管理员日常工作经验交流与分享",
+    description: "SRE、DevOps 与 AI 技术实践平台",
     vite: {
         plugins: [llms()],
     },
     head: [
     ['link', { rel: 'icon', href: '/sparrow.svg' }],
+    ['script', {}, `
+      window._hmt = window._hmt || [];
+      (function() {
+        var hm = document.createElement("script");
+        hm.src = "https://hm.baidu.com/hm.js?${baiduAnalyticsId}";
+        var s = document.getElementsByTagName("script")[0];
+        s.parentNode.insertBefore(hm, s);
+      })();
+    `],
     ['style', {}, `
      @media (max-width: 768px) {
        .beian-container {

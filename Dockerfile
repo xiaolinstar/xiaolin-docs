@@ -2,6 +2,10 @@ FROM node:22-alpine3.20 AS build-stage
 # 作者信息
 LABEL authors="xing.xiaolin@foxmail.com"
 
+# 构建时参数 - 百度统计 ID
+ARG BAIDU_ANALYTICS_ID
+ENV VITE_BAIDU_ANALYTICS_ID=${BAIDU_ANALYTICS_ID}
+
 # 设置工作目录
 WORKDIR /app
 

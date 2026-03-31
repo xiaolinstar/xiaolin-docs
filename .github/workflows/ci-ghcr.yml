@@ -52,6 +52,8 @@ jobs:
           push: true
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
+          build-args: |
+            BAIDU_ANALYTICS_ID=${{ vars.BAIDU_ANALYTICS_ID }}
 
       # 生成项目证明
       - name: Generate artifact attestation
