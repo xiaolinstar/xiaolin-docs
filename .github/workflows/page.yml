@@ -14,7 +14,8 @@ on:
 
 env:
   TZ: Asia/Shanghai # 上海时区，系统时间和自适应主题
-  VITE_BAIDU_ANALYTICS_ID: ${{ vars.BAIDU_ANALYTICS_ID }}
+  # 使用 GITHUB Pages 百度统计 ID
+  VITE_BAIDU_ANALYTICS_ID: ${{ vars.PAGES_BAIDU_ANALYTICS_ID }}
 
 jobs:
   build: # 1. 构建静态站点

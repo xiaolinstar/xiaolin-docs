@@ -12,6 +12,7 @@ on:
 env:
   REGISTRY: ghcr.io # GitHub Container Registry
   IMAGE_NAME: ${{ github.repository }} # 系统环境变量，所在 GitHub 仓库名
+  VITE_BAIDU_ANALYTICS_ID: ${{ vars.DOCKER_BAIDU_ANALYTICS_ID }}
 
 jobs:
   build-and-push-image:
@@ -53,7 +54,7 @@ jobs:
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
           build-args: |
-            BAIDU_ANALYTICS_ID=${{ vars.BAIDU_ANALYTICS_ID }}
+            BAIDU_ANALYTICS_ID=${{ env.VITE_BAIDU_ANALYTICS_ID }}
 
       # 生成项目证明
       - name: Generate artifact attestation
