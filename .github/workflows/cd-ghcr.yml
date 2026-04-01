@@ -29,14 +29,19 @@ jobs:
           username: ${{ secrets.SERVER_USER }}
           password: ${{ secrets.SERVER_PASSWORD }}
           script: |
-            # 停止并移除旧的容器
+            # 进入项目目录
             cd ${{ env.SERVER_DIR }}
             
-            git pull # 拉取最新代码，确保是最新版本的docker-compose.yaml
+            # 拉取最新代码，确保是最新版本的docker-compose.yaml
+            git pull
             
-            docker compose down || true
+            # 拉取最新镜像（重要：docker compose 不会自动拉取更新的镜像）
+            docker compose pull
             
-            # 启动新的容器
+            # 停止并移除旧的容器
+            docker compose down
+            
+            # 启动新的容器（使用最新镜像）
             docker compose up -d
             
             # 清理未使用的镜像
