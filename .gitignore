@@ -10,3 +10,8 @@ volumes/website/geoip
 .qoder/**/__pycache__/
 .qoder/**/*.pyc
 cert/
+
+# 环境变量配置文件
+.env
+.env.local
+.env.*.local
