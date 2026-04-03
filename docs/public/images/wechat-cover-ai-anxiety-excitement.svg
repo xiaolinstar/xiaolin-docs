@@ -1,0 +1,151 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1600" height="900" viewBox="0 0 1600 900" role="img" aria-label="Minimalist cover image: a person at a crossroads between dark confusion and a bright AI-collaborative future">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0%" stop-color="#0B1020"/>
+      <stop offset="48%" stop-color="#0F1B2B"/>
+      <stop offset="52%" stop-color="#10263B"/>
+      <stop offset="100%" stop-color="#EAF6FF"/>
+    </linearGradient>
+
+    <linearGradient id="hazeRight" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#FFFFFF" stop-opacity="0.55"/>
+      <stop offset="100%" stop-color="#FFFFFF" stop-opacity="0"/>
+    </linearGradient>
+
+    <radialGradient id="sunGlow" cx="72%" cy="26%" r="40%">
+      <stop offset="0%" stop-color="#FFE89A" stop-opacity="0.95"/>
+      <stop offset="30%" stop-color="#FFD060" stop-opacity="0.55"/>
+      <stop offset="100%" stop-color="#FFD060" stop-opacity="0"/>
+    </radialGradient>
+
+    <filter id="soft" x="-20%" y="-20%" width="140%" height="140%">
+      <feGaussianBlur stdDeviation="8" result="b"/>
+      <feMerge>
+        <feMergeNode in="b"/>
+        <feMergeNode in="SourceGraphic"/>
+      </feMerge>
+    </filter>
+
+    <filter id="shadow" x="-30%" y="-30%" width="160%" height="160%">
+      <feDropShadow dx="0" dy="10" stdDeviation="12" flood-color="#000000" flood-opacity="0.35"/>
+    </filter>
+
+    <linearGradient id="roadLeft" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#2A3550" stop-opacity="0.75"/>
+      <stop offset="100%" stop-color="#10182B" stop-opacity="0.95"/>
+    </linearGradient>
+
+    <linearGradient id="roadRight" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#EAF6FF" stop-opacity="0.65"/>
+      <stop offset="100%" stop-color="#A4D8FF" stop-opacity="0.45"/>
+    </linearGradient>
+
+    <clipPath id="leftHalf">
+      <rect x="0" y="0" width="800" height="900"/>
+    </clipPath>
+
+    <clipPath id="rightHalf">
+      <rect x="800" y="0" width="800" height="900"/>
+    </clipPath>
+  </defs>
+
+  <!-- Background -->
+  <rect width="1600" height="900" fill="url(#bg)"/>
+  <rect x="800" y="0" width="800" height="900" fill="url(#hazeRight)"/>
+  <circle cx="1150" cy="240" r="320" fill="url(#sunGlow)"/>
+
+  <!-- Subtle divider line (crossroads split) -->
+  <path d="M800 130 C805 270 805 420 800 610" fill="none" stroke="#FFFFFF" stroke-opacity="0.12" stroke-width="3"/>
+
+  <!-- Left: confusion clouds + scribbles -->
+  <g clip-path="url(#leftHalf)" opacity="0.95" filter="url(#soft)">
+    <g opacity="0.9">
+      <path d="M120 200c40-60 120-70 170-30c30-55 110-70 150-25c70-25 150 25 150 95c60 10 105 55 105 110c0 70-60 120-135 120H210c-80 0-145-55-145-130c0-55 30-105 75-130z"
+            fill="#141A2C" opacity="0.85"/>
+      <path d="M420 120c35-45 95-55 135-22c22-42 80-55 112-18c52-16 110 18 110 70c42 8 75 40 75 82c0 54-44 94-102 94H485c-62 0-112-40-112-98c0-40 20-75 47-92z"
+            fill="#0E1325" opacity="0.75"/>
+    </g>
+    <g stroke="#9AA4C7" stroke-opacity="0.35" fill="none" stroke-linecap="round">
+      <path d="M110 430 C190 380 280 500 360 430 S520 370 600 430" stroke-width="6"/>
+      <path d="M160 510 C240 460 320 560 400 510 S520 450 600 510" stroke-width="5"/>
+      <path d="M210 590 C290 540 360 640 440 590 S540 540 650 610" stroke-width="4"/>
+      <path d="M130 650 C220 620 260 720 350 690 S510 630 610 700" stroke-width="4"/>
+    </g>
+  </g>
+
+  <!-- Right: sun rays -->
+  <g clip-path="url(#rightHalf)" opacity="0.9">
+    <g transform="translate(1150 240)">
+      <circle r="54" fill="#FFD060" opacity="0.95"/>
+      <g stroke="#FFD060" stroke-width="8" stroke-linecap="round" opacity="0.65">
+        <path d="M0 -105 L0 -160"/>
+        <path d="M0 105 L0 160"/>
+        <path d="-105 0 L-160 0"/>
+        <path d="M105 0 L160 0"/>
+        <path d="-75 -75 L-120 -120"/>
+        <path d="M75 -75 L120 -120"/>
+        <path d="-75 75 L-120 120"/>
+        <path d="M75 75 L120 120"/>
+      </g>
+    </g>
+  </g>
+
+  <!-- Roads / crossroads -->
+  <g filter="url(#shadow)">
+    <!-- Main trunk -->
+    <path d="M720 900 C735 780 760 700 800 640 C840 700 865 780 880 900 Z" fill="#0C1324" opacity="0.65"/>
+
+    <!-- Left road -->
+    <path d="M800 640 C720 600 620 520 520 420 C420 320 300 260 180 250 L0 240 L0 900 L720 900 C735 780 760 700 800 640 Z"
+          fill="url(#roadLeft)"/>
+
+    <!-- Right road -->
+    <path d="M800 640 C880 600 980 520 1080 420 C1180 320 1300 260 1420 250 L1600 240 L1600 900 L880 900 C865 780 840 700 800 640 Z"
+          fill="url(#roadRight)"/>
+
+    <!-- Center seam highlight -->
+    <path d="M800 640 C800 720 800 800 800 900" stroke="#FFFFFF" stroke-opacity="0.16" stroke-width="6" stroke-linecap="round"/>
+  </g>
+
+  <!-- Person silhouette -->
+  <g transform="translate(800 650)" filter="url(#shadow)">
+    <circle cx="0" cy="-78" r="20" fill="#0A0F1D"/>
+    <path d="M-18 -55 C-22 -30 -26 -5 -22 20 C-18 46 -10 70 0 92 C10 70 18 46 22 20 C26 -5 22 -30 18 -55 C10 -58 -10 -58 -18 -55 Z"
+          fill="#0A0F1D"/>
+    <path d="M-38 -28 C-26 -24 -16 -18 -8 -10" stroke="#0A0F1D" stroke-width="10" stroke-linecap="round"/>
+    <path d="M38 -28 C26 -24 16 -18 8 -10" stroke="#0A0F1D" stroke-width="10" stroke-linecap="round"/>
+    <path d="M-10 90 C-26 110 -36 132 -40 152" stroke="#0A0F1D" stroke-width="10" stroke-linecap="round"/>
+    <path d="M10 90 C26 110 36 132 40 152" stroke="#0A0F1D" stroke-width="10" stroke-linecap="round"/>
+  </g>
+
+  <!-- Right: AI collaborator robots (minimal) -->
+  <g clip-path="url(#rightHalf)" transform="translate(1080 520)" filter="url(#shadow)">
+    <g transform="translate(170 60)">
+      <rect x="-46" y="-48" width="92" height="92" rx="22" fill="#FFFFFF" opacity="0.92"/>
+      <rect x="-28" y="-12" width="56" height="34" rx="12" fill="#A4D8FF" opacity="0.9"/>
+      <circle cx="-16" cy="6" r="5" fill="#10263B" opacity="0.9"/>
+      <circle cx="16" cy="6" r="5" fill="#10263B" opacity="0.9"/>
+      <path d="M0 -50 L0 -72" stroke="#FFFFFF" stroke-width="6" stroke-linecap="round" opacity="0.9"/>
+      <circle cx="0" cy="-78" r="9" fill="#FFD060" opacity="0.95"/>
+    </g>
+    <g transform="translate(290 150) scale(0.85)">
+      <rect x="-46" y="-48" width="92" height="92" rx="22" fill="#FFFFFF" opacity="0.9"/>
+      <rect x="-28" y="-12" width="56" height="34" rx="12" fill="#BDE8FF" opacity="0.85"/>
+      <circle cx="-16" cy="6" r="5" fill="#10263B" opacity="0.9"/>
+      <circle cx="16" cy="6" r="5" fill="#10263B" opacity="0.9"/>
+      <path d="M0 -50 L0 -72" stroke="#FFFFFF" stroke-width="6" stroke-linecap="round" opacity="0.85"/>
+      <circle cx="0" cy="-78" r="9" fill="#FFD060" opacity="0.9"/>
+    </g>
+  </g>
+
+  <!-- Right: friendly connection line suggesting collaboration -->
+  <g clip-path="url(#rightHalf)" opacity="0.75">
+    <path d="M845 640 C920 605 1010 565 1120 550 C1250 530 1380 545 1510 600"
+          fill="none" stroke="#3BB3FF" stroke-opacity="0.6" stroke-width="6" stroke-linecap="round"/>
+    <circle cx="845" cy="640" r="7" fill="#3BB3FF" opacity="0.75"/>
+    <circle cx="1510" cy="600" r="7" fill="#3BB3FF" opacity="0.75"/>
+  </g>
+
+  <!-- Corner vignette for depth (very subtle) -->
+  <rect width="1600" height="900" fill="#000000" opacity="0.06"/>
+</svg>
