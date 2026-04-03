@@ -10,15 +10,8 @@ todo/
 ├── tasks/                 # 所有任务文件夹
 │   ├── YYYYMMDD-任务名/   # 每个任务一个文件夹
 │   │   ├── README.md      # 任务说明和需求
-│   │   ├── plan.md        # 实现方案
-│   │   ├── progress.md    # 实现过程记录
-│   │   ├── verify.md      # 验证标准
-│   │   └── summary.md     # 任务总结
+│   │   └── ...            # 任务相关文件（如文章、图片等）
 │   └── ...              # 更多任务
-└── templates/             # 任务模板（可转化为 skill）
-    ├── feature.md
-    ├── bug.md
-    └── optimization.md
 ```
 
 ## 任务命名规范
@@ -53,13 +46,16 @@ todo/
 - 2026-04-02: 接入百度统计
 
 **进行中**：
-- 无
+- 20260402: 20260402-notion-infographic-generator (in_progress, P2)
+- 20260402: 20260402-text-to-image-exploration (in_progress, P1)
+
+**基本完成，待优化调试**：
+- 20260403: 20260403-advertisement-integration (基本完成，待优化调试, P2)
 
 **待办**：
 - 20260401: 20260401-ai-ide-directory-migration (pending, P1)
 - P1: 内容分发自动化
 - P1: 付费咨询功能
-- P2: 推广广告接入
 - P3: 邮件订阅功能
 
 ### 2026 年 Q2
