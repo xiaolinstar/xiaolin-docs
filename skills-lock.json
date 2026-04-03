@@ -21,6 +21,11 @@
       "sourceType": "github",
       "computedHash": "af61905de3e03307321a64988d36327dcb4af1171d3bbfd3c0e3c9f757f6a040"
     },
+    "notion-infographic-v2": {
+      "source": "lexburner/skill-collection",
+      "sourceType": "github",
+      "computedHash": "7d209d14677fa4327cf4ffc74a83a148c224b132bf434ddf776a6289e2ada5d2"
+    },
     "wechat-article-writer": {
       "source": "iamzhihuix/happy-claude-skills",
       "sourceType": "github",
