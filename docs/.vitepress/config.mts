@@ -56,6 +56,7 @@ export default withMermaid({
             { text: '开发架构', link: `/software-development/` },
             { text: 'AI实践', link: `/ai/` },
             { text: '效率工具', link: `/easy-office/` },
+            { text: '优惠推荐', link: `/recommend/` },
         ],
 
         sidebar: {
@@ -248,6 +249,16 @@ export default withMermaid({
                         { text: 'Markdown 语法', link: `/easy-office/markdown` },
                         { text: 'Linux 学习', link: `/easy-office/linux-learn` },
                         { text: 'Mac 办公体验', link: `/easy-office/mac` }
+                    ]
+                }
+            ],
+            '/recommend/': [
+                {
+                    text: '优惠推荐', link: `/recommend/`,
+                    items: [
+                        { text: '云服务器', link: `/recommend/cloud-server` },
+                        { text: 'AI IDE', link: `/recommend/ai-ide` },
+                        { text: '大模型工具推荐', link: `/recommend/ai-model` }
                     ]
                 }
             ]

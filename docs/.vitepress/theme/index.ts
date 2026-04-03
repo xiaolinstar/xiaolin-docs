@@ -1,6 +1,7 @@
 import DefaultTheme from 'vitepress/theme'
 import type { Theme } from 'vitepress'
 import Layout from './Layout.vue'
+import RecommendCard from './components/RecommendCard.vue'
 
 declare global {
   interface Window {
@@ -12,6 +13,9 @@ export default {
   extends: DefaultTheme,
   Layout,
   enhanceApp({ app, router }) {
+    // 注册推荐卡片组件
+    app.component('RecommendCard', RecommendCard)
+    
     if (typeof window !== 'undefined') {
       router.onAfterRouteChanged = (to: string) => {
         if (typeof window._hmt !== 'undefined') {
