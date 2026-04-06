@@ -54,6 +54,8 @@ todo/
 
 **待办**：
 - 20260401: 20260401-ai-ide-directory-migration (pending, P1)
+- 20260406: 20260406-wechat-mini-program (pending, P1)
+- 20260406: 20260406-boardgame-dealer-monorepo (pending, P1)
 - P1: 内容分发自动化
 - P1: 付费咨询功能
 - P3: 邮件订阅功能

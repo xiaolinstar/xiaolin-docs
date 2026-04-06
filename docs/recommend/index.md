@@ -4,50 +4,23 @@
 
 ## 🔥 热门推荐
 
-### 阿里云 ECS - 企业级云服务器
-阿里云是国内领先的云计算服务商，新用户注册可获得 ¥100 代金券，首购还可享受返现优惠。
+### 阿里云 ECS ¥99 包年
 
-[<span style="font-size: 18px; font-weight: bold; color: #FF6A00; background: #FFF0E6; padding: 8px 16px; border-radius: 4px; display: inline-block; margin: 8px 0;">👉 立即领取阿里云优惠</span>](https://www.aliyun.com/minisite/goods?userCode=d1pmxxar){target="_blank"}
+百万开发者的共同选择，新客首单￥68起，人人可享99元套餐，续费同价，5亿补贴开启企业增长引擎。
 
-### 腾讯云轻量应用服务器 - 个人建站首选
-腾讯云轻量服务器 1 核 2G 配置仅需 ¥99/年，适合个人博客和小型网站。
+[<span style="font-size: 18px; font-weight: bold; color: #FF6A00; background: #FFF0E6; padding: 8px 16px; border-radius: 4px; display: inline-block; margin: 8px 0;">👉 上云优选，普惠权益</span>](https://www.aliyun.com/daily-act/ecs/activity_selection?userCode=d1pmxxar){target="_blank"}
 
-[<span style="font-size: 18px; font-weight: bold; color: #00A4FF; background: #E6F7FF; padding: 8px 16px; border-radius: 4px; display: inline-block; margin: 8px 0;">👉 立即领取腾讯云优惠</span>](https://curl.qcloud.com/mQu7e5Fu){target="_blank"}
+### 腾讯云 AI 焕新
 
-### 智谱 GLM Coding - AI 编程助手
-国内顶流编程大模型，支持 20+ 主流 IDE，编码效率提升约 30%。
+普惠至上，AI开工。2核2G4M 服务器新客99元/年起。
+
+[<span style="font-size: 18px; font-weight: bold; color: #00A4FF; background: #E6F7FF; padding: 8px 16px; border-radius: 4px; display: inline-block; margin: 8px 0;">👉 立即领取腾讯云优惠</span>](https://curl.qcloud.com/LL4937aa){target="_blank"}
+
+### 智谱 GLM Coding Plan
+
+国内顶流编程大模型，支持 20+ 主流 IDE，编码效率提升约 30%，量大管饱。
 
 [<span style="font-size: 18px; font-weight: bold; color: #1E90FF; background: #E6F2FF; padding: 8px 16px; border-radius: 4px; display: inline-block; margin: 8px 0;">👉 立即参与「拼好模」</span>](https://www.bigmodel.cn/glm-coding?ic=AD49T61WTJ){target="_blank"}
-
----
-
-## 📋 专题概述
-
-### ☁️ 云服务器
-云服务器是现代应用部署的基础设施，本专题推荐了适合不同场景的云服务器方案，包括阿里云 ECS、腾讯云轻量应用服务器和华为云 ECS，帮助您根据需求选择最合适的云服务。
-
-[查看详细推荐](cloud-server.md){.link-button}
-
-### 🤖 大模型工具
-大模型工具正在改变开发者的工作方式，本专题推荐了智谱 GLM Coding、百度文心一言和阿里云通义千问等主流大模型，帮助您提升开发效率和创造力。
-
-[查看详细推荐](ai-model.md){.link-button}
-
-### 🛠️ AI IDE
-AI IDE 是未来开发的趋势，本专题推荐了智谱 GLM Coding 和 GitHub Copilot 等 AI 编程助手，帮助您在编码过程中获得智能辅助，提高代码质量和开发速度。
-
-[查看详细推荐](ai-ide.md){.link-button}
-
----
-
-## 🎯 专题导航
-
-- [☁️ 云服务器](#云服务器)
-- [🤖 大模型工具](#大模型工具)
-- [🛠️ 开发工具](#开发工具)
-- [📊 对比指南](#对比指南)
-- [💡 使用心得](#使用心得)
-- [🎁 优惠策略](#优惠策略)
 
 ---
 
