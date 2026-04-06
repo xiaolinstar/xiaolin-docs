@@ -158,7 +158,6 @@ Thunderbird 无需手动协议，输入授权码则可自动协议匹配👍
 
 ![Thunderbird Markdown 插件使用示例](/images/img-email-thunderbird/thunderbird-plugin-markdown-sample.png)
 
-
 ## 其他配置
 
 如果你使用的是国内邮箱，如 QQ 邮箱、139邮箱、网易邮箱，同时你通过某种手段访问国际互联网，建议关闭系统代理，以避免某些安全审查不通过。

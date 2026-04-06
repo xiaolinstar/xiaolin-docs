@@ -11,6 +11,7 @@ alwaysApply: true
 - 尽可能少地输出内容，仅提供高信息密度回复，禁止无效寒暄、过度铺垫，只输出对当前任务有直接帮助的信息。
 - 遵守[《中文文案排版指北》](https://www.bookstack.cn/read/chinese-copywriting-guidelines/README.md)标准排版格式
 - 中文与英文之间加空格，中文与数字之间加空格；全角标点与其他字符之间不加空格。全中文语境下必须使用全角标点。
+- **文档索引维护规则**：任何在 `docs/` 目录下新增的文章或文档，必须默认同步更新 `docs/.vitepress/config.mts` 中的 `nav` 和 `sidebar`，将其添加到对应的标签索引链接中。
 
 ## Git 提交规则
 

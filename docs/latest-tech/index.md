@@ -2,7 +2,9 @@
 
 This page demonstrates some of the built-in markdown extensions provided by VitePress.
 该页面展示了VitePress提供的一些内置markdown扩展能力。
+
 ## 语法高亮
+
 VitePress提供由[Shiki](https://github.com/shikijs/shiki)提供的语法高亮能力。
 **输入**
 

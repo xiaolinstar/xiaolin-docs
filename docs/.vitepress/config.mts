@@ -52,6 +52,7 @@ export default withMermaid({
         logo: '/sparrow.svg',
         nav: [
             { text: '首页', link: `/` },
+            { text: '前沿探索', link: `/latest-tech/` },
             { text: 'SRE运维', link: `/sre/` },
             { text: '开发架构', link: `/software-development/` },
             { text: 'AI实践', link: `/ai/` },
@@ -249,6 +250,14 @@ export default withMermaid({
                         { text: 'Markdown 语法', link: `/easy-office/markdown` },
                         { text: 'Linux 学习', link: `/easy-office/linux-learn` },
                         { text: 'Mac 办公体验', link: `/easy-office/mac` }
+                    ]
+                }
+            ],
+            '/latest-tech/': [
+                {
+                    text: '前沿探索', link: `/latest-tech/`,
+                    items: [
+                        { text: 'Harness Engineering', link: `/latest-tech/harness-engineering` },
                     ]
                 }
             ],
