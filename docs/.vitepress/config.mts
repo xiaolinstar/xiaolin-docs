@@ -98,6 +98,7 @@ export default withMermaid({
                                 { text: 'Git Submodule 父子项目协作', link: `/sre/devops/git-submodule` },
                                 { text: '环境管理', link: `/sre/devops/environment` },
                                 { text: 'DevOps 核心能力', link: `/sre/devops/devops-core` },
+                                { text: 'GitOps 设计理念与实践', link: `/sre/devops/gitops` },
                             ]
                         },
                         {
