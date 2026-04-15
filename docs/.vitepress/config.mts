@@ -75,6 +75,7 @@ export default withMermaid({
                                 { text: '透明，看得见还是看不见', link: `/sre/practice/transparency` },
                                 { text: '监控层次：IaaS 层还是基础设施层', link: `/sre/practice/monitoring-layers` },
                                 { text: '监控流程：健康感知实践', link: `/sre/practice/monitoring-process` },
+                                { text: '两台服务器，撑起多个项目', link: `/sre/practice/opc-server` },
                             ]
                         },
                         {
