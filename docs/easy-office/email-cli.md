@@ -49,7 +49,7 @@ ID   From                    Subject                         Date
 
 市面上的邮件客户端不少：Thunderbird、Spark、Apple Mail，但对于智能体协作来说，它们有一个共同的致命缺陷：**GUI 界面，Agent 无法直接操控。**
 
-![himalaya-cli](/images/img-email-cli/himalaya-cli.png)
+![himalaya-cli](/images/img-email-cli/himalaya.png)
 
 himalaya 的核心定位是 **纯 CLI 邮件工具**，而不是交互式 TUI。这个区别至关重要：
 
