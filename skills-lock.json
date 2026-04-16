@@ -11,6 +11,11 @@
       "sourceType": "github",
       "computedHash": "cbe644b0c6760ae2a1eaafa39133920d889331327065d92a131675a665273e56"
     },
+    "himalaya": {
+      "source": "steipete/clawdis",
+      "sourceType": "github",
+      "computedHash": "0d3baf6039b8f2d19266ec535b114cacca8a6ab1d288b8373a83b1a1585cefb8"
+    },
     "markdown-formatter": {
       "source": "vernox/skills",
       "sourceType": "github",
