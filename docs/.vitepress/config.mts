@@ -236,7 +236,8 @@ export default withMermaid({
                             items: [
                                 { text: '登录 Antigravity', link: `/ai/llm/antigravity` },
                                 { text: '半小时启动 OpenClaw', link: `/ai/llm/openclaw` },
-                                { text: 'AI 记忆系统', link: `/ai/llm/dotai` }
+                                { text: 'AI 记忆系统', link: `/ai/llm/dotai` },
+                                { text: 'OpenClaw 用不下去', link: `/ai/llm/openclaw-pain` },
                             ]
                         },
                     ],
