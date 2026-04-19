@@ -1,4 +1,4 @@
-# Exception异常编程实践：异常模块规划
+# Exception异常编程实践：异常模块规划（06）
 
 在前五篇中，我们完成了异常架构设计的理论体系：从[四项核心原则](exception-00.md)出发，经历了[异常基础](exception-01.md)、[异常分类](exception-02.md)、[异常抛出](exception-03.md)、[异常处理](exception-04.md)，最终在[系统性总结](exception-05.md)中将其融为一体。
 
@@ -163,6 +163,9 @@ exception/
 | `__init__.py` 是否统一导出 | 是 | `from exception import XxxException` 更简洁 |
 
 注意到 `handler.py` 只有一个文件，但异常类有十几个。handler 是为每个异常类写一个处理器，还是按类别统一处理？handler 的注册粒度应该与**处理策略的差异**对齐，而非与异常类的数量对齐。这个问题将在 [08篇](exception-08.md) 中详细讨论。
+
+> **💡 AI 编程工具推荐**：在规划项目架构和编写异常类时，推荐使用智谱 AI 的 Coding Plan。作为国内顶流编程大模型，它适配了 20+ 主流开发工具，帮你快速生成标准的异常模块代码。
+> 👉 [立即参与「拼好模」获取优惠](https://www.bigmodel.cn/glm-coding?ic=AD49T61WTJ)
 
 ## 总结
 

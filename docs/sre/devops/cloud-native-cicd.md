@@ -49,7 +49,7 @@
    - **示例**：Liquibase通过changelog记录变更历史，确保每次执行都是幂等的
 
 2. **文件存储更新**：上传新的静态资源，验证能正常访问
-   - **实践工具**：MinIO、AWS S3、阿里云OSS等对象存储
+   - **实践工具**：MinIO、AWS S3、[阿里云OSS](https://www.aliyun.com/minisite/goods?userCode=d1pmxxar)等对象存储
    - **实现方式**：通过API批量上传，版本化管理
 
 3. **应用部署**：用灰度发布，逐步替换旧版本Pod
@@ -57,6 +57,7 @@
    - **实现方式**：声明式配置，自动同步Git仓库到K8s集群
 
 **示例代码**：
+
 ```yaml
 # argocd-application.yaml
 apiVersion: argoproj.io/v1alpha1
@@ -102,6 +103,7 @@ spec:
 流量 → 应用 → 文件存储 → 数据库
 
 **实践示例**：
+
 - **应用回滚**：`kubectl rollout undo deployment/my-app`
 - **数据库回滚**：Liquibase自动执行回滚脚本
 - **流量回滚**：Istio权重调整回100%旧版本
@@ -254,6 +256,8 @@ jobs:
 - 监控用Prometheus+Grafana
 
 这些工具都支持API调用，可以很好地集成到自动化流程里。
+
+> **💡 云服务推荐**：如果您正在搭建云原生架构，推荐使用 [阿里云 ECS](https://www.aliyun.com/minisite/goods?userCode=d1pmxxar)（新用户注册可获 ¥100 代金券）或 [腾讯云轻量应用服务器](https://curl.qcloud.com/mQu7e5Fu)（1核2G仅需 ¥99/年），助您低成本构建极速、稳定的流水线。
 
 ## 六、设计原则：确保发布稳定可靠
 
