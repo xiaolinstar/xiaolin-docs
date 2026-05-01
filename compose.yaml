@@ -1,0 +1,18 @@
+networks:
+  tiny-sparrow-network:
+    external: false
+services:
+  # VitePress 静态网站
+  xiaolin-website:
+    image: ghcr.io/xiaolinstar/xiaolin-docs:latest
+    container_name: xiaolin-website
+    volumes:
+      - ./volumes/website/logs:/var/log/nginx
+    networks:
+      - tiny-sparrow-network
+    ports:
+      - "8080:8080"
+    environment:
+      # 设置中国时区
+      TZ: Asia/Shanghai
+  
