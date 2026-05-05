@@ -21,8 +21,8 @@ RUN pnpm install --registry=http://mirrors.cloud.tencent.com/npm/
 # 安装Git，lastUpdated=true需要
 # 更新 apk 索引并安装软件包
 # 指定腾讯云的 Alpine 镜像源
-RUN echo "https://mirrors.cloud.tencent.com/alpine/v3.14/main" > /etc/apk/repositories \
-    && echo "https://mirrors.cloud.tencent.com/alpine/v3.14/community" >> /etc/apk/repositories \
+RUN echo "https://mirrors.cloud.tencent.com/alpine/v3.20/main" > /etc/apk/repositories \
+    && echo "https://mirrors.cloud.tencent.com/alpine/v3.20/community" >> /etc/apk/repositories \
     && apk update \
     && apk upgrade \
     && apk add --no-cache bash git openssh

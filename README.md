@@ -50,7 +50,7 @@
 ### 基础设施与运维 (SRE Capabilities)
 - **容器化**: Docker & Docker Compose
 - **集群编排**: Kubernetes (K8s)
-- **CI/CD**: Jenkins (Legacy) & GitHub Actions (Modern)
+- **CI/CD**: GitHub Actions
 - **可观测性 (Observability)**:
   - **指标监控**: Prometheus + Grafana + Node Exporter + Nginx Exporter
   - **日志管理**: Grafana Loki + Promtail
@@ -71,7 +71,21 @@ pnpm docs:dev
 
 ### 容器化运行 (Docker Compose)
 
-一键启动整套可观测性环境：
+本项目采用**网关与服务分离**的架构设计，提供两个 Docker Compose 文件：
+
+#### 1. 独立服务模式 (`compose.yaml`)
+
+适用于网关部署在独立服务器的场景，仅启动文档网站服务：
+
+```bash
+docker compose -f compose.yaml up -d
+```
+
+- **网站访问**: [http://localhost:8080](http://localhost:8080)
+
+#### 2. 完整环境模式 (`docker-compose.yaml`)
+
+包含完整的可观测性栈，适用于本地开发或独立部署：
 
 ```bash
 docker-compose up -d
@@ -87,13 +101,11 @@ docker-compose up -d
 
 ### 1. GitHub Actions (推荐)
 配置文件位于 `.github/workflows/`：
-- **CI**: `release-package.yml` - 构建 Docker 镜像并推送至 GHCR。
-- **CD**: `deploy.yml` - 通过 SSH 自动化部署至目标服务器。
+- **CI**: `ci-ghcr.yml` - 构建 Docker 镜像并推送至 GHCR (南京大学镜像加速)。
+- **CD**: `cd-ghcr.yml` - 部署至生产环境。
+- **Pages**: `page.yml` - GitHub Pages 预览部署。
 
-### 2. Jenkins
-支持传统的 `Jenkinsfile` 声明式流水线，实现代码拉取、镜像构建与滚动更新。
-
-### 3. Kubernetes
+### 2. Kubernetes
 提供全套 K8s 部署清单文件（`k8s/` 目录）：
 ```bash
 kubectl apply -f k8s/
