@@ -251,7 +251,9 @@ export default withMermaid({
                         { text: 'Thunderbird 邮件管理', link: `/easy-office/email-thunderbird` },
                         { text: 'Markdown 语法', link: `/easy-office/markdown` },
                         { text: 'Linux 学习', link: `/easy-office/linux-learn` },
-                        { text: 'Mac 办公体验', link: `/easy-office/mac` }
+                        { text: 'Mac 办公体验', link: `/easy-office/mac` },
+                        { text: 'OpenClaw 个人助手', link: `/easy-office/openclaw-personal-assistant` },
+                        { text: '腾讯 QClaw 与 WorkBuddy', link: `/easy-office/tencent-qclaw-workbuddy` }
                     ]
                 }
             ],
