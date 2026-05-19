@@ -15,6 +15,10 @@ COPY . .
 # 安装 pnpm Qcloud腾讯云加速
 RUN npm install -g pnpm --registry=http://mirrors.cloud.tencent.com/npm/
 
+# 配置 pnpm 允许构建脚本
+RUN pnpm config set enable-pre-post-scripts true --location project
+RUN pnpm config set onlyBuiltDependencies '["esbuild","vue-demi"]' --location project
+
 # 安装依赖 Qcloud腾讯云加速
 RUN pnpm install --registry=http://mirrors.cloud.tencent.com/npm/
 
