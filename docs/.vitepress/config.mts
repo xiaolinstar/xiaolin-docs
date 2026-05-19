@@ -17,7 +17,9 @@ export default withMermaid({
     title: "AI持续运维",
     description: "SRE、DevOps 与 AI 技术实践平台",
     vite: {
-        plugins: [llms()],
+        plugins: [llms({
+            excludeIndexPage: false,  // 包含 index.md 文件
+        })],
     },
     head: [
     ['link', { rel: 'icon', href: '/sparrow.svg' }],
