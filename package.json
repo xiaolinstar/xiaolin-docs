@@ -1,5 +1,8 @@
 {
   "version": "0.0.1",
+  "pnpm": {
+    "onlyBuiltDependencies": ["esbuild", "vue-demi"]
+  },
   "devDependencies": {
     "markdown-it": "^14.1.1",
     "markdown-it-mathjax3": "^4.3.2",
