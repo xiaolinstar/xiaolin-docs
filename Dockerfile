@@ -12,11 +12,11 @@ WORKDIR /app
 # 复制所有文件到工作目录
 COPY . .
 
-# 安装 pnpm Qcloud腾讯云加速
-RUN npm install -g pnpm --registry=http://mirrors.cloud.tencent.com/npm/
+# 安装 pnpm (使用一个已知稳定的版本)
+RUN npm install -g pnpm@9.0.0 --registry=http://mirrors.cloud.tencent.com/npm/
 
-# 安装依赖 Qcloud腾讯云加速
-RUN pnpm install --registry=http://mirrors.cloud.tencent.com/npm/
+# 安装依赖 - 允许构建脚本
+RUN pnpm install --ignore-scripts=false --registry=http://mirrors.cloud.tencent.com/npm/
 
 # 安装Git，lastUpdated=true需要
 # 更新 apk 索引并安装软件包
