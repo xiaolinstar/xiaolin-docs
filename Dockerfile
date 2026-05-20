@@ -13,7 +13,7 @@ WORKDIR /app
 COPY . .
 
 # 安装 pnpm 8.x（支持 package.json 中的 pnpm 配置）
-RUN npm install -g pnpm@8.15.0 --registry=http://mirrors.cloud.tencent.com/npm/
+RUN npm install -g pnpm@11.1.3 --registry=http://mirrors.cloud.tencent.com/npm/
 
 # 安装依赖
 RUN pnpm install --registry=http://mirrors.cloud.tencent.com/npm/
