@@ -23,6 +23,7 @@ export default withMermaid({
     },
     head: [
     ['link', { rel: 'icon', href: '/sparrow.svg' }],
+    ['link', { rel: 'canonical', href: 'https://www.xiaolinstar.cn' }],
     ['script', {}, `
       window._hmt = window._hmt || [];
       (function() {
