@@ -202,7 +202,7 @@ export default withMermaid({
                             items: [
                                 {
                                     text: '软考高级：系统架构设计师',
-                                    link: `software-development/system-architecture-designer/ruankao-advanced`
+                                    link: `/software-development/system-architecture-designer/ruankao-advanced`
                                 },
                                 {
                                     text: '数据库系统基础知识',
@@ -229,7 +229,7 @@ export default withMermaid({
                         {
                             text: '理论基础', link: `/ai/theory`,
                             items: [
-                                { text: 'LLM 擅长问题与领域', link: `/ai/theory/when-llm` },
+                                { text: '理论首页', link: `/ai/theory/` },
                                 { text: 'AI Coding', link: `/ai/theory/ai-coding` },
                                 { text: '全面接入 AI 与驾驭工程', link: `/ai/theory/ai-native-harness` },
                             ]

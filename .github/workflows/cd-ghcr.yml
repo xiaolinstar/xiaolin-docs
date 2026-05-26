@@ -33,7 +33,7 @@ jobs:
             # 进入项目目录
             cd ${{ env.SERVER_DIR }}
             
-            # 拉取最新代码，确保是最新版本的docker-compose.yaml
+            # 拉取最新代码，确保是最新版本的 compose.yaml
             git pull
             
             # 拉取最新镜像（重要：docker compose 不会自动拉取更新的镜像）
@@ -44,11 +44,19 @@ jobs:
             
             # 启动新的容器（使用最新镜像）
             docker compose up -d
+
+            # 容器内健康检查，避免部署后返回 4xx/5xx 但流水线仍显示成功
+            docker compose exec -T xiaolin-website wget -qO- http://127.0.0.1:8080/healthz >/dev/null
             
             # 清理未使用的镜像
             docker image prune -f
             
             echo "Deployment completed successfully!"
+
+      - name: Probe production website
+        run: |
+          curl -4 --fail --show-error --silent --location --retry 3 --retry-delay 5 https://www.xiaolinstar.cn/ >/dev/null
+          curl -4 --fail --show-error --silent --location --retry 3 --retry-delay 5 https://www.xiaolinstar.cn/healthz >/dev/null
 
   # 发送部署成功邮件通知
   send-email:

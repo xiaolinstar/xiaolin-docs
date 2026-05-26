@@ -30,11 +30,11 @@
 
 QClaw 专家广场：
 
-![QClaw-Experts](QClaw-Experts.png)
+![QClaw-Experts](/images/img-tencent-qclaw-workbuddy/Qclaw-experts.png)
 
 WorkBuddy 专家中心：
 
-![WorkBuddy-Experts](WorkBuddy-Experts.png)
+![WorkBuddy-Experts](/images/img-tencent-qclaw-workbuddy/WorkBuddy-experts.png)
 
 专家是包含了特定任务场景领域知识和技能的扩展包，用户可以根据自己的场景选择不同的专家。应用官方在专家广场发布了大量的专家，用户都可以开箱即用。
 

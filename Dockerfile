@@ -12,11 +12,11 @@ WORKDIR /app
 # 复制所有文件到工作目录
 COPY . .
 
-# 安装 pnpm 8.x（支持 package.json 中的 pnpm 配置）
+# 安装 pnpm 11.x（与当前锁文件和 node_modules 版本保持一致）
 RUN npm install -g pnpm@11.1.3 --registry=http://mirrors.cloud.tencent.com/npm/
 
 # 安装依赖
-RUN pnpm install --registry=http://mirrors.cloud.tencent.com/npm/
+RUN pnpm install --frozen-lockfile --registry=http://mirrors.cloud.tencent.com/npm/
 
 # 安装Git，lastUpdated=true需要
 # 更新 apk 索引并安装软件包

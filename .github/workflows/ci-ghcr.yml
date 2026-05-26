@@ -30,6 +30,27 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v6
 
+      - uses: pnpm/action-setup@v6
+        name: Install pnpm
+        with:
+          version: 11
+          run_install: false
+
+      - name: Setup Node
+        uses: actions/setup-node@v6
+        with:
+          node-version: 24
+          cache: 'pnpm'
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Check local documentation links
+        run: pnpm run docs:check-links
+
+      - name: Build documentation
+        run: pnpm run docs:build
+
       - name: Login to GitHub Container Registry
         uses: docker/login-action@v4
         with:
