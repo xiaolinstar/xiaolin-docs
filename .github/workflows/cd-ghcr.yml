@@ -57,6 +57,7 @@ jobs:
         run: |
           curl -4 --fail --show-error --silent --location --retry 3 --retry-delay 5 https://www.xiaolinstar.cn/ >/dev/null
           curl -4 --fail --show-error --silent --location --retry 3 --retry-delay 5 https://www.xiaolinstar.cn/healthz >/dev/null
+          curl -4 --fail --show-error --silent --location --retry 3 --retry-delay 5 https://www.xiaolinstar.cn/latest-tech/index.md >/dev/null
 
   # 发送部署成功邮件通知
   send-email:
