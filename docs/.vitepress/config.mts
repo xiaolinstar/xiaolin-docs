@@ -13,13 +13,16 @@ const baiduAnalyticsId = process.env.VITE_BAIDU_ANALYTICS_ID || 'YOUR_BAIDU_ANAL
 // https://vitepress.dev/reference/site-config
 // export default defineConfig({
 export default withMermaid({
-    base: basePath, // (*)设置域名前缀
+    base: basePath,
     title: "AI持续运维",
     description: "SRE、DevOps 与 AI 技术实践平台",
     vite: {
         plugins: [llms({
-            excludeIndexPage: false,  // 包含 index.md 文件
+            excludeIndexPage: false,
         })],
+        optimizeDeps: {
+            include: ['cytoscape', 'cytoscape-cose-bilkent', 'dayjs']
+        }
     },
     head: [
     ['link', { rel: 'icon', href: '/sparrow.svg' }],
@@ -217,6 +220,20 @@ export default withMermaid({
                                     link: `/software-development/system-architecture-designer/paper`
                                 },
                             ]
+                        },
+                        {
+                            text: '安全实践',
+                            link: `/security/`,
+                            items: [
+                                { text: '认证授权基础', link: `/security/basis-of-auth` },
+                                { text: '从 Cookie 到 Token', link: `/security/cookie-to-token` },
+                                { text: 'JWT 深入浅出', link: `/security/jwt-deep-dive` },
+                                { text: 'OAuth 2.0 协议精讲', link: `/security/oauth2-protocol` },
+                                { text: 'OIDC 与 SSO 单点登录', link: `/security/oidc-sso` },
+                                { text: '微服务认证授权', link: `/security/microservice-auth` },
+                                { text: 'API 安全防护', link: `/security/api-security` },
+                                { text: '实战：完整认证系统设计', link: `/security/auth-system-design` },
+                            ]
                         }
                     ]
                 }
@@ -268,6 +285,29 @@ export default withMermaid({
                     ]
                 }
             ],
+
+            '/security/': [
+                {
+                    text: '安全实践', link: `/security/`,
+                    items: [
+                        {
+                            text: '认证授权',
+                            link: `/security/`,
+                            items: [
+                                { text: '认证授权基础', link: `/security/basis-of-auth` },
+                                { text: '从 Cookie 到 Token', link: `/security/cookie-to-token` },
+                                { text: 'JWT 深入浅出', link: `/security/jwt-deep-dive` },
+                                { text: 'OAuth 2.0 协议精讲', link: `/security/oauth2-protocol` },
+                                { text: 'OIDC 与 SSO 单点登录', link: `/security/oidc-sso` },
+                                { text: '微服务认证授权', link: `/security/microservice-auth` },
+                                { text: 'API 安全防护', link: `/security/api-security` },
+                                { text: '实战：完整认证系统设计', link: `/security/auth-system-design` },
+                            ]
+                        }
+                    ]
+                }
+            ],
+
             '/recommend/': [
                 {
                     text: '优惠推荐', link: `/recommend/`,

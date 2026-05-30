@@ -8,6 +8,18 @@ importers:
 
   .:
     devDependencies:
+      '@braintree/sanitize-url':
+        specifier: ^7.1.2
+        version: 7.1.2
+      cytoscape:
+        specifier: ^3.33.4
+        version: 3.33.4
+      cytoscape-cose-bilkent:
+        specifier: ^4.1.0
+        version: 4.1.0(cytoscape@3.33.4)
+      dayjs:
+        specifier: ^1.11.21
+        version: 1.11.21
       markdown-it:
         specifier: ^14.1.1
         version: 14.1.1
@@ -837,6 +849,10 @@ packages:
     resolution: {integrity: sha512-Gej7U+OKR+LZ8kvX7rb2HhCYJ0IhvEFsnkud4SB1PR+BUY/TsSO0dmOW59WEVLu51b1Rm+gQRKoz4bLYxGSZ2g==}
     engines: {node: '>=0.10'}
 
+  cytoscape@3.33.4:
+    resolution: {integrity: sha512-HIN5Pmd9MrX9BkV7tDwnOcEJCSFvCpc8X97h3f508J6I5FsqAY65wKOCvgH2CuP42CaahWaz4tuh32SOOIH7ww==}
+    engines: {node: '>=0.10'}
+
   d3-array@2.12.1:
     resolution: {integrity: sha512-B0ErZK/66mHtEsR1TkPEEkwdy+WDesimkM5gpZr5Dsg54BiTA5RXtYW5qTLIAcekaS9xfZrzBLF/OAkB3Qn1YQ==}
 
@@ -981,6 +997,9 @@ packages:
 
   dayjs@1.11.20:
     resolution: {integrity: sha512-YbwwqR/uYpeoP4pu043q+LTDLFBLApUP6VxRihdfNTqu4ubqMlGDLd6ErXhEgsyvY0K6nCs7nggYumAN+9uEuQ==}
+
+  dayjs@1.11.21:
+    resolution: {integrity: sha512-98IT+HOahAisibz/yjKbzuOBwYcjJ7BCLPzARyHiyEBmRz4fatF+KPJszEHXsGYjUG234aH/cOjW1wwTbKUZlA==}
 
   debug@4.4.3:
     resolution: {integrity: sha512-RGwwWnwQvkVfavKVt22FGLw+xYSdzARwm0ru6DhTVA3umU5hZc28V3kO4stgYryrTlLpuvgI9GiijltAjNbcqA==}
@@ -2461,12 +2480,19 @@ snapshots:
       cose-base: 1.0.3
       cytoscape: 3.33.3
 
+  cytoscape-cose-bilkent@4.1.0(cytoscape@3.33.4):
+    dependencies:
+      cose-base: 1.0.3
+      cytoscape: 3.33.4
+
   cytoscape-fcose@2.2.0(cytoscape@3.33.3):
     dependencies:
       cose-base: 2.2.0
       cytoscape: 3.33.3
 
   cytoscape@3.33.3: {}
+
+  cytoscape@3.33.4: {}
 
   d3-array@2.12.1:
     dependencies:
@@ -2641,6 +2667,8 @@ snapshots:
       lodash-es: 4.18.1
 
   dayjs@1.11.20: {}
+
+  dayjs@1.11.21: {}
 
   debug@4.4.3:
     dependencies:

@@ -3,6 +3,7 @@ docs/.vitepress/cache
 
 /node_modules/
 /docs/.vitepress/dist/
+.pnpm-store/
 .idea
 
 volumes/website/logs/
