@@ -21,14 +21,9 @@
 
 | 文章 | 简介 |
 |------|------|
-| [认证授权体系全景图](./auth-overview) | 认证与授权的核心概念、常见术语、技术选型决策树 |
-| [从 Cookie 到 Token：会话管理演进史](./cookie-to-token) | HTTP 无状态会话、Cookie、Session 共享、Token 化 |
-| [JWT 深入浅出](./jwt-deep-dive) | JWT 结构、安全最佳实践、Access/Refresh Token |
-| [OAuth 2.0 协议精讲](./oauth2-protocol) | 四种授权模式、PKCE 扩展、适用场景 |
-| [OIDC 与 SSO 单点登录](./oidc-sso) | OIDC 协议、ID Token、企业级 SSO |
-| [微服务认证授权](./microservice-auth) | 网关统一认证、RBAC/ABAC、MTLS |
-| [API 安全防护](./api-security) | API Key、签名验证、Rate Limiting |
-| [实战：完整认证系统设计](./auth-system-design) | 从需求到落地的实战案例 |
+| [认证授权基础](./basis-of-auth) | 认证与授权的核心概念、Cookie/Session 机制、凭证存储方案 |
+| [Cookie 安全问题](./cookie-security) | CSRF 攻击原理、同源策略、Cookie 安全属性 |
+| [Session 扩展](./session-scalability) | 分布式 Session、Redis 存储、高可用架构 |
 
 ## 知识图谱
 
@@ -148,4 +143,4 @@ flowchart TD
 
 ## 下篇预告
 
-下一篇将深入探讨 [从 Cookie 到 Token：会话管理演进史](./cookie-to-token)，了解 HTTP 无状态会话的来龙去脉。
+下一篇将深入探讨 [Cookie 安全问题](./cookie-security)，了解 CSRF 攻击原理与防护措施。

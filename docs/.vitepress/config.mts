@@ -226,13 +226,8 @@ export default withMermaid({
                             link: `/security/`,
                             items: [
                                 { text: '认证授权基础', link: `/security/basis-of-auth` },
-                                { text: '从 Cookie 到 Token', link: `/security/cookie-to-token` },
-                                { text: 'JWT 深入浅出', link: `/security/jwt-deep-dive` },
-                                { text: 'OAuth 2.0 协议精讲', link: `/security/oauth2-protocol` },
-                                { text: 'OIDC 与 SSO 单点登录', link: `/security/oidc-sso` },
-                                { text: '微服务认证授权', link: `/security/microservice-auth` },
-                                { text: 'API 安全防护', link: `/security/api-security` },
-                                { text: '实战：完整认证系统设计', link: `/security/auth-system-design` },
+                                { text: 'Cookie 安全问题', link: `/security/cookie-security` },
+                                { text: 'Session 扩展', link: `/security/session-scalability` },
                             ]
                         }
                     ]
@@ -295,13 +290,8 @@ export default withMermaid({
                             link: `/security/`,
                             items: [
                                 { text: '认证授权基础', link: `/security/basis-of-auth` },
-                                { text: '从 Cookie 到 Token', link: `/security/cookie-to-token` },
-                                { text: 'JWT 深入浅出', link: `/security/jwt-deep-dive` },
-                                { text: 'OAuth 2.0 协议精讲', link: `/security/oauth2-protocol` },
-                                { text: 'OIDC 与 SSO 单点登录', link: `/security/oidc-sso` },
-                                { text: '微服务认证授权', link: `/security/microservice-auth` },
-                                { text: 'API 安全防护', link: `/security/api-security` },
-                                { text: '实战：完整认证系统设计', link: `/security/auth-system-design` },
+                                { text: 'Cookie 安全问题', link: `/security/cookie-security` },
+                                { text: 'Session 扩展', link: `/security/session-scalability` },
                             ]
                         }
                     ]
