@@ -223,11 +223,14 @@ export default withMermaid({
                         },
                         {
                             text: '安全实践',
-                            link: `/security/`,
+                            link: `/software-development/security/`,
                             items: [
-                                { text: '认证授权基础', link: `/security/basis-of-auth` },
-                                { text: 'Cookie 安全问题', link: `/security/cookie-security` },
-                                { text: 'Session 扩展', link: `/security/session-scalability` },
+                                { text: '认证授权基础', link: `/software-development/security/basis-of-auth` },
+                                { text: '浏览器同源策略', link: `/software-development/security/same-origin-policy` },
+                                { text: 'Cookie 安全问题', link: `/software-development/security/cookie-security` },
+                                { text: 'Session 扩展', link: `/software-development/security/session-scalability` },
+                                { text: 'JWT 无状态凭证', link: `/software-development/security/jwt` },
+                                { text: '凭证安全问题', link: `/software-development/security/credential-security` },
                             ]
                         }
                     ]
@@ -277,23 +280,6 @@ export default withMermaid({
                     text: '前沿探索', link: `/latest-tech/`,
                     items: [
                         { text: 'Harness Engineering', link: `/latest-tech/harness-engineering` },
-                    ]
-                }
-            ],
-
-            '/security/': [
-                {
-                    text: '安全实践', link: `/security/`,
-                    items: [
-                        {
-                            text: '认证授权',
-                            link: `/security/`,
-                            items: [
-                                { text: '认证授权基础', link: `/security/basis-of-auth` },
-                                { text: 'Cookie 安全问题', link: `/security/cookie-security` },
-                                { text: 'Session 扩展', link: `/security/session-scalability` },
-                            ]
-                        }
                     ]
                 }
             ],

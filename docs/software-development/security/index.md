@@ -1,4 +1,4 @@
-# 认证授权
+# 认证授权基础
 
 认证授权是软件系统一个基础功能模块，是确保系统安全的基础能力。无论多小的系统，都需要建立认证授权机制，来保护系统的资源和数据安全。
 
@@ -22,8 +22,11 @@
 | 文章 | 简介 |
 |------|------|
 | [认证授权基础](./basis-of-auth) | 认证与授权的核心概念、Cookie/Session 机制、凭证存储方案 |
-| [Cookie 安全问题](./cookie-security) | CSRF 攻击原理、同源策略、Cookie 安全属性 |
+| [浏览器同源策略](./same-origin-policy) | 同源策略原理、跨域问题、CORS 配置 |
+| [Cookie 安全问题](./cookie-security) | Cookie 盗取、伪造、滥用，CSRF 攻击原理与防护 |
 | [Session 扩展](./session-scalability) | 分布式 Session、Redis 存储、高可用架构 |
+| [JWT 无状态凭证](./jwt) | Json Web Token 原理与实践 |
+| [凭证安全问题](./credential-security) | 凭证泄露、伪造、滥用与授权滥用 |
 
 ## 知识图谱
 
