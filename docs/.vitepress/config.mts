@@ -63,7 +63,14 @@ export default withMermaid({
             { text: '开发架构', link: `/software-development/` },
             { text: 'AI实践', link: `/ai/` },
             { text: '效率工具', link: `/easy-office/` },
-            { text: '优惠推荐', link: `/recommend/` },
+            {
+                text: '优惠推荐',
+                items: [
+                    { text: '推荐首页', link: `/recommend/` },
+                    { text: 'Token Plan', link: `/recommend/token-plan` },
+                    { text: '云服务器', link: `/recommend/cloud-server` },
+                ]
+            },
         ],
 
         sidebar: {
@@ -288,9 +295,8 @@ export default withMermaid({
                 {
                     text: '优惠推荐', link: `/recommend/`,
                     items: [
+                        { text: 'Token Plan', link: `/recommend/token-plan` },
                         { text: '云服务器', link: `/recommend/cloud-server` },
-                        { text: 'AI IDE', link: `/recommend/ai-ide` },
-                        { text: '大模型工具推荐', link: `/recommend/ai-model` }
                     ]
                 }
             ]
