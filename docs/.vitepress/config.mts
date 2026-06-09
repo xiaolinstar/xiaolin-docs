@@ -274,6 +274,7 @@ export default withMermaid({
                     text: '效率工具', link: `/easy-office/`,
                     items: [
                         { text: 'Thunderbird 邮件管理', link: `/easy-office/email-thunderbird` },
+                        { text: 'ai-todo AI 待办系统', link: `/easy-office/ai-todo` },
                         { text: 'Markdown 语法', link: `/easy-office/markdown` },
                         { text: 'Linux 学习', link: `/easy-office/linux-learn` },
                         { text: 'Mac 办公体验', link: `/easy-office/mac` },
@@ -308,7 +309,7 @@ export default withMermaid({
         // 页脚
         footer: {
             message: '微信公众号：AI持续运维，掘金：AI持续运维',
-            copyright: 'Copyright © 2026 xingxiaolin <br/><span class="beian-container" style="display:inline-flex;align-items:center;gap:8px;"><a href="https://beian.miit.gov.cn/" target="_blank">苏ICP备2026011017号-1</a><span class="gongan-beian" style="display:inline-flex;align-items:center;white-space:nowrap;"><img src="/beian-gongan.png" alt="公安备案" style="width:16px;height:16px;margin-right:4px;"><a href="http://beian.mps.gov.cn/#query/webSearch?code=32010602012313"target="_blank">苏公网安备32010602012313号</a></span></span>'
+            copyright: 'Copyright © 2026 xiaolinstar <br/><span class="beian-container" style="display:inline-flex;align-items:center;gap:8px;"><a href="https://beian.miit.gov.cn/" target="_blank">苏ICP备2026011017号-1</a><span class="gongan-beian" style="display:inline-flex;align-items:center;white-space:nowrap;"><img src="/beian-gongan.png" alt="公安备案" style="width:16px;height:16px;margin-right:4px;"><a href="http://beian.mps.gov.cn/#query/webSearch?code=32010602012313"target="_blank">苏公网安备32010602012313号</a></span></span>'
         },
         // 支持模糊搜索
         search: {
