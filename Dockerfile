@@ -19,12 +19,8 @@ RUN npm install -g pnpm@11.1.3 --registry=http://mirrors.cloud.tencent.com/npm/
 RUN pnpm install --frozen-lockfile --registry=http://mirrors.cloud.tencent.com/npm/
 
 # 安装Git，lastUpdated=true需要
-# 更新 apk 索引并安装软件包
-# 指定腾讯云的 Alpine 镜像源
-RUN echo "https://mirrors.cloud.tencent.com/alpine/v3.20/main" > /etc/apk/repositories \
-    && echo "https://mirrors.cloud.tencent.com/alpine/v3.20/community" >> /etc/apk/repositories \
-    && apk update \
-    && apk upgrade \
+# 使用官方 Alpine 镜像源（避免腾讯云镜像源 IO 错误）
+RUN apk update \
     && apk add --no-cache bash git openssh
 
 # 构建生产环境下到Vue项目
