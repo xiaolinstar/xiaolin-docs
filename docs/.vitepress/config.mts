@@ -58,10 +58,10 @@ export default withMermaid({
         logo: '/sparrow.svg',
         nav: [
             { text: '首页', link: `/` },
-            { text: '前沿探索', link: `/latest-tech/` },
             { text: 'SRE运维', link: `/sre/` },
             { text: '开发架构', link: `/software-development/` },
             { text: 'AI实践', link: `/ai/` },
+            { text: '软件产品', link: `/products/` },
             { text: '效率工具', link: `/easy-office/` },
             {
                 text: '优惠推荐',
@@ -254,6 +254,7 @@ export default withMermaid({
                                 { text: '理论首页', link: `/ai/theory/` },
                                 { text: 'AI Coding', link: `/ai/theory/ai-coding` },
                                 { text: '全面接入 AI 与驾驭工程', link: `/ai/theory/ai-native-harness` },
+                                { text: '个人开发者视角的驾驭工程', link: `/ai/theory/harness-engineering` },
                             ]
                         },
                         {
@@ -269,12 +270,25 @@ export default withMermaid({
                 }
             ],
 
+            '/products/': [
+                {
+                    text: '软件产品', link: `/products/`,
+                    items: [
+                        { text: '产品总览', link: `/products/` },
+                        { text: 'ai-todo', link: `/products/ai-todo/` },
+                        { text: '产品介绍', link: `/products/ai-todo/product` },
+                        { text: '快速上手', link: `/products/ai-todo/quick-start` },
+                        { text: 'Agent 接入', link: `/products/ai-todo/agent` },
+                        { text: '技术架构', link: `/products/ai-todo/architecture` },
+                    ]
+                }
+            ],
+
             '/easy-office/': [
                 {
                     text: '效率工具', link: `/easy-office/`,
                     items: [
                         { text: 'Thunderbird 邮件管理', link: `/easy-office/email-thunderbird` },
-                        { text: 'ai-todo AI 待办系统', link: `/easy-office/ai-todo` },
                         { text: 'Markdown 语法', link: `/easy-office/markdown` },
                         { text: 'Linux 学习', link: `/easy-office/linux-learn` },
                         { text: 'Mac 办公体验', link: `/easy-office/mac` },
@@ -283,15 +297,6 @@ export default withMermaid({
                     ]
                 }
             ],
-            '/latest-tech/': [
-                {
-                    text: '前沿探索', link: `/latest-tech/`,
-                    items: [
-                        { text: 'Harness Engineering', link: `/latest-tech/harness-engineering` },
-                    ]
-                }
-            ],
-
             '/recommend/': [
                 {
                     text: '优惠推荐', link: `/recommend/`,

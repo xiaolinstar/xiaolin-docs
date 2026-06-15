@@ -18,6 +18,7 @@ Markdown 是一种轻量级标记语言，用简单的符号（如 `#`、`*`、`
 低成本自建 AI 办公助手，覆盖邮件管理、待办追踪、日历同步和文档生成等自动化场景。
 
 - [自己动手搭建 AI 办公助手](./openclaw-personal-assistant.md)
+- [ai-todo：AI 原生待办小程序](/products/ai-todo/)
 
 ---
 
