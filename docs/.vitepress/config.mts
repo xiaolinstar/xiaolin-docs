@@ -108,6 +108,7 @@ export default withMermaid({
                             items: [
                                 { text: '发布变更，AI 价值', link: `/sre/devops/change-control` },
                                 { text: '云原生CI/CD全局视角', link: `/sre/devops/cloud-native-cicd` },
+                                { text: 'CI 制品源管控与“软着陆”治理', link: `/sre/devops/harbor-source-control` },
                                 { text: 'DevOps 平台思考', link: `/sre/devops/devops-platform` },
                                 { text: 'Git Submodule 父子项目协作', link: `/sre/devops/git-submodule` },
                                 { text: '环境管理', link: `/sre/devops/environment` },
