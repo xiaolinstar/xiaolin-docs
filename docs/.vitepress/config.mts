@@ -276,11 +276,23 @@ export default withMermaid({
                     text: '软件产品', link: `/products/`,
                     items: [
                         { text: '产品总览', link: `/products/` },
-                        { text: 'ai-todo', link: `/products/ai-todo/` },
-                        { text: '产品介绍', link: `/products/ai-todo/product` },
-                        { text: '快速上手', link: `/products/ai-todo/quick-start` },
-                        { text: 'Agent 接入', link: `/products/ai-todo/agent` },
-                        { text: '技术架构', link: `/products/ai-todo/architecture` },
+                        {
+                            text: 'AI 待办',
+                            link: `/products/ai-todo/`,
+                            items: [
+                                { text: '产品介绍', link: `/products/ai-todo/product` },
+                                { text: '快速上手', link: `/products/ai-todo/quick-start` },
+                                { text: 'Agent 接入', link: `/products/ai-todo/agent` },
+                                { text: '技术架构', link: `/products/ai-todo/architecture` },
+                            ]
+                        },
+                        {
+                            text: '奶茶仙人',
+                            link: `/products/milktea-fairy/`,
+                            items: [
+                                { text: '产品规划', link: `/products/milktea-fairy/` }
+                            ]
+                        }
                     ]
                 }
             ],

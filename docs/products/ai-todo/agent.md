@@ -1,18 +1,18 @@
-# ai-todo Agent 接入
+# AI 待办 Agent 接入
 
-ai-todo 的 Agent 接入目标很明确：让 AI 工具通过稳定的结构化接口管理个人提醒、日历和联系人。
+AI 待办的 Agent 接入目标很明确：让 AI 工具通过稳定的结构化接口管理个人提醒、日历和联系人。
 
-Agent 负责理解用户自然语言，ai-todo 负责执行确定的数据操作。
+Agent 负责理解用户自然语言，AI 待办负责执行确定的数据操作。
 
 ## 接入方式
 
-Agent 当前通过 `ai-todo` CLI 接入 ai-todo。
+Agent 当前通过 `ai-todo` CLI 接入 AI 待办。
 
 CLI 封装认证、参数格式和 JSON 输出，更适合作为 Agent Skill 的稳定工具入口。
 
 ## Skill 集成
 
-ai-todo 提供 Skill 后，可以集成到 Claude Code、OpenClaw、Cursor 等工具中。
+AI 待办提供 Skill 后，可以集成到 Claude Code、OpenClaw、Cursor 等工具中。
 
 基本做法是把 `skills/ai-todo/` 复制到 Agent 的 skills 目录，并在 Skill 说明中约束：
 
@@ -62,7 +62,7 @@ Agent 在创建数据前，需要先判断用户意图属于哪类事项：
 
 ## Agent 调用原则
 
-Agent 调用 ai-todo 时，应遵循以下原则：
+Agent 调用 AI 待办时，应遵循以下原则：
 
 - **结构化优先**：能用字段表达的内容不要塞进备注。
 - **联系人先查后建**：避免同一联系人重复创建。
@@ -98,6 +98,6 @@ Agent 读取会议纪要 -> 提取负责人、截止时间和行动项 -> 创建
 
 ## 边界
 
-ai-todo 不负责自然语言理解、长期记忆推理和跨系统编排。
+AI 待办不负责自然语言理解、长期记忆推理和跨系统编排。
 
-这些能力应由 Agent 处理。ai-todo 只提供可靠的数据模型、权限隔离、审计记录和确定性接口。
+这些能力应由 Agent 处理。AI 待办只提供可靠的数据模型、权限隔离、审计记录和确定性接口。

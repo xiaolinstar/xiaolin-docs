@@ -1,6 +1,6 @@
-# ai-todo 技术架构
+# AI 待办技术架构
 
-ai-todo 的技术架构围绕一个目标设计：为人类和 AI Agent 提供同一套稳定的个人事务数据能力。
+AI 待办的技术架构围绕一个目标设计：为人类和 AI Agent 提供同一套稳定的个人事务数据能力。
 
 小程序、CLI 和 Agent Skill 都围绕后端服务工作，避免多端逻辑分裂。REST API 当前不作为公开接入方式，现阶段优先开放 CLI。
 
@@ -36,7 +36,7 @@ packages/
 
 ## 认证体系
 
-ai-todo 区分人类入口和 Agent 入口：
+AI 待办区分人类入口和 Agent 入口：
 
 - **小程序**：微信登录 + 会话 Token；
 - **CLI / Agent**：Personal Access Token（PAT）；
@@ -73,7 +73,7 @@ CLI 是 Agent 接入的首选方式。
 
 ## 数据边界
 
-ai-todo 保持数据模型克制：
+AI 待办保持数据模型克制：
 
 - 不做团队项目管理；
 - 不做复杂审批流；
@@ -85,7 +85,7 @@ ai-todo 保持数据模型克制：
 
 ## 开发文档
 
-更多技术细节建议在 ai-todo 仓库中继续补齐：
+更多技术细节建议在 AI 待办仓库中继续补齐：
 
 - `docs/api-design.md`：API 设计文档；
 - `docs/developer-guide.md`：开发者指南；
