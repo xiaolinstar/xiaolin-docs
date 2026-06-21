@@ -1,3 +1,14 @@
+---
+title: 从零实现 CI/CD：CI 与 CD 分离：权责边界
+description: "为什么中大型组织坚持\"构建归开发、发布归运维\"，职责分界线在哪里？"
+date: 2026-03-28
+updated: 2026-03-28
+category: SRE 运维
+tags:
+  - DevOps
+  - CI/CD
+---
+
 # 从零实现 CI/CD：CI 与 CD 分离：权责边界
 
 > 从代码提交到生产发布的权责边界设计

@@ -1,3 +1,14 @@
+---
+title: 服务端开发，SpringBoot 快速开始
+description: 开发环境：Jetbrains IDEA
+date: 2026-03-28
+updated: 2026-03-28
+category: SRE 运维
+tags:
+  - DevOps
+  - CI/CD
+---
+
 # 服务端开发，SpringBoot 快速开始
 
 > 基于 SpringBoot 3.x 快速启动服务端 Demo 项目

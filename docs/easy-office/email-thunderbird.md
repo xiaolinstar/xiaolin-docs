@@ -1,3 +1,12 @@
+---
+title: Thunderbird 解放收件箱
+description: 邮箱轻度用户在 Web 网页使用账户/密码（或手机号/验证码）登录邮箱，包括 QQ 邮箱、139邮箱、网易邮箱等。
+date: 2026-04-06
+updated: 2026-04-06
+category: 效率工具
+tags: []
+---
+
 # Thunderbird 解放收件箱
 
 > 遇见Thunderbird：一个给你充分自由的邮件、日历和联系人管理应用。

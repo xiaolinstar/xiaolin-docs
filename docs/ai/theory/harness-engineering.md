@@ -1,3 +1,14 @@
+---
+title: 个人开发者视角的驾驭工程：从“结对编程”到“圈养” AI
+description: 大家最近可能常听到一个热词——驾驭工程（Harness Engineering）。
+date: 2026-06-15
+updated: 2026-06-15
+category: AI 实践
+tags:
+  - AI 理论
+  - AI
+---
+
 # 个人开发者视角的驾驭工程：从“结对编程”到“圈养” AI
 
 ![驾驭工程概览](/images/img-harness-engineering/avatar.png)

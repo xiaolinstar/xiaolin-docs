@@ -1,3 +1,13 @@
+---
+title: 构建记忆系统，从发现开始
+description: 在构建自己的 AI Agents、Skills 和 Commands 时，不要急着自己手写，也不要让 AI 生成。
+date: 2026-03-28
+updated: 2026-03-28
+category: AI 实践
+tags:
+  - LLM
+---
+
 # 构建记忆系统，从发现开始
 
 ## Extensions plug

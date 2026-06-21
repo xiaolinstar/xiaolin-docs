@@ -1,3 +1,12 @@
+---
+title: email-cli：智能体办公的第一块拼图
+description: 邮件，是绕不过去的效率瓶颈。
+date: 2026-04-17
+updated: 2026-04-17
+category: 效率工具
+tags: []
+---
+
 # email-cli：智能体办公的第一块拼图
 
 ![email-cli 封面](/images/img-email-cli/avatar.png)

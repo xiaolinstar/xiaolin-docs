@@ -10,6 +10,8 @@ volumes/website/logs/
 volumes/website/geoip
 .qoder/**/__pycache__/
 .qoder/**/*.pyc
+scripts/__pycache__/
+scripts/**/*.pyc
 cert/
 
 # 环境变量配置文件

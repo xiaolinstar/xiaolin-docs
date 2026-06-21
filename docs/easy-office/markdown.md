@@ -1,3 +1,13 @@
+---
+title: Markdown 文本编辑，专注于内容而非样式
+description: 在信息爆炸的时代，我们每天都在处理和生成大量文本数据。
+date: 2026-03-28
+updated: 2026-03-28
+category: 效率工具
+tags:
+  - Markdown
+---
+
 # Markdown 文本编辑，专注于内容而非样式
 
 ## 前言

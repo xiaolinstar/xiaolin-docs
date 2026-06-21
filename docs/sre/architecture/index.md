@@ -1,3 +1,13 @@
+---
+title: 架构设计
+description: 系统架构设计与演进策略。
+date: 2026-03-30
+updated: 2026-03-30
+category: SRE 运维
+tags:
+  - 架构设计
+---
+
 # 架构设计
 
 系统架构设计与演进策略。

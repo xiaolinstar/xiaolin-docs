@@ -1,3 +1,13 @@
+---
+title: Exception异常的架构设计
+description: 在上一章节描述了异常处理的架构设计，这一章节将从编码实践中详细介绍。
+date: 2026-03-30
+updated: 2026-03-30
+category: SRE 运维
+tags:
+  - 架构设计
+---
+
 # Exception异常的架构设计
 
 在[上一章节](exception-design.md)描述了异常处理的架构设计，这一章节将从编码实践中详细介绍。。

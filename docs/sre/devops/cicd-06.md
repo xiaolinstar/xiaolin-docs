@@ -1,3 +1,14 @@
+---
+title: 从零实现 CI/CD：GitHub Actions 工作流实践
+description: 本文介绍2个工作流实用的案例小试牛刀，从实践中学习、理解 GitHub Actions。
+date: 2026-03-28
+updated: 2026-03-28
+category: SRE 运维
+tags:
+  - DevOps
+  - CI/CD
+---
+
 # 从零实现 CI/CD：GitHub Actions 工作流实践
 
 本文介绍2个工作流实用的案例小试牛刀，从实践中学习、理解 GitHub Actions。

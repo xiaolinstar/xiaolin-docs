@@ -1,3 +1,14 @@
+---
+title: 上下文工程，维护自己的 AI IDE 记忆文件
+description: 在 AI 发展中，跑得最快的当属 AI Coding，程序员率先借助 AI 的力量实现自我革命。
+date: 2026-03-28
+updated: 2026-03-28
+category: AI 实践
+tags:
+  - LLM
+  - AI
+---
+
 # 上下文工程，维护自己的 AI IDE 记忆文件
 
 在 AI 发展中，跑得最快的当属 AI Coding，程序员率先借助 AI 的力量实现自我革命。狭义上，我对 AI 技术的理解：大模型 + 领域工程。两者的互联互通依赖于提示词 Prompt。因此，无论 MPC、Agent、skills 等新技术范式的流行，本质上仍然是面向提示词的软件工程实践。

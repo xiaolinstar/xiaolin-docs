@@ -1,3 +1,14 @@
+---
+title: 从零实现 CI/CD：容器化
+description: 容器化部署（如 Docker、Kubernetes）已成为现代软件交付的“默认选项”，其必要性并非单纯技术升级，而是对业务效率、成本、稳定性的系统性重构。
+date: 2026-03-06
+updated: 2026-03-06
+category: SRE 运维
+tags:
+  - DevOps
+  - CI/CD
+---
+
 # 从零实现 CI/CD：容器化
 
 容器化部署（如 Docker、Kubernetes）已成为现代软件交付的“默认选项”，其必要性并非单纯技术升级，而是对**业务效率、成本、稳定性**的系统性重构。

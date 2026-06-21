@@ -1,3 +1,15 @@
+---
+title: Grafana Loki 轻量级日志聚合系统
+description: Grafana 简介
+date: 2026-03-28
+updated: 2026-03-28
+category: SRE 运维
+tags:
+  - 可观测性
+  - Loki
+  - Grafana
+---
+
 # Grafana Loki 轻量级日志聚合系统
 
 Grafana 简介

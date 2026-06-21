@@ -1,3 +1,14 @@
+---
+title: 从零实现 CI/CD：Pipeline 流水线工具
+description: 在阶段五中，引入 Docker Compose，实现了容器编排，支持容器集群一键启动、一键停止。
+date: 2026-03-06
+updated: 2026-03-06
+category: SRE 运维
+tags:
+  - DevOps
+  - CI/CD
+---
+
 # 从零实现 CI/CD：Pipeline 流水线工具
 
 ## 前言

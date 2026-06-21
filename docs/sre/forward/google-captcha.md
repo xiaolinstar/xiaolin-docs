@@ -1,3 +1,13 @@
+---
+title: Google验证码，让用户免费打工
+description: 验证码中的学问。
+date: 2026-03-28
+updated: 2026-03-28
+category: SRE 运维
+tags:
+  - 前沿
+---
+
 # Google验证码，让用户免费打工
 
 验证码中的学问。

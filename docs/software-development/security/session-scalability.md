@@ -1,3 +1,13 @@
+---
+title: Session 扩展：分布式与高可用
+description: 在单机部署场景下，Session 存储在应用服务器内存中：
+date: 2026-06-03
+updated: 2026-06-03
+category: 开发架构
+tags:
+  - 安全
+---
+
 # Session 扩展：分布式与高可用
 
 > 本文探讨单机 Session 的局限性，以及如何通过分布式缓存实现 Session 的扩展性与高可用性。

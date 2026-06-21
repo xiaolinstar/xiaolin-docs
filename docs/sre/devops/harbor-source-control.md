@@ -1,3 +1,14 @@
+---
+title: CI 制品源管控：镜像仓库多源推送的“软着陆”治理实践
+description: 在现代企业 IT 架构中，研发与运维的协作边界往往在制品库相遇。
+date: 2026-06-15
+updated: 2026-06-15
+category: SRE 运维
+tags:
+  - DevOps
+  - CI/CD
+---
+
 # CI 制品源管控：镜像仓库多源推送的“软着陆”治理实践
 
 ![CI 制品源管控与“软着陆”治理实践](/images/img-harbor-source-control/infographic-01.png)

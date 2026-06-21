@@ -1,3 +1,15 @@
+---
+title: AI 待办产品介绍
+description: |
+  AI 待办是一个轻量级的 AI 原生待办系统，以微信小程序为核心入口，核心模块包括提醒、日历与联系人，并通过 Skill、CLI 与 OpenClaw、Claude Code 等 AI 工具集成。
+date: 2026-06-17
+updated: 2026-06-17
+category: 软件产品
+tags:
+  - AI 待办
+  - AI
+---
+
 # AI 待办产品介绍
 
 AI 待办是一个轻量级的 AI 原生待办系统，以微信小程序为核心入口，核心模块包括提醒、日历与联系人，并通过 Skill、CLI 与 OpenClaw、Claude Code 等 AI 工具集成。其微信小程序官方名称为「AI 日省待办」，英文名为 `ai-todo`。

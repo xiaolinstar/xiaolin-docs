@@ -1,3 +1,17 @@
+---
+title: 轻量级 Kubernetes：在Linux上运行K3s
+description: 本文面向DevOps工程师和云原生开发者，介绍如何选择和使用轻量级Kubernetes方案来搭建预生产环境。
+date: 2026-03-28
+updated: 2026-03-28
+category: SRE 运维
+tags:
+  - DevOps
+  - CI/CD
+  - K3s
+  - Kubernetes
+  - Linux
+---
+
 # 轻量级 Kubernetes：在Linux上运行K3s
 
 本文面向DevOps工程师和云原生开发者，介绍如何选择和使用轻量级Kubernetes方案来搭建预生产环境。我们将重点介绍K3s这一优秀的轻量级Kubernetes发行版，并提供详细的安装部署指南。

@@ -1,3 +1,14 @@
+---
+title: CI/CD初体验
+description: |
+  此文档由介绍 Jenkins 简介开始，通过部署一个 VitePress 项目最佳实践，让读者感受并体验 Jenkins 的强大功能，并可以将 Jenkins 的 CI/CD 有效迁移到自己的项目中。
+date: 2026-03-28
+updated: 2026-03-28
+category: SRE 运维
+tags:
+  - Jenkins
+---
+
 # CI/CD初体验
 
 > Jenkins 是流行的开源 CI/CD 服务器，以插件的方式实现扩展，其持续集成、持续部署能力，将开发者从繁琐的部署过程中解放出来。

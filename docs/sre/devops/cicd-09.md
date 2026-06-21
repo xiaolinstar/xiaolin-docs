@@ -1,3 +1,14 @@
+---
+title: 持续发布 CD，从容器镜像到生产环境
+description: CI Pipeline 从源代码到镜像仓库，CD Pipeline 从镜像仓库到生产环境，流水线在项目建设初期定义，可重复执行。
+date: 2026-03-28
+updated: 2026-03-28
+category: SRE 运维
+tags:
+  - DevOps
+  - CI/CD
+---
+
 # 持续发布 CD，从容器镜像到生产环境
 
 [CI Pipeline](cicd-08.md) 从源代码到镜像仓库，CD Pipeline 从镜像仓库到生产环境，流水线在项目建设初期定义，可重复执行。

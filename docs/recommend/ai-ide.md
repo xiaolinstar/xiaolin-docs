@@ -1,3 +1,13 @@
+---
+title: AI IDE 推荐
+description: 作为 AI 辅助编程的深度用户，我体验了多个 AI IDE 和编程工具，这里分享我的使用心得。
+date: 2026-04-06
+updated: 2026-04-06
+category: 优惠推荐
+tags:
+  - AI
+---
+
 # AI IDE 推荐
 
 作为 AI 辅助编程的深度用户，我体验了多个 AI IDE 和编程工具，这里分享我的使用心得。
