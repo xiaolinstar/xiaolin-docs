@@ -1,3 +1,15 @@
+---
+title: 大模型自动生成的 Skill 有价值吗？复用、治理、降方差
+description: |
+  根据 Claude Code 官方文档的定义，Skill 作为 OpenClaw 生态中的核心组件，其底层本质并不神秘——它只是将零散凌乱的大模型提示词进行了深度结构化与固化封装而已。
+date: 2026-03-30
+updated: 2026-03-30
+category: SRE 运维
+tags:
+  - 运营规划
+  - Skill
+---
+
 # 大模型自动生成的 Skill 有价值吗？复用、治理、降方差
 
 根据 Claude Code 官方文档的定义，Skill 作为 OpenClaw 生态中的核心组件，其底层本质并不神秘——它只是将零散凌乱的大模型提示词进行了深度结构化与固化封装而已。

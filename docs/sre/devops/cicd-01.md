@@ -1,3 +1,14 @@
+---
+title: 从零实现 CI/CD：起步
+description: 为了简单期间，系列文章以开发、构建和部署 VitePress 静态站点为例，后期根据差异性补充 SpringBoot 服务端项目。
+date: 2026-03-06
+updated: 2026-03-06
+category: SRE 运维
+tags:
+  - DevOps
+  - CI/CD
+---
+
 # 从零实现 CI/CD：起步
 
 为了简单期间，系列文章以开发、构建和部署 VitePress 静态站点为例，后期根据差异性补充 SpringBoot 服务端项目。

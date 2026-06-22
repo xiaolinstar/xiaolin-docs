@@ -1,3 +1,13 @@
+---
+title: writing-prompt
+description: ""
+date: 2026-03-28
+updated: 2026-03-28
+category: SRE 运维
+tags:
+  - 前沿
+---
+
 在下一条消息中，你将收到文本。你的任务是逐步对它执行几个操作（自己思考每个步骤）。
 
 首先，确定文本中的单词数。

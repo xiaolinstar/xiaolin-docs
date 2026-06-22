@@ -1,3 +1,14 @@
+---
+title: Exception异常架构设计：四项核心原则
+description: 我们当然希望软件系统是正常安全运行的，但根据墨菲定律：凡是可能出错的事，就一定会出错。
+date: 2026-03-28
+updated: 2026-03-28
+category: SRE 运维
+tags:
+  - DevOps
+  - CI/CD
+---
+
 # Exception异常架构设计：四项核心原则
 
 **为什么要进行异常架构设计？异常有什么价值？**

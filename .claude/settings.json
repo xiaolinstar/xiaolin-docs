@@ -1,0 +1,20 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(ai-todo *)"
+    ],
+    "ask": [
+      "Bash(ai-todo reminder create:*)",
+      "Bash(ai-todo reminder update:*)",
+      "Bash(ai-todo reminder delete:*)",
+      "Bash(ai-todo reminder done:*)",
+      "Bash(ai-todo reminder reschedule:*)",
+      "Bash(ai-todo calendar add:*)",
+      "Bash(ai-todo calendar update:*)",
+      "Bash(ai-todo calendar delete:*)",
+      "Bash(ai-todo contact add:*)",
+      "Bash(ai-todo contact update:*)",
+      "Bash(ai-todo contact delete:*)"
+    ]
+  }
+}

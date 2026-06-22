@@ -1,3 +1,13 @@
+---
+title: Linux 学习有无必要双系统？
+description: 我认为完全不需要在个人电脑上安装 Linux 双系统。
+date: 2026-01-01
+updated: 2026-01-01
+category: 效率工具
+tags:
+  - Linux
+---
+
 # Linux 学习有无必要双系统？
 
 我认为完全不需要在个人电脑上安装 Linux 双系统。作为一名计算机专业本硕7年学生，推荐路线如下：

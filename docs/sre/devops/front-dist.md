@@ -1,3 +1,14 @@
+---
+title: Web 前端开发，基于 VitePress 快速搭建个人网站
+description: Vite、VitePress 和 Vue3 均为 Vue 生态系统的重要组成部分，它们在前端开发中扮演不同角色并紧密协作。
+date: 2025-08-27
+updated: 2025-08-27
+category: SRE 运维
+tags:
+  - DevOps
+  - CI/CD
+---
+
 # Web 前端开发，基于 VitePress 快速搭建个人网站
 
 > 本文介绍 Web 前端开发，基于 VitePress 搭建个人网站。
@@ -162,4 +173,3 @@ npm run docs:build
 ## 参考
 
 1. VitePress，由 Vite 和 Vue 驱动的静态站点生成器，https://vitepress.dev/zh/
-

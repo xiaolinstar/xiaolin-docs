@@ -1,3 +1,14 @@
+---
+title: AI 待办：AI 原生的待办、日历与联系人管理系统
+description: |
+  AI 待办是一个轻量级的 AI 原生待办管理系统，以微信小程序为核心入口，不内置自然语言解析能力，支持多端多平台，通过自动闭环 SKILL 与 OpenClaw、Claude Code 等 AI...
+date: 2026-06-17
+updated: 2026-06-17
+category: 效率工具
+tags:
+  - AI
+---
+
 # AI 待办：AI 原生的待办、日历与联系人管理系统
 
 AI 待办是一个轻量级的 AI 原生待办管理系统，以微信小程序为核心入口，不内置自然语言解析能力，支持多端多平台，通过自动闭环 SKILL 与 OpenClaw、Claude Code 等 AI 工具无缝集成，当前优先提供稳定、结构化、可审计的 CLI。其微信小程序官方名称为「AI 日省待办」，英文名为 `ai-todo`。

@@ -1,3 +1,14 @@
+---
+title: OpenClaw 用不下去的 4 个理由
+description: "最近一段时间，陆续有朋友问起 OpenClaw 的使用体验，也看到不少文章在推介\"把 Agent 部署在云服务器上，随时随地用 IM 工具调用\"的方案。"
+date: 2026-04-19
+updated: 2026-04-19
+category: AI 实践
+tags:
+  - LLM
+  - OpenClaw
+---
+
 # OpenClaw 用不下去的 4 个理由
 
 ![OpenClaw 的四大痛点](/images/img-openclaw-pain/avatar.png)

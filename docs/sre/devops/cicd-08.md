@@ -1,3 +1,14 @@
+---
+title: 从零实现 CI/CD：持续集成 CI，从源代码到容器镜像
+description: 既然 CI 与 CD 在流程上分离具有必要性，因此分别构建 CI Pipeline 和 CD Pipeline。
+date: 2026-03-28
+updated: 2026-03-28
+category: SRE 运维
+tags:
+  - DevOps
+  - CI/CD
+---
+
 # 从零实现 CI/CD：持续集成 CI，从源代码到容器镜像
 
 既然 CI 与 CD 在流程上分离具有必要性，因此分别构建 CI Pipeline 和 CD Pipeline。

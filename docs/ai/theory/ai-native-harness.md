@@ -1,3 +1,14 @@
+---
+title: 让 AI Work for me：一场开启 AI 原生的“双向奔赴”
+description: 当前，大语言模型的能力正在以指数级飞跃，但许多场景下，AI 输出的质量和效率并未达到预期。
+date: 2026-04-17
+updated: 2026-04-17
+category: AI 实践
+tags:
+  - AI 理论
+  - AI
+---
+
 # 让 AI Work for me：一场开启 AI 原生的“双向奔赴”
 
 ![封面图](/images/img-ai-native-harness/avatar.png)

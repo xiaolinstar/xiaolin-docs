@@ -1,3 +1,14 @@
+---
+title: AI 待办快速上手
+description: AI 待办提供三种入口：微信小程序、CLI 命令行工具和 Agent 集成。
+date: 2026-06-17
+updated: 2026-06-17
+category: 软件产品
+tags:
+  - AI 待办
+  - AI
+---
+
 # AI 待办快速上手
 
 AI 待办提供三种入口：微信小程序、CLI 命令行工具和 Agent 集成。

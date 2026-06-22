@@ -1,3 +1,12 @@
+---
+title: 一站式开发环境
+description: 操作系统：ubuntu 22.04
+date: 2025-03-17
+updated: 2025-03-17
+category: SRE 运维
+tags: []
+---
+
 # 一站式开发环境
 
 操作系统：ubuntu 22.04
@@ -23,4 +32,3 @@ newgrp docker
 ```shell
 docker ps
 ```
-

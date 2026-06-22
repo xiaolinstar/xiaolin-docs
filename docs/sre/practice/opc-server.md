@@ -1,3 +1,13 @@
+---
+title: 两台服务器，撑起多个项目
+description: 独立开发者手握多个项目，云服务器怎么选？
+date: 2026-04-15
+updated: 2026-04-15
+category: SRE 运维
+tags:
+  - SRE
+---
+
 # 两台服务器，撑起多个项目
 
 ![avatar](/images/img-opc-server/avatar.png)

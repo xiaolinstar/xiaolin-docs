@@ -1,3 +1,13 @@
+---
+title: AI 工具形态演变：Copilot、AI Native IDE、CLI、VSCode Plugin、Desktop App
+description: 在过去几年里，AI 技术应用经历了令人惊叹的进化，很难想象今天的 AI 已经成为如此强大的工具。
+date: 2026-05-05
+updated: 2026-05-05
+category: 效率工具
+tags:
+  - AI
+---
+
 # AI 工具形态演变：Copilot、AI Native IDE、CLI、VSCode Plugin、Desktop App
 
 ## 引言

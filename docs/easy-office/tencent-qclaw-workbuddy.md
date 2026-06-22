@@ -1,3 +1,14 @@
+---
+title: 完全面向 AI 工具办公，替代豆包
+description: |
+  近些时间，我对 AI 工具的使用越来越多，Claude Code、Codex、Cursor、OpenClaw、TRAE、CodeBuddy 等，越来越觉得大模型作为通用人工智能，不止在 Codi...
+date: 2026-05-26
+updated: 2026-05-26
+category: 效率工具
+tags:
+  - AI
+---
+
 # 完全面向 AI 工具办公，替代豆包
 
 近些时间，我对 AI 工具的使用越来越多，Claude Code、Codex、Cursor、OpenClaw、TRAE、CodeBuddy 等，越来越觉得大模型作为通用人工智能，不止在 Coding 领域可以大展身手，在办公场景中也可以发挥重要作用。

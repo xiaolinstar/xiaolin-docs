@@ -1,3 +1,15 @@
+---
+title: SRE 运维能力建设，循序渐进
+description: 系统安全、网络安全、账号安全等
+date: 2026-03-30
+updated: 2026-03-30
+category: SRE 运维
+tags:
+  - DevOps
+  - CI/CD
+  - SRE
+---
+
 # SRE 运维能力建设，循序渐进
 
 ## DevOps 与 CI/CD，小步快跑、敏捷开发的基础
@@ -16,5 +28,4 @@
 
 
 ## 参考
-
 

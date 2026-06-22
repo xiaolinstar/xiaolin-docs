@@ -1,3 +1,14 @@
+---
+title: AI Coding，技术演进与思考
+description: 自从 ChatGPT 发布以来，「大模型」、「AI」、「人工智能」等概念技术成为各行各业津津乐道的话题，所有公司、所有行业都在探索如何应用大模型技术为业务赋能。
+date: 2026-03-28
+updated: 2026-03-28
+category: AI 实践
+tags:
+  - AI 理论
+  - AI
+---
+
 # AI Coding，技术演进与思考
 
 ## 前言

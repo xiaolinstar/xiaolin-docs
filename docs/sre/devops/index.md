@@ -1,3 +1,14 @@
+---
+title: DevOps 实践
+description: DevOps 方法论与实践经验。
+date: 2026-06-15
+updated: 2026-06-15
+category: SRE 运维
+tags:
+  - DevOps
+  - CI/CD
+---
+
 # DevOps 实践
 
 DevOps 方法论与实践经验。

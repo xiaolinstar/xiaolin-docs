@@ -1,3 +1,14 @@
+---
+title: Exception异常架构设计：异常抛出（03）
+description: 什么时候抛出异常？
+date: 2026-03-28
+updated: 2026-03-28
+category: SRE 运维
+tags:
+  - DevOps
+  - CI/CD
+---
+
 # Exception异常架构设计：异常抛出（03）
 
 什么时候抛出异常？什么时候是`if-raise`，什么时候是`try-except-raise`？

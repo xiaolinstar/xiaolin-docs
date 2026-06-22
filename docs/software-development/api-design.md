@@ -1,3 +1,12 @@
+---
+title: 软件开发中接口 RestfulAPI 设计最佳实践
+description: 在前后端开发的架构设计中，接口设计是非常重要的，设计得
+date: 2025-07-20
+updated: 2025-07-20
+category: 开发架构
+tags: []
+---
+
 # 软件开发中接口 RestfulAPI 设计最佳实践
 
 ## 前言
@@ -37,7 +46,6 @@ Request -> GatewayService -> AuthService
 ### 前端设计
 
 生产环境使用 Nginx 作静态资源代理和反向代理，在开发环境使用 nodejs 部署。
-
 
 
 

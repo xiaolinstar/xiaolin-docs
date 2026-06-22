@@ -1,3 +1,15 @@
+---
+title: Exception异常架构设计：系统性异常处理的思维革命（05）
+description: Exception处理不是语法技巧，而是架构设计。
+date: 2026-04-19
+updated: 2026-04-19
+category: SRE 运维
+tags:
+  - DevOps
+  - CI/CD
+  - 异常处理
+---
+
 # Exception异常架构设计：系统性异常处理的思维革命（05）
 
 > 优秀的异常架构设计，要尽可能异常避免，更要在问题发生时快速精准响应

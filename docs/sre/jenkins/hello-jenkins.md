@@ -1,3 +1,13 @@
+---
+title: "你好Jenkins，以[docker in docker]的方式见面"
+description: 1. 默认基础环境：amd64 Linux，推荐使用Ubuntu22.04 2. 安装docker和docker-compose
+date: 2025-03-17
+updated: 2025-03-17
+category: SRE 运维
+tags:
+  - Jenkins
+---
+
 # 你好Jenkins，以[docker in docker]的方式见面
 
 > 基于docker-compose快速构建Jenkins容器，且Jenkins容器与宿主机docker环境连通，实现「docker in docker」。

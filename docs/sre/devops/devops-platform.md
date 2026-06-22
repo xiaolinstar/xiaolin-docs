@@ -1,3 +1,15 @@
+---
+title: 腾讯云 Coding DevOps 系列产品停服：一站式 DevOps 平台窘境与思考
+description: |
+  作为运维工程师，我的工作中多多少少需要与 CI/CD、DevOps 打交道，公司内部需要建设一套强有力的 DevOps 平台，以支撑公司的业务发展（自动化，提高效率、降低成本）。
+date: 2026-03-30
+updated: 2026-03-30
+category: SRE 运维
+tags:
+  - DevOps
+  - CI/CD
+---
+
 # 腾讯云 Coding DevOps 系列产品停服：一站式 DevOps 平台窘境与思考
 
 ## 引言：一个时代的落幕

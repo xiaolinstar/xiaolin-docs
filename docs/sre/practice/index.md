@@ -1,3 +1,13 @@
+---
+title: SRE 实践
+description: 系统可靠性工程实践案例与方法论。
+date: 2026-03-30
+updated: 2026-03-30
+category: SRE 运维
+tags:
+  - SRE
+---
+
 # SRE 实践
 
 系统可靠性工程实践案例与方法论。

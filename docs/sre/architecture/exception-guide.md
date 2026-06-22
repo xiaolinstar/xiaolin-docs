@@ -1,3 +1,13 @@
+---
+title: Exception异常的架构设计
+description: 异常架构设计原则：
+date: 2026-03-30
+updated: 2026-03-30
+category: SRE 运维
+tags:
+  - 架构设计
+---
+
 # Exception异常的架构设计
 
 异常架构设计原则：
@@ -862,4 +872,3 @@ def handle_fatal_exception(e):
 
 
 ## 总结
-

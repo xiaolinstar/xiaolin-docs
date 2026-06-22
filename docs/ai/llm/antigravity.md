@@ -1,3 +1,15 @@
+---
+title: 如何在中国大陆使用 Google Antigravity AI Coding 工具
+description: Google Antigravity 是由 Google DeepMind 团队推出的一款革命性 AI 编程助手。
+date: 2026-03-28
+updated: 2026-03-28
+category: AI 实践
+tags:
+  - LLM
+  - Antigravity
+  - AI
+---
+
 # 如何在中国大陆使用 Google Antigravity AI Coding 工具
 
 Google Antigravity 是由 Google DeepMind 团队推出的一款革命性 AI 编程助手。它不仅集成了 Gemini 3 系列最先进的模型，还支持接入 Anthropic 和 OpenAI 的多种模型，是开发者提升生产力的利器。

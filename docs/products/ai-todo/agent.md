@@ -1,3 +1,14 @@
+---
+title: AI 待办 Agent 接入
+description: AI 待办的 Agent 接入目标很明确：让 AI 工具通过稳定的结构化接口管理个人提醒、日历和联系人。
+date: 2026-06-17
+updated: 2026-06-17
+category: 软件产品
+tags:
+  - AI 待办
+  - AI
+---
+
 # AI 待办 Agent 接入
 
 AI 待办的 Agent 接入目标很明确：让 AI 工具通过稳定的结构化接口管理个人提醒、日历和联系人。

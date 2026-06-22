@@ -1,3 +1,13 @@
+---
+title: VitePress快速搭建个人网站
+description: 安装步骤概述：
+date: 2025-08-06
+updated: 2025-08-06
+category: SRE 运维
+tags:
+  - Jenkins
+---
+
 # VitePress快速搭建个人网站
 
 > 本文介绍VitePress搭建个人网站，并使用Docker容器化部署。

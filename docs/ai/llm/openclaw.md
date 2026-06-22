@@ -1,3 +1,15 @@
+---
+title: 精打细算玩 AI，半小时搞定 OpenClaw 自动化
+description: 最近一周，AI 界最新产品 OpenClaw 出圈，继 ChatGPT、DeepSeek 之后的第三个爆点。
+date: 2026-03-28
+updated: 2026-03-28
+category: AI 实践
+tags:
+  - LLM
+  - OpenClaw
+  - AI
+---
+
 # 精打细算玩 AI，半小时搞定 OpenClaw 自动化
 
 最近一周，AI 界最新产品 OpenClaw 出圈，继 ChatGPT、DeepSeek 之后的第三个爆点。OpenClaw 的出现在 AI 发展进程上是必然的，在 MCP、skills、rules 等理论和技术土壤之上的一次**综合性工程实践**：让 AI 接管操作系统。
