@@ -287,6 +287,27 @@ export default withMermaid({
                             ]
                         },
                         {
+                            text: '聚会助手',
+                            link: `/products/party-helper/`,
+                            items: [
+                                { text: '产品理念', link: `/products/party-helper/product` },
+                                { text: '场景选型', link: `/products/party-helper/scenarios` },
+                                { text: '快速上手', link: `/products/party-helper/quick-start` },
+                                { text: '聚会设置', link: `/products/party-helper/party-settings` },
+                                {
+                                    text: '游戏指南',
+                                    link: `/products/party-helper/games/undercover`,
+                                    items: [
+                                        { text: '谁是卧底', link: `/products/party-helper/games/undercover` },
+                                        { text: '阿瓦隆', link: `/products/party-helper/games/avalon` },
+                                        { text: '一夜狼人', link: `/products/party-helper/games/one-night-werewolf` },
+                                        { text: '真心话大冒险', link: `/products/party-helper/games/truth-or-dare` },
+                                    ]
+                                },
+                                { text: '隐私与反馈', link: `/products/party-helper/privacy-feedback` },
+                            ]
+                        },
+                        {
                             text: '奶茶仙人',
                             link: `/products/milktea-fairy/`,
                             items: [
