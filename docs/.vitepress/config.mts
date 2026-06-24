@@ -257,6 +257,7 @@ export default withMermaid({
                                 { text: 'AI Coding', link: `/ai/theory/ai-coding` },
                                 { text: '全面接入 AI 与驾驭工程', link: `/ai/theory/ai-native-harness` },
                                 { text: '个人开发者视角的驾驭工程', link: `/ai/theory/harness-engineering` },
+                                { text: '通用 Skill 会消失，领域 Skill 会商品化', link: `/ai/theory/agent-skills-evolution` },
                             ]
                         },
                         {
