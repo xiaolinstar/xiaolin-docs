@@ -12,6 +12,8 @@ tags:
 
 # 通用 Skill 会消失，领域 Skill 会商品化：我的 Agent Skill 演进观
 
+![Agent Skill 演进观封面](/images/img-agent-skills-evolution/infographic-01.png)
+
 从 2025 年 10 月 Anthropic 正式发布 Claude Skills 算起，到现在也就大半年时间，Agent Skills 已经成了 AI 圈最热的关键词。打开小红书、抖音，铺天盖地的不是“必备 Skills”就是“超好用的 Skills”，再不然就是“宝藏 Skills”；企业端更夸张，腾讯 WorkBuddy、QClaw 以及不少大厂内部都掀起了“Skills 运动”，直接给员工下 KPI 让人提交 Skills。这股热潮来得快，消耗得也快，最近甚至开始有点退烧，但我越看越觉得，很多讨论的出发点是反的。
 
 这里想系统聊一下我的看法：**通用型 Skills 终将被用户无感知，自己给别人写通用 Skills 没多大价值，未来真正值钱的，是被精打细磨过的领域知识技能包。**
@@ -19,6 +21,8 @@ tags:
 ## 先给 Skill 分个类
 
 谈演进趋势之前，得先把 Agent Skills 分清楚。在我看来，Skills 应该明确地分成三类，各自的演化路径完全不同：
+
+![Skill 的三分类](/images/img-agent-skills-evolution/infographic-02.png)
 
 ### 一、通用工具型 Skills（工具类）
 
@@ -88,6 +92,8 @@ tags:
 
 所以，写通用 Skills 给别人用，注定是一份看上去热闹、实际上没沉淀的工作。
 
+![通用型 Skills 终将无感知](/images/img-agent-skills-evolution/infographic-03.png)
+
 ## 通用型 Skills 怎样变得无感知：三种技术形态
 
 无感知不是一个口号，从软件工程的设计思想看，它或许有明确的技术形态。
@@ -133,6 +139,8 @@ Skill 知识层
 **关键判断**：当物理层 + 缓存层都够用时，**绝不能因为够用就直接放弃去了解业界有没有更好的实践**——否则会错过最先进生产力的迭代。一个 80 分的旧 Skill 用三年，远不如一个 95 分的新 Skill 用三个月。
 
 两层的意义是：**物理层保显性可管理（用户能装、能删、能 review），缓存层保隐性全覆盖（让用户即使不装也能用上业界最新）**。分层决定 Skills 放在哪，生命周期决定 Skills 怎么活——这两件事必须作为整体来管理，否则任何一层单兵突进都会让另一层失效。
+
+![物理层与缓存层双层管理](/images/img-agent-skills-evolution/infographic-04.png)
 
 ### 3. 按使用频率与采纳度划分优先级（优先队列）
 
@@ -204,6 +212,8 @@ Skill 知识层
 
 ## 真正值钱的是：领域专家型 Skills
 
+![领域专家型 Skills 的四大稀缺性](/images/img-agent-skills-evolution/infographic-05.png)
+
 与通用工具型 Skills 形成鲜明对比的是，**领域专家型 Skills 才是未来真正能产生价值、甚至被商品化的资产**。
 
 它的价值来自四个稀缺性：
@@ -243,6 +253,8 @@ Skill 知识层
 
 这些 Skill 别人拿不走，也不指望别人拿走，但它把一个人的经验价值从每天 8 小时扩展到了每天 24 小时。
 
+![个人专属 Skills 的数字协同化身](/images/img-agent-skills-evolution/infographic-06.png)
+
 #### 自我蒸馏：一种戏谑，也是一种现实
 
 网上流行一种说法：**把自己的 Skills 蒸馏给 Agent，把自己也蒸馏了，就可以在被裁之后，以数字生命的形态继续在公司里工作**。
@@ -269,6 +281,8 @@ Skill 知识层
 | 通用工具型 | 被平台收编 → 用户无感知 | 几乎不可 | 低 |
 | 领域专家型 | 上架成领域知识技能包 → 被订阅 | 可，且应被商品化 | 高（最值得做） |
 | 个人专属型 | 外置成个人协作者 → 持续进化 | 不可，但值得长期沉淀 | 无，但自己用最值 |
+
+![三类 Skills 演进总结](/images/img-agent-skills-evolution/infographic-07.png)
 
 如果要给一个行动建议，那就是：
 
