@@ -1,5 +1,5 @@
 {
-  "version": "0.0.1",
+  "version": "0.1.0",
   "devDependencies": {
     "@braintree/sanitize-url": "^7.1.2",
     "cytoscape": "^3.33.4",

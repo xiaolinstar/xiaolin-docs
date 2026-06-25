@@ -50,6 +50,7 @@ platforms:
 2. **有差异才落盘**；与原文相同的掘金同步可在 `meta.yaml` 标注 `sync: origin`，不必重复存全文。
 3. **视频 mp4 等大文件** 默认不提交 Git；脚本与 meta 提交即可。
 4. 生成流程见 `.claude/skills/creator-suite/content-repurpose/SKILL.md`。
+5. **架构版本**：creator-suite 当前 **v1.0.0**（见 `.claude/skills/creator-suite/VERSION`）；大改动时递增 MAJOR 并更新 `CHANGELOG.md`。
 
 ## 历史说明
 
@@ -62,4 +63,15 @@ platforms:
 | `exception-08` | `docs/sre/devops/exception-08.md` | `wechat.md` |
 | `harness-engineering` | `docs/ai/theory/harness-engineering.md` | `wechat.md`、`xiaohongshu.md`、`bilibili.md`、`douyin.md`、`repurpose.md`（试跑） |
 
-转换脚本：`docs/sre/devops/convert_for_wechat.py`（输出至 `content/dist/{slug}/`）。
+转换脚本：`docs/sre/devops/convert_for_wechat.py`（exception 系列）→ 再经 **wechat-publisher** 补标题 / 摘要 / 引流。
+
+## 公众号工作流
+
+```
+docs/ Origin
+    → wechat-publisher（Generate）→ content/dist/{slug}/wechat.md
+    → wechat-publisher（Polish，可选）
+    → 公众号后台发布
+```
+
+Skill：`.claude/skills/creator-suite/wechat-publisher/SKILL.md`

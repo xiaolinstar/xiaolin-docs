@@ -10,6 +10,7 @@ platforms:
     account: AI持续运维
     status: draft
     output: wechat.md
+    origin_sync: generated
   juejin:
     account: AI持续运维
     status: draft

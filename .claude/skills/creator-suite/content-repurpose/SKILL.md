@@ -1,5 +1,6 @@
 ---
 name: content-repurpose
+version: 1.0.0
 description: >-
   将 VitePress 站点长文或用户提供的源材料一源多用，拆分为公众号、掘金、知乎、小红书、B 站、抖音、视频号、微博、头条等多平台发布包。
   当用户提到一源多用、内容分发、多平台改编、repurpose、把文章发小红书、把长文做成短视频脚本、
@@ -113,9 +114,9 @@ content/dist/harness-engineering/
 
 ### 3.1 主号长文（公众号 / 掘金 / 知乎）
 
-- 语气：[brand-voice.md](../shared/brand-voice.md)；禁止全文复制站点原文
-- 公众号：摘要 80–120 字；标题 3 备选；文末引流站点 + **AI持续运维**
-- 掘金：问题型标题；标签 3–5；代码块保留语言标识
+- 语气：[brand-voice.md](../shared/brand-voice.md)
+- **公众号**：调用 **[wechat-publisher](../wechat-publisher/SKILL.md)** → 生成 `content/dist/{slug}/wechat.md`（可再 Polish）
+- 掘金：问题型标题；标签 3–5；`sync: origin` 时不重复存全文
 - 知乎：标注「专栏同步」或「推荐回答方向」
 
 ### 3.2 副号图文（小红书）
@@ -171,10 +172,10 @@ content/dist/harness-engineering/
 
 | 场景 | 调用 |
 |------|------|
+| **公众号** | **`wechat-publisher`**（Generate → 可选 Polish） |
 | 小红书信息图 | `notion-infographic-v2` |
-| 公众号从零撰写（无源文） | `wechat-article-writer` |
 | Markdown 排版修复 | `markdown-formatter` |
-| 公众号封面图 | `nano-banana-2` 或项目生图 skill |
+| 公众号封面图 | `nano-banana-2` |
 
 本 skill **负责编排与文案**；生图 / 深度写稿交给上表子 skill，不在此重复其规则。
 

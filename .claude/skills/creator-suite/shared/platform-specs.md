@@ -194,7 +194,7 @@ Cursor · DevOps · 一人公司 · 每天进步一点点
 | **结尾** | 互动提问 + 站点链接 + 可选二维码 |
 | **发布时段** | 工作日 12:00–13:00 或 20:00–22:00（可 A/B 测试） |
 
-**封面图设计要求**（来自 `wechat-article-writer`）：
+**封面图设计要求**（来自 `wechat-publisher`）：
 
 - 包含主题元素或吸睛标题
 - 构图居中，兼容横向裁剪
@@ -563,7 +563,7 @@ assets/
 |------|------|
 | [brand-voice.md](brand-voice.md) | 语气、结构模板、平台 tone |
 | `.claude/skills/notion-infographic-v2/SKILL.md` | 小红书组图规则与视觉风格 |
-| `.claude/skills/wechat-article-writer/SKILL.md` | 公众号封面与摘要规范 |
+| `.claude/skills/creator-suite/wechat-publisher/SKILL.md` | 公众号生成与润色 |
 | `.claude/skills/creator-suite/content-repurpose/SKILL.md` | 一源多用编排流程 |
 | [content/dist/README.md](../../../content/dist/README.md) | Origin / Output 目录约定 |
 | `docs/sre/planning/2026-plan.md` | 分发策略、发布节奏、账号名 |

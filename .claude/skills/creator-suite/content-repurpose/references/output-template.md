@@ -36,21 +36,25 @@ Agent 完成 `content-repurpose` 后，按此结构写入 `content/dist/{slug}/`
 
 ## §1 公众号（AI持续运维）
 
+由 **`wechat-publisher`** 从 Origin 生成，落盘 `content/dist/{slug}/wechat.md`。
+
+结构见 [wechat-publisher/SKILL.md](../wechat-publisher/SKILL.md) 与范例 `content/dist/harness-engineering/wechat.md`：
+
 ```markdown
-### 标题备选（3 个，人工筛选）
-1.
-2.
-3.
+---
+origin: docs/...
+slug: ...
+mode: repurpose | repurpose+polish
+status: draft | ready | published
+---
 
-### 摘要（80–120 字，第一人称）
+# 发布元数据（标题 ×3、摘要 80–120 字）
 
-### 正文调整说明
-- 相对原文需精简 / 扩写的部分
-- 需插入的个人素材占位：[截图] [数据]
+# 正文（可粘贴公众号后台）
 
-### 文末引流
-完整配置与 checklist → https://xiaolinstar.cn/...
-关注 **AI持续运维** 获取更多运维 + AI 实践
+# 文末引流
+
+# 发布 checklist
 ```
 
 ---

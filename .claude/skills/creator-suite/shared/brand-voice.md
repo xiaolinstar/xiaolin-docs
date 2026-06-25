@@ -1,6 +1,6 @@
 # 品牌语气指南（Brand Voice）
 
-> 本文档是自媒体技能包的**共享层**，供 `tech-article-writer`、`xiaohongshu-carousel`、`bilibili-video-script`、`douyin-short-script`、`content-repurpose` 等 Skill 引用。
+> 本文档是自媒体技能包的**共享层**，供 `content-repurpose`、`wechat-publisher`、`xiaohongshu-carousel`、`bilibili-video-script`、`douyin-short-script` 等 Skill 引用。
 >
 > **维护原则**：每发布 3–5 篇内容后，把「读者反馈好 / 自己读着别扭」的片段回写进本文档。Brand Voice 是活文档，不是一次性定稿。
 
@@ -211,7 +211,7 @@ Brand Voice 回答三个问题：
 
 ## 7. 原创与 AI 协作边界
 
-来源：`wechat-article-writer` Skill 原则。
+来源：`wechat-publisher` 与 Origin 写作原则；公众号稿仅从 Origin 分发。
 
 | 原则 | 要求 |
 |------|------|
@@ -293,6 +293,6 @@ Brand Voice 回答三个问题：
 | `docs/sre/forward/prompt.md` | 去 AI 感写作框架（人格、开头、人情味） |
 | `docs/ai/theory/harness-engineering.md` | 比喻式表达、个人开发者视角 |
 | `docs/ai/llm/openclaw-pain.md` | 结构化批评、诚实边界 |
-| `.claude/skills/wechat-article-writer/SKILL.md` | 原创与 AI 协作原则 |
+| `.claude/skills/creator-suite/wechat-publisher/SKILL.md` | 公众号：Origin → Generate → Polish |
 | [platform-specs.md](platform-specs.md) | 各平台字数、尺寸、标签、发布节奏 |
 | `.claude/skills/creator-suite/content-repurpose/SKILL.md` | 一源多用编排流程 |

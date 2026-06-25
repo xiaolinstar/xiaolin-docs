@@ -161,7 +161,7 @@ Skill 知识层
 
 **当一个缓存层 Skill 的调用频率和价值被验证到一定程度时，Agent 可以自动把它晋升为物理层 Skill，纳入 Git 管理**：
 
-- 晋升路径：`.cache/skills/<task>/` → `.agent/skills/<task>/`（物理目录） → 写入 Git。
+- 晋升路径：`.cache/skills/<task>/` → `.agents/skills/<task>/`（物理目录） → 写入 Git。
 - 晋升触发条件：调用频率超过阈值（如 30 天内被调用 N 次） + 用户采纳率 > 阈值 + 失败率为 0。
 - 晋升后的好处：
   - 跨 workspace 迁移：新机器 `git pull` 一下就把自己用顺手的 Skills 一起带过来。
@@ -175,7 +175,7 @@ Skill 知识层
 ```
 ~/workspaces/my-project/
 ├── .git/
-└── .agent/
+└── .agents/
     ├── skills/         # 物理 Skills（含晋升来的，建议入 git）
     │   ├── commit-helper/    # 来自缓存层晋升
     │   └── lark-helper/      # 来自缓存层晋升

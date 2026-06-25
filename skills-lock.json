@@ -30,11 +30,6 @@
       "source": "lexburner/skill-collection",
       "sourceType": "github",
       "computedHash": "7d209d14677fa4327cf4ffc74a83a148c224b132bf434ddf776a6289e2ada5d2"
-    },
-    "wechat-article-writer": {
-      "source": "iamzhihuix/happy-claude-skills",
-      "sourceType": "github",
-      "computedHash": "8dc010602abc29f8c45fd0fa2ba5b2f46c5a058dc860a18f1f1a87a73cf96134"
     }
   }
 }

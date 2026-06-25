@@ -82,7 +82,7 @@ Input -> LLM Server -> Output
 
 其功能简单来说，用户维护记忆文件项目，然后写一个配置文件 `glooit.config.ts`，可以将文件同步到目标目录中，实际效果类比与复制 `cp`。
 
-将 `.agent/main.md` 复制到 Claude、Cursor、Codex 项目中。
+将 `.agents/main.md` 复制到 Claude、Cursor、Codex 项目中。
 
 ```ts
 import { defineRules } from 'glooit';
