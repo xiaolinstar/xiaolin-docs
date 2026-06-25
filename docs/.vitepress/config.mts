@@ -16,6 +16,9 @@ export default withMermaid({
     base: basePath,
     title: "AI持续运维",
     description: "SRE、DevOps 与 AI 技术实践平台",
+    srcExclude: [
+        '**/wechat/**',
+    ],
     vite: {
         plugins: [llms({
             excludeIndexPage: false,

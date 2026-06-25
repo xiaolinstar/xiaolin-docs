@@ -1,0 +1,32 @@
+slug: harness-engineering
+origin: docs/ai/theory/harness-engineering.md
+origin_url: https://xiaolinstar.cn/ai/theory/harness-engineering.html
+title: 个人开发者视角的驾驭工程：从「结对编程」到「圈养」 AI
+pillar: Vibe Coding
+created: 2026-06-25
+updated: 2026-06-25
+platforms:
+  wechat:
+    account: AI持续运维
+    status: draft
+    output: wechat.md
+  juejin:
+    account: AI持续运维
+    status: draft
+    sync: origin
+  zhihu:
+    account: AI持续运维
+    status: draft
+    sync: origin
+  xiaohongshu:
+    account: 一只羊驼驼
+    status: draft
+    output: xiaohongshu.md
+  bilibili:
+    account: AI持续运维
+    status: draft
+    output: bilibili.md
+  douyin:
+    account: 一只羊驼驼
+    status: draft
+    output: douyin.md
