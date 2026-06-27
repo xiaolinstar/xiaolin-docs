@@ -1,6 +1,6 @@
 ---
 account: 一只羊驼驼
-status: draft
+status: ready
 duration: 60s
 ---
 

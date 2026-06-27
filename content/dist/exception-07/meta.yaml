@@ -4,10 +4,15 @@ origin_url: https://xiaolinstar.cn/sre/devops/exception-07.html
 title: Exception异常编程实践：异常类与错误码设计（07）
 pillar: 云原生
 created: 2026-03-06
-updated: 2026-06-25
+updated: 2026-06-27
 migrated_from: docs/sre/devops/wechat/exception-07.md
 platforms:
   wechat:
     account: AI持续运维
     status: published
     output: wechat.md
+  juejin:
+    account: AI持续运维
+    status: ready
+    sync: origin
+    output: juejin.md

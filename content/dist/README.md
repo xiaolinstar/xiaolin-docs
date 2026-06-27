@@ -58,10 +58,10 @@ platforms:
 
 | Slug | Origin | Output |
 |------|--------|--------|
-| `exception-06` | `docs/sre/devops/exception-06.md` | `wechat.md` |
-| `exception-07` | `docs/sre/devops/exception-07.md` | `wechat.md` |
-| `exception-08` | `docs/sre/devops/exception-08.md` | `wechat.md` |
-| `harness-engineering` | `docs/ai/theory/harness-engineering.md` | `wechat.md`、`xiaohongshu.md`、`bilibili.md`、`douyin.md`、`repurpose.md`（试跑） |
+| `exception-06` | `docs/sre/devops/exception-06.md` | `wechat.md`、`juejin.md` |
+| `exception-07` | `docs/sre/devops/exception-07.md` | `wechat.md`、`juejin.md` |
+| `exception-08` | `docs/sre/devops/exception-08.md` | `wechat.md`、`juejin.md` |
+| `harness-engineering` | `docs/ai/theory/harness-engineering.md` | `wechat.md`、`juejin.md`、`zhihu.md`、`xiaohongshu.md`、`bilibili.md`、`douyin.md` |
 
 转换脚本：`docs/sre/devops/convert_for_wechat.py`（exception 系列）→ 再经 **wechat-publisher** 补标题 / 摘要 / 引流。
 

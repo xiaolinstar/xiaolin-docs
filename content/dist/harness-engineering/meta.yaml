@@ -4,24 +4,26 @@ origin_url: https://xiaolinstar.cn/ai/theory/harness-engineering.html
 title: 个人开发者视角的驾驭工程：从「结对编程」到「圈养」 AI
 pillar: Vibe Coding
 created: 2026-06-25
-updated: 2026-06-25
+updated: 2026-06-27
 platforms:
   wechat:
     account: AI持续运维
-    status: draft
+    status: ready
     output: wechat.md
-    origin_sync: generated
+    title_selected: 我还在用 Prompt 硬扛 AI 改代码，直到搞懂「驾驭工程」
   juejin:
     account: AI持续运维
-    status: draft
+    status: ready
     sync: origin
+    output: juejin.md
   zhihu:
     account: AI持续运维
-    status: draft
+    status: ready
     sync: origin
+    output: zhihu.md
   xiaohongshu:
     account: 一只羊驼驼
-    status: draft
+    status: ready
     output: xiaohongshu.md
   bilibili:
     account: AI持续运维
@@ -29,5 +31,5 @@ platforms:
     output: bilibili.md
   douyin:
     account: 一只羊驼驼
-    status: draft
+    status: ready
     output: douyin.md

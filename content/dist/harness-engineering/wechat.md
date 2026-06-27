@@ -3,9 +3,12 @@ origin: docs/ai/theory/harness-engineering.md
 origin_url: https://xiaolinstar.cn/ai/theory/harness-engineering.html
 slug: harness-engineering
 account: AI持续运维
-mode: repurpose
-status: draft
-polish: []
+mode: repurpose+polish
+status: ready
+polish:
+  - 选用标题 1
+  - 补全总结段「缰绳」比喻，与 Origin 对齐
+  - 引流句与 checklist 核对
 ---
 
 # 发布元数据
@@ -16,7 +19,7 @@ polish: []
 2. 从结对编程到圈养 AI：个人开发者的 Harness 入门
 3. Cursor 用了半年，我为什么说 Prompt 不够用了
 
-**选用**：_（发布前填写）_
+**选用**：1
 
 ## 摘要（96 字）
 
@@ -86,6 +89,8 @@ polish: []
 一言以蔽之，驾驭工程绝不是抛弃提示词，而是将**自然语言提示，转变成了难以绕过的系统化拦截器和自动化工作流**。
 
 在未来，我们会把精力倾注于配置细分的 `rules`、编排严格的 `hooks`。好比从亲力亲为搬砖修墙的「泥瓦匠」，蜕变为了专门设计防线网络、架设红绿灯的「基建架构师」。
+
+当我们为这股狂野算力安上紧绷安全的工程「缰绳」，原本不可靠的生成式心智才能彻底转变为长久、稳定且高效的基础数字生产力。
 
 ![总结：向基建架构师蜕变](https://media.xiaolin.fun/docs/img-harness-engineering/infographic-06.png)
 <!-- ⚠️ 公众号发布：图片 https://media.xiaolin.fun/docs/img-harness-engineering/infographic-06.png 需手动上传至微信后台 -->

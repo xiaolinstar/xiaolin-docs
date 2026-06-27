@@ -162,7 +162,10 @@ export default withMermaid({
                                 { text: 'Exception 异常架构设计 02', link: `/sre/devops/exception-02` },
                                 { text: 'Exception 异常架构设计 03', link: `/sre/devops/exception-03` },
                                 { text: 'Exception 异常架构设计 04', link: `/sre/devops/exception-04` },
-                                { text: 'Exception 异常架构设计 05', link: `/sre/devops/exception-05` }
+                                { text: 'Exception 异常架构设计 05', link: `/sre/devops/exception-05` },
+                                { text: 'Exception 异常编程实践 06', link: `/sre/devops/exception-06` },
+                                { text: 'Exception 异常编程实践 07', link: `/sre/devops/exception-07` },
+                                { text: 'Exception 异常编程实践 08', link: `/sre/devops/exception-08` }
                             ]
                         },
                         {
