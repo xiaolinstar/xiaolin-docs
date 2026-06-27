@@ -66,6 +66,7 @@ export default withMermaid({
             { text: 'AI实践', link: `/ai/` },
             { text: '软件产品', link: `/products/` },
             { text: '效率工具', link: `/easy-office/` },
+            { text: '关于本站', link: `/about/` },
             {
                 text: '优惠推荐',
                 items: [
@@ -346,6 +347,14 @@ export default withMermaid({
                         { text: '云服务器', link: `/recommend/cloud-server` },
                     ]
                 }
+            ],
+            '/about/': [
+                {
+                    text: '关于本站', link: `/about/`,
+                    items: [
+                        { text: '联系与合作', link: `/about/` },
+                    ]
+                }
             ]
         },
 
@@ -354,7 +363,7 @@ export default withMermaid({
         ],
         // 页脚
         footer: {
-            message: '微信公众号：AI持续运维，掘金：AI持续运维',
+            message: '微信公众号：AI持续运维，掘金：AI持续运维，<a href="/about/">联系与合作</a>',
             copyright: 'Copyright © 2026 xiaolinstar <br/><span class="beian-container" style="display:inline-flex;align-items:center;gap:8px;"><a href="https://beian.miit.gov.cn/" target="_blank">苏ICP备2026011017号-1</a><span class="gongan-beian" style="display:inline-flex;align-items:center;white-space:nowrap;"><img src="/beian-gongan.png" alt="公安备案" style="width:16px;height:16px;margin-right:4px;"><a href="http://beian.mps.gov.cn/#query/webSearch?code=32010602012313"target="_blank">苏公网安备32010602012313号</a></span></span>'
         },
         // 支持模糊搜索

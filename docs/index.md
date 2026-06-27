@@ -22,6 +22,9 @@ hero:
     - theme: alt
       text: GitHub
       link: https://github.com/xiaolinstar/xiaolin-docs
+    - theme: alt
+      text: 关于本站
+      link: /about/
 
 features:
   - title: SRE实践
@@ -32,4 +35,6 @@ features:
     details: 大语言模型实践、AI 编程、智能运维
   - title: 开发架构
     details: 系统设计、架构师备考、高可用方案
+  - title: 联系合作
+    details: 内容平台、产品矩阵、友情链接与反馈入口
 ---
