@@ -12,7 +12,7 @@ tags:
 
 # GitOps，让 Git 成为运维的唯一入口
 
-![GitOps 封面图](/images/gitops/cover.png)
+![GitOps 封面图](https://media.xiaolin.fun/docs/img-gitops/cover.png)
 
 > GitOps 是独立于 Kubernetes 的运维理念，核心是以 Git 为唯一真相来源、持续调和实际与期望状态。本文从运维、开发、管理三个视角说明 GitOps 解决的具体问题，再深入理念、原则与实践，覆盖从 Docker Compose 到 K8s 的多场景落地方案。
 
@@ -42,7 +42,7 @@ Alexis Richardson 随后将这套经验整理命名，于 **2017 年**以博文�
 
 > Weaveworks 于 2024 年初停止商业运营，但 Flux CD 作为独立开源项目，仍在 CNCF 社区持续维护。这个概念本身早已超越了提出它的公司。
 
-![起源故事：一次故障催生了 GitOps](/images/gitops/origin.png)
+![起源故事：一次故障催生了 GitOps](https://media.xiaolin.fun/docs/img-gitops/origin.png)
 
 ## 什么是 GitOps
 
@@ -62,7 +62,7 @@ GitOps 的核心只有一句话：**将 Git 仓库作为系统期望状态的唯
 
 变更通过各种路径进入生产：有人直接执行了 `kubectl edit`，有人手动上传了配置文件，有人在服务器上改了一行 shell 脚本。每一次"临时操作"都在悄悄让实际状态偏离有记录的期望状态。积累到一定程度，出了故障就很难溯源，回滚更是靠经验和运气。
 
-![问题场景：变更入口太多，线上是什么版本？](/images/gitops/problem.png)
+![问题场景：变更入口太多，线上是什么版本？](https://media.xiaolin.fun/docs/img-gitops/problem.png)
 
 这种困境有一个共同的根源：**变更的入口太多，且大多数不可追踪。**
 
@@ -79,7 +79,7 @@ GitOps 给出的答案不是更严格的流程管控，而是从架构上消灭�
 - **版本化与可审计（Versioned & Auditable）**：每一次变更对应一次 Commit，完整历史即天然审计日志。任意版本可回滚，任意时刻可溯源。
 - **持续调和（Continuous Reconciliation）**：自动化代理持续监控实际状态与 Git 中定义的期望状态，发现漂移（Drift）时自动修复，而非等待人工发现后介入。
 
-![四大核心原则：声明式、单一入口、版本可溯、持续调和](/images/gitops/principles.png)
+![四大核心原则：声明式、单一入口、版本可溯、持续调和](https://media.xiaolin.fun/docs/img-gitops/principles.png)
 
 ## 与 IaC、声明式配置的关系
 
@@ -121,7 +121,7 @@ Kubernetes 集群配置（YAML / Helm Chart）
 实际运行的容器与服务
 ```
 
-![两层调和链路：Git → K8s 配置 → 实际容器](/images/gitops/k8s-layers.png)
+![两层调和链路：Git → K8s 配置 → 实际容器](https://media.xiaolin.fun/docs/img-gitops/k8s-layers.png)
 
 这就是为什么"K8s + GitOps"在实践中如此自然，它们是同一种哲学在不同层次的一致体现。
 
@@ -191,7 +191,7 @@ sequenceDiagram
 
 ### 两种模式的本质差异
 
-![Push vs Pull 对比：传统 CI/CD 与 GitOps 模式](/images/gitops/push-vs-pull.png)
+![Push vs Pull 对比：传统 CI/CD 与 GitOps 模式](https://media.xiaolin.fun/docs/img-gitops/push-vs-pull.png)
 
 | 维度 | 传统 CI/CD（Push） | GitOps（Pull） |
 |------|-------------------|----------------|
@@ -222,7 +222,7 @@ GitOps 是从一次真实的生产故障中提炼出来的运维理念，而非�
 
 这套理念与 Kubernetes 高度契合，但边界远不止于此。无论是 Docker Compose 的小项目还是云原生的大集群，只要系统状态能被声明式代码描述，GitOps 就能在此之上建立起秩序——变更有记录，漂移能自愈，故障可回溯。引入的不是一个工具，而是一套可信赖的交付纪律。
 
-![总结：变更有记录、漂移能自愈、故障可回溯](/images/gitops/summary.png)
+![总结：变更有记录、漂移能自愈、故障可回溯](https://media.xiaolin.fun/docs/img-gitops/summary.png)
 
 ## 参考资料
 

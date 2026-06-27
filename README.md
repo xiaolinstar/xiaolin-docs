@@ -101,6 +101,19 @@ pnpm docs:check-links  # 站内链接检查
 
 新增 `docs/` 文章时，请同步更新 `docs/.vitepress/config.mts` 中的 `nav` 与 `sidebar`。
 
+文档插图走 **COS + CDN**（与 xiaolin-life 共用 Bucket，`docs/` 前缀）：
+
+```bash
+pnpm run media:check          # 验证 coscli
+pnpm run media:upload         # 本机上传 docs/public/images → COS
+pnpm run media:rewrite:apply  # 新文章 /images/ 路径批量改 CDN URL
+pnpm run media:cdn-check      # 抽样校验 CDN
+```
+
+Markdown 引用格式：`https://media.xiaolin.fun/docs/img-{slug}/file.png`
+
+命名规范见 [`docs/sre/planning/media-standards.md`](./docs/sre/planning/media-standards.md)。**本地大图不进 Git**，仅保留 CDN 链接。
+
 ### 容器化运行
 
 **独立服务模式**（仅文档站点）：

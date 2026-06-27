@@ -84,7 +84,7 @@ tags:
 如今，描述可观测性实现的最佳方式是——“指标之外的一切，加上指标”。
 
 
-![监控与可观测性](/images/img-what-is-observability/monitor-vs-observability.webp)
+![监控与可观测性](https://media.xiaolin.fun/docs/img-what-is-observability/monitor-vs-observability.webp)
 
 一个完美的可观测系统会记录生产过程中发生的*一切*，不留任何数据缺口。值得庆幸的是，这不切实际，成本高昂，而且 99% 的数据根本无关紧要，因此，一个普通的可观测平台需要对采集哪些遥测数据以及采集多少遥测数据做出复杂的选择。不同的供应商对此有不同的看法，而且，根据你询问的对象，可观测性似乎也略有不同。
 
@@ -146,7 +146,7 @@ tags:
 
 尽管投入了大量资金，但我们似乎最多只是取得了一些渐进的进展。
 
-![增长的生产环境MTTRs](/images/img-what-is-observability/increasing-production-MTTRs.webp)
+![增长的生产环境MTTRs](https://media.xiaolin.fun/docs/img-what-is-observability/increasing-production-mttrs.webp)
 
 ## 我们现在在哪里？
 
@@ -172,7 +172,7 @@ tags:
 
 因此，我们引入了一套称为可观测性的工具，它位于第 1 级和第 2 级之间，通过为我们提供更多数据来“*帮助理解为什么会出现故障”。*
 
-![监控，可观测性和推理](/images/img-what-is-observability/monitoring-observability-and-inferencing.webp)
+![监控，可观测性和推理](https://media.xiaolin.fun/docs/img-what-is-observability/monitoring-observability-and-inferencing.webp)
 
 ## 推理——可观测性加人工智能
 

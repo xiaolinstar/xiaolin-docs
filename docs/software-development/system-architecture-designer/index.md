@@ -30,13 +30,13 @@ tags:
 
 在南京获得软考高级证书后，可公司报备向区人社局申请认定为E类人才，每月可领取2400元的租房补贴，最长可领取5年。
 
-![南京市人民政府人才安居办法](/images/img-ruankao/nanjing-gov.png)
+![南京市人民政府人才安居办法](https://media.xiaolin.fun/docs/img-ruankao/nanjing-gov.png)
 
 第十四条    E类人才可以选择申请保障性租赁住房和租赁补贴中的一种安居方式。申请保障性租赁住房的，面积为60平方米左右，房源面积以实际供应为准。申请租赁补贴的，租赁补贴金额为每月2400元。
 
 E类人才认定标准：
 
-![E类人才认定标准](/images/img-ruankao/e-class.png)
+![E类人才认定标准](https://media.xiaolin.fun/docs/img-ruankao/e-class.png)
 
 其中最重要的两条：个人所得税超过30万元；CPA/CFA及软考高级证书。在南京的大中型互联网企业，直接可通过30万来申请，无需软考。工资不够的那就软考吧。
 
@@ -54,13 +54,13 @@ E类人才认定标准：
 - 人社局登记企业，个人年纳税额超过50万元
 - 高级资格证书+一项成果，软著、专利、论文、政府奖励等
 
-![杭州E类人才](/images/img-ruankao/hangzhou-e-class.png)
+![杭州E类人才](https://media.xiaolin.fun/docs/img-ruankao/hangzhou-e-class.png)
 
 ## 科目选择
 
 在 Google 上搜索软考人数与通过率的数据，有很多引用数据，出处不可查了，但基本上是可靠的，可直接参考。软考主要面向职场人，弃考率和通过率较低。
 
-![软考人数与通过率](/images/img-ruankao/ruankao-statistics.png)
+![软考人数与通过率](https://media.xiaolin.fun/docs/img-ruankao/ruankao-statistics.png)
 
 根据软考官网的公开信息，开始工作安排，上半年在5月份，下半年在11月份。
 
@@ -73,7 +73,7 @@ E类人才认定标准：
 
 高级科目中，报考人数最多的是：高级项目规划设计师、系统架构设计师，其中高项是考试人数最多的，这一点从培训机构的课程中可以看出。
 
-![软考高级科目课程](/images/img-ruankao/ruankao-senior.png)
+![软考高级科目课程](https://media.xiaolin.fun/docs/img-ruankao/ruankao-senior.png)
 
 如果是计算机科学与技术/软件工程专业的毕业生，或从事软件开发工作，建议考**系统架构设计师**，多多少少能有一点知识储备，上手较快，最重要的是每年可以考2次，机会增加。
 
@@ -95,7 +95,7 @@ E类人才认定标准：
 
 在软考的官方网站，提供了参考用书。
 
-![参考用书](/images/img-ruankao/ruankao-book.png)
+![参考用书](https://media.xiaolin.fun/docs/img-ruankao/ruankao-book.png)
 
 鉴于上边所述的软考价值，软考教培行业也比较活跃，有很多培训机构提供软考课程。如果想买纸质书籍的话，直接淘宝搜一下也不少。对于我个人来说，虽然买了书，但基本吃灰，已经不习惯纸质书籍学习，这和很多考生的习惯恰恰相反。
 
@@ -164,24 +164,24 @@ Redis主从复制，Redis两种持久化方式
 ## 南农软考日记
 
 在南京农业大学考点参加了两次考试，上半年只有论文过了，综合知识和案例分析都是40分左右。对我来说，裸考是通过不了的，必须得花点时间准备。回想起我大二参加英语CET-6考试，裸考380分，我不属于天资聪颖的选手。
-![考场门口](/images/img-ruankao/entrance.jpeg)
+![考场门口](https://media.xiaolin.fun/docs/img-ruankao/entrance.jpeg)
 
 中午在学校吃的麻辣香锅，海带、鹌鹑蛋、西兰花、花菜、豆皮、腊肠都是最爱，怀念在学校的时候经常吃。不过，这也导致在学校期间体重常年在150-160区间，现在吃的机会变少也算是好事。
-![学校里的麻辣香锅](/images/img-ruankao/mlxg.jpeg)
+![学校里的麻辣香锅](https://media.xiaolin.fun/docs/img-ruankao/mlxg.jpeg)
 
 中午可以在学校里边随便逛逛，学校里面有瑞幸咖啡和库迪咖啡，喝一杯冰的黑杯拿铁，下午继续考论文。
 
-![黑杯拿铁](/images/img-ruankao/black-luckin.jpeg)
+![黑杯拿铁](https://media.xiaolin.fun/docs/img-ruankao/black-luckin.jpeg)
 
 考试结束，南京农业大学（卫岗校区）位置就在紫金山-中山陵附近，网红打卡地梧桐大道就在这附近，下图是学校的一个扇型草地。
 
-![南京农业大学卫岗校区](/images/img-ruankao/nannong.jpeg)
+![南京农业大学卫岗校区](https://media.xiaolin.fun/docs/img-ruankao/nannong.jpeg)
 
 ## 总结
 
 2025年下半年的成绩在12月5日公布，比去年公布时间提前。很幸运我成功通过了系统架构设计师的考试，接下来就是等待邮寄证书，并向人社局申请E类人才了。本文是作者参加软考的一次总结和心得分享，还是强烈建议每一位南京或杭州未安居的打工人，努力拿下软考高级。
 
-![软考成绩](/images/img-ruankao/score.jpg)
+![软考成绩](https://media.xiaolin.fun/docs/img-ruankao/score.jpg)
 
 这是一门考试，有相关学历、技术背景或工作经验不是必须的，考试就是把题目做对，把分数拿到。
 

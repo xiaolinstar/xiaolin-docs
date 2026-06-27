@@ -37,17 +37,17 @@ tags:
 
 Jetbrains 的 CI/CD 产品 TeamCity 文档描述：持续交付和持续部署之间的区别在于发布到生产的最后阶段。采用持续交付，将构建工件发布到生产时需要手动输入。发布流程通常完全自动化，但必须有人决定是否以及何时发布具体版本。 采用持续部署，每次完成流程的先前阶段时，构建都会自动发布到生产中。
 
-![Integration Delivery Deployment](/images/img-what-is-cd/continuous-integration-delivery-deployment.webp)
+![Integration Delivery Deployment](https://media.xiaolin.fun/docs/img-what-is-cd/continuous-integration-delivery-deployment.webp)
 
 我在《从0到1实现微服务架构（第2版）》中，发现持续交付与持续部署的概念刚好相反😅。
 
 **持续部署**
 
-![Continuous Deployment](/images/img-what-is-cd/continuous-deployment.png)
+![Continuous Deployment](https://media.xiaolin.fun/docs/img-what-is-cd/continuous-deployment.png)
 
 **持续交付**
 
-![Continuous Delivery](/images/img-what-is-cd/continuous-delivery.png)
+![Continuous Delivery](https://media.xiaolin.fun/docs/img-what-is-cd/continuous-delivery.png)
 
 ## 现代演进定义
 
@@ -62,7 +62,7 @@ Jetbrains 的 CI/CD 产品 TeamCity 文档描述：持续交付和持续部署�
 
 另外，部署也与目标环境无关，将制品或镜像推送到测试环境（TEST）、预发布环境（STAGING）或生产环境（PRODUCTION）并启动都可以称为部署。
 
-![CI,CD,CD](/images/img-what-is-cd/ci-cd-cd.png)
+![CI,CD,CD](https://media.xiaolin.fun/docs/img-what-is-cd/ci-cd-cd.png)
 
 持续交付是面向终端用户的，如果没有**交付门限**，那么部署到生产环境意味着交付给终端用户。交付门限是值得研究的一项复杂的工程，典型的技术包括：蓝绿部署、流量切换、特性开关、测试用户。因此，我认为更贴切的领域术语是：**持续集成、持续部署、渐进式交付**。
 

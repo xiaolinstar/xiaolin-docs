@@ -18,7 +18,7 @@ tags:
 
 本文将深入探讨如何在流程运营层面实现三剑客的协同工作，通过建立有效的正向职责驱动快速处置、反向督办持续优化策略，构建起一套完整的系统可用性保障体系。我们将描述在任意事件发生下，流程如何驱动不同团队或组织协同工作。
 
-![健康感知流程运营闭环](/images/img-availability-safeguard-process/availability-process.png)
+![健康感知流程运营闭环](https://media.xiaolin.fun/docs/img-availability-safeguard-process/availability-process.png)
 
 _关键词：健康感知 巡检 拨测 监控 组合拳 闭环_
 

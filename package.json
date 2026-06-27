@@ -18,6 +18,15 @@
     "docs:dev": "vitepress dev docs",
     "docs:build": "vitepress build docs",
     "docs:preview": "vitepress preview docs",
-    "docs:check-links": "node scripts/check-docs-links.mjs"
+    "docs:check-links": "node scripts/check-docs-links.mjs",
+    "media:check": "bash scripts/cos-check.sh",
+    "media:upload": "bash scripts/upload-media-cos.sh docs/public/images",
+    "media:rewrite": "python3 scripts/rewrite-media-urls.py",
+    "media:rewrite:apply": "python3 scripts/rewrite-media-urls.py --apply",
+    "media:cdn-check": "bash scripts/cdn-check.sh",
+    "media:cdn-migrate": "python3 scripts/rewrite-cos-to-cdn.py",
+    "media:cdn-migrate:apply": "python3 scripts/rewrite-cos-to-cdn.py --apply",
+    "media:normalize": "python3 scripts/normalize-media-names.py",
+    "media:normalize:apply": "python3 scripts/normalize-media-names.py --apply"
   }
 }

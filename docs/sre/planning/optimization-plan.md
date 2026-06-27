@@ -121,7 +121,7 @@ tags:
 
 **内容储备**：
 - 建立 10 篇文章储备池
-- 使用 AI 辅助写作（如 wechat-article-writer skill）
+- 使用 AI 辅助写作（creator-suite / wechat-publisher skill）
 - 建立选题库和素材库
 
 ### 2. 技术优化
@@ -132,8 +132,10 @@ tags:
 **具体措施**：
 - 图片优化：压缩图片、使用 WebP 格式
 - 代码分割：优化 VitePress 构建配置
-- CDN 加速：使用 CDN 加速静态资源
+- CDN 加速：文档大图已迁 **腾讯云 COS**（`docs/` 前缀）+ **`media.xiaolin.fun`** CDN（与 xiaolin-life 共用 Bucket）
 - 缓存策略：配置合理的缓存头
+
+**工具**：`pnpm run media:upload` / `media:rewrite:apply` / `media:cdn-check`（见 `scripts/`）
 
 **执行计划**：
 - 第 1 周：图片优化和压缩

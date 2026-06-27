@@ -105,7 +105,7 @@ def save_order(order):
 
 在架构设计层面，我们不仅要考虑异常的语义价值，还需要关注其性能影响。特别是抛出异常的方式选择——直接抛出(`if-raise`)还是先捕获再转抛(`try-except-raise`)——对系统性能有着显著差异。
 
-![raise-decide](/images/img-exception-03/raise-decide.png)
+![raise-decide](https://media.xiaolin.fun/docs/img-exception-03/raise-decide.png)
 
 ### 异常处理的性能本质
 

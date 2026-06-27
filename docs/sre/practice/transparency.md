@@ -46,11 +46,11 @@ tags:
 
 分布式数据库的透明性：分片透明、复制透明、位置透明和逻辑透明
 
-![分布式数据库的透明级别](/images/img-transparency/distributed-database-transparency.png)
+![分布式数据库的透明级别](https://media.xiaolin.fun/docs/img-transparency/distributed-database-transparency.png)
 
 计算机网络中下层对上层是透明的
 
-![计算机网络分层架构](/images/img-transparency/computer-network-layers.webp)
+![计算机网络分层架构](https://media.xiaolin.fun/docs/img-transparency/computer-network-layers.webp)
 
 > 计算机科学中，最早接触透明的概念是：函数调用中调用者只关心输入参数和返回结果，不关心实现。
 
@@ -62,11 +62,11 @@ tags:
 
 例如政府的行政运作、财政支出去向对公众透明。
 
-![透明国际](/images/img-transparency/transparency-international.png)
+![透明国际](https://media.xiaolin.fun/docs/img-transparency/transparency-international.png)
 
 餐厅对顾客开放厨房，称为透明化厨房。
 
-![袁记云饺，大妈隔着玻璃包饺子和云吞](/images/img-transparency/yuan.jpg)
+![袁记云饺，大妈隔着玻璃包饺子和云吞](https://media.xiaolin.fun/docs/img-transparency/yuan.jpg)
 
 「透明」指的是看得见过程，无论是政府还是厨房，如何运作的信息尽可能公开，让外边看得见。
 
@@ -79,11 +79,11 @@ tags:
 
 在当今的公司管理架构中，是树形分层架构，如科室领导对部门领导负责，部门领导对公司总经理负责，总经理对CEO或董事会负责，跨层级别间工作互相隔离和不可见，可以称之为计算机术语中的「透明」（看不见）。
 
-![公司组织架构](/images/img-transparency/corporation-architecture.png)
+![公司组织架构](https://media.xiaolin.fun/docs/img-transparency/corporation-architecture.png)
 
 分层次管理虽令各守其位、对上负责、对下行权，却暗藏“信息只经直接下级”之软肋，上级易被架空，故领导不仅索结果，亦苛求过程透明；主动频报仅为一策，更须以软件基础设施托底，让统计数据与图表把每一环量化、可视化，使全程实时“可见”，既防堵欺瞒，又兑现**治理能力现代化**的硬核诉求。
 
-![政府服务大数据可视化监管平台](/images/img-transparency/government-visualization.gif)
+![政府服务大数据可视化监管平台](https://media.xiaolin.fun/docs/img-transparency/government-visualization.gif)
 
 ## 一点小Tips
 

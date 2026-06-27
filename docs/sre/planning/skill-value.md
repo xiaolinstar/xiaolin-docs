@@ -16,7 +16,7 @@ tags:
 
 而在当前的圈子里，最炙手可热的标杆玩法莫过于 `create-skill` 工具：也就是让大模型自行生成一组专属的 Skill，并立刻投入日常业务使用。这种“套娃式”的做法，就好比先请一位行业专家（大模型本人）出具一份标准的工作流程防线（SOP），接着再让它原封不动地照着这份 SOP 去机械执行。然而，如此繁复重叠的操作路线，到底是在创造实质性的提效价值，还是在制造空转的摩擦？
 
-![封面配图](/images/img-skill-autogen/cover-image.png)
+![封面配图](https://media.xiaolin.fun/docs/img-skill-autogen/cover-image.png)
 
 ## Skill 应用场景介绍
 
@@ -95,7 +95,7 @@ tags:
 - 正文 1500 至 2000 字（或按项目标准）。
 - 至少 2 至 3 个备选标题 + 5 个爆款标题。
 - 概述约 80 字，用 `---` 分隔。
-- 插图使用相对路径 `/images/img-xxx/`，文件名英文。
+- 插图使用相对路径 `https://media.xiaolin.fun/docs/img-xxx/`，文件名英文。
 
 ### 回放与验证
 
@@ -115,7 +115,7 @@ tags:
 
 这样 skill 才会越用越省事，而不是越用越臃肿。
 
-![Skill 固化闭环](/images/img-skill-autogen/skill-autogen-loop.svg)
+![Skill 固化闭环](https://media.xiaolin.fun/docs/img-skill-autogen/skill-autogen-loop.svg)
 
 ## 总结
 
@@ -130,7 +130,7 @@ tags:
 
 “自动生成并直接用”往往只是一种美好的幻觉。未经自适应微调的 skill 只是一份未经测试的代码草案；而经过沉淀与打磨的 skill，才是能让团队效率产生质变的数字底座。
 
-![总结配图](/images/img-skill-autogen/summary-assets.png)
+![总结配图](https://media.xiaolin.fun/docs/img-skill-autogen/summary-assets.png)
 
 ---
 

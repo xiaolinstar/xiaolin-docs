@@ -61,7 +61,7 @@ AI+ 是时代热点，政府以及社会上各行各业都看好 AI+ 的巨大�
 
 QQ 和微信均为腾讯出品，腾讯以其简单、易用的设计，赢得了用户的喜爱。社会上的无数用户隔空对微信提出了很多需求（吐槽），例如聊天记录云存储、丰富群管理等。然而，微信团队始终保持克制和理性，微信这款全民用户产品，不应该为了部分个体需求而增加其他用户使用负担。
 
-![微信：简单方便就是美](/images/img-project-mangament/Wechat-Easy-Life.png)
+![微信：简单方便就是美](https://media.xiaolin.fun/docs/img-project-management/wechat-easy-life.png)
 
 **如无必要**，如何来判断，可以扔出三连问：角色、职责、规模。
 
@@ -104,11 +104,11 @@ QQ 和微信均为腾讯出品，腾讯以其简单、易用的设计，赢得�
 另外一个比较明显的例子就是，高德扫街榜和美团/大众点评。
 
 高德扫街榜 No.1
-![高德扫街榜-李记清真馆](/images/img-project-mangament/gaode-li.jpeg)
+![高德扫街榜-李记清真馆](https://media.xiaolin.fun/docs/img-project-management/gaode-li.jpeg)
 
 美团/大众点评网友评价
 
-![美团/大众点评-李记清真馆](/images/img-project-mangament/meituan-li.jpeg)
+![美团/大众点评-李记清真馆](https://media.xiaolin.fun/docs/img-project-management/meituan-li.jpeg)
 
 一家餐厅是否受欢迎的两个度量角度：
 

@@ -11,7 +11,7 @@ tags:
 
 # CI 制品源管控：镜像仓库多源推送的“软着陆”治理实践
 
-![CI 制品源管控与“软着陆”治理实践](/images/img-harbor-source-control/infographic-01.png)
+![CI 制品源管控与“软着陆”治理实践](https://media.xiaolin.fun/docs/img-harbor-source-control/infographic-01.png)
 
 在现代企业 IT 架构中，研发与运维的协作边界往往在制品库相遇。研发团队主导持续集成（CI），负责将代码构建为镜像并推送到镜像仓库；运维团队主导持续部署（CD），负责从镜像仓库拉取镜像并部署到各环境。
 
@@ -21,7 +21,7 @@ tags:
 
 ## 混乱的多源推送现状
 
-![多源推送的质量后门与发布痛点](/images/img-harbor-source-control/infographic-02.png)
+![多源推送的质量后门与发布痛点](https://media.xiaolin.fun/docs/img-harbor-source-control/infographic-02.png)
 
 在许多企业的发展初期，为了追求敏捷开发和快速迭代，通常采用最小可行性产品（MVP）的模式交付。在这种“唯快不破”的氛围下，开发团队为了方便，会寻找各种便捷的构建路径；而运维团队在早期阶段也往往只关心“部署是否成功”，对“镜像是从哪里推送过来的”并不敏感。这种协作默契，直接催生了 Harbor 仓库中并存的多种推送源：
 
@@ -53,7 +53,7 @@ tags:
 
 ### 方案一：行政督导与凭证收拢（渐进式管理推动）
 
-![行政督导与自证成本极高](/images/img-harbor-source-control/infographic-03.png)
+![行政督导与自证成本极高](https://media.xiaolin.fun/docs/img-harbor-source-control/infographic-03.png)
 
 该方案主要是**管理手段**，即通过行政施压与排期闭环来强力推动整改，而技术手段仅作为辅助。
 
@@ -121,7 +121,7 @@ LABEL cn.xiaolinstar.image.source="CI-A" \
       cn.xiaolinstar.image.signature="${CI_SIGNATURE_TOKEN}"
 ```
 
-![基于构建凭证的防伪与量化白盒审计](/images/img-harbor-source-control/infographic-04.png)
+![基于构建凭证的防伪与量化白盒审计](https://media.xiaolin.fun/docs/img-harbor-source-control/infographic-04.png)
 
 #### 2. 量化目标与成效
 
@@ -146,7 +146,7 @@ LABEL cn.xiaolinstar.image.source="CI-A" \
 
 ## 工作思考：让技术为管理服务
 
-![让技术为管理服务，达成治理最优闭环](/images/img-harbor-source-control/infographic-05.png)
+![让技术为管理服务，达成治理最优闭环](https://media.xiaolin.fun/docs/img-harbor-source-control/infographic-05.png)
 
 作为一个游走在研发与运维交界处的 SRE，我深切感受到程序员在 CI/CD 中所蕴含的那些设计思想，其影响早已超越了技术本身，甚至直击企业运营管理的本质。
 

@@ -17,7 +17,7 @@ tags:
 
 在 GitHub 的官方 Workflows 模板中，查看到 Greetings 工作流模板，它的作用是当新用户打开仓库的 issue 或 pull request 时，自动发送欢迎消息。
 
-![greetings](/images/img-github-actions-workflows/greetings.png)
+![greetings](https://media.xiaolin.fun/docs/img-github-actions-workflows/greetings.png)
 
 代码模板如下，代码注释查看配置功能：
 
@@ -49,21 +49,21 @@ jobs:
 
 **创建 issue**
 
-![create-issue](/images/img-github-actions-workflows/greeting-issue-create.png)
+![create-issue](https://media.xiaolin.fun/docs/img-github-actions-workflows/greeting-issue-create.png)
 
 **创建后 issue 效果**
 
-![greeting-issue](/images/img-github-actions-workflows/greeting-issue.png)
+![greeting-issue](https://media.xiaolin.fun/docs/img-github-actions-workflows/greeting-issue.png)
 
 **工作流执行需要时间，等待片刻后，即可在 issue 中看到欢迎消息**
 
 > 使用 `secrets.GITHUB_TOKEN` 执行的用户身份为`github-actions[bot]`。
 
-![github-actions-bot](/images/img-github-actions-workflows/github-actions-bot.png)
+![github-actions-bot](https://media.xiaolin.fun/docs/img-github-actions-workflows/github-actions-bot.png)
 
 在 `Actions` 中查看工作流执行详情
 
-![greeting-action](/images/img-github-actions-workflows/greeting-action.png)
+![greeting-action](https://media.xiaolin.fun/docs/img-github-actions-workflows/greeting-action.png)
 
 ---
 
@@ -196,7 +196,7 @@ jobs:
 
 可阅读文档了解更多内容...
 
-![deploy-pages](/images/img-github-actions-workflows/deploy-pages.png)
+![deploy-pages](https://media.xiaolin.fun/docs/img-github-actions-workflows/deploy-pages.png)
 
 ### 自动化与免运维发布
 
@@ -247,7 +247,7 @@ flowchart TD
 
 本站点项目已经运行了 171 次流水线：
 
-![workflow-runs](/images/img-github-actions-workflows/workflows-runs.png)
+![workflow-runs](https://media.xiaolin.fun/docs/img-github-actions-workflows/workflows-runs.png)
 
 另一方面 GitHub Pages 是 **Serverless 架构**，无需关注 IaaS 资源维护，无需购买域名，无需配置 DNS，无需配置 HTTPS，无需配置 CDN，无需配置负载均衡，无需配置监控告警，无需配置备份恢复，无需配置高可用，无需配置成本优化。
 

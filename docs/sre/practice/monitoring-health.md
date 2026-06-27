@@ -63,7 +63,7 @@ $$
 
 监控是比较容易理解和接受的，因为几乎所有的系统均具备基础设施的监控，如CPU利用率、内存利用率，Prometheus 和 Grafana 则是常见的监控开源组件。
 
-![Grafana Dashboard](/images/img-availability-safeguard/grafana-dashboard-english.png)
+![Grafana Dashboard](https://media.xiaolin.fun/docs/img-availability-safeguard/grafana-dashboard-english.png)
 
 拨测是成本较低的探测服务是否健康的方式，最简单的业务无关性拨测：Ping/Pong、心跳机制，业务相关性拨测的过程则类似于“网络爬虫”，使用自动化工具模拟用户行为，往往需要串联多个链路，例如登陆-点击首页-点击热榜，依次检查系统的 Response 是否符合预定的规则（已知场景）。因此，拨测是黑盒的，可直接发现系统的业务异常。
 
@@ -71,11 +71,11 @@ $$
 
 注：下图中，拨测某网站首页显示黑屏。
 
-![Youtube-Probing-Error](/images/img-availability-safeguard/youtube-probing-error.png)
+![Youtube-Probing-Error](https://media.xiaolin.fun/docs/img-availability-safeguard/youtube-probing-error.png)
 
 bilibili 某网页失效 404
 
-![bilibili-404](/images/img-availability-safeguard/bilibili-404.png)
+![bilibili-404](https://media.xiaolin.fun/docs/img-availability-safeguard/bilibili-404.png)
 
 巡检是半自动化的或手动的，如何理解？
 
@@ -91,7 +91,7 @@ bilibili 某网页失效 404
 
 阿里云向用户发送的《云安全中心安全运营报告》，可能会被认定为「巡检报告」，然而称为「系统快照报告」更为合适，这是完全自动化执行的，在系统上做截图，并基于规则进行总结。发送该报告的目的是因为用户几乎不关心系统指标健康，没有登录系统查看的习惯，定期发送的报告类似于「纸条便签」，起到提醒知会的作用，发送频次为周。
 
-![阿里云安全报告](/images/img-availability-safeguard/阿里云安全报告.png)
+![阿里云安全报告](https://media.xiaolin.fun/docs/img-availability-safeguard/aliyun-security-report.png)
 
 ## 总结
 

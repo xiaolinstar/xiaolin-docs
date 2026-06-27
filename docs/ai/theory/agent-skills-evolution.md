@@ -12,7 +12,7 @@ tags:
 
 # 通用 Skill 会消失，领域 Skill 会商品化：我的 Agent Skill 演进观
 
-![Agent Skill 演进观封面](/images/img-agent-skills-evolution/infographic-01.png)
+![Agent Skill 演进观封面](https://media.xiaolin.fun/docs/img-agent-skills-evolution/infographic-01.png)
 
 从 2025 年 10 月 Anthropic 正式发布 Claude Skills 算起，到现在也就大半年时间，Agent Skills 已经成了 AI 圈最热的关键词。打开小红书、抖音，铺天盖地的不是“必备 Skills”就是“超好用的 Skills”，再不然就是“宝藏 Skills”；企业端更夸张，腾讯 WorkBuddy、QClaw 以及不少大厂内部都掀起了“Skills 运动”，直接给员工下 KPI 让人提交 Skills。这股热潮来得快，消耗得也快，最近甚至开始有点退烧，但我越看越觉得，很多讨论的出发点是反的。
 
@@ -22,7 +22,7 @@ tags:
 
 谈演进趋势之前，得先把 Agent Skills 分清楚。在我看来，Skills 应该明确地分成三类，各自的演化路径完全不同：
 
-![Skill 的三分类](/images/img-agent-skills-evolution/infographic-02.png)
+![Skill 的三分类](https://media.xiaolin.fun/docs/img-agent-skills-evolution/infographic-02.png)
 
 ### 一、通用工具型 Skills（工具类）
 
@@ -138,7 +138,7 @@ Skill 知识层
 
 两层的意义是：**物理层保显性可管理（用户能装、能删、能 review），缓存层保隐性全覆盖（让用户即使不装也能用上业界最新）**。分层决定 Skills 放在哪，生命周期决定 Skills 怎么活——这两件事必须作为整体来管理，否则任何一层单兵突进都会让另一层失效。
 
-![物理层与缓存层双层管理](/images/img-agent-skills-evolution/infographic-04.png)
+![物理层与缓存层双层管理](https://media.xiaolin.fun/docs/img-agent-skills-evolution/infographic-04.png)
 
 ### 3. 按使用频率与采纳度划分优先级（优先队列）
 
@@ -210,7 +210,7 @@ Skill 知识层
 
 ## 真正值钱的是：领域专家型 Skills
 
-![领域专家型 Skills 的四大稀缺性](/images/img-agent-skills-evolution/infographic-05.png)
+![领域专家型 Skills 的四大稀缺性](https://media.xiaolin.fun/docs/img-agent-skills-evolution/infographic-05.png)
 
 与通用工具型 Skills 形成鲜明对比的是，**领域专家型 Skills 才是未来真正能产生价值、甚至被商品化的资产**。
 

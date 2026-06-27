@@ -28,8 +28,8 @@ polish: []
 
 # 个人开发者视角的驾驭工程：从「结对编程」到「圈养」 AI
 
-![驾驭工程概览](/images/img-harness-engineering/avatar.png)
-<!-- ⚠️ 公众号发布：图片 /images/img-harness-engineering/avatar.png 需手动上传至微信后台 -->
+![驾驭工程概览](https://media.xiaolin.fun/docs/img-harness-engineering/avatar.png)
+<!-- ⚠️ 公众号发布：图片 https://media.xiaolin.fun/docs/img-harness-engineering/avatar.png 需手动上传至微信后台 -->
 
 > 最近「驾驭工程（Harness Engineering）」这个词十分火爆。本文从个人开发者的痛点出发，用通俗易懂的语言为你解读这是个什么新概念。重点拆解了主流 AI 编程工具中 Rules、Hooks 等扩展插件的神秘外衣，带你轻松读懂为什么要从「结对编程」走向「圈养」 AI。
 
@@ -45,8 +45,8 @@ polish: []
 
 一旦 AI 犯错，大家本能的做法是去修改 Prompt，强加诸如「禁止修改外部依赖」、「必须保留原逻辑」等命令。然而，大模型本质上是一个基于概率的文本预测器。随着对话步骤拉长，它的注意力极易漂移，之前的「千叮咛万嘱咐」很容易被遗忘。这种纯粹依靠自然语言的「结对编程」模式让人如履薄冰，必须由人类全程盯防。
 
-![痛点分析：结对编程的困境](/images/img-harness-engineering/infographic-02.png)
-<!-- ⚠️ 公众号发布：图片 /images/img-harness-engineering/infographic-02.png 需手动上传至微信后台 -->
+![痛点分析：结对编程的困境](https://media.xiaolin.fun/docs/img-harness-engineering/infographic-02.png)
+<!-- ⚠️ 公众号发布：图片 https://media.xiaolin.fun/docs/img-harness-engineering/infographic-02.png 需手动上传至微信后台 -->
 
 ## 什么是驾驭工程？
 
@@ -64,22 +64,22 @@ polish: []
 
 项目中的 `.rules` 文件是典型的静态固化提示。比如「禁止使用 `var`」、「强制使用 TailwindCSS」等原本松散的口头规范，可以被沉淀为不变的规则文档。每次智能体启动思考时，底层系统都会自动将其作为最高优先级的系统指令注入脑中。
 
-![规则：固化的系统法则](/images/img-harness-engineering/infographic-03.png)
-<!-- ⚠️ 公众号发布：图片 /images/img-harness-engineering/infographic-03.png 需手动上传至微信后台 -->
+![规则：固化的系统法则](https://media.xiaolin.fun/docs/img-harness-engineering/infographic-03.png)
+<!-- ⚠️ 公众号发布：图片 https://media.xiaolin.fun/docs/img-harness-engineering/infographic-03.png 需手动上传至微信后台 -->
 
 ### 钩子 (Hooks)：执行的底层门神
 
 当我们拿到 AI 生成的代码并准备保存时，`hooks` 就扮演了安全门神。通过在保存或合并动作中植入 `pre-commit` 钩子，不仅能在瞬间粉碎错误代码落盘的企图，还能将异常堆栈信息反向「扔回」给模型，强制它重写。
 
-![钩子：执行的底层门神](/images/img-harness-engineering/infographic-04.png)
-<!-- ⚠️ 公众号发布：图片 /images/img-harness-engineering/infographic-04.png 需手动上传至微信后台 -->
+![钩子：执行的底层门神](https://media.xiaolin.fun/docs/img-harness-engineering/infographic-04.png)
+<!-- ⚠️ 公众号发布：图片 https://media.xiaolin.fun/docs/img-harness-engineering/infographic-04.png 需手动上传至微信后台 -->
 
 ### 技能 (Skills) 与子代理 (Subagents)：物理切分与隔离
 
 面对极为庞杂的业务诉求，让主模型身兼数职必然导致权限失控。最好的策略就是通过能力拆解隔离风险：让一个专属的 `subagent` 仅拥有只读权限去分析数据库；再暴露一个单独的 `skill` 去调用特定 API 发送合并请求。
 
-![技能与子代理：物理切分与隔离](/images/img-harness-engineering/infographic-05.png)
-<!-- ⚠️ 公众号发布：图片 /images/img-harness-engineering/infographic-05.png 需手动上传至微信后台 -->
+![技能与子代理：物理切分与隔离](https://media.xiaolin.fun/docs/img-harness-engineering/infographic-05.png)
+<!-- ⚠️ 公众号发布：图片 https://media.xiaolin.fun/docs/img-harness-engineering/infographic-05.png 需手动上传至微信后台 -->
 
 ## 总结：从泥瓦匠走向基建架构师
 
@@ -87,8 +87,8 @@ polish: []
 
 在未来，我们会把精力倾注于配置细分的 `rules`、编排严格的 `hooks`。好比从亲力亲为搬砖修墙的「泥瓦匠」，蜕变为了专门设计防线网络、架设红绿灯的「基建架构师」。
 
-![总结：向基建架构师蜕变](/images/img-harness-engineering/infographic-06.png)
-<!-- ⚠️ 公众号发布：图片 /images/img-harness-engineering/infographic-06.png 需手动上传至微信后台 -->
+![总结：向基建架构师蜕变](https://media.xiaolin.fun/docs/img-harness-engineering/infographic-06.png)
+<!-- ⚠️ 公众号发布：图片 https://media.xiaolin.fun/docs/img-harness-engineering/infographic-06.png 需手动上传至微信后台 -->
 
 ## 延伸思考：棘手的新挑战
 

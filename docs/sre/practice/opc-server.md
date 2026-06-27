@@ -10,7 +10,7 @@ tags:
 
 # 两台服务器，撑起多个项目
 
-![avatar](/images/img-opc-server/avatar.png)
+![avatar](https://media.xiaolin.fun/docs/img-opc-server/avatar.png)
 
 独立开发者手握多个项目，云服务器怎么选？怎么部署？SSL 证书和备案怎么搞？本文是我作为独立开发者给出的实践路线。
 
@@ -39,7 +39,7 @@ AI 技术的发展给个人开发者送来了春风，我在工作之外的闲�
 
 参考腾讯云给出的轻量应用服务器与云服务器 CVM 的主要区别和优势：
 
-![腾讯云服务器对比](/images/img-opc-server/tencent-lighthouse-cvm.png)
+![腾讯云服务器对比](https://media.xiaolin.fun/docs/img-opc-server/tencent-lighthouse-cvm.png)
 
 从技术实现上，我对两种云服务器的理解更多应该从**运维复杂度**角度考虑：
 
@@ -278,10 +278,10 @@ HTTPS 是绕不过去的，微信小程序、App 接口都强制要求。好消�
 - **华为云 (TrustAsia)**：流程与前两家大同小异，适合在该平台有资源存量的项目。
 
 腾讯云申请免费 SSL 证书：
-![腾讯云申请免费 SSL 证书](/images/img-opc-server/tencent-cloud-ssl.png)
+![腾讯云申请免费 SSL 证书](https://media.xiaolin.fun/docs/img-opc-server/tencent-cloud-ssl.png)
 
 阿里云个人测试证书介绍：
-![阿里云个人测试证书](/images/img-opc-server/aliyun-ssl-doc.png)
+![阿里云个人测试证书](https://media.xiaolin.fun/docs/img-opc-server/aliyun-ssl-doc.png)
 
 **提醒**：免费证书仅支持绑定一个域名，不支持通配符子域名。另外，从 2024 年中开始各大云厂商的免费证书有效期已从原来的 1 年普遍缩短至 **3 个月（90 天）**。这意味着每年需要“折腾”四次。如果项目域名很多，这种手动管理的成本会迅速上升。
 
@@ -325,7 +325,7 @@ HTTPS 是绕不过去的，微信小程序、App 接口都强制要求。好消�
 
 AI持续运维，网站底部 ICP 备案和公安备案：
 
-![AI持续运维备案](/images/img-opc-server/xiaolinstar-icp.png)
+![AI持续运维备案](https://media.xiaolin.fun/docs/img-opc-server/xiaolinstar-icp.png)
 
 ## 总结
 

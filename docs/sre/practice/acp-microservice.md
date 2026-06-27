@@ -17,11 +17,11 @@ tags:
 
 我是阿里云的用户，并且企业内可以申请认证报销，因此就选择了**阿里云 ACP 云原生微服务认证高级工程师**。
 
-![阿里云认证列表](/images/img-acp-microservice/alibaba-cloud-microservice.png)
+![阿里云认证列表](https://media.xiaolin.fun/docs/img-acp-microservice/alibaba-cloud-microservice.png)
 
 我获得的证书：
 
-![MicroService Certification](/images/img-acp-microservice/acp-certification.jpg)
+![MicroService Certification](https://media.xiaolin.fun/docs/img-acp-microservice/acp-certification.jpg)
 
 阿里云将云原生的核心技术理念概括为：**微服务、容器、服务网格、不可变基础设施与声明式API**。这一提炼与行业共识（如 CNCF 的定义）一致，但更侧重于基础设施自动化与治理能力的强化。
 
@@ -102,11 +102,11 @@ tags:
 
 使用CD流水线部署Kubernetes无状态应用已经成为常见实践，而对于数据库等有状态服务的版本发布，多数运维工程师仍然手动执行 SQL 脚本，或者编写shell脚本或Python脚本，半自动化地扫描所有SQL脚本并执行。最近，我在研究数据库版本发布的自动化工具时，了解到 ByteBase 工具，它专为数据库CI/CD项目设计，被 CNCF 收录。
 
-![ByteBase](/images/img-acp-microservice/bytebase.png)
+![ByteBase](https://media.xiaolin.fun/docs/img-acp-microservice/bytebase.png)
 
 它使用一个非常形象的大鱼吃小鱼的图来表示各数据库工具工作场景：
 
-![fish](/images/img-acp-microservice/fish.webp)
+![fish](https://media.xiaolin.fun/docs/img-acp-microservice/fish.webp)
 
 这张图不仅直观展示了 ByteBase 与其他工具的适配场景和优势，也生动地诠释了命令式API和声明式API的典型使用场景：
 

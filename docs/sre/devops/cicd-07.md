@@ -39,7 +39,7 @@ tags:
 - 开发：需求承接、功能交付、敏捷发布
 - 运维：稳定性、回滚时长、MTBF（平均可用时间）、MTTR（平均故障时间）
 
-![CI与CD权责分离](/images/img-cicd/ci-cd权责.png)
+![CI与CD权责分离](https://media.xiaolin.fun/docs/img-cicd/ci-cd-responsibilities.png)
 
 部分文章将组织责任分为“开发-测试-运维”三角关系，但以作者个人实践经验，测试往往没有独立部门。在职责承担上，测试不与开发、运维并列，以可追溯到测试方案、测试报告来定责。
 

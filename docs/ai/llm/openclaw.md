@@ -62,7 +62,7 @@ https://cloud.tencent.com/act/cps/redirect?redirect=1079&cps_key=aaaf11280836364
 
 现在大模型厂商非常多，我发现智谱网页中有**免费模型**，这太好了，可以拿来使用。
 
-![智谱免费模型](/images/img-openclaw/zhipuai-free.png)
+![智谱免费模型](https://media.xiaolin.fun/docs/img-openclaw/zhipuai-free.png)
 
 ## 通信渠道：飞书
 
@@ -70,7 +70,7 @@ https://cloud.tencent.com/act/cps/redirect?redirect=1079&cps_key=aaaf11280836364
 
 大学生普遍都有 QQ，可直接使用。对于职场打工人，“先进团队用飞书”，字节跳动出品的办公软件飞书用户体验和口碑是最好的。
 
-![飞书开放平台](/images/img-openclaw/open-feishu.png)
+![飞书开放平台](https://media.xiaolin.fun/docs/img-openclaw/open-feishu.png)
 
 ## 半小时安装实战
 
@@ -81,7 +81,7 @@ https://cloud.tencent.com/act/cps/redirect?redirect=1079&cps_key=aaaf11280836364
 
 复制链接根据指引购买即可。腾讯云的这款产品性价比非常高，4核4G。
 
-![腾讯云新用户专享](/images/img-openclaw/79-tencent-cloud.png)
+![腾讯云新用户专享](https://media.xiaolin.fun/docs/img-openclaw/79-tencent-cloud.png)
 
 ### 2. 一键安装 OpenClaw
 
@@ -89,7 +89,7 @@ https://cloud.tencent.com/act/cps/redirect?redirect=1079&cps_key=aaaf11280836364
 
 在控制台中选择购买的云服务器，使用应用模板重装系统，选择 OpenClaw。
 
-![Tencent OpenClaw](/images/img-openclaw/tencent-openclaw.png)
+![Tencent OpenClaw](https://media.xiaolin.fun/docs/img-openclaw/tencent-openclaw.png)
 
 腾讯云提供了全面和详尽的玩转 OpenClaw 文档，可跳转查看。
 
@@ -103,7 +103,7 @@ https://cloud.tencent.com/act/cps/redirect?redirect=1079&cps_key=aaaf11280836364
 
 起步的配置直接根据指引完成即可，快速将龙虾启动。
 
-![飞书 OpenClaw](/images/img-openclaw/feishu-message.jpg)
+![飞书 OpenClaw](https://media.xiaolin.fun/docs/img-openclaw/feishu-message.jpg)
 
 
 ## 切换智谱免费模型
@@ -112,7 +112,7 @@ https://cloud.tencent.com/act/cps/redirect?redirect=1079&cps_key=aaaf11280836364
 
 在官方教程文档中，没有介绍 GLM 的模型配置，本文补充。
 
-![用户自定义模型](/images/img-openclaw/userself-model.png)
+![用户自定义模型](https://media.xiaolin.fun/docs/img-openclaw/userself-model.png)
 
 在智谱官网登录个人账户，并复制 API Key，默认使用 GLM V4.7 Flash 模型：
 

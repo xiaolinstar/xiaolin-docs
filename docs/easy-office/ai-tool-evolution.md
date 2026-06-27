@@ -30,7 +30,7 @@ tags:
 
 这一产品是首次在领域应用中集成大模型能力，基本确定了 AI 工具的形态，奠定了结对编程的使用模式。
 
-![TRAE Plugin](/images/img-ai-ide-evolution/TRAE-Plugin.png)
+![TRAE Plugin](https://media.xiaolin.fun/docs/img-ai-ide-evolution/trae-plugin.png)
 
 ## AI Native IDE
 
@@ -48,11 +48,11 @@ Cursor 的出现对开发者来说是现象级的，因为它第一次给推崇�
 
 Cursor：
 
-![Cursor Native IDE](/images/img-ai-ide-evolution/cursor-app.png)
+![Cursor Native IDE](https://media.xiaolin.fun/docs/img-ai-ide-evolution/cursor-app.png)
 
 字节跳动 TRAE：
 
-![TRAE](/images/img-ai-ide-evolution/TRAE.png)
+![TRAE](https://media.xiaolin.fun/docs/img-ai-ide-evolution/trae.png)
 
 ## AI CLI
 
@@ -64,7 +64,7 @@ Cursor：
 
 之后国内厂商 TRAE、Qoder、CodeBuddy 等产品也出现了 AI CLI 版本，为开发者提供了更方便的使用方式。
 
-![Claude Code](/images/img-ai-ide-evolution/claude-code-cli.png)
+![Claude Code](https://media.xiaolin.fun/docs/img-ai-ide-evolution/claude-code-cli.png)
 
 ## 操作系统级智能体
 
@@ -78,13 +78,13 @@ OpenClaw 带来的一个核心颠覆是，所有的系统都应该考虑面向 A
 
 微信接入 OpenClaw 机器人：
 
-![Wechat OpenClaw](/images/img-ai-ide-evolution/wechat-openclaw.png)
+![Wechat OpenClaw](https://media.xiaolin.fun/docs/img-ai-ide-evolution/wechat-openclaw.png)
 
 ## 智能体协作平台
 
 **代表产品：Codex（OpenAI）**  
 
-![CodexApp](/images/img-ai-ide-evolution/CodexApp.png)
+![CodexApp](https://media.xiaolin.fun/docs/img-ai-ide-evolution/codex-app.png)
 
 OpenAI 这家人工智能先驱在2026年2月2日正式发布了 Codex 的独立桌面 App，这是一个基于多智能体的协作平台。
 
@@ -92,7 +92,7 @@ Codex 的产品形态其貌不扬，但用起来发现其工作调度能力非�
 
 Codex 的产品理念也是 Vibe Coding 优先，不需要懂代码，只需要与智能体交互即可。
 
-![Codex](/images/img-ai-ide-evolution/Codex.png)
+![Codex](https://media.xiaolin.fun/docs/img-ai-ide-evolution/codex.png)
 
 ## 结语
 

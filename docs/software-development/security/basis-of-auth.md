@@ -54,7 +54,7 @@ sequenceDiagram
 
 Cookie 是现代浏览器默认支持的一项本地缓存机制，起英文名为*小饼干*，本质上它是浏览器为认证授权而设计的一个“小口袋”，约定其来处理用户认证授权数据。
 
-![Cookie in Chrome](/images/img-basis-auth/auth-cookie.png)
+![Cookie in Chrome](https://media.xiaolin.fun/docs/img-basis-auth/auth-cookie.png)
 
 Session 英文名为*会话*，指的是客户端和服务器间的状态记录，位于服务端，是专门用来存储用户会话数据的。
 

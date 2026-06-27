@@ -346,11 +346,11 @@ pipeline {
 
 配置全局凭据：**请使用GitHub账户密码**
 
-![Jenkins设置全局凭据](/images/img-cicd-taste/global-credential.png)
+![Jenkins设置全局凭据](https://media.xiaolin.fun/docs/img-cicd-taste/global-credential.png)
 
 在Blue Ocean界面中创建流水线，根据提示选择代码仓库，完成项目导入。
 
-![Blue Ocean UI创建流水线](/images/img-cicd-taste/blue-ocean-pipeline.png)
+![Blue Ocean UI创建流水线](https://media.xiaolin.fun/docs/img-cicd-taste/blue-ocean-pipeline.png)
 
 设置完成后，GitHub项目添加完成，BlueOcean中默认配置了GitHub Webhook，每一次提交代码到GitHub仓库，就会触发项目构建和编译。
 

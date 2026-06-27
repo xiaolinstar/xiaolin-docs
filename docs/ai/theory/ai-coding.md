@@ -31,13 +31,13 @@ tags:
 - 腾讯 CodeBuddy
 - 阿里云 Lingma
 
-![AI Coding Plugin](/images/img-ai-coding/tencent-code-buddy.png)
+![AI Coding Plugin](https://media.xiaolin.fun/docs/img-ai-coding/tencent-code-buddy.png)
 
 此阶段，AI Coding 的工作范畴是文件、代码块级别的，首次让人见识到了大模型的强大能力。
 
 早期我非常喜欢 Jetbrains 产品中的 Tab 代码补全插件 **Tabnine**，基于机器学习的强大代码补全插件。一直以来，该产品是 IDE 插件中的明星产品，大模型这种新技术的到来直接将该产品拍在了沙滩上。它的宿主 JetBrains 公司也面临同样的窘境。
 
-![Jetbrains free of charge](/images/img-ai-coding/jetbrains-free-charge.png)
+![Jetbrains free of charge](https://media.xiaolin.fun/docs/img-ai-coding/jetbrains-free-charge.png)
 
 **2024至今，AI 原生 IDE**
 

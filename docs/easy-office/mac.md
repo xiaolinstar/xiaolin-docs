@@ -13,9 +13,9 @@ tags:
 
 作为4年MacBook Pro用户，近期因为工作软件兼容性问题，自费购买了Windows电脑作为主力办公电脑，但学习、写代码等仍然使用MacBook Pro，在此聊聊这些年用MacBook Pro的感受。说实话，刚开始是被它的颜值吸引的——谁不喜欢一个轻薄漂亮、屏幕又好的笔记本呢？但真正让我留下来的，是它那套让人"用了就回不去"的系统体验以及轻装上阵，无需携带充电器、鼠标。
 
-![MacBook Pro 银色](/images/img-mac/mac-sliver.jpg)
+![MacBook Pro 银色](https://media.xiaolin.fun/docs/img-mac/mac-silver.jpg)
 
-![MacBook Pro 深灰色](/images/img-mac/mac-gray.jpg)
+![MacBook Pro 深灰色](https://media.xiaolin.fun/docs/img-mac/mac-gray.jpg)
 
 ## MacBook Pro 体验
 
@@ -55,7 +55,7 @@ Office兼容性差是macOS最大的痛点，特别是和同事协作的时候，
 - 好奇心，想要尝鲜，体验Mac系统，毕竟Windows、Linux都用过了，同时很多同学朋友都推荐Mac
 - 好看好看好看，苹果电脑简约大方，端个苹果电脑在自习室、星巴克、图书馆办公，既方便又有美感
 
-![starbucks](/images/img-mac/mac-starbucks.jpg)
+![starbucks](https://media.xiaolin.fun/docs/img-mac/mac-starbucks.jpg)
 
 不过，因为macOS的系统兼容性问题，以及一些专业软件的限制，我个人还是比较推荐购买Windows笔记本的，尤其是你在一家比较传统的企业或单位，Windows始终是基准。
 

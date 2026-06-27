@@ -168,7 +168,7 @@ Cursor · DevOps · 一人公司 · 每天进步一点点
 | **Frontmatter** | 遵循项目规范：`title`、`description`、`date`、`category`、`tags` |
 | **结构** | 结论先行 → 最小可行方案 → 原理与权衡 → 落地材料 → 关联阅读（≥3 条内链） |
 | **SEO** | 1 个主关键词 + 3 个长尾词；`description` 120 字内 |
-| **配图** | 封面 + 信息图；路径 `/images/img-{slug}/` |
+| **配图** | 封面 + 信息图；CDN `https://media.xiaolin.fun/docs/img-{slug}/` |
 | **索引** | 新增文档同步更新 `docs/.vitepress/config.mts` |
 
 **轻量文 vs 深度文**：

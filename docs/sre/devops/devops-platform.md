@@ -24,7 +24,7 @@ tags:
 
 现状：GitLab、Atlassian、Azure DevOps 等全球产品占据绝大多数市场份额。
 
-![Coding DevOps 停服公告](/images/img-devops-platform/coding-devops-pause.png)
+![Coding DevOps 停服公告](https://media.xiaolin.fun/docs/img-devops-platform/coding-devops-pause.png)
 
 ## 理想很丰满，用户很“分裂”
 
@@ -65,7 +65,7 @@ tags:
 
 云原生构建（Cloud Native Build，CNB）是新一代开发者工具，为开发者提供代码托管、流水线、云上开发空间、制品管理等能力。基于 Docker 生态，对环境、缓存、插件进行抽象，通过声明式的语法，帮助开发者以更高效的方式构建软件。
 
-![CNB](/images/img-devops-platform/cnb.png)
+![CNB](https://media.xiaolin.fun/docs/img-devops-platform/cnb.png)
 
 ## 供应商模式：DevOps 最后的堡垒与深坑
 

@@ -30,7 +30,7 @@ LTS 版本是 Long Term Support 的缩写，意思是长期支持版本。
 
 初始化服务器系统时，支持多种类型：使用应用模板、**基于操作系统镜像**、使用容器镜像、**使用自定义镜像**，可根据实际情况选择。
 
-![ubuntu 22.04 操作系统](/images/img-linux-guide/tencent-instance.png)
+![ubuntu 22.04 操作系统](https://media.xiaolin.fun/docs/img-linux-guide/tencent-instance.png)
 
 启动后可以首先执行基本的系统初始化配置，比如更新软件包列表、升级系统软件等。
 
@@ -99,7 +99,7 @@ echo $SHELL
 
 oh-my-zsh 是一个社区驱动的 zsh 配置框架，它提供了很多有用的功能，比如插件、主题等。
 
-![oh-my-zsh GitHub Repository](/images/img-linux-guide/ohmyzsh-repository.png)
+![oh-my-zsh GitHub Repository](https://media.xiaolin.fun/docs/img-linux-guide/ohmyzsh-repository.png)
 
 ### 安装 oh-my-zsh
 
@@ -394,11 +394,11 @@ sudo systemctl restart docker
 
 因此，可以将系统当前状态保存为一个镜像，后续可以直接使用这个镜像创建新的虚拟机，作为开发环境的起点。
 
-![tencentyun build image](/images/img-linux-guide/tencentyun-image.png)
+![tencentyun build image](https://media.xiaolin.fun/docs/img-linux-guide/tencentyun-image.png)
 
 腾讯云提供5个自定义镜像免费额度：
 
-![tencentyun images](/images/img-linux-guide/tencentyun-image-free.png)
+![tencentyun images](https://media.xiaolin.fun/docs/img-linux-guide/tencentyun-image-free.png)
 
 ## 总结
 

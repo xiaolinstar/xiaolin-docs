@@ -35,7 +35,7 @@ Google Antigravity 是由 Google DeepMind 团队推出的一款革命性 AI 编�
 
 安装过程与常规软件无异，但在安装结束后首次启动时，系统通常会跳转至浏览器进行 OAuth 认证。这是大多数由于网络配置不当而导致安装失败的“重灾区”。
 
-![antigravity-auth](/images/img-antigravity/antigravity-auth.png)
+![antigravity-auth](https://media.xiaolin.fun/docs/img-antigravity/antigravity-auth.png)
 
 ## 解决网络问题
 
@@ -56,7 +56,7 @@ Antigravity 内部会调用大量的后台搜索、代码执行和权限校验�
 
 在现代网络代理工具中，通常可以一键开启 TUN 模式。
 
-![virtual-network](/images/img-antigravity/mihomo-tun.png)
+![virtual-network](https://media.xiaolin.fun/docs/img-antigravity/mihomo-tun.png)
 
 配置时保持默认设置即可。本文以 Mihomo (Clash) 为例进行演示，其他主流工具的操作逻辑基本一致。
 
@@ -66,23 +66,23 @@ Antigravity 内部会调用大量的后台搜索、代码执行和权限校验�
 
 目前的 AI 编程工具普遍支持 Agent（智能助手）模式和编辑器模式，用户可以通过快捷键或点击界面右上角的图标进行无缝切换。
 
-![antigravity-help](/images/img-antigravity/antigravity-help.png)
+![antigravity-help](https://media.xiaolin.fun/docs/img-antigravity/antigravity-help.png)
 
 ### 模型额度监控插件
 
 在使用 AI 编程工具时，实时监控模型额度是非常有必要的，这能帮助开发者对资源消耗做到“心中有数”。
 
-![antigravity-cockpit.png](/images/img-antigravity/antigravity-cockpit.png)
+![antigravity-cockpit.png](https://media.xiaolin.fun/docs/img-antigravity/antigravity-cockpit.png)
 
 安装后重启 Antigravity 即可。
 
-![antigravity-free](/images/img-antigravity/antigravity-free.png)
+![antigravity-free](https://media.xiaolin.fun/docs/img-antigravity/antigravity-free.png)
 
 > 注：付费订阅目前仍不支持中国大陆及香港地区的信用卡直接支付。
 
 Google 提供订阅增值服务，每月花费约 150 元人民币即可订购 Google AI Pro 会员，预算充足的开发者可以考虑支持一下。
 
-![Google AI Pro](/images/img-antigravity/google-ai-pro.png)
+![Google AI Pro](https://media.xiaolin.fun/docs/img-antigravity/google-ai-pro.png)
 
 订阅该会员后，你不仅可以解锁 Antigravity 的高级功能，还能享受 Google AI 全家桶的完整服务。
 

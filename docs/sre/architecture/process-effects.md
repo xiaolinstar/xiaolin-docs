@@ -43,7 +43,7 @@ tags:
 
 **真正有价值、能产生生产力的流程，必须主动并且大量地制造“副作用”。** 这里的“副作用”绝不是代码世界里令人头疼的 Bug，而是指当流程节点发生状态流转的那一刻，能够以自动化的逻辑精准触发对外部异构系统、硬件设施或者其他业务模块状态的接力更改。
 
-![流程产生的多米诺效应](/images/img-process-side-effects/workflow_domino.png)
+![流程产生的多米诺效应](https://media.xiaolin.fun/docs/img-process-side-effects/workflow-domino.png)
 
 那些带有各种强力“副作用”、能主动伸出触手去影响其他系统的流程，才是带领我们真正跨越到“数智化”和高度自动化的唯一舟楫。
 

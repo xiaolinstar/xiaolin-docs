@@ -3,6 +3,8 @@ docs/.vitepress/cache
 
 /node_modules/
 /docs/.vitepress/dist/
+coscli_output/
+coscli.log
 .pnpm-store/
 .idea
 
@@ -18,3 +20,7 @@ cert/
 .env
 .env.local
 .env.*.local
+
+# 文档大图已迁 COS/CDN（本地目录仅作上传源）
+docs/public/images/**
+!docs/public/images/.gitkeep

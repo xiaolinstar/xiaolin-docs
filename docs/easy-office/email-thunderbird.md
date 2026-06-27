@@ -25,8 +25,8 @@ tags: []
 
 ### 优雅外观、清爽简洁
 
-![黑色主题](/images/img-email-thunderbird/thunderbird-lookup.png)
-![白色主题](/images/img-email-thunderbird/thunderbird-lookup2.png)
+![黑色主题](https://media.xiaolin.fun/docs/img-email-thunderbird/thunderbird-lookup.png)
+![白色主题](https://media.xiaolin.fun/docs/img-email-thunderbird/thunderbird-lookup2.png)
 
 ### 全平台支持
 
@@ -47,7 +47,7 @@ Thunderbird 由用户自愿捐助，无需收费。人人都可以是项目贡�
 ### 插件扩展
 
 Thunderbird 已经足以满足用户的绝大多数需求，像Chrome浏览器一样，它支持插件扩展，功能更加丰富。
-![插件扩展](/images/img-email-thunderbird/thunderbird-plug.png)
+![插件扩展](https://media.xiaolin.fun/docs/img-email-thunderbird/thunderbird-plug.png)
 
 ## 马上开始
 
@@ -55,7 +55,7 @@ Thunderbird 已经足以满足用户的绝大多数需求，像Chrome浏览器�
 
 无需「科学上网」，可直接在[官网](https://www.thunderbird.net/zh-CN/thunderbird/all/)下载，根据操作安装指引完成。
 
-![Thunderbird解放收件箱](/images/img-email-thunderbird/thunderbird.png)
+![Thunderbird解放收件箱](https://media.xiaolin.fun/docs/img-email-thunderbird/thunderbird.png)
 
 ### 邮箱配置
 
@@ -73,16 +73,16 @@ Thunderbird 已经足以满足用户的绝大多数需求，像Chrome浏览器�
 #### 获取 Imap/Pop3 授权码
 
 **QQ 邮箱**
-![QQ邮箱获取imap授权码-1](/images/img-email-thunderbird/mail-qq.png)
-![QQ邮箱获取imap授权码-2](/images/img-email-thunderbird/mail-qq-imap.png)
+![QQ邮箱获取imap授权码-1](https://media.xiaolin.fun/docs/img-email-thunderbird/mail-qq.png)
+![QQ邮箱获取imap授权码-2](https://media.xiaolin.fun/docs/img-email-thunderbird/mail-qq-imap.png)
 
 **139邮箱**
-![139邮箱获取imap授权码](/images/img-email-thunderbird/mail-139.png)
+![139邮箱获取imap授权码](https://media.xiaolin.fun/docs/img-email-thunderbird/mail-139.png)
 
 #### 绑定 Thunderbird 邮箱
 
 Thunderbird 无需手动协议，输入授权码则可自动协议匹配👍
-![设置现有的电子邮件地址](/images/img-email-thunderbird/thunderbird-email.png)
+![设置现有的电子邮件地址](https://media.xiaolin.fun/docs/img-email-thunderbird/thunderbird-email.png)
 
 ## 最佳实践
 
@@ -91,9 +91,9 @@ Thunderbird 无需手动协议，输入授权码则可自动协议匹配👍
 ### 通信录
 
 可以在通信录中区分邮箱联系人，你无需手动添加，在邮件中点击邮箱账户快速添加和编辑。
-![添加账户](/images/img-email-thunderbird/email-add-user.png)
+![添加账户](https://media.xiaolin.fun/docs/img-email-thunderbird/email-add-user.png)
 
-![创建通信录](/images/img-email-thunderbird/email-add-menu.png)
+![创建通信录](https://media.xiaolin.fun/docs/img-email-thunderbird/email-add-menu.png)
 
 在发送邮件时，也无需可以从通信录中选择「收件人」和「抄送人」，Thunderbird 客户端支持关键字匹配，自动弹出通信录中匹配的用户。
 
@@ -114,18 +114,18 @@ Thunderbird 无需手动协议，输入授权码则可自动协议匹配👍
 
 在邮箱客户端的「设置-工具-消息过滤器」中新建过滤器，并配置。
 
-![Thunderbird 消息过滤器](/images/img-email-thunderbird/thunderbird-filter-1.png)
+![Thunderbird 消息过滤器](https://media.xiaolin.fun/docs/img-email-thunderbird/thunderbird-filter-1.png)
 
 手动执行或者收到邮件时，执行过滤器，满足条件（逻辑或）的邮件移动到系统例行文件夹。
 
 举一反三，您可以自行定义各类消息过滤器，类似于 `if-else` 逻辑。
 
-![Thunderbird 消息过滤器自定义](/images/img-email-thunderbird/thunderbird-filter-2.png)
+![Thunderbird 消息过滤器自定义](https://media.xiaolin.fun/docs/img-email-thunderbird/thunderbird-filter-2.png)
 
 ### 签名
 
 在发送邮箱时，附带介绍个人信息的专属签名，可以提升你邮箱的商务属性。在 Thunderbird 中「一劳永逸」设置自己的专属签名。
-![商务气质邮箱签名](/images/img-email-thunderbird/email-signature-dingzhen.png)
+![商务气质邮箱签名](https://media.xiaolin.fun/docs/img-email-thunderbird/email-signature-dingzhen.png)
 
 配置签名，包含以下步骤：
 
@@ -135,7 +135,7 @@ Thunderbird 无需手动协议，输入授权码则可自动协议匹配👍
 #### 邮箱签名模板
 
 推荐一个邮箱模板生成器[标小智](https://www.logosc.cn/email-signature-generator#templates)，根据自己的偏好设计专属签名模板。
-![标小智邮箱签名模板](/images/img-email-thunderbird/email-signature-template.png)
+![标小智邮箱签名模板](https://media.xiaolin.fun/docs/img-email-thunderbird/email-signature-template.png)
 
 根据网站提示定义模板，生成签名 HTML 文件，可以使用「文本编辑器」打开，并全选复制。
 
@@ -144,10 +144,10 @@ Thunderbird 无需手动协议，输入授权码则可自动协议匹配👍
 签名模板是以邮箱为单位的，QQ 邮箱和网易邮箱（个人邮箱和上午邮箱）可以设置不同的模板。
 
 右键点击想要设置签名的邮箱：
-![邮箱设置](/images/img-email-thunderbird/mail-setting.png)
+![邮箱设置](https://media.xiaolin.fun/docs/img-email-thunderbird/mail-setting.png)
 
 选择「签名文字」，勾选「使用 HTML」，将上一步骤生成的 HTML 粘贴到编辑框内，无需保存自动生效。
-![设置邮箱签名](/images/img-email-thunderbird/mail-setting-signature.png)
+![设置邮箱签名](https://media.xiaolin.fun/docs/img-email-thunderbird/mail-setting-signature.png)
 
 新建邮件时，会自动在邮件末尾生成个人专属签名。
 
@@ -155,17 +155,17 @@ Thunderbird 无需手动协议，输入授权码则可自动协议匹配👍
 
 像 Chrome 浏览器一样，Thunderbird 支持扩展插件，可以去插件市场上查看推荐插件、精选插件。
 
-![Thunderbird 插件市场](/images/img-email-thunderbird/thunderbird-plugins.png)
+![Thunderbird 插件市场](https://media.xiaolin.fun/docs/img-email-thunderbird/thunderbird-plugins.png)
 
 如定时发送、外观主题、语法检查、翻译等。
 
 特别地，在富文本编辑框中使用 Markdown 编辑：
 
-![Thunderbird Markdown 插件](/images/img-email-thunderbird/thunderbird-plugin-markdown.png)
+![Thunderbird Markdown 插件](https://media.xiaolin.fun/docs/img-email-thunderbird/thunderbird-plugin-markdown.png)
 
 > 该插件存在一个不足，消息无法自适应编辑框大小，可以适用体验下。去社区提个 issue 或者自己开发个插件！
 
-![Thunderbird Markdown 插件使用示例](/images/img-email-thunderbird/thunderbird-plugin-markdown-sample.png)
+![Thunderbird Markdown 插件使用示例](https://media.xiaolin.fun/docs/img-email-thunderbird/thunderbird-plugin-markdown-sample.png)
 
 ## 其他配置
 
@@ -173,7 +173,7 @@ Thunderbird 无需手动协议，输入授权码则可自动协议匹配👍
 
 设置-常规-网络与磁盘空间-连接-设置...
 
-![不使用代理](/images/img-email-thunderbird/no-proxy.png)
+![不使用代理](https://media.xiaolin.fun/docs/img-email-thunderbird/no-proxy.png)
 
 ## 参考
 

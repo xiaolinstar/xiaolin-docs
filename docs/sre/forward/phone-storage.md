@@ -25,7 +25,7 @@ tags:
 
 电池是消耗品，换块电池即使是iPhone，均价在800元。因为电池不行换手机，就像“因为笔没墨了就要换支钢笔”。
 
-<img src="/images/img-phone-storage/iPhone15Pro-repair.jpg" alt="iPhone维修" style="width: 100%; max-width: 400px; height: auto; display: block; margin: 0 auto;">
+<img src="https://media.xiaolin.fun/docs/img-phone-storage/iphone-15-pro-repair.jpg" alt="iPhone维修" style="width: 100%; max-width: 400px; height: auto; display: block; margin: 0 auto;">
 
 苹果官方针对iPhone13，推出换电池半价活动，活动时间为2026年1月7日至2026年4月30日，半价后的换电池费用为399元。
 
@@ -45,11 +45,11 @@ tags:
 
 照片存储空间占用60GB：
 
-<img src="/images/img-phone-storage/photo-storage.jpg" alt="照片存储空间" style="width: 100%; max-width: 400px; height: auto; display: block; margin: 0 auto;">
+<img src="https://media.xiaolin.fun/docs/img-phone-storage/photo-storage.jpg" alt="照片存储空间" style="width: 100%; max-width: 400px; height: auto; display: block; margin: 0 auto;">
 
 微信存储空间占用50GB：
 
-<img src="/images/img-phone-storage/wechat-storage.jpg" alt="微信存储空间" style="width: 100%; max-width: 400px; height: auto; display: block; margin: 0 auto;">
+<img src="https://media.xiaolin.fun/docs/img-phone-storage/wechat-storage.jpg" alt="微信存储空间" style="width: 100%; max-width: 400px; height: auto; display: block; margin: 0 auto;">
 
 这些数据不该被删除，因为它们是数字化的“人生痕迹”——工作记录、情感凭证、生活的底片。核心原则应该是：数据不应被抹除，而应被“重排”。
 
@@ -81,27 +81,27 @@ iCloud照片不只是一块云盘，更像一个**照片版的虚拟内存**，�
 
 **电脑版微信 → 设置 → 聊天记录管理 → 备份与恢复**
 
-<img src="/images/img-phone-storage/wechat-settings.png" alt="聊天记录管理" style="width: 100%; max-width: 400px; height: auto; display: block; margin: 0 auto;">
+<img src="https://media.xiaolin.fun/docs/img-phone-storage/wechat-settings.png" alt="聊天记录管理" style="width: 100%; max-width: 400px; height: auto; display: block; margin: 0 auto;">
 
 支持的功能：
 
-<img src="/images/img-phone-storage/wechat-management.png" alt="聊天记录管理功能" style="width: 100%; max-width: 400px; height: auto; display: block; margin: 0 auto;">
+<img src="https://media.xiaolin.fun/docs/img-phone-storage/wechat-management.png" alt="聊天记录管理功能" style="width: 100%; max-width: 400px; height: auto; display: block; margin: 0 auto;">
 
 最近，我发现微信悄悄上线了自动备份的功能，只要与电脑端同时登录，且在同一个局域网中，那么手机微信中的聊天记录会自动备份到电脑上。
 
-<img src="/images/img-phone-storage/setting-copy.jpg" alt="微信自动备份" style="width: 100%; max-width: 400px; height: auto; display: block; margin: 0 auto;">
+<img src="https://media.xiaolin.fun/docs/img-phone-storage/setting-copy.jpg" alt="微信自动备份" style="width: 100%; max-width: 400px; height: auto; display: block; margin: 0 auto;">
 
 有点类似于Mac上的时间机器（Time Machine）了，会提醒用户备份。
 
 我去翻阅微信的更新日志，看不到任何有价值的信息，全部都是“修复了一些已知问题”。
 
-<img src="/images/img-phone-storage/wechat-log.jpg" alt="微信更新日志" style="width: 100%; max-width: 400px; height: auto; display: block; margin: 0 auto;">
+<img src="https://media.xiaolin.fun/docs/img-phone-storage/wechat-log.jpg" alt="微信更新日志" style="width: 100%; max-width: 400px; height: auto; display: block; margin: 0 auto;">
 
 然而有一条微信评论让我眼前一亮，完全就是该功能的说明书，大胆猜测这个给微信开发者提意见的用户是一名专业优秀的产品经理，向她学习。
 
-<img src="/images/img-phone-storage/wechat-comment-1.jpg" alt="微信用户反馈1" style="width: 100%; max-width: 400px; height: auto; display: block; margin: 0 auto;">
+<img src="https://media.xiaolin.fun/docs/img-phone-storage/wechat-comment-1.jpg" alt="微信用户反馈1" style="width: 100%; max-width: 400px; height: auto; display: block; margin: 0 auto;">
 
-<img src="/images/img-phone-storage/wechat-comment-2.jpg" alt="微信用户反馈2" style="width: 100%; max-width: 400px; height: auto; display: block; margin: 0 auto;">
+<img src="https://media.xiaolin.fun/docs/img-phone-storage/wechat-comment-2.jpg" alt="微信用户反馈2" style="width: 100%; max-width: 400px; height: auto; display: block; margin: 0 auto;">
 
 ---
 

@@ -49,7 +49,7 @@ tags:
 
 **“快速失败”是高性能架构的核心原则。** 异常抛出的时机，宜早不宜迟。如果一个请求注定要失败，那就让它在最外层（如校验层）就宣告终结。如果异常被带入了深层业务代码，甚至进入了数据库事务，处理成本将呈指数级上升。
 
-![Fail-Fast](/images/img-exception-00/fail-fast.png)
+![Fail-Fast](https://media.xiaolin.fun/docs/img-exception-00/fail-fast.png)
 
 **异常层级**：
 

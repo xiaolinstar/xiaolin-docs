@@ -11,7 +11,7 @@ tags:
 
 # 让 AI Work for me：一场开启 AI 原生的“双向奔赴”
 
-![封面图](/images/img-ai-native-harness/avatar.png)
+![封面图](https://media.xiaolin.fun/docs/img-ai-native-harness/avatar.png)
 
 当前，大语言模型的能力正在以指数级飞跃，但许多场景下，AI 输出的质量和效率并未达到预期。这是因为当下主流的人机协作模式，依然停留在“人类适应机器界面”的旧习惯中。给 AI 提供格式混乱的富文本，或者让 AI 面对无法操作的图形界面，等同于给这个数字时代的超级大脑加上了枷锁。
 
@@ -27,7 +27,7 @@ tags:
 
 ## 重塑信息载体
 
-![重塑信息载体](/images/img-ai-native-harness/infographic-01.png)
+![重塑信息载体](https://media.xiaolin.fun/docs/img-ai-native-harness/infographic-01.png)
 
 长期以来，富文本格式及专属办公文档（如 Word、Excel、PPT）被奉为圭臬。这类文件不仅包含了信息本身，还携带着重度渲染的样式、宏操作以及复杂的元数据。虽然这种形态对肉眼极其友好，但在大语言模型的视角中，却充满了极高的认知负担与视觉“杂音”。
 
@@ -37,7 +37,7 @@ tags:
 
 ## 授权工具能力
 
-![授权工具能力](/images/img-ai-native-harness/infographic-02.png)
+![授权工具能力](https://media.xiaolin.fun/docs/img-ai-native-harness/infographic-02.png)
 
 除了重构信息载体，交互形式也需要发生根本性的转变。在传统的软件工程中，图形用户界面（GUI）降低了操作门槛，但这是只属于生物视觉和物理手指的便利。GUI 是封闭的黑盒，极难被机器自主“点击”或捕捉状态。
 
@@ -47,7 +47,7 @@ tags:
 
 ## 引入驾驭工程
 
-![驾驭工程](/images/img-ai-native-harness/infographic-03.png)
+![驾驭工程](https://media.xiaolin.fun/docs/img-ai-native-harness/infographic-03.png)
 
 如果将优秀的模型类比为一匹充满力量的骏马，那么如何控制其方向与速度，便需要一套完善的“马具”。这就是目前快速发展的方法论——驾驭工程（Harness Engineering）。它的出现，标志着大模型应用从单次对话拉扯（Prompt Engineering），正式迈向持久化系统托管。
 
@@ -61,7 +61,7 @@ tags:
 
 ## 规训与惯养：AI 原生的深层追问
 
-![规训与惯养](/images/img-ai-native-harness/infographic-04.png)
+![规训与惯养](https://media.xiaolin.fun/docs/img-ai-native-harness/infographic-04.png)
 
 当我们积极投身于这场 AI 原生的重构时，一个有趣的悖论浮出水面：大模型的底层架构是在计算机科学家与软件工程师的领军之下构建的。在程序员的天然逻辑中，纯文本与结构化数据极度易于编程控制，是极简与高效的代名词。因此，在塑造庞大 AI 能力的形成期，开发者们事实上遵循了“方便优先、自我中心”的设计原则。
 
@@ -71,7 +71,7 @@ tags:
 
 ## 升华总结
 
-![人机双向奔赴](/images/img-ai-native-harness/infographic-05.png)
+![人机双向奔赴](https://media.xiaolin.fun/docs/img-ai-native-harness/infographic-05.png)
 
 全面接入 AI 原生的时代，看似是我们放弃了视觉上的花哨享受，被“规训”到了开发者设定的纯文本与干瘪命令之中，但这种双方不断博弈与磨合的“建设性妥协”，恰恰是通往超级生产力的必经之路。从主动转换信息载体、开放底层工具接口，到构建体系化的驾驭工程，不再仅仅是工具的平替，而是一场从“温室里的软件使用者”向“硬核代理管理者”的残酷跃迁。当我们学会不再指望机器无限地“惯养”我们，而是主动拥抱结构框架，在这股新时代浪潮中，数字自动化的真实威力必将被全面激活。
 

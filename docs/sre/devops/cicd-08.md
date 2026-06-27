@@ -21,7 +21,7 @@ tags:
 
 制品仓库是用于存储、管理和分发软件包（即制品）的软件系统，贯穿软件研发的整个生命周期。它提供一种**高效**、**安全**和**可追溯**的方式管理各种类型的制品，例如普通的压缩包、库文件、二进制文件等，并通过各种制品协议为开发者和 CI/CD 工具提供服务。
 
-![阿里云效制品库在CI/CD中的架构功能](/images/img-ci-pipeline/阿里云效codeup.png)
+![阿里云效制品库在CI/CD中的架构功能](https://media.xiaolin.fun/docs/img-ci-pipeline/aliyun-codeup.png)
 
 制品仓库作为开发、测试、安全、运维人员的桥梁，链接整个 CI/CD 工作流。
 
@@ -29,7 +29,7 @@ tags:
 
 制品仓库托管特定类型的产出制品如 Maven、Npm、Pypi，而容器镜像则是云原生时代**通用制品**。简单来说，容器镜像是对制品的再封装，CD 的部署单元被统一为 **OCI 镜像**，生产环境中的节点是完全对等的、环境依赖无关的，容器服务可以像云一样在计算平面上自由飘移。因此，云原生技术架构下，CD 流水线通常只面向**镜像仓库**。
 
-![制品封装为容器镜像](/images/img-ci-pipeline/制品仓库到镜像仓库.png)
+![制品封装为容器镜像](https://media.xiaolin.fun/docs/img-ci-pipeline/artifact-to-image-registry.png)
 
 ## 普通制品库成为可选项
 
@@ -68,7 +68,7 @@ ghcr 的优势是 GitHub 出品，与 Git 源代码仓库、GitHub Actions 等�
 
 GitHub 仓库承担 CI 产物托管的功能，支持存储主流的制品。
 
-![常见的项目构建](/images/img-ci-pipeline/GitHub-package支持.png)
+![常见的项目构建](https://media.xiaolin.fun/docs/img-ci-pipeline/github-package-support.png)
 
 对于一个简单的前端 Web 项目，CI Pipeline 包括若干个 steps（其中步骤4和5是可选的）：
 
@@ -178,21 +178,21 @@ jobs:
 
 在仓库中设置上述密钥变量，${项目仓库} -> Settings -> Secrets and variables -> Actions
 
-![GitHub Actions Secrets](/images/img-ci-pipeline/Actions-Secret.png)
+![GitHub Actions Secrets](https://media.xiaolin.fun/docs/img-ci-pipeline/actions-secret.png)
 
 有2个触发流水线的方式，推送 release 分支 和 手动触发
 
-![Run workflow](/images/img-ci-pipeline/run-workflow.png)
+![Run workflow](https://media.xiaolin.fun/docs/img-ci-pipeline/run-workflow.png)
 
 完成后，可在 Packages 中查看到执行结果
 
-![Packages](/images/img-ci-pipeline/Packages.png)
+![Packages](https://media.xiaolin.fun/docs/img-ci-pipeline/packages.png)
 
-![GitHub-Package 执行结果](/images/img-ci-pipeline/github-package.png)
+![GitHub-Package 执行结果](https://media.xiaolin.fun/docs/img-ci-pipeline/github-package.png)
 
 接收到邮件提醒：
 
-![Email Notification](/images/img-ci-pipeline/GitHub-Actions-Email.png)
+![Email Notification](https://media.xiaolin.fun/docs/img-ci-pipeline/github-actions-email.png)
 
 ## CI 流水线：Alibaba Cloud Container Registry
 
@@ -311,11 +311,11 @@ jobs:
 
 建立发布变更自动化工作流程，该流程是完全自动化的，其中设置了2个控制点，**变更申请**和**变更审批**。
 
-![变更管控](/images/img-ci-pipeline/CI-CD变更管控.png)
+![变更管控](https://media.xiaolin.fun/docs/img-ci-pipeline/ci-cd-change-control.png)
 
 只有生产环境需要严格管控，对 CI 流程给予自由度。另外，运维团队只对变更管控流程负责，不直接参与 CI 流程。
 
-![变更管控流程](/images/img-ci-pipeline/变更管控流程.png)
+![变更管控流程](https://media.xiaolin.fun/docs/img-ci-pipeline/change-control-flow.png)
 
 ## 总结
 

@@ -9,7 +9,7 @@ tags: []
 
 # email-cli：智能体办公的第一块拼图
 
-![email-cli 封面](/images/img-email-cli/avatar.png)
+![email-cli 封面](https://media.xiaolin.fun/docs/img-email-cli/avatar.png)
 
 邮件，是绕不过去的效率瓶颈。每天几十封、上百封邮件，分类、阅读、回复……大量时间消耗在这里。
 
@@ -21,7 +21,7 @@ himalaya，一个用 Rust 编写的开源 email-cli，正好契合这个思路�
 
 ## 效果预览
 
-![show-me-emails](/images/img-email-cli/show-me-emails.png)
+![show-me-emails](https://media.xiaolin.fun/docs/img-email-cli/show-me-emails.png)
 
 在 AI IDE（如 Trae、Cursor、Claude Code）或 OpenClaw 的终端里，直接用自然语言下达指令：
 
@@ -58,7 +58,7 @@ ID   From                    Subject                         Date
 
 市面上的邮件客户端不少：Thunderbird、Spark、Apple Mail，但对于智能体协作来说，它们有一个共同的致命缺陷：**GUI 界面，Agent 无法直接操控。**
 
-![himalaya-cli](/images/img-email-cli/himalaya.png)
+![himalaya-cli](https://media.xiaolin.fun/docs/img-email-cli/himalaya.png)
 
 himalaya 的核心定位是 **纯 CLI 邮件工具**，而不是交互式 TUI。这个区别至关重要：
 

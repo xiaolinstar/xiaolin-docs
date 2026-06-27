@@ -25,11 +25,11 @@ GitHub Actions 不止是 DevOps，还能让仓库中发生其他事件时运行�
 
 疫情时基于 Github Actions 实现每日自动打卡项目：
 
-![bupt-auto-clock](/images/img-github-actions/bupt-auto-clock.png)
+![bupt-auto-clock](https://media.xiaolin.fun/docs/img-github-actions/bupt-auto-clock.png)
 
 由我完成的浙江师范大学自动打卡：
 
-![zjnu-auto-clock](/images/img-github-actions/zjnu-auto-clock-workflows.png)
+![zjnu-auto-clock](https://media.xiaolin.fun/docs/img-github-actions/zjnu-auto-clock-workflows.png)
 
 GitHub 提供 Linux、Windows 和 macOS 虚拟机来运行工作流程，或者可在自己的数据中心或云基础架构中自托管。
 
@@ -39,7 +39,7 @@ GitHub 提供 Linux、Windows 和 macOS 虚拟机来运行工作流程，或者�
 
 可以配置一个 GitHub Actions 工作流 workflow，当仓库中发生**事件** event（例如打开拉取请求或创建问题）时触发，其中包含一个或多个可以按顺序或并行运行的**作业** jobs。每个作业将独立的虚拟机**运行器** runner 中或容器内运行，并且包含一个或多个**步骤** steps，这些步骤可以运行定义的脚本或**动作**actions（action 是一个可重复使用的扩展，可以简化工作流程）。
 
-![GitHub Overview](/images/img-github-actions/overview-actions-simple.webp)
+![GitHub Overview](https://media.xiaolin.fun/docs/img-github-actions/overview-actions-simple.webp)
 
 ### 工作流 Workflows
 
@@ -55,7 +55,7 @@ GitHub 提供 Linux、Windows 和 macOS 虚拟机来运行工作流程，或者�
 
 GitHub Actions 官方提供了丰富的 Workflows 模板。
 
-![workflow-template](/images/img-github-actions/workflow-template.png)
+![workflow-template](https://media.xiaolin.fun/docs/img-github-actions/workflow-template.png)
 
 官方将 Workflow 分为了5个类别，查看模版或许有所启发：
 

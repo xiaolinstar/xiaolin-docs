@@ -67,7 +67,7 @@ Markdown 的易写性体现在它的语法简单，无需复杂的操作即可�
 
 易扩展性是 Markdown 的另一个显著特点。Markdown 是结构化语言，编程语言如 Python、Java、JavaScript 等可以方便读取其结构，很轻松地进行格式转换，如 Markdown 转 PDF、Markdown 转 Word、Markdown 转智能图形、Markdown 转知识树等，支持各种插件和扩展以增强其功能。它适应场景广泛，从技术文档到学术论文，Markdown 都能轻松应对。此外，随着大模型时代的到来，Markdown 成为一种「标准格式」。
 
-![DeepSeek 回复格式为 Markdown](/images/img-markdown/deepseek-markdown.jpg)
+![DeepSeek 回复格式为 Markdown](https://media.xiaolin.fun/docs/img-markdown/deepseek-markdown.jpg)
 
 
 **Markdown功能快览：**
@@ -152,7 +152,7 @@ Markdown 需要专门的编辑器进行格式渲染，然而本质上仍然是�
 
 即使没有 Markdown 编辑器，纯文本方式打开也**无障碍阅读**，同时文本格式也意味着 Markdown 非常易于**复制粘贴**。
 
-![Markdown文本源代码](/images/img-markdown/txt-markdown.png)
+![Markdown文本源代码](https://media.xiaolin.fun/docs/img-markdown/txt-markdown.png)
 
 ### 2.2 易写
 
@@ -172,11 +172,11 @@ Markdown作为轻量级的标记语言，很容易实现编程扩展
 
 1. [markmap](https://markmap.js.org/) Markdown 和思维导图之间轻松转换。
 
-![markmap](/images/img-markdown/markmap.png)
+![markmap](https://media.xiaolin.fun/docs/img-markdown/markmap.png)
 
 2. [aippt](https://www.aippt.cn) 基于 Markdown 文本大纲格式快速生成PPT。
 
-![aippt](/images/img-markdown/aippt.png)
+![aippt](https://media.xiaolin.fun/docs/img-markdown/aippt.png)
 
 3. [mermaid](https://mermaid.nodejs.cn/) 基于 JavaScript 的图标工具，支持流程图、时序图、类图、状态图、实体关系图、甘特图等。
 

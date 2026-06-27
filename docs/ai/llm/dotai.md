@@ -102,7 +102,7 @@ export default defineRules({
 
 该项目很新，正式版本还未发布（1.x.x），在 GitHub 上仅有 20 Star，是一个很稚嫩的不知名项目。值得注意的是，该项目的贡献者除了开发者 nikuscs，还有 Cluade，也算是得到了大公司精神支持了。
 
-![glooit-claude](/images/img-dotai/glooit-claude.png)
+![glooit-claude](https://media.xiaolin.fun/docs/img-dotai/glooit-claude.png)
 
 ## 总结
 
