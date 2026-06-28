@@ -4,8 +4,12 @@ import markdownItTaskListPlus from "markdown-it-task-list-plus"
 import llms from 'vitepress-plugin-llms'
 
 
-// @ts-ignore 网站基础路径，区分GitHub部署和常规部署
-const basePath = process.env.GITHUB_ACTIONS === 'true' ? '/xiaolin-docs/' : '/'
+// 网站基础路径：优先 .env 的 VITE_BASE_PATH，GitHub Pages 构建时回退到仓库子路径
+const basePath =
+    process.env.VITE_BASE_PATH ||
+    (process.env.GITHUB_ACTIONS === 'true' ? '/xiaolin-docs/' : '/')
+
+const asset = (path: string) => `${basePath}${path.replace(/^\//, '')}`
 
 // @ts-ignore 百度统计 ID
 const baiduAnalyticsId = process.env.VITE_BAIDU_ANALYTICS_ID || 'YOUR_BAIDU_ANALYTICS_ID'
@@ -28,7 +32,7 @@ export default withMermaid({
         }
     },
     head: [
-    ['link', { rel: 'icon', href: '/sparrow.svg' }],
+    ['link', { rel: 'icon', href: asset('sparrow.svg') }],
     ['link', { rel: 'canonical', href: 'https://www.xiaolinstar.cn' }],
     ['script', {}, `
       window._hmt = window._hmt || [];
@@ -366,8 +370,8 @@ export default withMermaid({
         ],
         // 页脚
         footer: {
-            message: '微信公众号：AI持续运维，掘金：AI持续运维，<a href="/about/">联系与合作</a>',
-            copyright: 'Copyright © 2026 xiaolinstar <br/><span class="beian-container" style="display:inline-flex;align-items:center;gap:8px;"><a href="https://beian.miit.gov.cn/" target="_blank">苏ICP备2026011017号-1</a><span class="gongan-beian" style="display:inline-flex;align-items:center;white-space:nowrap;"><img src="/beian-gongan.png" alt="公安备案" style="width:16px;height:16px;margin-right:4px;"><a href="http://beian.mps.gov.cn/#query/webSearch?code=32010602012313"target="_blank">苏公网安备32010602012313号</a></span></span>'
+            message: `微信公众号：AI持续运维，掘金：AI持续运维，<a href="${asset('about/')}">联系与合作</a>`,
+            copyright: `Copyright © 2026 xiaolinstar <br/><span class="beian-container" style="display:inline-flex;align-items:center;gap:8px;"><a href="https://beian.miit.gov.cn/" target="_blank">苏ICP备2026011017号-1</a><span class="gongan-beian" style="display:inline-flex;align-items:center;white-space:nowrap;"><img src="${asset('beian-gongan.png')}" alt="公安备案" style="width:16px;height:16px;margin-right:4px;"><a href="http://beian.mps.gov.cn/#query/webSearch?code=32010602012313" target="_blank">苏公网安备32010602012313号</a></span></span>`
         },
         // 支持模糊搜索
         search: {

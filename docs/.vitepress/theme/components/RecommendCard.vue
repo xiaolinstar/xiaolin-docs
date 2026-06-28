@@ -24,12 +24,14 @@
       </a>
     </div>
     <div class="recommend-footer">
-      <a href="/recommend/" class="view-more">更多推荐</a>
+      <a :href="withBase('/recommend/')" class="view-more">更多推荐</a>
     </div>
   </div>
 </template>
 
 <script setup>
+import { withBase } from 'vitepress'
+
 const recommendList = [
   {
     name: '阿里云 ECS',
