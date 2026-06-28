@@ -19,6 +19,16 @@
 
 **VPS 上不应存在 `.env`**（无文件即达标）。
 
+## 健康检查（/healthz）
+
+容器 nginx 提供 **`GET /healthz` → 204**（见 `volumes/website/default.conf`）。gateway [uptime.yml](https://github.com/xiaolinstar/xiaolin-gateway/blob/main/.github/workflows/uptime.yml) 探测：
+
+```text
+https://www.xiaolinstar.cn/healthz
+```
+
+规范：[healthz-probe-standard.md](https://github.com/xiaolinstar/xiaolin-gateway/blob/main/docs/healthz-probe-standard.md)
+
 ## 媒体工作流（与 life 对齐）
 
 ```bash
