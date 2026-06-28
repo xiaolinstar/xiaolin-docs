@@ -5,13 +5,14 @@ set -euo pipefail
 ROOT="$(cd "$(dirname "$0")/.." && pwd)"
 # shellcheck source=lib/cos-config.sh
 source "$ROOT/scripts/lib/cos-config.sh"
+cos_load_dotenv "$ROOT"
 cos_load_config
 
 CDN="${MEDIA_CDN_BASE:-https://media.xiaolin.fun}"
 CDN="${CDN%/}"
 COS="${COS_PUBLIC_BASE_URL:-https://media-1300240022.cos.ap-nanjing.myqcloud.com}"
 COS="${COS%/}"
-COS_PREFIX="${COS_PREFIX:-docs}"
+PREFIX="${COS_PREFIX:-docs}"
 
 # 上传后应存在的抽样键（相对 docs/ 前缀）
 SAMPLES=(
@@ -21,8 +22,8 @@ SAMPLES=(
 )
 
 echo "== CDN 检查 (xiaolin-docs) =="
-echo "CDN:  $CDN/$COS_PREFIX"
-echo "COS:  $COS/$COS_PREFIX"
+echo "CDN:  $CDN/$PREFIX"
+echo "COS:  $COS/$PREFIX"
 echo
 
 check_url() {

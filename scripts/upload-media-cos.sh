@@ -17,10 +17,11 @@ set -euo pipefail
 ROOT="$(cd "$(dirname "$0")/.." && pwd)"
 # shellcheck source=lib/cos-config.sh
 source "$ROOT/scripts/lib/cos-config.sh"
+cos_load_dotenv "$ROOT"
 cos_load_config
 
 ALIAS="$COS_BUCKET_ALIAS"
-PREFIX="${COS_PREFIX:-docs}"
+PREFIX="${COS_PREFIX}"
 PREFIX="${PREFIX#/}"
 PREFIX="${PREFIX%/}"
 

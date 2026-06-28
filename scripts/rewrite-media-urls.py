@@ -88,8 +88,11 @@ def main() -> None:
     )
     parser.add_argument(
         "--cos-prefix",
-        default=os.environ.get("MEDIA_COS_PREFIX", DEFAULT_COS_PREFIX),
-        help=f"COS 对象键前缀（默认 {DEFAULT_COS_PREFIX} 或 MEDIA_COS_PREFIX）",
+        default=os.environ.get(
+            "COS_PREFIX",
+            os.environ.get("MEDIA_COS_PREFIX", DEFAULT_COS_PREFIX),
+        ),
+        help=f"COS 对象键前缀（默认 {DEFAULT_COS_PREFIX} 或 COS_PREFIX / MEDIA_COS_PREFIX）",
     )
     args = parser.parse_args()
 

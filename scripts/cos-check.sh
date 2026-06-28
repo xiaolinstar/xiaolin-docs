@@ -5,10 +5,12 @@ set -euo pipefail
 ROOT="$(cd "$(dirname "$0")/.." && pwd)"
 # shellcheck source=lib/cos-config.sh
 source "$ROOT/scripts/lib/cos-config.sh"
+cos_load_dotenv "$ROOT"
 
 CONFIG="$(cos_config_path)"
 DOCS_IMAGES="$ROOT/docs/public/images"
-COS_PREFIX="${COS_PREFIX:-docs}"
+
+cos_load_config
 
 echo "== coscli =="
 if ! command -v coscli >/dev/null 2>&1; then

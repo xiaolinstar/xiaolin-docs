@@ -1,5 +1,19 @@
 #!/usr/bin/env bash
 # 从 coscli 配置文件（默认 ~/.cos.yaml）读取 Bucket 信息；环境变量优先。
+# 可选：仓库根目录 .env（COS_PREFIX、MEDIA_CDN_BASE、VITE_* 等）
+
+cos_load_dotenv() {
+  local root="${1:-}"
+  if [[ -z "$root" ]]; then
+    root="$(cd "$(dirname "${BASH_SOURCE[0]}")/../.." && pwd)"
+  fi
+  if [[ -f "$root/.env" ]]; then
+    set -a
+    # shellcheck disable=SC1091
+    source "$root/.env"
+    set +a
+  fi
+}
 
 cos_config_path() {
   printf '%s\n' "${COS_CONFIG_PATH:-$HOME/.cos.yaml}"
@@ -23,7 +37,7 @@ _cos_yaml_first_field() {
   ' "$file"
 }
 
-# 加载 COS_BUCKET_ALIAS、COS_BUCKET_NAME、COS_ENDPOINT、COS_REGION、COS_PUBLIC_BASE_URL
+# 加载 COS_BUCKET_ALIAS、COS_BUCKET_NAME、COS_ENDPOINT、COS_REGION、COS_PUBLIC_BASE_URL、COS_PREFIX
 cos_load_config() {
   local config
   config="$(cos_config_path)"
@@ -58,5 +72,8 @@ cos_load_config() {
     COS_PUBLIC_BASE_URL="https://${COS_BUCKET_NAME}.${COS_ENDPOINT}"
   fi
 
-  export COS_BUCKET_ALIAS COS_BUCKET_NAME COS_ENDPOINT COS_REGION COS_PUBLIC_BASE_URL
+  # xiaolin-docs 默认 docs；与 xiaolin-life（life/）共用 Bucket
+  export COS_PREFIX="${COS_PREFIX:-docs}"
+
+  export COS_BUCKET_ALIAS COS_BUCKET_NAME COS_ENDPOINT COS_REGION COS_PUBLIC_BASE_URL COS_PREFIX
 }
