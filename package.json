@@ -27,6 +27,7 @@
     "media:cdn-migrate": "python3 scripts/rewrite-cos-to-cdn.py",
     "media:cdn-migrate:apply": "python3 scripts/rewrite-cos-to-cdn.py --apply",
     "media:normalize": "python3 scripts/normalize-media-names.py",
-    "media:normalize:apply": "python3 scripts/normalize-media-names.py --apply"
+    "media:normalize:apply": "python3 scripts/normalize-media-names.py --apply",
+    "sync:github-env": "node scripts/cd/sync-github-env.mjs"
   }
 }

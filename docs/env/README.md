@@ -10,10 +10,12 @@
 |----|--------|------|
 | L0 模板 | `VITE_*`、`COS_PREFIX`、`MEDIA_CDN_BASE` | `.env.example` |
 | L2 CI | 百度统计 | GitHub **Variables**：`DOCKER_BAIDU_ANALYTICS_ID` 等 |
+| L2 CD | SSH + 邮件 | GitHub **Secrets**：`SERVER_*`、`MAIL_*` |
 | L3 凭证 | SecretId / SecretKey | **`~/.cos.yaml`** |
 | L3 本机 | Vite 构建 + 媒体脚本 | 仓库根 `.env` |
 | L3 VPS | 无 | 镜像 + `compose.yaml`，upstream **8080** |
 | L3 备份 | 本机 `.env` | `~/.config/xiaolinstar/xiaolin-docs/local.env` |
+| L2 备份 | GitHub 清单 | `~/.config/xiaolinstar/xiaolin-docs/github-production.env` |
 
 **VPS 上不应存在 `.env`**（无文件即达标）。
 
@@ -53,6 +55,18 @@ scripts/lib/cos-config.sh:
 cp .env ~/.config/xiaolinstar/xiaolin-docs/local.env
 chmod 600 ~/.config/xiaolinstar/xiaolin-docs/local.env
 # ~/.cos.yaml 与 life 共用，单独备份
+```
+
+## GitHub L2 同步（party-helper 模式）
+
+键名清单见 `docs/env/github-environments.example.env`。本地填：
+
+```bash
+mkdir -p ~/.config/xiaolinstar/xiaolin-docs
+cp docs/env/github-production.env ~/.config/xiaolinstar/xiaolin-docs/github-production.env
+chmod 600 ~/.config/xiaolinstar/xiaolin-docs/github-production.env
+pnpm sync:github-env -- --dry-run
+pnpm sync:github-env
 ```
 
 ## Agent 禁区
