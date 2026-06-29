@@ -16,6 +16,8 @@ planning/
 ├── README.md           # 本说明
 ├── products/           # 按产品分子目录
 │   └── ai-todo/
+│       ├── 4-week-ops-calendar.md
+│       └── product-one-pager.md   # 对外话术统一源
 └── …                   # 未来可按 content/、campaign/ 等扩展
 ```
 
