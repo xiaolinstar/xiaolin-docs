@@ -59,29 +59,3 @@ jobs:
           curl -4 --fail --show-error --silent --location --retry 3 --retry-delay 5 https://www.xiaolinstar.cn/ >/dev/null
           curl -4 --fail --show-error --silent --location --retry 3 --retry-delay 5 https://www.xiaolinstar.cn/healthz >/dev/null
           curl -4 --fail --show-error --silent --location --retry 3 --retry-delay 5 https://www.xiaolinstar.cn/products/index.md >/dev/null
-
-  # 发送部署成功邮件通知
-  send-email:
-    needs: deploy-to-server
-    runs-on: ubuntu-latest
-    steps:
-      - name: Send deployment success email
-        uses: dawidd6/action-send-mail@v17
-        with:
-          server_address: smtp.qq.com
-          server_port: 465
-          secure: true
-          username: ${{ secrets.MAIL_USERNAME }}
-          password: ${{ secrets.MAIL_PASSWORD }}
-          subject: "🚀 应用部署完成 - ${{ github.repository }}"
-          to: xing.xiaolin@foxmail.com
-          from: ${{ secrets.MAIL_USERNAME }}
-          html_body: |
-            <h2>应用已成功部署到目标服务器</h2>
-            <p><strong>仓库：</strong>${{ github.repository }}</p>
-            <p><strong>分支：</strong>${{ github.ref_name }}</p>
-            <p><strong>提交：</strong>${{ github.sha }}</p>
-            <p><strong>镜像：</strong>${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}</p>
-            <p><strong>时间：</strong>$(date)</p>
-            <hr>
-            <p><small>此邮件由 GitHub Actions 自动发送</small></p>

@@ -85,27 +85,3 @@ jobs:
           subject-name: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
           subject-digest: ${{ steps.push.outputs.digest }}
           push-to-registry: true
-
-      # 发送邮件到 QQ 邮箱
-      - name: Send email notification
-        uses: dawidd6/action-send-mail@v17
-        with:
-          server_address: smtp.qq.com
-          server_port: 465
-          secure: true
-          username: ${{ secrets.MAIL_USERNAME }}      # 用户关注，QQ 邮箱账号，例：12345678@qq.com
-          password: ${{ secrets.MAIL_PASSWORD }}      # 用户关注，QQ 邮箱授权码（非登录密码）
-          subject: "🐳 镜像构建完成 - ${{ github.repository }}"
-          to: xing.xiaolin@foxmail.com              # 目标邮箱
-          from: ${{ secrets.MAIL_USERNAME }}
-          html_body: |
-            <h2>镜像构建与证明生成完成</h2>
-            <p><strong>仓库：</strong>${{ github.repository }}</p>
-            <p><strong>分支：</strong>${{ github.ref_name }}</p>
-            <p><strong>提交：</strong>${{ github.sha }}</p>
-            <p><strong>镜像：</strong>${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}</p>
-            <p><strong>标签：</strong>${{ steps.meta.outputs.tags }}</p>
-            <p><strong>摘要：</strong>${{ steps.push.outputs.digest }}</p>
-            <p><strong>证明状态：</strong>✅ 已生成并推送至 ghcr.io</p>
-            <hr>
-            <p><small>此邮件由 GitHub Actions 自动发送</small></p>

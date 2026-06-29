@@ -10,7 +10,7 @@
 |----|--------|------|
 | L0 模板 | `VITE_*`、`COS_PREFIX`、`MEDIA_CDN_BASE` | `.env.example` |
 | L2 CI | 百度统计 | GitHub **Variables**：`DOCKER_BAIDU_ANALYTICS_ID` 等 |
-| L2 CD | SSH + 邮件 | GitHub **Secrets**：`SERVER_*`、`MAIL_*` |
+| L2 CD | SSH 部署 | GitHub **Secrets**：`SERVER_*`（无邮件 Secrets；CD 通知靠 GitHub） |
 | L3 凭证 | SecretId / SecretKey | **`~/.cos.yaml`** |
 | L3 本机 | Vite 构建 + 媒体脚本 | 仓库根 `.env` |
 | L3 VPS | 无 | 镜像 + `compose.yaml`，upstream **8080** |
@@ -83,4 +83,5 @@ pnpm sync:github-env
 
 禁止 Agent 修改 `.env`、`~/.cos.yaml` 与 `~/.config/xiaolinstar/**`。
 
-注册表：[env-registry.yaml](https://github.com/xiaolinstar/dev-standards/blob/main/playbook/env-registry.yaml) §xiaolin-docs。
+注册表：[env-registry.yaml](https://github.com/xiaolinstar/dev-standards/blob/main/playbook/env-registry.yaml) §xiaolin-docs。  
+L2 标准：[ADR-0009](https://github.com/xiaolinstar/dev-standards/blob/main/playbook/adr/0009-l2-github-env-by-category.md)（category: **content**）。
