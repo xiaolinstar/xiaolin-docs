@@ -296,6 +296,7 @@ export default withMermaid({
                             link: `/products/ai-todo/`,
                             items: [
                                 { text: '产品介绍', link: `/products/ai-todo/product` },
+                                { text: '为什么不做 AI 对话框', link: `/products/ai-todo/why-no-ai-chatbox` },
                                 { text: '快速上手', link: `/products/ai-todo/quick-start` },
                                 { text: 'Agent 接入', link: `/products/ai-todo/agent` },
                                 { text: '技术架构', link: `/products/ai-todo/architecture` },
