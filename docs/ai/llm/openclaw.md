@@ -131,6 +131,10 @@ https://cloud.tencent.com/act/cps/redirect?redirect=1079&cps_key=aaaf11280836364
 
 添加并应用，即可切换到 GLM-4.7-Flash 免费模型。然后就可以在飞书中指示 OpenClaw 工作了。
 
+## 延伸阅读
+
+若希望 Agent 将待办、日程写入可审计的结构化存储，并在微信小程序中查看确认，见 **[AI 日省待办](/products/ai-todo/)**：[快速上手](/products/ai-todo/quick-start) · [Agent 接入](/products/ai-todo/agent)。
+
 ## 参考
 
 - [🔥玩转OpenClaw｜云上OpenClaw快速接入飞书指南](https://cloud.tencent.com/developer/article/2626151)

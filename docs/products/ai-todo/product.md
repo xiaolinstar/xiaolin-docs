@@ -3,7 +3,7 @@ title: AI 待办产品介绍
 description: |
   AI 待办是一个轻量级的 AI 原生待办系统，以微信小程序为核心入口，核心模块包括提醒、日历与联系人，并通过 Skill、CLI 与 OpenClaw、Claude Code 等 AI 工具集成。
 date: 2026-06-17
-updated: 2026-06-17
+updated: 2026-06-29
 category: 软件产品
 tags:
   - AI 待办
@@ -130,4 +130,10 @@ AI 待办适合三类用户：
 
 AI 待办不是另一个传统提醒应用，而是一个 AI 原生的个人事务数据平台。
 
-它把「理解自然语言」交给 AI 工具，自己专注做好「可靠存储、确定操作 and 结构化接口」。
+它把「理解自然语言」交给 AI 工具，自己专注做好「可靠存储、确定操作与结构化接口」。
+
+## 立即体验
+
+- **小程序**：微信搜索 **AI 日省待办**
+- **开发者 CLI**：`npm install -g @xiaolinstar/ai-todo-cli`
+- **下一步**：[快速上手](./quick-start.md) · [Agent 接入](./agent.md) · [返回专栏首页](./index.md)

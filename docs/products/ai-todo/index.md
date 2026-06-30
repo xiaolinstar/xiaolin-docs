@@ -2,7 +2,7 @@
 title: AI 待办（AI 日省待办）
 description: AI 待办是一个 AI 原生的轻量级待办系统，核心模块包括提醒、日历与联系人。
 date: 2026-06-17
-updated: 2026-06-17
+updated: 2026-06-29
 category: 软件产品
 tags:
   - AI 待办
@@ -40,3 +40,13 @@ AI 待办选择做一个更小的能力层：
 如果你已经准备使用，直接看[快速上手](./quick-start.md)。
 
 如果你希望让 AI Agent 自动管理待办、日历和联系人，重点看[Agent 接入](./agent.md)。
+
+## 立即体验
+
+| 角色 | 入口 |
+|------|------|
+| **普通用户** | 微信搜索 **AI 日省待办**，创建你的第一条提醒 |
+| **开发者** | `npm install -g @xiaolinstar/ai-todo-cli`，在小程序「我的 → CLI / Agent 访问令牌」创建令牌 |
+| **Agent 集成** | 阅读 [Agent 接入](./agent.md)，将 `ai-todo` CLI 或 Skill 接入 OpenClaw、Claude Code、Cursor 等工具 |
+
+完整文档见上方[文档索引](#文档索引)；CLI 配置与常用命令见[快速上手](./quick-start.md)。

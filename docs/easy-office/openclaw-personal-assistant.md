@@ -210,6 +210,13 @@ openclaw channel add wechat --app-id your-app-id --app-secret your-app-secret
 
 现在就动手试试吧！一台云服务器，一个 API Key，开启你的 AI 办公之旅。
 
+## 延伸阅读
+
+Agent 提取邮件行动项、生成待办后，需要可靠的结构化存储与微信提醒时，可参考本站产品 **[AI 日省待办](/products/ai-todo/)**：
+
+- [产品介绍](/products/ai-todo/product)：设计理念与 Agent + 小程序分工
+- [Agent 接入](/products/ai-todo/agent)：OpenClaw、Claude Code 等如何通过 CLI 写入待办
+
 ---
 
 关键词：AI Agent、OpenClaw、个人助手、办公自动化、自建方案

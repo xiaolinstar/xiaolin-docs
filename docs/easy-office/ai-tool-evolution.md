@@ -104,4 +104,8 @@ AI 工具的形态演变，本质上是人机交互方式的革命。从代码�
 
 我最近的一个小目标是，完全面向 AI 代理工作，下一步尝试体验并对比腾讯的两款所谓的办公助手 QClaw 和 CodeBuddy。从现在已有的体验感受来看，QClaw 是 OpenClaw 的衍生产品，WorkBuddy 是 Claude 的衍生产品。
 
+## 延伸阅读
+
+面向 Agent 开发的个人事务数据层 **[AI 日省待办](/products/ai-todo/)** 提供提醒、日历、联系人的 CLI 接口（命令名 `ai-todo`），可与 OpenClaw Skill 组合使用。详见 [Agent 接入](/products/ai-todo/agent)。
+
 关键词：AI 工具、智能体、OpenClaw、Cursor、Copilot、工具形态

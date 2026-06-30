@@ -329,7 +329,7 @@
   - [x] 周一 · 产品一页纸 → `product-one-pager.md`
   - [x] 周一 · 北极星基线记录（见下）
   - [x] 产品 bug：微信设定时间多 1 个月（已在 ai-todo 标记完成）
-  - [ ] 周二 · 站点 CTA + 内链
+  - [x] 周二 · 站点 CTA + 内链（index/product CTA；openclaw-personal-assistant、ai-tool-evolution、openclaw 延伸阅读）
   - [ ] 周三 · 深度文
   - [ ] 周四 · 公众号
   - [ ] 周五 · 种子用户
