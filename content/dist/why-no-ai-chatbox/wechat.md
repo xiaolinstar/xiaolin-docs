@@ -4,7 +4,7 @@ origin_url: https://xiaolinstar.cn/products/ai-todo/why-no-ai-chatbox.html
 slug: why-no-ai-chatbox
 account: AI持续运维
 mode: repurpose
-status: draft
+status: published
 ---
 
 # 发布元数据
@@ -90,8 +90,8 @@ Agent 写错标题、时间偏了，总得有个地方改；做完了要有个�
 
 # 发布 checklist
 
-- [ ] 标题已选 1 个
-- [ ] 摘要已填入公众号后台
-- [ ] 流程图 1 张已上传（可参考正文 ASCII 重绘）
-- [ ] 后台预览排版正常
-- [ ] `meta.yaml` → `platforms.wechat.status: published`
+- [x] 标题已选 1 个
+- [x] 摘要已填入公众号后台
+- [x] 流程图 1 张已上传（可参考正文 ASCII 重绘）
+- [x] 后台预览排版正常
+- [x] `meta.yaml` → `platforms.wechat.status: published`

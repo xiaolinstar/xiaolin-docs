@@ -21,8 +21,9 @@ content/dist/{slug}/
 ├── bilibili.md            # B 站脚本
 ├── douyin.md              # 抖音口播稿
 ├── weibo.md               # 微博预告（可选）
-└── assets/                # 该平台专用图（信息图等，可选）
-    └── xiaohongshu-01.png
+└── assets/                # 配图清单与平台专用图（见下「产品截图」）
+    ├── README.md          # 截图 manifest：文件名、CDN、插入位置、状态
+    └── …                  # 小图可选提交 Git；大图走 COS
 ```
 
 ## meta.yaml 示例
@@ -75,3 +76,21 @@ docs/ Origin
 ```
 
 Skill：`.claude/skills/creator-suite/wechat-publisher/SKILL.md`
+
+## 产品截图与占位符
+
+站点 Origin 可先发文，截图后补。约定如下：
+
+1. **清单**：`content/dist/{slug}/assets/README.md` 列文件名、CDN 路径、Origin/公众号插入位置、`pending | done` 状态。
+2. **本地母本**：`docs/public/images/img-{product}/{slug}/`（不进 Git，见 [media-standards](../../docs/sre/planning/media-standards.md)）。
+3. **Origin 占位**：在 `docs/` 正文中用注释预留，补图时取消注释即可：
+
+   ```markdown
+   <!-- shot:miniapp-list -->
+   <!-- ![说明文字](https://media.xiaolin.fun/docs/img-ai-todo/why-no-ai-chatbox/02-miniapp-list.png) -->
+   ```
+
+4. **公众号**：CDN 图需**下载后上传**微信后台，不能依赖外链。
+5. **上传**：`pnpm run media:upload` → `pnpm run media:cdn-check` → 更新 Origin → 站点重新部署。
+
+范例：`content/dist/why-no-ai-chatbox/assets/README.md`

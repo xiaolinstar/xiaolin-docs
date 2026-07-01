@@ -2,10 +2,10 @@ slug: why-no-ai-chatbox
 origin: docs/products/ai-todo/why-no-ai-chatbox.md
 origin_url: https://xiaolinstar.cn/products/ai-todo/why-no-ai-chatbox.html
 created: 2026-07-01
-updated: 2026-07-01
+updated: 2026-07-02
 pillar: 软件产品
 platforms:
   wechat:
     account: AI持续运维
-    status: draft
-    published_at:
+    status: published
+    published_at: 2026-07-02

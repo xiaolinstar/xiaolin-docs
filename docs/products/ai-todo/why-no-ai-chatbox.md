@@ -2,7 +2,7 @@
 title: AI 日省待办：为什么我不在小程序里做 AI 对话框
 description: 做「AI 日省待办」时，我刻意不在小程序里放聊天框。这篇写清楚原因，以及邮件、待办、微信提醒怎么串起来。
 date: 2026-07-01
-updated: 2026-07-01
+updated: 2026-07-02
 category: 软件产品
 tags:
   - AI 待办
@@ -51,6 +51,9 @@ tags:
 
 可以把它想成：**Agent 负责理解，服务负责存储，小程序负责确认。** 人最后点一下「完成」，比在一堆对话记录里找待办踏实。
 
+<!-- shot:miniapp-list -->
+<!-- ![AI 日省待办小程序提醒列表](https://media.xiaolin.fun/docs/img-ai-todo/why-no-ai-chatbox/02-miniapp-list.png) -->
+
 ## 举个真实的用法
 
 领导邮件里写：「这周五前把 Q2 报销单交给财务。」
@@ -70,7 +73,16 @@ ai-todo reminder create \
 
 全程没有在小程序里打字聊天，但该记的记了，该提醒的也能推到微信。
 
+<!-- shot:flow-4step -->
+<!-- ![邮件到小程序的四步流程](https://media.xiaolin.fun/docs/img-ai-todo/why-no-ai-chatbox/01-flow-4step.png) -->
+
+<!-- shot:cli-today -->
+<!-- ![终端查看今日待办](https://media.xiaolin.fun/docs/img-ai-todo/why-no-ai-chatbox/04-cli-today.png) -->
+
 ## 那小程序还重要吗
+
+<!-- shot:miniapp-reminder -->
+<!-- ![提醒详情与微信提醒开关](https://media.xiaolin.fun/docs/img-ai-todo/why-no-ai-chatbox/03-miniapp-reminder-detail.png) -->
 
 重要。Agent 写错标题、时间偏了半 hour，总得有个地方改；事情做完了，也得有个勾。这些操作不需要对话，列表 + 表单就够了。
 
