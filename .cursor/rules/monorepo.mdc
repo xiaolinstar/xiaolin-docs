@@ -1,0 +1,34 @@
+---
+description: pnpm monorepo 目录、包边界与 workspace 依赖约定
+globs: apps/**/*,packages/**/*,pnpm-workspace.yaml
+alwaysApply: false
+---
+
+# Monorepo 约定
+
+标准库：`~/AgentProjects/dev-standards/playbook/monorepo.md`
+
+## 目录
+
+- `apps/` — 可部署/可安装产物（API、CLI、小程序）
+- `packages/` — 共享库（类型、客户端、协议）；默认 `private: true`
+- 根 `scripts/` — CI 可直接调用的脚本，不强行包进 pnpm scripts
+
+## 依赖
+
+- 内部包：`@<scope>/<name>`，workspace 依赖写 `"workspace:*"`
+- 允许：`apps → packages → npm`
+- 禁止：`packages → apps`、packages 间循环依赖
+
+## 改动时注意
+
+- 改 `packages/*` 契约时，检查所有消费方 apps 并 bump 该包 version
+- 根 `package.json` 的 `version` 不代表产品版本；各 app 自有 version
+- 跨组件行为变更写 compatibility / release note，不假设「全仓库同版本号」
+- Python 等非 Node app 留在 `apps/<name>/` 自有工具链，不强行 npm 化
+
+## 命令
+
+在仓库根目录：`pnpm install`、`pnpm -r build`、`pnpm --filter <pkg> <script>`
+
+> 标准库真源：`playbook/monorepo.md`；完整索引见 `playbook/INDEX.md`。

@@ -1,0 +1,39 @@
+---
+description: 跨项目核心开发原则（最小 scope、复用约定、可验证）
+alwaysApply: true
+---
+
+# 核心开发原则
+
+来源：`~/AgentProjects/dev-standards/playbook/principles.md`
+
+## 最小 scope
+
+只做请求范围内的事。不顺手重构、不扩功能、不为假想边界加代码。
+
+## 复用现有约定
+
+改代码前先读周边文件。命名、目录、错误处理、测试风格与项目保持一致。
+
+## Agent 边界
+
+- 业务逻辑在应用里；结构化 API/CLI，不在服务端堆 NL 解析
+- Agent 负责理解与编排：自然语言 → 结构化调用
+- Skill 管流程，Rule 管写法
+
+## 可验证
+
+行为变更应有测试或明确验证步骤。不测显而易见的事；测真实行为和回归点。
+
+## 配置与密钥
+
+密钥不进仓库；用 `.env.example` 文档化变量名。配置走环境，不硬编码环境差异。
+
+## Git
+
+- Conventional Commits 风格。不主动 commit/push，除非用户明确要求。
+- 开发与推送前必先 `git pull`（优先 `--rebase`）同步远程，提前预防冲突。
+- 严禁使用 `--no-verify` 绕过本地 hooks，避免 CI 脏构建与排队浪费。
+
+> 行业基线对齐见 `playbook/baselines/`；主题 playbook 见 `playbook/INDEX.md`。
+> 本文件为 Agent 流程层派生；改标准前先跑 `scripts/sync.sh validate`。

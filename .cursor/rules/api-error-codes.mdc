@@ -1,0 +1,46 @@
+---
+description: API 错误码 schema、HTTP 语义、traceId（派生自 api-error-codes.md）
+globs: **/*.{ts,tsx,py,go}
+alwaysApply: false
+---
+
+# API 错误码与 HTTP 状态
+
+来源：`~/AgentProjects/dev-standards/playbook/api-error-codes.md`
+
+## 错误响应体（非 2xx 必 JSON）
+
+```json
+{
+  "code": "AUTH_INVALID_TOKEN",
+  "message": "token 已过期或无效",
+  "details": { "reason": "expired" },
+  "traceId": "01HXY..."
+}
+```
+
+## 业务错误码前缀
+
+| 前缀 | 含义 | 典型 HTTP |
+|---|---|---|
+| `AUTH_*` | 鉴权 / 权限 | 401 / 403 |
+| `VAL_*` | 参数校验 | 400 / 422 |
+| `BIZ_*` | 业务规则 | 400 / 409 / 422 |
+| `SYS_*` | 系统 / 依赖 | 500 / 502 / 503 / 504 |
+
+- HTTP 状态表达「哪一类失败」；`code` 表达具体原因（正交）
+- 枚举集中在后端 `errors.py`（或等价）+ monorepo 可选 `packages/shared/src/errors.ts`；**禁止** handler 硬编码字符串
+- ai-todo 参考：tag `api-error-codes-migration-complete` · `playbook/api-error-codes.md` §参考实现
+
+## traceId
+
+- 请求入口 middleware 生成（ULID / UUIDv7）
+- 写入错误响应体、该请求全部日志、对外 `X-Trace-Id` header
+- 实现参考：`playbook/snippets/trace-id-middleware.md`
+
+## Envelope 变体（存量）
+
+允许 `{ ok, error: { code, message, details }, requestId, traceId }`；`requestId` ≡ `traceId`。
+新错误码须前缀 + 集中枚举；legacy alias 见 ai-todo `errors.py` / `shared/errors.ts`。
+
+> 来源：`playbook/api-error-codes.md`

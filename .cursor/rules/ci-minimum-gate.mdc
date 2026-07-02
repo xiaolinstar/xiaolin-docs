@@ -1,0 +1,44 @@
+---
+description: CI 最低 4 项 + Husky 本地双段（派生自 ci-minimum-gate.md）
+globs: .github/workflows/**,.husky/**,package.json,commitlint.config.*
+alwaysApply: false
+---
+
+# CI 最低门槛
+
+来源：`~/AgentProjects/dev-standards/playbook/ci-minimum-gate.md`
+
+## 立场
+
+- **本地 + CI 双段是底线**。Secret scan 双段尤其重要（漏库 = 紧急事件）。
+- **严禁绕过**：严禁使用 `git commit --no-verify` 人为绕过本地 hooks。本地所有拦截规则在 CI 均为硬性阻断标准，绕过必败且浪费公共 CI 资源。
+
+## 必选 4 项
+
+| # | 项 | 本地 | CI |
+|---|---|---|---|
+| 1 | Lint | pre-commit（lint-staged） | PR / main |
+| 2 | Typecheck or Test | — | PR / main |
+| 3 | Secret Scan | pre-commit（gitleaks，可降级） | **阻断** |
+| 4 | Commit Message | commit-msg（commitlint） | — |
+
+## 本地栈（必选）
+
+Husky 9 + lint-staged + commitlint + gitleaks
+
+| 文件 | 作用 |
+|---|---|
+| `.husky/pre-commit` | gitleaks protect --staged + lint-staged |
+| `.husky/commit-msg` | commitlint --edit |
+| `commitlint.config.cjs` | `@commitlint/config-conventional` |
+| `package.json` | `"prepare": "husky"` + `lint-staged` |
+
+部署模板：`~/AgentProjects/dev-standards/scripts/sync.sh hooks-precommit <project>`
+
+## 改 CI / hook 时
+
+- monorepo 的 lint-staged 须**路径分流**，禁止根目录无 eslint 时扫 `**/*.ts`
+- 子 app 若 CI 跑 `format:check`，同 glob 在 lint-staged 须含 `prettier --write`（可与 eslint 同 pattern、多 step）；禁止 hook 只 eslint、CI 才 prettier
+- 审计清单见 playbook §审计 checklist（含 hook ↔ CI format glob 对齐项）
+
+> 来源：`playbook/ci-minimum-gate.md`

@@ -1,0 +1,53 @@
+---
+description: Vue 3 + Vant 4 移动端 H5 规范（vw 适配、组件交互、WebView 兼容，派生自 h5.md + h5-admin.md）
+globs: apps/admin/**,apps/h5/**,**/*.vue
+alwaysApply: false
+---
+
+# 移动端 H5 开发规范（Vue 3 + Vant 4 + TypeScript）
+
+来源：`~/AgentProjects/dev-standards/playbook/h5.md` + `h5-admin.md`
+
+## 视口适配
+
+- 设计基准 `375px`；使用 `postcss-px-to-viewport-8-plugin` 编译时 px → vw
+- PC 端沙盒居中（375px~480px 限宽 + shadow），不转换沙盒外层容器
+- viewport meta 必须含 `viewport-fit=cover` + `user-scalable=no`
+- 安全区避让：`env(safe-area-inset-top)` / `env(safe-area-inset-bottom)`
+
+## 强制约定
+
+1. **严禁原生 `<select>`** — 统一 readonly `van-field` + `van-popup` + `van-picker` 底部弹窗组合
+2. **触控面积 ≥ 44px** — 按钮和可点击区域的最小物理尺寸不得低于 44×44
+3. **按压弹性微动效** — `active:scale-[0.97] active:opacity-90 transition-all duration-100`
+4. **严禁翻页按钮** — 统一下拉刷新（PullRefresh） + 上拉无限加载（van-list），底部 `"没有更多了"`
+5. **防重提交** — 所有写操作按钮点击后立即 `loading` / `disabled`
+6. **路由懒加载** — 除首屏外所有页面 `() => import('@/views/xxx.vue')`
+7. **Vant 按需引入** — `unplugin-vue-components`；禁止 main.ts 全量引入
+8. **错误处理** — 统一 `services/http.ts` 拦截器；遵循 `api-error-codes.md`
+
+## WebView 兼容（高频坑）
+
+- **iOS 软键盘塌陷**：所有 input/textarea blur 时触发 `window.scrollTo()` 重置
+- **弹窗橡皮筋穿透**：popup 打开时 `document.body.style.overflow = 'hidden'`
+- **微信 OAuth code 清洗**：重定向取 code 后必须从 URL 中移除，防止刷新报 500
+
+## 性能
+
+- **图片**：首选 WebP；LCP 英雄图 `fetchpriority="high"`；非首屏 `loading="lazy"`
+- **字体**：禁止首屏加载中文字体包，使用系统 fallback 栈
+- **首屏 3 秒定律**：三方库按需引入 + 路由代码拆分
+
+## 后台管理（apps/admin 专有）
+
+- 表格数据 → 卡片式列表（禁止移动端横向大表格）
+- 高危操作必须 `van-dialog` 二次确认 + Danger 色按钮
+- 图表选型：AntV F2 / ECharts 移动版；禁止双指缩放手势
+- 品牌色换肤：`--van-primary-color: var(--project-primary-color, #1989fa)`
+- PC 沙盒布局：`App.vue` sandbox-container 375px 限宽居中
+
+## 模式与坑
+
+详细代码参考、拦截器模板、PostCSS 配置：`skills/h5/`（Claude Code Skill）
+
+> 来源：`playbook/h5.md` + `playbook/h5-admin.md`

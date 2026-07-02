@@ -1,0 +1,42 @@
+---
+description: 原生 TS 微信小程序目录、wxp、http.ts、2MB 限制（派生自 wechat-mp.md）
+globs: apps/miniapp/**,**/miniprogram/**
+alwaysApply: false
+---
+
+# 微信小程序（原生 + TypeScript）
+
+来源：`~/AgentProjects/dev-standards/playbook/wechat-mp.md`
+
+## 目录要点
+
+- `miniprogram/` = 源码根（对齐 `project.config.json` → `miniprogramRoot`）
+- `miniprogram/services/http.ts` — 统一网络层；**禁止**页面裸调 `wxp.request`
+- `project.private.config.json` — **必须** gitignore（appid / 私钥）
+- `pages/`、`components/`（4 文件同名）、`stores/`、`utils/`、`types/`
+
+Monorepo 嵌套：见 `apps/miniapp/`；根 `pnpm check:wechat` 或 filter 脚本。
+
+## 强制约定
+
+1. **异步 API** — 只用 `wxp.*`（`miniprogram-api-promise` patch）；禁止 callback 形式
+2. **错误格式** — 遵循 `api-error-codes.md`（经 http.ts）
+3. **主包 ≤ 2MB** — 图片 CDN / 分包；CI 建议 size 检查
+4. **提交** — Husky + commitlint（见 ci-minimum-gate.mdc）
+5. **MobX / zustand** — 跨页状态；token 走 `wx.setStorageSync`，不用 globalData
+
+## 分环境
+
+| 环境 | 触发 | 上传号 |
+|---|---|---|
+| dev | push main | `1.0.${run_number}` |
+| trial | tag / manual | `1.0.${run_number}` |
+| release | GitHub Release | semver（CHANGELOG 同步） |
+
+体验版/正式版审核须人工到微信公众平台；CI 只负责 upload。
+
+## 模式与坑
+
+详细 API 模式、组件、CI：`skills/wechat-mp/`（Claude Code Skill）
+
+> 来源：`playbook/wechat-mp.md`
