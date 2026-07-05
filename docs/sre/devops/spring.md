@@ -9,7 +9,6 @@ tags:
   - CI/CD
 ---
 
-# 服务端开发，SpringBoot 快速开始
 
 > 基于 SpringBoot 3.x 快速启动服务端 Demo 项目
 

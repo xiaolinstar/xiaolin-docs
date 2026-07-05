@@ -10,7 +10,6 @@ tags:
   - Docker
 ---
 
-# 从零实现 CI/CD：声明式 API，Docker Compose 容器编排实践
 
 云原生的代表技术包括容器、服务网格、微服务、不可变基础设施和**声明式 API**。
 

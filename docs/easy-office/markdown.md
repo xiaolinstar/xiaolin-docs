@@ -8,7 +8,6 @@ tags:
   - Markdown
 ---
 
-# Markdown 文本编辑，专注于内容而非样式
 
 ## 前言
 

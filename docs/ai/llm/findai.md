@@ -8,7 +8,6 @@ tags:
   - LLM
 ---
 
-# 构建记忆系统，从发现开始
 
 ## Extensions plug
 

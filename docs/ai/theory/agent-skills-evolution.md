@@ -10,7 +10,6 @@ tags:
   - Skill
 ---
 
-# 通用 Skill 会消失，领域 Skill 会商品化：我的 Agent Skill 演进观
 
 ![Agent Skill 演进观封面](https://media.xiaolin.fun/docs/img-agent-skills-evolution/infographic-01.png)
 

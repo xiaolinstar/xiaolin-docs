@@ -9,7 +9,6 @@ tags:
   - OpenClaw
 ---
 
-# OpenClaw 用不下去的 4 个理由
 
 ![OpenClaw 的四大痛点](https://media.xiaolin.fun/docs/img-openclaw-pain/avatar.png)
 

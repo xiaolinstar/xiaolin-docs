@@ -9,7 +9,6 @@ tags:
   - CI/CD
 ---
 
-# 从零实现 CI/CD：起步
 
 为了简单期间，系列文章以开发、构建和部署 VitePress 静态站点为例，后期根据差异性补充 SpringBoot 服务端项目。
 

@@ -9,7 +9,6 @@ tags:
   - CI/CD
 ---
 
-# Exception异常架构设计：异常抛出（03）
 
 什么时候抛出异常？什么时候是`if-raise`，什么时候是`try-except-raise`？
 

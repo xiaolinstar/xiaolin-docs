@@ -9,7 +9,6 @@ tags:
   - AI
 ---
 
-# AI Coding，技术演进与思考
 
 ## 前言
 

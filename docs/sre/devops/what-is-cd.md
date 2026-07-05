@@ -9,7 +9,6 @@ tags:
   - CI/CD
 ---
 
-# CD 持续部署，持续交付
 
 持续部署（Continuous Deployment）与持续交付（Continuous Delivery）的缩写都是 CD，它们的联系和区别是什么？我的理解：
 

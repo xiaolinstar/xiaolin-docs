@@ -9,7 +9,6 @@ tags:
   - AI
 ---
 
-# 个人开发者视角的驾驭工程：从“结对编程”到“圈养” AI
 
 ![驾驭工程概览](https://media.xiaolin.fun/docs/img-harness-engineering/avatar.png)
 

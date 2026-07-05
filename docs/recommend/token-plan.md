@@ -8,7 +8,6 @@ tags:
   - Token
 ---
 
-# Token Plan 推荐
 
 大模型 Token、AI Coding 套餐与 API 体验金入口，扫码或点击链接均可领取优惠。
 

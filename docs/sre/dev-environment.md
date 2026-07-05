@@ -7,7 +7,6 @@ category: SRE 运维
 tags: []
 ---
 
-# 一站式开发环境
 
 操作系统：ubuntu 22.04
 

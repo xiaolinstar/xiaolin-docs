@@ -9,7 +9,6 @@ tags:
   - CI/CD
 ---
 
-# 从零实现 CI/CD：Pipeline 流水线工具
 
 ## 前言
 

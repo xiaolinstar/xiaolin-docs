@@ -8,7 +8,6 @@ tags:
   - Jenkins
 ---
 
-# 你好Jenkins，以[docker in docker]的方式见面
 
 > 基于docker-compose快速构建Jenkins容器，且Jenkins容器与宿主机docker环境连通，实现「docker in docker」。
 

@@ -9,7 +9,6 @@ tags:
   - CI/CD
 ---
 
-# CI 制品源管控：镜像仓库多源推送的“软着陆”治理实践
 
 ![CI 制品源管控与“软着陆”治理实践](https://media.xiaolin.fun/docs/img-harbor-source-control/infographic-01.png)
 

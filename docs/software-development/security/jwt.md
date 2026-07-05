@@ -9,5 +9,3 @@ tags:
   - JWT
   - Token
 ---
-
-# 无状态凭证 Json Web Token (JWT)

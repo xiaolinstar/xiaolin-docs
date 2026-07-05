@@ -9,7 +9,6 @@ tags:
   - CI/CD
 ---
 
-# Web 前端开发，基于 VitePress 快速搭建个人网站
 
 > 本文介绍 Web 前端开发，基于 VitePress 搭建个人网站。
 

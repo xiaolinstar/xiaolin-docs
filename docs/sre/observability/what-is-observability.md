@@ -9,7 +9,6 @@ tags:
   - 监控
 ---
 
-# 监控 vs 可观测性 2023
 
 本文引用自 Cloud Native Daily：[Monitoring vs Observability in 2023 — An Honest Take](https://medium.com/cloud-native-daily/monitoring-vs-observability-in-2023-an-honest-take-f68df4e2d774)
 

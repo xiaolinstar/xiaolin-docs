@@ -8,7 +8,6 @@ tags:
   - SRE
 ---
 
-# 两台服务器，撑起多个项目
 
 ![avatar](https://media.xiaolin.fun/docs/img-opc-server/avatar.png)
 

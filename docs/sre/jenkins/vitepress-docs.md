@@ -8,7 +8,6 @@ tags:
   - Jenkins
 ---
 
-# VitePress快速搭建个人网站
 
 > 本文介绍VitePress搭建个人网站，并使用Docker容器化部署。
 

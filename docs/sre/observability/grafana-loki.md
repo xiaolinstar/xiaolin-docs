@@ -10,7 +10,6 @@ tags:
   - Grafana
 ---
 
-# Grafana Loki 轻量级日志聚合系统
 
 Grafana 简介
 

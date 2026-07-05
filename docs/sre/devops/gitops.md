@@ -10,7 +10,6 @@ tags:
   - GitOps
 ---
 
-# GitOps，让 Git 成为运维的唯一入口
 
 ![GitOps 封面图](https://media.xiaolin.fun/docs/img-gitops/cover.png)
 

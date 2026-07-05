@@ -7,7 +7,6 @@ category: 效率工具
 tags: []
 ---
 
-# Thunderbird 解放收件箱
 
 > 遇见Thunderbird：一个给你充分自由的邮件、日历和联系人管理应用。
 

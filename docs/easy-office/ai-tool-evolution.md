@@ -8,7 +8,6 @@ tags:
   - AI
 ---
 
-# AI 工具形态演变：Copilot、AI Native IDE、CLI、VSCode Plugin、Desktop App
 
 ## 引言
 

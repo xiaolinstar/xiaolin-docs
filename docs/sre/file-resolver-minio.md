@@ -7,6 +7,5 @@ category: SRE 运维
 tags: []
 ---
 
-# 文件存储解决方案：Minio
 
 待完成

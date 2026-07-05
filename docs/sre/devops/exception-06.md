@@ -9,7 +9,6 @@ tags:
   - CI/CD
 ---
 
-# Exception异常编程实践：异常模块规划（06）
 
 在前五篇中，我们完成了异常架构设计的理论体系：从[四项核心原则](exception-00.md)出发，经历了[异常基础](exception-01.md)、[异常分类](exception-02.md)、[异常抛出](exception-03.md)、[异常处理](exception-04.md)，最终在[系统性总结](exception-05.md)中将其融为一体。
 
