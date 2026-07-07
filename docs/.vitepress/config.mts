@@ -111,17 +111,58 @@ export default withMermaid({
                             ]
                         },
                         {
-                            text: 'DevOps 实践',
-                            link: `/sre/devops/`,
+                            text: '渐进式 DevOps 实践',
+                            link: `/sre/devops/cicd/progressive-devops-intro`,
                             items: [
-                                { text: '发布变更，AI 价值', link: `/sre/devops/change-control` },
-                                { text: '云原生CI/CD全局视角', link: `/sre/devops/cloud-native-cicd` },
-                                { text: 'CI 制品源管控与“软着陆”治理', link: `/sre/devops/harbor-source-control` },
-                                { text: 'DevOps 平台思考', link: `/sre/devops/devops-platform` },
-                                { text: 'Git Submodule 父子项目协作', link: `/sre/devops/git-submodule` },
-                                { text: '环境管理', link: `/sre/devops/environment` },
-                                { text: 'DevOps 核心能力', link: `/sre/devops/devops-core` },
-                                { text: 'GitOps 设计理念与实践', link: `/sre/devops/gitops` },
+                                { text: '专栏导读：渐进式 DevOps 路线图', link: `/sre/devops/cicd/progressive-devops-intro` },
+                                { text: 'L1 级规范：环境变量与配置管理', link: `/sre/devops/cicd/environment` },
+                                { text: 'L2 级基础：流水线自动化与 CI/CD 权责分离', link: `/sre/devops/cicd/cicd-07` },
+                                { text: 'L2.1 持续集成 CI：源代码到容器镜像', link: `/sre/devops/cicd/cicd-08` },
+                                { text: 'L2.2 CI 制品源管控与“软着陆”治理', link: `/sre/devops/cicd/harbor-source-control` },
+                                { text: 'L3 级演进：轻量级容器集群 (K3s) 落地', link: `/sre/devops/cicd/k3s` },
+                                { text: 'L4 级进阶：持续发布 CD 与生产发布', link: `/sre/devops/cicd/cicd-09` },
+                                { text: 'L4.1 交付边界：持续发布与部署交付', link: `/sre/devops/cicd/what-is-cd` },
+                                { text: 'L4.2 声明式发布：GitOps 设计理念与实践', link: `/sre/devops/cicd/gitops` },
+                                { text: 'L5 级治理：发布变更管控与防线建设', link: `/sre/devops/cicd/change-management` },
+                                { text: 'L5.1 变更防错：发布变更，AI 价值', link: `/sre/devops/cicd/change-control` },
+                                { text: 'L5.2 平台思考：一站式 DevOps 平台反思', link: `/sre/devops/cicd/devops-platform` },
+                            ]
+                        },
+                        {
+                            text: '从零实现 CI/CD 实操演练',
+                            link: `/sre/devops/cicd/cicd-01`,
+                            items: [
+                                { text: '从零实现 01：起步与目标规划', link: `/sre/devops/cicd/cicd-01` },
+                                { text: '从零实现 02：应用容器化实践', link: `/sre/devops/cicd/cicd-02` },
+                                { text: '从零实现 03：Docker Compose 容器编排', link: `/sre/devops/cicd/cicd-03` },
+                                { text: '从零实现 04：Pipeline 流水线工具', link: `/sre/devops/cicd/cicd-04` },
+                                { text: '从零实现 05：GitHub Actions 快速介绍', link: `/sre/devops/cicd/cicd-05` },
+                                { text: '从零实现 06：GitHub Actions 工作流实践', link: `/sre/devops/cicd/cicd-06` },
+                            ]
+                        },
+                        {
+                            text: 'Exception 异常架构专栏',
+                            link: `/sre/devops/exception/exception-00`,
+                            items: [
+                                { text: '异常设计 00：四项核心原则', link: `/sre/devops/exception/exception-00` },
+                                { text: '异常设计 01：基础概念与机制', link: `/sre/devops/exception/exception-01` },
+                                { text: '异常设计 02：异常分类体系与边界', link: `/sre/devops/exception/exception-02` },
+                                { text: '异常设计 03：异常抛出时机与原则', link: `/sre/devops/exception/exception-03` },
+                                { text: '异常设计 04：声明式处理理念', link: `/sre/devops/exception/exception-04` },
+                                { text: '异常设计 05：系统性处理的思维革命', link: `/sre/devops/exception/exception-05` },
+                                { text: '异常设计 06：异常模块规划与文件结构', link: `/sre/devops/exception/exception-06` },
+                                { text: '异常设计 07：异常类与错误码设计', link: `/sre/devops/exception/exception-07` },
+                                { text: '异常设计 08：全局异常处理器项目集成', link: `/sre/devops/exception/exception-08` },
+                            ]
+                        },
+                        {
+                            text: '常见场景部署实践',
+                            items: [
+                                { text: 'Web 静态站点发布', link: `/sre/devops/cicd/front-dist` },
+                                { text: 'Spring 服务端开发部署', link: `/sre/devops/cicd/spring` },
+                                { text: 'Git Submodule 父子项目协作', link: `/sre/devops/cicd/git-submodule` },
+                                { text: '云原生 CI/CD 全局视角', link: `/sre/devops/cicd/cloud-native-cicd` },
+                                { text: 'DevOps 核心能力', link: `/sre/devops/cicd/devops-core` },
                             ]
                         },
                         {
@@ -141,35 +182,6 @@ export default withMermaid({
                                 { text: '2026 运营规划', link: `/sre/planning/2026-plan` },
                                 { text: '自动生成 Skill 的价值', link: `/sre/planning/skill-value` },
                                 { text: 'AI 时代 SRE 的价值重塑', link: `/sre/planning/sre-ai-era` },
-                            ]
-                        },
-                        {
-                            text: 'CI/CD 与 DevOps',
-                            link: `/sre/devops`,
-                            items: [
-                                { text: 'Web 静态站点', link: `/sre/devops/front-dist` },
-                                { text: 'Spring 服务端开发', link: `/sre/devops/spring` },
-                                { text: '从零实现 CI/CD 01', link: `/sre/devops/cicd-01` },
-                                { text: '从零实现 CI/CD 02', link: `/sre/devops/cicd-02` },
-                                { text: '从零实现 CI/CD 03', link: `/sre/devops/cicd-03` },
-                                { text: '从零实现 CI/CD 04', link: `/sre/devops/cicd-04` },
-                                { text: '从零实现 CI/CD 05', link: `/sre/devops/cicd-05` },
-                                { text: '从零实现 CI/CD 06', link: `/sre/devops/cicd-06` },
-                                { text: '从零实现 CI/CD 07', link: `/sre/devops/cicd-07` },
-                                { text: '从零实现 CI/CD 08', link: `/sre/devops/cicd-08` },
-                                { text: '从零实现 CI/CD 09', link: `/sre/devops/cicd-09` },
-                                { text: 'CD 部署与交付', link: `/sre/devops/what-is-cd` },
-                                { text: '发布变更管控', link: `/sre/devops/change-management` },
-                                { text: 'K3s', link: `/sre/devops/k3s` },
-                                { text: 'Exception 异常架构设计 00', link: `/sre/devops/exception-00` },
-                                { text: 'Exception 异常架构设计 01', link: `/sre/devops/exception-01` },
-                                { text: 'Exception 异常架构设计 02', link: `/sre/devops/exception-02` },
-                                { text: 'Exception 异常架构设计 03', link: `/sre/devops/exception-03` },
-                                { text: 'Exception 异常架构设计 04', link: `/sre/devops/exception-04` },
-                                { text: 'Exception 异常架构设计 05', link: `/sre/devops/exception-05` },
-                                { text: 'Exception 异常编程实践 06', link: `/sre/devops/exception-06` },
-                                { text: 'Exception 异常编程实践 07', link: `/sre/devops/exception-07` },
-                                { text: 'Exception 异常编程实践 08', link: `/sre/devops/exception-08` }
                             ]
                         },
                         {
