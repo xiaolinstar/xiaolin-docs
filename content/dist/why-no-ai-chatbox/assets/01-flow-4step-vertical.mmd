@@ -1,0 +1,15 @@
+%% 竖版流程图（公众号正文窄栏 / 手机阅读）
+%% 导出：npx @mermaid-js/mermaid-cli -i 01-flow-4step-vertical.mmd -o 01-flow-4step-vertical.png -w 800 -b transparent
+
+flowchart TD
+    A["📧 领导邮件"]
+    B["🤖 Agent 读邮件<br/>提炼行动项"]
+    C["⌨️ ai-todo CLI<br/>写入提醒"]
+    D["📱 微信小程序<br/>查看 · 微信提醒 · 完成"]
+
+    A --> B --> C --> D
+
+    style A fill:#E8F4FD,stroke:#4A90D9,color:#333
+    style B fill:#F0F7FF,stroke:#5B8DEF,color:#333
+    style C fill:#EDFAF3,stroke:#34A853,color:#333
+    style D fill:#FFF8E6,stroke:#FBBC04,color:#333
