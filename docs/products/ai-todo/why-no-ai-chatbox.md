@@ -72,8 +72,7 @@ ai-todo reminder create \
 
 全程没有在小程序里打字聊天，但该记的记了，该提醒的也能推到微信。
 
-<!-- shot:flow-4step -->
-<!-- ![邮件到小程序的四步流程](https://media.xiaolin.fun/docs/img-ai-todo/why-no-ai-chatbox/01-flow-4step.png) -->
+![邮件到小程序的四步流程](https://media.xiaolin.fun/docs/img-ai-todo/why-no-ai-chatbox/01-flow-4step.png)
 
 <!-- shot:cli-today -->
 <!-- ![终端查看今日待办](https://media.xiaolin.fun/docs/img-ai-todo/why-no-ai-chatbox/04-cli-today.png) -->
