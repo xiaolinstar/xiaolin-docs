@@ -562,8 +562,8 @@ assets/
 | 文件 | 用途 |
 |------|------|
 | [brand-voice.md](brand-voice.md) | 语气、结构模板、平台 tone |
-| `.claude/skills/notion-infographic-v2/SKILL.md` | 小红书组图规则与视觉风格 |
-| `.claude/skills/creator-suite/wechat-publisher/SKILL.md` | 公众号生成与润色 |
-| `.claude/skills/creator-suite/content-repurpose/SKILL.md` | 一源多用编排流程 |
+| `.agents/skills/notion-infographic-v2/SKILL.md` | 小红书组图规则与视觉风格 |
+| `.agents/skills/creator-suite/wechat-publisher/SKILL.md` | 公众号生成与润色 |
+| `.agents/skills/creator-suite/content-repurpose/SKILL.md` | 一源多用编排流程 |
 | [content/dist/README.md](../../../content/dist/README.md) | Origin / Output 目录约定 |
 | `docs/sre/planning/2026-plan.md` | 分发策略、发布节奏、账号名 |

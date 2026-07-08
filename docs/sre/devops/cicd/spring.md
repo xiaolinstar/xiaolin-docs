@@ -1,5 +1,5 @@
 ---
-title: 服务端开发，SpringBoot 快速开始
+title: 22 ｜ Spring 应用部署
 description: 开发环境：Jetbrains IDEA
 date: 2026-03-28
 updated: 2026-03-28

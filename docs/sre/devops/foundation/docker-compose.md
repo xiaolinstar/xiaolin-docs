@@ -1,5 +1,5 @@
 ---
-title: 从零实现 CI/CD：声明式 API，Docker Compose 容器编排实践
+title: 03 ｜ 多服务容器编排
 description: 云原生的代表技术包括容器、服务网格、微服务、不可变基础设施和声明式 API。
 date: 2026-03-06
 updated: 2026-03-06

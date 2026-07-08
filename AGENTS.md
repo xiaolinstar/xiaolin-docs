@@ -13,6 +13,25 @@ alwaysApply: true
 - 中文与英文之间加空格，中文与数字之间加空格；全角标点与其他字符之间不加空格。全中文语境下必须使用全角标点。
 - **文档索引维护规则**：任何在 `docs/` 目录下新增的文章或文档，必须默认同步更新 `docs/.vitepress/config.mts` 中的 `nav` 和 `sidebar`，将其添加到对应的标签索引链接中。
 
+## Agent Skills
+
+- **Skill 真源**：`.agents/skills/`（Codex、Antigravity、OpenCode 原生读取）
+- **Claude / Cursor 兼容**：`.claude/skills/` 全部为符号链接 → `.agents/skills/`（单一真源）
+- **索引**：见 [`.agents/README.md`](./.agents/README.md)
+
+## 内容创作
+
+Origin 在 `docs/`，分发稿在 `content/dist/{slug}/`（不上站）。写文 / 分发前读取：
+
+| 任务 | Skill |
+|------|-------|
+| 多平台改编 | `.agents/skills/creator-suite/content-repurpose/SKILL.md` |
+| 公众号 | `.agents/skills/creator-suite/wechat-publisher/SKILL.md` |
+| 语气与禁区 | `.agents/skills/creator-suite/shared/brand-voice.md` |
+| 平台规格 | `.agents/skills/creator-suite/shared/platform-specs.md` |
+
+细则（文档命名、直角引号、加粗兼容）见 [`.agents/rules/core.md`](./.agents/rules/core.md)。
+
 ## Git 提交规则
 
 - **禁止自动提交 git**：除非用户明确要求提交，否则不要执行 git commit、git add 等操作。

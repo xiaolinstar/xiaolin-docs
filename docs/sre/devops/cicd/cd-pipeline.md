@@ -1,5 +1,5 @@
 ---
-title: 持续发布 CD，从容器镜像到生产环境
+title: 12 ｜ 持续发布流水线
 description: CI Pipeline 从源代码到镜像仓库，CD Pipeline 从镜像仓库到生产环境，流水线在项目建设初期定义，可重复执行。
 date: 2026-03-28
 updated: 2026-03-28
@@ -10,7 +10,7 @@ tags:
 ---
 
 
-[CI Pipeline](cicd-08.md) 从源代码到镜像仓库，CD Pipeline 从镜像仓库到生产环境，流水线在项目建设初期定义，可重复执行。
+[CI Pipeline](ci-pipeline.md) 从源代码到镜像仓库，CD Pipeline 从镜像仓库到生产环境，流水线在项目建设初期定义，可重复执行。
 
 ![CICD最小可行方案](https://media.xiaolin.fun/docs/img-cd-pipeline/cicd-minimal.png)
 
@@ -116,7 +116,7 @@ docker-compose up -d # 容器启动
 
 在生产环境，CI 与 CD 应该相分离，CI 流水线负责构建镜像，CD 流水线负责部署镜像到生产环境，需要进行手动确认后触发。
 
-上篇文章 [CI Pipeline](cicd-08.md) 完成了从源代码到镜像仓库的流程，现将镜像部署到生产环境，包含两个步骤：
+上篇文章 [CI Pipeline](ci-pipeline.md) 完成了从源代码到镜像仓库的流程，现将镜像部署到生产环境，包含两个步骤：
 
 1. 在目标服务器上执行 `docker compose`，最简化启停服务
 2. 发送部署成功邮件通知

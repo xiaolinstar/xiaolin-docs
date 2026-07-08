@@ -1,5 +1,5 @@
 ---
-title: 从零实现 CI/CD：GitHub Actions 工作流实践
+title: 06 ｜ Actions 实战
 description: 本文介绍2个工作流实用的案例小试牛刀，从实践中学习、理解 GitHub Actions。
 date: 2026-03-28
 updated: 2026-03-28
@@ -95,7 +95,7 @@ jobs:
 
 GitHub Pages 是通过 GitHub 托管和发布的公共网页，静态站点托管级别的 Serverless 架构，用户无需关注 IaaS 资源维护。
 
-回顾 [VitePress 静态站点](./front-dist.md)，已经学习了如何使用 VitePress 构建静态站点，从[起步：阶段一](cicd-01.md)跳跃到**阶段六：基于 Github Actions 自动化集成与部署**。
+回顾 [VitePress 静态站点](../cicd/front-dist.md)，已经学习了如何使用 VitePress 构建静态站点，从[起步：阶段一](delivery-start.md)跳跃到**阶段六：基于 Github Actions 自动化集成与部署**。
 
 ### 修改 URL 配置
 

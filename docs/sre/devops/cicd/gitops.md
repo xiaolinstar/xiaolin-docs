@@ -1,5 +1,5 @@
 ---
-title: GitOps，让 Git 成为运维的唯一入口
+title: 14 ｜ GitOps 发布实践
 description: 提到 GitOps，很多人第一反应是 Argo CD 和 Kubernetes——这个联想并没有错，它们确实是 GitOps 理念目前最具代表性的落地载体。
 date: 2026-04-09
 updated: 2026-04-09

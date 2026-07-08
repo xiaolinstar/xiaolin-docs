@@ -1,5 +1,5 @@
 ---
-title: 从零实现 CI/CD：GitHub Actions 快速介绍
+title: 05 ｜ Actions 基础
 description: 学习 GitHub Actions 中的核心概念基础知识以及基本术语。
 date: 2026-03-28
 updated: 2026-03-28
@@ -128,7 +128,7 @@ GitHub 还提供更大的运行器，可用于更大的配置。此外，如果�
 
 GitHub Actions 把「事件驱动」与「基础设施即代码」这两件事做到了极致：
 
-- 事件驱动：仓库里的任何风吹草动（一次 push、一条 issue、甚至一条定时 crontab）都可以触发一段自动化流程，真正做到“代码即流程”。
+- 事件驱动：仓库里的任何风吹草动（一次 push、一条 issue、甚至一条定时 crontab）都可以触发一段自动化流程，真正做到「代码即流程」。
 - 基础设施即代码：所有编排逻辑都写在`.github/workflows/*.yml`里，随仓库一起版本管理、一起评审、一起回滚，CI/CD 像写业务代码一样自然。
 
 借助官方的 Linux / Windows / macOS 运行器，以及 Marketplace 上成千上万的现成 Action，我们几乎可以零成本地拼出任何常见场景：

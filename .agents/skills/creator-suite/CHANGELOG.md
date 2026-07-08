@@ -4,6 +4,14 @@
 
 当前版本见 [`VERSION`](./VERSION)。
 
+## [1.0.1] - 2026-07-08
+
+### 迁移（PATCH）
+
+- **真源迁至 `.agents/skills/creator-suite/`**（Agent Skills 标准目录，Codex / Antigravity 原生读取）。
+- `.claude/skills/creator-suite` 改为符号链接，兼容 Claude Code / Cursor。
+- 路径引用统一为 `.agents/skills/creator-suite/`。
+
 ## [1.0.0] - 2026-06-24
 
 ### 架构（MAJOR）

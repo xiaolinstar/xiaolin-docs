@@ -50,8 +50,8 @@ platforms:
 1. **一篇 Origin 对应一个 `{slug}` 目录**，加工文不覆盖原文。
 2. **有差异才落盘**；与原文相同的掘金同步可在 `meta.yaml` 标注 `sync: origin`，不必重复存全文。
 3. **视频 mp4 等大文件** 默认不提交 Git；脚本与 meta 提交即可。
-4. 生成流程见 `.claude/skills/creator-suite/content-repurpose/SKILL.md`。
-5. **架构版本**：creator-suite 当前 **v1.0.0**（见 `.claude/skills/creator-suite/VERSION`）；大改动时递增 MAJOR 并更新 `CHANGELOG.md`。
+4. 生成流程见 `.agents/skills/creator-suite/content-repurpose/SKILL.md`。
+5. **架构版本**：creator-suite 当前 **v1.0.0**（见 `.agents/skills/creator-suite/VERSION`）；大改动时递增 MAJOR 并更新 `CHANGELOG.md`。
 
 ## 历史说明
 
@@ -75,7 +75,7 @@ docs/ Origin
     → 公众号后台发布
 ```
 
-Skill：`.claude/skills/creator-suite/wechat-publisher/SKILL.md`
+Skill：`.agents/skills/creator-suite/wechat-publisher/SKILL.md`
 
 ## 产品截图与占位符
 

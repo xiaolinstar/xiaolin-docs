@@ -293,6 +293,6 @@ Brand Voice 回答三个问题：
 | `docs/sre/forward/prompt.md` | 去 AI 感写作框架（人格、开头、人情味） |
 | `docs/ai/theory/harness-engineering.md` | 比喻式表达、个人开发者视角 |
 | `docs/ai/llm/openclaw-pain.md` | 结构化批评、诚实边界 |
-| `.claude/skills/creator-suite/wechat-publisher/SKILL.md` | 公众号：Origin → Generate → Polish |
+| `.agents/skills/creator-suite/wechat-publisher/SKILL.md` | 公众号：Origin → Generate → Polish |
 | [platform-specs.md](platform-specs.md) | 各平台字数、尺寸、标签、发布节奏 |
-| `.claude/skills/creator-suite/content-repurpose/SKILL.md` | 一源多用编排流程 |
+| `.agents/skills/creator-suite/content-repurpose/SKILL.md` | 一源多用编排流程 |

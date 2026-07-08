@@ -32,7 +32,7 @@
 |------|------|
 | **公开站点** | `docs/` 权威原文，构建为静态站点 |
 | **分发加工** | `content/dist/` 多平台发布稿，Git 管理、不上站 |
-| **Agent Skills** | `.claude/` 项目 skill + `.agents/` 外部 skill，兼容 Cursor / Claude |
+| **Agent Skills** | `.agents/skills/` 真源（Codex / Antigravity / OpenCode）；`.claude/skills/` 符号链接兼容 Claude / Cursor |
 | **运维栈** | Docker、K8s、GitHub Actions、Prometheus + Grafana + Loki |
 
 ---
@@ -55,13 +55,15 @@ xiaolin-docs/
 │   ├── xiaohongshu.md             # 小红书
 │   └── …                          # 掘金 / B 站 / 抖音等
 │
-├── .claude/skills/creator-suite/  # 自媒体技能包（项目自建）
-│   ├── VERSION                    # 架构版本（大改动递增 MAJOR）
-│   ├── content-repurpose/         # 一源多用编排
-│   ├── wechat-publisher/          # 公众号 Generate / Polish
-│   └── shared/                    # brand-voice、platform-specs
+├── .agents/skills/                # Skill 真源（Agent Skills 标准目录）
+│   ├── creator-suite/             # 自媒体技能包（项目自建）
+│   │   ├── VERSION                # 架构版本（大改动递增 MAJOR）
+│   │   ├── content-repurpose/     # 一源多用编排
+│   │   ├── wechat-publisher/      # 公众号 Generate / Polish
+│   │   └── shared/                # brand-voice、platform-specs
+│   └── …                          # find-skills、gh-cli 等外部安装
 │
-├── .agents/skills/                # 外部安装 skill（find-skills、gh-cli 等）
+├── .claude/skills/                # Claude / Cursor 兼容层（符号链接 → .agents/skills/）
 ├── .github/workflows/             # CI / CD / Pages
 ├── k8s/                           # Kubernetes 清单
 ├── compose.yaml                   # 独立服务模式
@@ -141,8 +143,8 @@ docs/ Origin（权威原文）
     └─ wechat-publisher  ──→ wechat.md            公众号稿
 ```
 
-- 技能包版本：[`.claude/skills/creator-suite/VERSION`](./.claude/skills/creator-suite/VERSION)（当前 **1.0.0**）
-- 变更记录：[`CHANGELOG.md`](./.claude/skills/creator-suite/CHANGELOG.md)
+- 技能包版本：[`.agents/skills/creator-suite/VERSION`](./.agents/skills/creator-suite/VERSION)（当前 **1.0.0**）
+- 变更记录：[`CHANGELOG.md`](./.agents/skills/creator-suite/CHANGELOG.md)
 - 账号矩阵：主号 **AI持续运维**（公众号、掘金、知乎、B 站等）；副号 **一只羊驼驼**（小红书、抖音）
 
 Agent 通用规则见 [`AGENTS.md`](./AGENTS.md) / [`CLAUDE.md`](./CLAUDE.md)。
@@ -182,6 +184,7 @@ Agent 通用规则见 [`AGENTS.md`](./AGENTS.md) / [`CLAUDE.md`](./CLAUDE.md)。
 
 | 日期 | 说明 |
 |------|------|
+| 2026-07 | creator-suite v1.0.1：迁至 `.agents/skills/` 真源，Codex / Antigravity 兼容 |
 | 2026-06 | creator-suite v1.0.0：Origin/Output 分层、wechat-publisher、`.agents` 目录规范化 |
 | 2026-03 | 项目分离，专注技术内容 |
 | 2025-12 | 接入 GitHub Actions CI/CD |
