@@ -116,7 +116,7 @@ export default withMermaid({
                             text: 'DevOps 基础篇',
                             collapsed: true,
                             items: [
-                                { text: '01. 极简交付闭环起步', link: `/sre/devops/foundation/delivery-start` },
+                                { text: '01. Nginx 静态资源代理', link: `/sre/devops/foundation/delivery-start` },
                                 { text: '02. 应用容器化实践', link: `/sre/devops/foundation/docker-practice` },
                                 { text: '03. 多服务容器编排', link: `/sre/devops/foundation/docker-compose` },
                                 { text: '04. 流水线工具选型', link: `/sre/devops/foundation/pipeline-tools` },

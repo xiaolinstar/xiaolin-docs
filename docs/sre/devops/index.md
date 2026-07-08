@@ -17,8 +17,8 @@ DevOps 方法论与实践经验。本站 DevOps 板块设计了「**双轨并行
 
 ```mermaid
 graph TD
-    subgraph 基础篇 ["基础篇：容器化部署与流水线（从零实现闭环）"]
-        start["01 极简起步"] --> docker["02 Docker 容器化"]
+    subgraph 基础篇 ["基础篇：从静态资源代理到自动化流水线"]
+        start["01 Nginx 静态资源代理"] --> docker["02 Docker 容器化"]
         docker --> compose["03 Compose 编排"]
         compose --> pipeline["04 流水线选型"]
         pipeline --> actions["05-06 Actions 实践"]
@@ -47,12 +47,12 @@ graph TD
 ### 1. 开篇词
 *   [00 ｜ 渐进式运维导读](./cicd/progressive-devops-intro.md) — 探寻中小团队与个人开发者的渐进式 DevOps 演进路径。
 
-### 2. 基础篇：容器化部署与流水线（从零实现闭环）
-以容器化、Docker Compose 多服务编排与 GitHub Actions 流水线为核心，从零实现自动化交付闭环。
+### 2. 基础篇：从静态资源代理到自动化流水线
+从本地 Nginx 代理静态资源开始，在具体问题中引入 VitePress、Docker、Docker Compose 与 GitHub Actions。
 
 | 序号 | 核心文章 | 说明 |
 | :--- | :--- | :--- |
-| **01** | [01 ｜ 极简交付闭环起步](./foundation/delivery-start.md) | 从零构建极简交付闭环的起点与目标规划 |
+| **01** | [01 ｜ Nginx 静态资源代理](./foundation/delivery-start.md) | 从本地 `index.html` 到 VitePress `dist` 目录的静态资源代理 |
 | **02** | [02 ｜ 应用容器化实践](./foundation/docker-practice.md) | 容器化技术演练：将静态站点打包进 Docker |
 | **03** | [03 ｜ 多服务容器编排](./foundation/docker-compose.md) | 声明式多服务治理：Docker Compose 容器编排 |
 | **04** | [04 ｜ 流水线工具选型](./foundation/pipeline-tools.md) | DevOps 工具链选型：常见 Pipeline 工具对比 |
