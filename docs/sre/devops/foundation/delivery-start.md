@@ -9,89 +9,161 @@ tags:
   - CI/CD
 ---
 
-编程入门的 Hello World，是在控制台打印一行文字。
+编程入门的 Hello World 是打印一行文字，运维入门的 Hello World 是把网站发布到服务器上，让别人通过浏览器访问。
 
-运维入门的 Hello World，可以从用 Nginx 代理一个静态网页开始。
+例如，你写了一个博客，希望别人能通过 `http://my-blog.com` 访问。这需要解决一个问题：**如何把本地的网站文件发布到服务器上？**
 
-本文的核心问题是：
+## 什么是静态资源
 
-> 如何用 Nginx 把本地静态文件发布成一个可访问的网站？
+网站文件通常由三种资源组成：
 
-这篇文章只关注静态资源代理：HTML、CSS、JS、图片等文件已经存在于本地目录中，Nginx 负责把它们返回给浏览器。
+- **HTML**：网页的结构和内容
+- **CSS**：网页的样式和布局
+- **JavaScript**：网页的交互和动态行为
 
-## Nginx 是什么
+这些文件在本地编辑完成后，需要放到服务器上，才能被浏览器访问。
 
-Nginx 是一个常用 Web 服务器。
+## Nginx 简介
 
-在静态网站场景中，可以先把它理解成 3 件事：
+Nginx 是一个 Web 服务器，负责把静态资源返回给浏览器。
 
-- 接收浏览器发来的 HTTP 请求。
-- 到配置指定的目录中查找文件。
-- 把找到的 HTML、CSS、JS、图片等静态资源返回给浏览器。
+在静态网站场景中，它做 3 件事：
 
-例如浏览器访问：
+```mermaid
+sequenceDiagram
+    participant 浏览器
+    participant Nginx
+    participant 服务器文件系统
 
-```text
-http://localhost:8080
+    浏览器->>Nginx: HTTP 请求（如 GET /index.html）
+    Nginx->>服务器文件系统: 查找 /index.html
+    服务器文件系统-->>Nginx: 返回文件内容
+    Nginx-->>浏览器: 返回 HTML、CSS、JS 等静态资源
 ```
 
-Nginx 可以返回本地目录中的：
+例如浏览器访问 `http://my-blog.com`，Nginx 返回服务器上的 `index.html`。
 
-```text
-index.html
+Nginx 还可以做反向代理、负载均衡、HTTPS、限流等事情，但这些不是本文重点。作为开发者，我们只需要关注**配置文件**。
+
+## 安装 Nginx
+
+在 Ubuntu 环境下安装 Nginx：
+
+```bash
+sudo apt update
+sudo apt install nginx
 ```
 
-Nginx 还可以做反向代理、负载均衡、HTTPS、限流等事情，但这些不是本文重点。当前只需要掌握：**Nginx 可以把某个文件或某个文件夹代理成一个网站。**
+安装完成后，Nginx 会自动启动。可以通过以下命令验证：
 
-## 配置文件在哪里
-
-Nginx 最关键的是配置文件。
-
-常见结构如下：
-
-```text
-nginx/
-  nginx.conf
-  conf.d/
-    default.conf
+```bash
+nginx -v
 ```
 
-其中：
+## 常用命令
 
-- `nginx.conf`：主配置文件，负责加载基础配置和子配置。
-- `conf.d/default.conf`：站点配置文件，通常在这里写监听端口、网站目录、首页文件等配置。
+```bash
+# 启动
+sudo systemctl start nginx
 
-很多 Linux 发行版安装 Nginx 后，也会采用类似结构：
+# 停止
+sudo systemctl stop nginx
 
-```text
-/etc/nginx/nginx.conf
-/etc/nginx/conf.d/default.conf
+# 重启
+sudo systemctl restart nginx
+
+# 查看状态
+sudo systemctl status nginx
+
+# 重新加载配置（不中断服务）
+sudo systemctl reload nginx
+
+# 测试配置文件语法
+nginx -t
 ```
 
-本地练习时，不必直接修改系统目录，可以在项目里准备一套独立的 Nginx 配置，便于理解和删除。
-
-## 代理一个 index.html
-
-先准备目录：
+安装完成后，访问 `http://localhost`，可以看到 Nginx 默认欢迎页面：
 
 ```text
-nginx-demo/
-  nginx.conf
-  conf.d/
-    default.conf
-  html/
-    index.html
-  logs/
+┌─────────────────────────────────────────────────────────────┐
+│                                                             │
+│                    Welcome to nginx!                         │
+│                                                             │
+│  If you see this page, the nginx web server is successfully │
+│  installed and working. Further configuration is required.  │
+│                                                             │
+│  For online documentation and support please refer to       │
+│  nginx.org.                                                 │
+│  Commercial support is available at nginx.com.              │
+│                                                             │
+│  Thank you for using nginx.                                 │
+│                                                             │
+└─────────────────────────────────────────────────────────────┘
 ```
 
-`html/index.html`：
+这说明 Nginx 已经在运行，并且可以返回静态资源了。
+
+## 配置文件结构
+
+Nginx 最关键的是配置文件，安装后的目录结构如下：
+
+```text
+/etc/nginx/
+├── nginx.conf              # 主配置文件
+├── conf.d/                 # 站点配置目录（默认为空）
+├── sites-available/        # 可用站点配置
+│   └── default             # 默认站点配置
+└── sites-enabled/          # 已启用站点（符号链接）
+    └── default -> ../sites-available/default
+
+/var/www/
+└── html/
+    └── index.nginx-debian.html  # 默认首页
+```
+
+`nginx.conf` 的核心内容：
+
+```nginx
+http {
+    include /etc/nginx/conf.d/*.conf;        # 加载自定义站点配置
+    include /etc/nginx/sites-enabled/*;      # 加载已启用站点配置
+}
+```
+
+默认情况下，`conf.d/` 为空，Nginx 使用 `sites-enabled/default` 配置：
+
+```nginx
+server {
+    listen 80 default_server;                      # IPv4 监听端口
+    listen [::]:80 default_server;                 # IPv6 监听端口
+
+    root /var/www/html;                            # 静态资源目录
+    index index.html index.htm index.nginx-debian.html;  # 默认首页（按优先级）
+
+    server_name _;                                 # 匹配所有域名
+}
+```
+
+## 代理自定义页面
+
+现在我们已经了解了 Nginx 的基本结构，那么如何代理我们自己的网页呢？
+
+思路很简单：
+
+1. 创建自定义 `index.html`
+2. 复制到静态资源目录 `/var/www/html/index.html`
+3. 重启 Nginx 生效
+
+根据配置中的优先级 `index.html > index.htm > index.nginx-debian.html`，自定义的 `index.html` 会优先生效。
+
+创建自定义页面：
 
 ```html
 <!doctype html>
 <html lang="zh-CN">
 <head>
     <meta charset="UTF-8">
-    <title>Nginx 静态资源代理</title>
+    <title>我的网站</title>
 </head>
 <body>
     <h1>你好，Nginx</h1>
@@ -100,89 +172,44 @@ nginx-demo/
 </html>
 ```
 
-`nginx.conf` 只保留最小结构：
-
-```nginx
-worker_processes 1;
-
-error_log logs/error.log;
-pid logs/nginx.pid;
-
-events {
-    worker_connections 1024;
-}
-
-http {
-    include conf.d/*.conf;
-}
-```
-
-`conf.d/default.conf` 写站点配置：
-
-```nginx
-server {
-    listen 8080;
-    server_name localhost;
-
-    root html;
-    index index.html;
-}
-```
-
-启动 Nginx：
+复制到静态资源目录：
 
 ```bash
-nginx -p "$PWD/nginx-demo" -c nginx.conf
+sudo cp index.html /var/www/html/index.html
 ```
 
-浏览器访问：
-
-```text
-http://localhost:8080
-```
-
-看到「你好，Nginx」，说明本地 `index.html` 已经被 Nginx 代理成功。
-
-停止 Nginx：
+重启 Nginx：
 
 ```bash
-nginx -p "$PWD/nginx-demo" -c nginx.conf -s stop
+sudo systemctl restart nginx
 ```
 
-## 代理一个文件夹
+访问 `http://localhost`，看到「你好，Nginx」，说明自定义页面已经生效。
 
-真实静态网站通常不是只有一个 `index.html`，还会有样式、脚本、图片。
+## 理解 root 指令
 
-例如：
-
-```text
-html/
-  index.html
-  style.css
-  main.js
-  logo.png
-```
-
-只要 `default.conf` 中的 `root` 指向 `html` 目录，Nginx 就会从这个目录里读取文件：
+配置中的 `root` 指的是网站的根目录。例如：
 
 ```nginx
-server {
-    listen 8080;
-    server_name localhost;
-
-    root html;
-    index index.html;
-}
+root /var/www/html;
 ```
 
-访问关系可以简单理解为：
+这表示 `/var/www/html` 是网站的根目录，其目录下的静态资源作为网站的根目录。
+
+访问关系如下：
 
 | 浏览器访问 | Nginx 返回 |
 | --- | --- |
-| `http://localhost:8080/` | `html/index.html` |
-| `http://localhost:8080/style.css` | `html/style.css` |
-| `http://localhost:8080/main.js` | `html/main.js` |
-| `http://localhost:8080/logo.png` | `html/logo.png` |
+| `http://localhost/index.html` | `/var/www/html/index.html` |
+| `http://localhost/style.css` | `/var/www/html/style.css` |
+| `http://localhost/main.js` | `/var/www/html/main.js` |
+| `http://localhost/logo.png` | `/var/www/html/logo.png` |
+
+如果目录下有子目录，例如 `test/me.html`，则访问路径为：
+
+| 浏览器访问 | Nginx 返回 |
+| --- | --- |
+| `http://localhost/test/me.html` | `/var/www/html/test/me.html` |
 
 这就是 Nginx 代理静态资源最核心的工作方式。
 
@@ -190,7 +217,26 @@ server {
 
 手写 `index.html` 适合理解原理，但真实文档站点通常不会手写每一个页面。
 
-VitePress 是一个静态站点生成器。它的工作方式是：
+VitePress 是一个由 Vite 和 Vue 驱动的静态站点生成器，将 Markdown 变成优雅的文档，只需几分钟。
+
+开发者只需要专注于两件事：
+
+- **内容**：用 Markdown 编写文档
+- **配置**：少量的站点配置文件
+
+VitePress 负责将 Markdown 渲染构建成面向浏览器的静态资源（HTML、CSS、JS），生成一个完整的文档站点。
+
+很多产品文档都是基于类似的站点生成器做的，例如 Vue、Vite、Rollup 等项目的官方文档。
+
+**VitePress 首页示例：**
+
+![VitePress 首页](https://media.xiaolin.fun/docs/img-delivery-start/vitepress-home.png)
+
+**VitePress 文档页面示例：**
+
+![VitePress 文档页面](https://media.xiaolin.fun/docs/img-delivery-start/vitepress-docs.png)
+
+工作方式如下：
 
 ```text
 Markdown 文档 + 站点配置
@@ -202,139 +248,103 @@ dist 静态资源目录
 Nginx 代理访问
 ```
 
-也就是说，VitePress 负责把文档项目构建成静态文件，Nginx 负责把这些静态文件返回给浏览器。
-
 ## 安装 VitePress
 
-创建项目目录：
+VitePress 需要 Node.js v18+ 环境，推荐使用 pnpm（一个快速、节省磁盘空间的包管理器）。
 
 ```bash
+# 安装 pnpm（如果尚未安装）
+npm install -g pnpm
+
+# 创建项目目录
 mkdir vitepress-demo
 cd vitepress-demo
-pnpm init
+
+# 安装 VitePress
 pnpm add -D vitepress
+
+# 初始化项目（交互式配置）
+npx vitepress init
 ```
 
-创建文档首页：
-
-```text
-docs/
-  index.md
-```
-
-`docs/index.md`：
-
-```markdown
-# 我的文档站点
-
-这是一个使用 VitePress 构建的静态文档站点。
-```
-
-在 `package.json` 中添加脚本：
-
-```json
-{
-  "scripts": {
-    "docs:dev": "vitepress dev docs",
-    "docs:build": "vitepress build docs",
-    "docs:preview": "vitepress preview docs"
-  }
-}
-```
-
-## 本地调试
-
-开发时启动 VitePress 本地服务：
+初始化完成后，启动开发服务器：
 
 ```bash
-pnpm docs:dev
+npx vitepress dev docs
 ```
 
-浏览器访问终端提示的本地地址，通常是：
+> 更多细节参考 [VitePress 官方文档](https://vitepress.dev/guide/getting-started)。
 
-```text
-http://localhost:5173
-```
+## 本地调试、构建与预览
 
-此时适合写文章、改导航、调样式。修改 Markdown 后，页面会自动刷新。
-
-但 `docs:dev` 是开发服务，不是最终发布形态。真正交给 Nginx 代理之前，需要先构建。
-
-## 构建 dist
-
-执行构建：
+VitePress 提供三个核心命令，分别对应开发的不同阶段：
 
 ```bash
-pnpm docs:build
+# 本地调试：开发时使用，支持热更新
+pnpm run docs:dev
+
+# 构建：生成静态资源
+pnpm run docs:build
+
+# 预览验证：本地预览构建结果
+pnpm run docs:preview
 ```
 
-构建成功后，会生成：
+三者的联系和区别：
 
-```text
-docs/.vitepress/dist/
-```
+| 命令 | 用途 | 特点 |
+| --- | --- | --- |
+| `docs:dev` | 开发调试 | 使用本地 Node.js 服务器渲染，支持热更新 |
+| `docs:build` | 构建生产版本 | 生成 `docs/.vitepress/dist/` 静态资源目录 |
+| `docs:preview` | 预览构建结果 | 模拟生产环境，验证构建是否正确 |
 
-这个目录就是 VitePress 的静态站点产物，里面包含：
+`docs:dev` 使用本地 Node.js 服务器渲染，适合开发调试。但在生产环境中，需要使用 Nginx 代理 `dist` 静态资源。
 
-- `index.html`
-- CSS 文件
-- JS 文件
-- 图片和字体等静态资源
-
-从 Nginx 的视角看，`dist` 和前面的 `html` 目录一样，都是一个可以代理的静态资源目录。
-
-## 用 Nginx 代理 VitePress
-
-将 `nginx-demo/conf.d/default.conf` 改成代理 VitePress 的 `dist` 目录：
-
-```nginx
-server {
-    listen 8080;
-    server_name localhost;
-
-    root ../vitepress-demo/docs/.vitepress/dist;
-    index index.html;
-}
-```
-
-重新加载 Nginx：
-
-```bash
-nginx -p "$PWD/nginx-demo" -c nginx.conf -s reload
-```
-
-浏览器访问：
-
-```text
-http://localhost:8080
-```
-
-此时看到的页面，就不是手写的 `index.html`，而是 VitePress 构建后的文档站点。
-
-到这里，一个本地闭环已经完成：
+开发流程：
 
 ```text
 编写 Markdown
   ↓
-pnpm docs:dev 本地调试
+pnpm run docs:dev 本地调试（Node.js 服务器）
   ↓
-pnpm docs:build 构建 dist
+pnpm run docs:build 构建生产版本
   ↓
-Nginx 代理 dist
+pnpm run docs:preview 预览验证
   ↓
-浏览器访问 http://localhost:8080
+复制 dist 到 /var/www/html/，Nginx 代理发布
 ```
 
-## 发布检查
+## 发布部署
 
-每次重新发布前，至少检查 4 件事：
+构建完成后，将 `dist` 目录下的所有子文件、子文件夹复制到 Nginx 的静态资源目录：
 
-- `pnpm docs:build` 是否成功。
-- `docs/.vitepress/dist/index.html` 是否存在。
-- `default.conf` 中的 `root` 是否指向 `dist` 目录。
-- `http://localhost:8080` 是否能打开最新页面。
+```bash
+sudo cp -r docs/.vitepress/dist/* /var/www/html/
+```
 
-如果只修改了 Markdown，但没有重新执行 `pnpm docs:build`，Nginx 仍然会代理旧的 `dist`，浏览器看不到最新内容。
+注意：是将 `dist` 目录**里面的内容**复制到 `/var/www/html/` 下，而不是将 `dist` 目录本身复制过去。这样 `/var/www/html/index.html` 才能被 Nginx 正确访问。
+
+如果需要修改 Nginx 配置（如端口、域名等），编辑 `sites-enabled/default`：
+
+```nginx
+server {
+    listen 80;
+    server_name your-domain.com;
+
+    root /var/www/html;
+    index index.html index.htm index.nginx-debian.html;
+}
+```
+
+重新加载 Nginx 使配置生效：
+
+```bash
+sudo systemctl restart nginx
+```
+
+访问 `http://localhost` 验证部署是否成功。
+
+VitePress 适合开发者灵活地管理静态站点，好处是仅需关注 Markdown 文档和配置文件。但需要注意的是，每次无论大小修改，均需要重新构建和发布。在运维领域，这属于一次「生产变更」，是比较敏感的运维动作。
 
 ## 小结
 
@@ -342,15 +352,39 @@ Nginx 静态资源代理的核心很简单：
 
 > 指定一个目录，让浏览器可以通过 HTTP 访问这个目录中的静态文件。
 
-单个 `index.html` 用来理解 Nginx 的最小工作方式；VitePress 用来生成真实文档站点；`dist` 目录则是交给 Nginx 代理的最终静态资源。
+单个 `index.html` 用来理解 Nginx 的最小工作方式，VitePress 用来生成真实文档站点，`dist` 目录则是交给 Nginx 代理的最终静态资源。
 
-## 思考题
+## 思考
 
-1. `nginx.conf` 和 `conf.d/default.conf` 分别适合放什么配置？
-2. 为什么 `pnpm docs:dev` 能本地预览，但发布时仍然需要 `pnpm docs:build`？
-3. 如果浏览器打开的页面不是最新内容，应该优先检查哪几个环节？
+1. Node.js 和 Nginx 都可以作为 Web 服务器，为什么 `docs:dev` 和 `docs:build` 要区分来做？
+2. 如何将站点部署到互联网上，让别人通过域名访问？
+3. 每次写文章都要走一遍完全一样的步骤，能否实现自动化？
 
 ## 参考
 
-1. Nginx 静态资源服务器，[https://docs.nginx.com/nginx/admin-guide/web-server/serving-static-content/](https://docs.nginx.com/nginx/admin-guide/web-server/serving-static-content/)
-2. VitePress 部署指南，[https://vitepress.dev/guide/deploy](https://vitepress.dev/guide/deploy)
+1. [Nginx 静态资源服务器](https://docs.nginx.com/nginx/admin-guide/web-server/serving-static-content/)
+2. [VitePress 部署指南](https://vitepress.dev/guide/deploy)
+3. [Node.js 官网](https://nodejs.org/)
+4. [pnpm 官方文档](https://pnpm.io/)
+
+## 延伸阅读
+
+### 其他静态站点生成器
+
+除了 VitePress，还有许多优秀的静态站点生成器，适合不同场景：
+
+| 工具 | 技术栈 | 适合场景 |
+| --- | --- | --- |
+| [VitePress](https://vitepress.dev/) | Vue + Vite | 技术文档、博客 |
+| [Docusaurus](https://docusaurus.io/) | React | 技术文档、社区网站 |
+| [Hugo](https://gohugo.io/) | Go | 博客、企业官网（构建速度快） |
+| [Hexo](https://hexo.io/) | Node.js | 博客（中文社区活跃） |
+| [Jekyll](https://jekyllrb.com/) | Ruby | GitHub Pages 默认支持 |
+| [Astro](https://astro.build/) | 多框架支持 | 内容网站、博客（性能优先） |
+
+### VitePress 主题选择
+
+VitePress 默认主题已经非常优秀，如果需要更多定制，可以考虑：
+
+- [默认主题](https://vitepress.dev/guide/theme-introduction)：开箱即用，适合大多数文档站点
+- [社区主题](https://github.com/vuejs/awesome-vitepress#themes)：提供更多样式和功能选择
