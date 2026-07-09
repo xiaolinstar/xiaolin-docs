@@ -1,5 +1,5 @@
 ---
-title: 05 ｜ Actions 基础
+title: 08 ｜ Actions 基础
 description: 学习 GitHub Actions 中的核心概念基础知识以及基本术语。
 date: 2026-03-28
 updated: 2026-03-28

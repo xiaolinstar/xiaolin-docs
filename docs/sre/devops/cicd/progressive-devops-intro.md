@@ -38,14 +38,17 @@ graph TD
 
 一切自动化运维的根基，都是实现「**服务可移植**」与「**流程自动化初步**」。
 *   **核心动作**：将服务通过 Docker 进行容器化，并引入 Docker Compose 实现多服务本地编排；最后利用 GitHub Actions 实现代码推送即触发的极简构建与部署。
-*   **最佳实践**：从手动 `scp` 的极简闭环出发，熟练掌握多阶段构建 Dockerfile 编写与 Actions 编写，达成单机环境下的自动化交付闭环。
+*   **最佳实践**：从手动 `scp` 的极简闭环出发，熟练掌握多阶段构建 Dockerfile 编写与 Actions 编写，达成单机环境下的自动化交付闭环。在引入容器化之前，先理解生产环境（7×24 + 公网 IP）的概念，通过 SSH + scp 完成第一次手动部署。
 *   **前置专栏文章**：
-    *   [01 ｜ 极简交付闭环起步](../foundation/delivery-start.md)
-    *   [02 ｜ 应用容器化实践](../foundation/docker-practice.md)
-    *   [03 ｜ 多服务容器编排](../foundation/docker-compose.md)
-    *   [04 ｜ 流水线工具选型](../foundation/pipeline-tools.md)
-    *   [05 ｜ Actions 基础](../foundation/actions-basic.md)
-    *   [06 ｜ Actions 实战](../foundation/actions-practice.md)
+    *   [01 ｜ Nginx 静态资源代理](../foundation/delivery-start.md)
+    *   [02 ｜ 生产环境入门：部署到云服务器](../foundation/production-env.md)
+    *   [03 ｜ Git 与 GitHub：版本管理与云端仓库](../foundation/git-github.md)
+    *   [04 ｜ 服务端应用部署：依赖地狱与环境一致性](../foundation/server-side-deploy.md)
+    *   [05 ｜ 应用容器化实践](../foundation/docker-practice.md)
+    *   [06 ｜ 多服务容器编排](../foundation/docker-compose.md)
+    *   [07 ｜ 流水线工具选型](../foundation/pipeline-tools.md)
+    *   [08 ｜ Actions 基础](../foundation/actions-basic.md)
+    *   [09 ｜ Actions 实战](../foundation/actions-practice.md)
 
 ### 1. L1 级：配置规范化（先标准化，后自动化）
 一切运维工作的痛点，几乎都源于**配置与代码的耦合**。
