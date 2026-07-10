@@ -117,9 +117,9 @@ export default withMermaid({
                             collapsed: true,
                             items: [
                                 { text: '01. Nginx 静态资源代理', link: `/sre/devops/foundation/delivery-start` },
-                                { text: '02. 生产环境入门：部署到云服务器', link: `/sre/devops/foundation/production-env` },
-                                { text: '03. Git 与 GitHub：版本管理与云端仓库', link: `/sre/devops/foundation/git-github` },
-                                { text: '04. 服务端应用部署：依赖地狱与环境一致性', link: `/sre/devops/foundation/server-side-deploy` },
+                                { text: '02. 生产环境入门', link: `/sre/devops/foundation/production-env` },
+                                { text: '03. Git 与 GitHub 入门', link: `/sre/devops/foundation/git-github` },
+                                { text: '04. 服务端应用部署', link: `/sre/devops/foundation/server-side-deploy` },
                                 { text: '05. 应用容器化实践', link: `/sre/devops/foundation/docker-practice` },
                                 { text: '06. 多服务容器编排', link: `/sre/devops/foundation/docker-compose` },
                                 { text: '07. 流水线工具选型', link: `/sre/devops/foundation/pipeline-tools` },
