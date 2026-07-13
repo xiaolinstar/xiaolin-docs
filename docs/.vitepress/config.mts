@@ -170,6 +170,9 @@ export default withMermaid({
                             collapsed: true,
                             items: [
                                 { text: 'Linux 起手式', link: `/sre/tools/linux-guide` },
+                                { text: 'Mac 终端起手式', link: `/sre/tools/mac-terminal-starter` },
+                                { text: 'WSL Ubuntu 开发', link: `/sre/tools/wsl-ubuntu-dev` },
+                                { text: 'Linux 起手式优化', link: `/sre/tools/linux-guide-optimization` },
                                 { text: '项目管理思考', link: `/sre/tools/project-management` },
                             ]
                         },
