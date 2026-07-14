@@ -155,7 +155,7 @@ Agent 通用规则见 [`AGENTS.md`](./AGENTS.md) / [`CLAUDE.md`](./CLAUDE.md)。
 
 | 层级 | 选型 |
 |------|------|
-| 文档 | VitePress、Mermaid、MathJax、vitepress-plugin-llms |
+| 文档 | VitePress、Mermaid、KaTeX、vitepress-plugin-llms |
 | 包管理 | pnpm workspace |
 | 部署 | Nginx、Docker、Kubernetes、GitHub Actions → GHCR |
 | 可观测性 | Prometheus、Grafana、Loki、Promtail、Node / Nginx Exporter |

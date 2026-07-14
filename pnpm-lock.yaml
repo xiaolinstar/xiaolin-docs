@@ -11,6 +11,9 @@ importers:
       '@braintree/sanitize-url':
         specifier: ^7.1.2
         version: 7.1.2
+      '@vscode/markdown-it-katex':
+        specifier: ^1.1.2
+        version: 1.1.2
       cytoscape:
         specifier: ^3.33.4
         version: 3.33.4
@@ -20,12 +23,12 @@ importers:
       dayjs:
         specifier: ^1.11.21
         version: 1.11.21
+      katex:
+        specifier: ^0.16.21
+        version: 0.16.47
       markdown-it:
         specifier: ^14.1.1
         version: 14.1.1
-      markdown-it-mathjax3:
-        specifier: ^4.3.2
-        version: 4.3.2
       markdown-it-task-list-plus:
         specifier: ^2.1.3
         version: 2.1.3
@@ -365,79 +368,66 @@ packages:
     resolution: {integrity: sha512-EIPRXTVQpHyF8WOo219AD2yEltPehLTcTMz2fn6JsatLYSzQf00hj3rulF+yauOlF9/FtM2WpkT/hJh/KJFGhA==}
     cpu: [arm]
     os: [linux]
-    libc: [glibc]
 
   '@rollup/rollup-linux-arm-musleabihf@4.60.4':
     resolution: {integrity: sha512-J3Yh9PzzF1Ovah2At+lHiGQdsYgArxBbXv/zHfSyaiFQEqvNv7DcW98pCrmdjCZBrqBiKrKKe2V+aaSGWuBe/w==}
     cpu: [arm]
     os: [linux]
-    libc: [musl]
 
   '@rollup/rollup-linux-arm64-gnu@4.60.4':
     resolution: {integrity: sha512-BFDEZMYfUvLn37ONE1yMBojPxnMlTFsdyNoqncT0qFq1mAfllL+ATMMJd8TeuVMiX84s1KbcxcZbXInmcO2mRg==}
     cpu: [arm64]
     os: [linux]
-    libc: [glibc]
 
   '@rollup/rollup-linux-arm64-musl@4.60.4':
     resolution: {integrity: sha512-pc9EYOSlOgdQ2uPl1o9PF6/kLSgaUosia7gOuS8mB69IxJvlclko1MECXysjs5ryez1/5zjYqx3+xYU0TU6R1A==}
     cpu: [arm64]
     os: [linux]
-    libc: [musl]
 
   '@rollup/rollup-linux-loong64-gnu@4.60.4':
     resolution: {integrity: sha512-NxnomyxYerDh5n4iLrNa+sH+Z+U4BMEE46V2PgQ/hoB909i8gV1M5wPojWg9fk1jWpO3IQnOs20K4wyZuFLEFQ==}
     cpu: [loong64]
     os: [linux]
-    libc: [glibc]
 
   '@rollup/rollup-linux-loong64-musl@4.60.4':
     resolution: {integrity: sha512-nbJnQ8a3z1mtmrwImCYhc6BGpThAyYVRQxw9uKSKG4wR6aAYno9sVjJ0zaZcW9BPJX1GbrDPf+SvdWjgTuDmnw==}
     cpu: [loong64]
     os: [linux]
-    libc: [musl]
 
   '@rollup/rollup-linux-ppc64-gnu@4.60.4':
     resolution: {integrity: sha512-2EU6acNrQLd8tYvo/LXW535wupT3m6fo7HKo6lr7ktQoItxTyOL1ZCR/GfGCuXl2vR+zmfI6eRXkSemafv+iVg==}
     cpu: [ppc64]
     os: [linux]
-    libc: [glibc]
 
   '@rollup/rollup-linux-ppc64-musl@4.60.4':
     resolution: {integrity: sha512-WeBtoMuaMxiiIrO2IYP3xs6GMWkJP2C0EoT8beTLkUPmzV1i/UcOSVw1d5r9KBODtHKilG5yFxsGRnBbK3wJ4A==}
     cpu: [ppc64]
     os: [linux]
-    libc: [musl]
 
   '@rollup/rollup-linux-riscv64-gnu@4.60.4':
     resolution: {integrity: sha512-FJHFfqpKUI3A10WrWKiFbBZ7yVbGT4q4B5o1qKFFojqpaYoh9LrQgqWCmmcxQzVSXYtyB5bzkXrYzlHTs21MYA==}
     cpu: [riscv64]
     os: [linux]
-    libc: [glibc]
 
   '@rollup/rollup-linux-riscv64-musl@4.60.4':
     resolution: {integrity: sha512-mcEl6CUT5IAUmQf1m9FYSmVqCJlpQ8r8eyftFUHG8i9OhY7BkBXSUdnLH5DOf0wCOjcP9v/QO93zpmF1SptCCw==}
     cpu: [riscv64]
     os: [linux]
-    libc: [musl]
 
   '@rollup/rollup-linux-s390x-gnu@4.60.4':
     resolution: {integrity: sha512-ynt3JxVd2w2buzoKDWIyiV1pJW93xlQic1THVLXilz429oijRpSHivZAgp65KBu+cMcgf1eVVjdnTLvPxgCuoQ==}
     cpu: [s390x]
     os: [linux]
-    libc: [glibc]
 
   '@rollup/rollup-linux-x64-gnu@4.60.4':
     resolution: {integrity: sha512-Boiz5+MsaROEWDf+GGEwF8VMHGhlUoQMtIPjOgA5fv4osupqTVnJteQNKJwUcnUog2G55jYXH7KZFFiJe0TEzQ==}
     cpu: [x64]
     os: [linux]
-    libc: [glibc]
 
   '@rollup/rollup-linux-x64-musl@4.60.4':
     resolution: {integrity: sha512-+qfSY27qIrFfI/Hom04KYFw3GKZSGU4lXus51wsb5EuySfFlWRwjkKWoE9emgRw/ukoT4Udsj4W/+xxG8VbPKg==}
     cpu: [x64]
     os: [linux]
-    libc: [musl]
 
   '@rollup/rollup-openbsd-x64@4.60.4':
     resolution: {integrity: sha512-VpTfOPHgVXEBeeR8hZ2O0F3aSso+JDWqTWmTmzcQKted54IAdUVbxE+j/MVxUsKa8L20HJhv3vUezVPoquqWjA==}
@@ -634,6 +624,9 @@ packages:
     peerDependencies:
       vite: ^5.0.0 || ^6.0.0
       vue: ^3.2.25
+
+  '@vscode/markdown-it-katex@1.1.2':
+    resolution: {integrity: sha512-+4IIv5PgrmhKvW/3LpkpkGg257OViEhXkOOgCyj5KMsjsOfnRXkni8XAuuF9Ui5p3B8WnUovlDXAQNb8RJ/RaQ==}
 
   '@vue/compiler-core@3.5.34':
     resolution: {integrity: sha512-s9cLyK5mLcvZ4Agva5QgRsQyLKvts9WbU9DB6NqiZkkGEdwmcEiylj5Jbwkp680drF/NNCV8OlAJSe+yMLxaJw==}
@@ -2254,6 +2247,10 @@ snapshots:
       vite: 5.4.14
       vue: 3.5.34
 
+  '@vscode/markdown-it-katex@1.1.2':
+    dependencies:
+      katex: 0.16.47
+
   '@vue/compiler-core@3.5.34':
     dependencies:
       '@babel/parser': 7.29.3
@@ -2353,7 +2350,8 @@ snapshots:
     transitivePeerDependencies:
       - typescript
 
-  '@xmldom/xmldom@0.9.10': {}
+  '@xmldom/xmldom@0.9.10':
+    optional: true
 
   algoliasearch@5.52.1:
     dependencies:
@@ -2372,7 +2370,8 @@ snapshots:
       '@algolia/requester-fetch': 5.52.1
       '@algolia/requester-node-http': 5.52.1
 
-  ansi-colors@4.1.3: {}
+  ansi-colors@4.1.3:
+    optional: true
 
   ansi-regex@5.0.1: {}
 
@@ -2392,7 +2391,8 @@ snapshots:
 
   birpc@0.2.19: {}
 
-  boolbase@1.0.0: {}
+  boolbase@1.0.0:
+    optional: true
 
   brace-expansion@5.0.6:
     dependencies:
@@ -2414,6 +2414,7 @@ snapshots:
       domelementtype: 2.3.0
       domhandler: 5.0.3
       domutils: 3.2.2
+    optional: true
 
   cheerio@1.2.0:
     dependencies:
@@ -2428,6 +2429,7 @@ snapshots:
       parse5-parser-stream: 7.1.2
       undici: 7.25.0
       whatwg-mimetype: 4.0.0
+    optional: true
 
   cliui@8.0.1:
     dependencies:
@@ -2443,9 +2445,11 @@ snapshots:
 
   comma-separated-tokens@2.0.3: {}
 
-  commander@13.1.0: {}
+  commander@13.1.0:
+    optional: true
 
-  commander@6.1.0: {}
+  commander@6.1.0:
+    optional: true
 
   commander@7.0.0: {}
 
@@ -2470,8 +2474,10 @@ snapshots:
       domhandler: 5.0.3
       domutils: 3.2.2
       nth-check: 2.0.1
+    optional: true
 
-  css-what@6.1.0: {}
+  css-what@6.1.0:
+    optional: true
 
   csstype@3.2.3: {}
 
@@ -2692,22 +2698,27 @@ snapshots:
     dependencies:
       domelementtype: 2.3.0
       entities: 2.0.0
+    optional: true
 
   dom-serializer@2.0.0:
     dependencies:
       domelementtype: 2.3.0
       domhandler: 5.0.3
       entities: 4.2.0
+    optional: true
 
-  domelementtype@2.3.0: {}
+  domelementtype@2.3.0:
+    optional: true
 
   domhandler@3.0.0:
     dependencies:
       domelementtype: 2.3.0
+    optional: true
 
   domhandler@5.0.3:
     dependencies:
       domelementtype: 2.3.0
+    optional: true
 
   dompurify@3.4.5:
     optionalDependencies:
@@ -2718,12 +2729,14 @@ snapshots:
       dom-serializer: 0.2.1
       domelementtype: 2.3.0
       domhandler: 3.0.0
+    optional: true
 
   domutils@3.2.2:
     dependencies:
       dom-serializer: 2.0.0
       domelementtype: 2.3.0
       domhandler: 5.0.3
+    optional: true
 
   emoji-regex-xs@1.0.0: {}
 
@@ -2733,14 +2746,18 @@ snapshots:
     dependencies:
       iconv-lite: 0.6.3
       whatwg-encoding: 3.1.1
+    optional: true
 
-  entities@2.0.0: {}
+  entities@2.0.0:
+    optional: true
 
-  entities@4.2.0: {}
+  entities@4.2.0:
+    optional: true
 
   entities@4.4.0: {}
 
-  entities@6.0.0: {}
+  entities@6.0.0:
+    optional: true
 
   entities@7.0.1: {}
 
@@ -2774,11 +2791,13 @@ snapshots:
 
   escalade@3.2.0: {}
 
-  escape-goat@3.0.0: {}
+  escape-goat@3.0.0:
+    optional: true
 
   escape-string-regexp@5.0.0: {}
 
-  esm@3.2.25: {}
+  esm@3.2.25:
+    optional: true
 
   esprima@4.0.1: {}
 
@@ -2840,6 +2859,7 @@ snapshots:
       domhandler: 5.0.3
       domutils: 3.2.2
       entities: 7.0.1
+    optional: true
 
   htmlparser2@4.0.0:
     dependencies:
@@ -2847,6 +2867,7 @@ snapshots:
       domhandler: 3.0.0
       domutils: 2.0.0
       entities: 2.0.0
+    optional: true
 
   iconv-lite@0.6.0:
     dependencies:
@@ -2855,6 +2876,7 @@ snapshots:
   iconv-lite@0.6.3:
     dependencies:
       safer-buffer: 2.1.2
+    optional: true
 
   import-meta-resolve@4.2.0: {}
 
@@ -2884,6 +2906,7 @@ snapshots:
       web-resource-inliner: 5.0.0
     transitivePeerDependencies:
       - encoding
+    optional: true
 
   katex@0.16.47:
     dependencies:
@@ -2917,6 +2940,7 @@ snapshots:
       mathjax-full: 3.2.2
     transitivePeerDependencies:
       - encoding
+    optional: true
 
   markdown-it-task-list-plus@2.1.3: {}
 
@@ -2941,6 +2965,7 @@ snapshots:
       mhchemparser: 4.2.1
       mj-context-menu: 0.6.1
       speech-rule-engine: 4.1.4
+    optional: true
 
   mdast-util-from-markdown@2.0.3:
     dependencies:
@@ -3004,7 +3029,8 @@ snapshots:
 
   mdurl@2.0.0: {}
 
-  mensch@0.3.4: {}
+  mensch@0.3.4:
+    optional: true
 
   mermaid@11.15.0:
     dependencies:
@@ -3030,7 +3056,8 @@ snapshots:
       ts-dedent: 2.2.0
       uuid: 14.0.0
 
-  mhchemparser@4.2.1: {}
+  mhchemparser@4.2.1:
+    optional: true
 
   micromark-core-commonmark@2.0.0:
     dependencies:
@@ -3176,7 +3203,8 @@ snapshots:
     dependencies:
       yargs: 17.7.2
 
-  mime@2.6.0: {}
+  mime@2.6.0:
+    optional: true
 
   minimatch@10.2.5:
     dependencies:
@@ -3186,7 +3214,8 @@ snapshots:
 
   mitt@3.0.1: {}
 
-  mj-context-menu@0.6.1: {}
+  mj-context-menu@0.6.1:
+    optional: true
 
   ms@2.1.3: {}
 
@@ -3195,6 +3224,7 @@ snapshots:
   node-fetch@2.7.0:
     dependencies:
       whatwg-url: 5.0.0
+    optional: true
 
   non-layered-tidy-tree-layout@2.0.2:
     optional: true
@@ -3202,6 +3232,7 @@ snapshots:
   nth-check@2.0.1:
     dependencies:
       boolbase: 1.0.0
+    optional: true
 
   oniguruma-to-es@2.3.0:
     dependencies:
@@ -3215,14 +3246,17 @@ snapshots:
     dependencies:
       domhandler: 5.0.3
       parse5: 7.3.0
+    optional: true
 
   parse5-parser-stream@7.1.2:
     dependencies:
       parse5: 7.3.0
+    optional: true
 
   parse5@7.3.0:
     dependencies:
       entities: 6.0.0
+    optional: true
 
   path-data-parser@0.1.0: {}
 
@@ -3363,7 +3397,8 @@ snapshots:
       '@shikijs/vscode-textmate': 10.0.2
       '@types/hast': 3.0.4
 
-  slick@1.12.2: {}
+  slick@1.12.2:
+    optional: true
 
   source-map-js@1.2.1: {}
 
@@ -3376,6 +3411,7 @@ snapshots:
       '@xmldom/xmldom': 0.9.10
       commander: 13.1.0
       wicked-good-xpath: 1.3.0
+    optional: true
 
   sprintf-js@1.0.3: {}
 
@@ -3408,7 +3444,8 @@ snapshots:
 
   tokenx@1.3.0: {}
 
-  tr46@0.0.3: {}
+  tr46@0.0.3:
+    optional: true
 
   trim-lines@3.0.1: {}
 
@@ -3418,7 +3455,8 @@ snapshots:
 
   uc.micro@2.1.0: {}
 
-  undici@7.25.0: {}
+  undici@7.25.0:
+    optional: true
 
   unified@11.0.0:
     dependencies:
@@ -3461,7 +3499,8 @@ snapshots:
 
   uuid@14.0.0: {}
 
-  valid-data-url@3.0.1: {}
+  valid-data-url@3.0.1:
+    optional: true
 
   vfile-message@4.0.3:
     dependencies:
@@ -3575,21 +3614,27 @@ snapshots:
       valid-data-url: 3.0.1
     transitivePeerDependencies:
       - encoding
+    optional: true
 
-  webidl-conversions@3.0.0: {}
+  webidl-conversions@3.0.0:
+    optional: true
 
   whatwg-encoding@3.1.1:
     dependencies:
       iconv-lite: 0.6.3
+    optional: true
 
-  whatwg-mimetype@4.0.0: {}
+  whatwg-mimetype@4.0.0:
+    optional: true
 
   whatwg-url@5.0.0:
     dependencies:
       tr46: 0.0.3
       webidl-conversions: 3.0.0
+    optional: true
 
-  wicked-good-xpath@1.3.0: {}
+  wicked-good-xpath@1.3.0:
+    optional: true
 
   wrap-ansi@7.0.0:
     dependencies:

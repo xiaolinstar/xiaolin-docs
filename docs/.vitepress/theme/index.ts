@@ -2,6 +2,7 @@ import DefaultTheme from 'vitepress/theme'
 import type { Theme } from 'vitepress'
 import Layout from './Layout.vue'
 import RecommendCard from './components/RecommendCard.vue'
+import 'katex/dist/katex.min.css'
 
 declare global {
   interface Window {

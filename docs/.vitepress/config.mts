@@ -1,7 +1,13 @@
 // import { defineConfig } from 'vitepress'
 import { withMermaid } from "vitepress-plugin-mermaid"
 import markdownItTaskListPlus from "markdown-it-task-list-plus"
+import markdownItKatexModule from '@vscode/markdown-it-katex'
 import llms from 'vitepress-plugin-llms'
+
+// CJS 默认导出在 ESM 下可能包在 .default
+const markdownItKatex =
+    (markdownItKatexModule as unknown as { default?: typeof markdownItKatexModule }).default
+    ?? markdownItKatexModule
 
 
 // 网站基础路径：优先 .env 的 VITE_BASE_PATH，GitHub Pages 构建时回退到仓库子路径
@@ -196,6 +202,7 @@ export default withMermaid({
                                 { text: '你好 Jenkins', link: `/sre/jenkins/hello-jenkins` },
                                 { text: 'CI/CD 初体验', link: `/sre/jenkins/cicd-taste` },
                                 { text: 'VitePress 快速搭建个人网站', link: `/sre/jenkins/vitepress-docs` },
+                                { text: 'VitePress 数学公式修复（KaTeX）', link: `/sre/jenkins/vitepress-math-fix` },
                             ],
                         },
                         {
@@ -399,15 +406,13 @@ export default withMermaid({
     mermaidPlugin: {
         class: "mermaid my-class"
     },
-    // pnpm install markdown-it-mathjax3
-    // pnpm install markdown-it-task-lists
+    // 数学公式：仅用 KaTeX（勿开 math:true，避免与 MathJax 双渲染）
     markdown: {
-        // 支持数学公式
-        math: true,
-        // 支持代码块行号
+        math: false,
         lineNumbers: true,
         config: (md) => {
             md.use(markdownItTaskListPlus)
+            md.use(markdownItKatex)
         }
     },
 
