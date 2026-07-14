@@ -53,5 +53,6 @@ pnpm docs:check-links
 
 ## 相关
 
+- 画什么、配色、角色图标：[站点视觉语言](./visual-language.md)
 - 部署与脚本：`README.md` 媒体章节、`scripts/upload-media-cos.sh`
 - life 站规范：`xiaolin-life/docs/MEDIA-STANDARDS.md`

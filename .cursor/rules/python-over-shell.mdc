@@ -1,0 +1,64 @@
+---
+description: 新增/重写脚本优先 Python（uv 运行），存量 Shell 不强迁；适用于构建与部署类脚本
+alwaysApply: false
+globs:
+  - "scripts/**"
+  - "package.json"
+---
+
+# Python 优先于 Shell（构建/部署类）
+
+> 项目内**构建与部署类**脚本优先用 Python。新增、重写优先 Python；存量 Shell 不主动改写。
+
+## 为什么
+
+- 库更丰富（图像、HTTP、并发、类型化）
+- 可读性、可测试性、IDE 支持都更好
+- 跨平台一致（不依赖 `/bin/bash` 行为差异）
+
+## 适用与不适用
+
+| 类别 | 优先 | 备注 |
+| --- | --- | --- |
+| 构建 / 部署 / 上传 / 检查 | **Python** | `upload-media-cos.sh` 等重写目标 |
+| 媒体处理（图、链、改名） | **Python**（项目已是） | 维持现状 |
+| 内容 / 分发 | **Python** | 与现有 `*.py` 一致 |
+| 极薄 wrapper（≤ 3 行 `pnpm`/`coscli` 调用） | 可留 Shell | 单行链式即可 |
+| CI / GitHub Actions 内联步骤 | 跟随仓库默认 | 不在本规则约束内 |
+
+## 运行方式
+
+- 项目级依赖使用 **uv**（`pyproject.toml` + `uv run scripts/xxx.py`）
+- `package.json` 的脚本入口形如：
+  ```json
+  "media:upload": "uv run scripts/upload_media_cos.py"
+  ```
+- 临时脚本允许 `python3 scripts/xxx.py`，但**提交前**统一改成 `uv run`
+
+## 风格基线
+
+- **PEP 8 + 类型注解**（函数签名必须注解；返回类型必要）
+- **结构**：`argparse` + `main()` + `if __name__ == "__main__"`
+- **依赖**：`pyproject.toml` 声明，不导入未声明的包
+- **日志**：用 `logging` 或结构化输出，不要 `print` 满天飞
+- **错误**：抛异常而不是 `exit 1`；外层 `main()` 统一捕获并返回非零退出码
+- **Shell 互操作**：必要时 `subprocess.run([...], check=True)`，不要拼字符串命令
+
+## 文件命名
+
+- `snake_case.py`，与现有 `normalize-media-names.py` / `rewrite-media-urls.py` 风格一致
+- 一个脚本只做一件事；工具函数放 `scripts/lib/`
+
+## 不在范围
+
+- 存量 Shell（`upload-media-cos.sh`、`cos-check.sh`、`cdn-check.sh` 等）**不主动重写**
+- 重写触发条件：脚本需要新增能力 / 用户明确要求 / 重写比维护便宜
+- 重写优先顺序：`upload-media-cos.sh` → `cdn-check.sh` → `cos-check.sh`
+
+## 自检清单（新增 Python 脚本前）
+
+- [ ] 真的需要脚本吗？能复用 `scripts/` 下现有 `*.py` 吗？
+- [ ] 依赖在 `pyproject.toml` 已声明
+- [ ] `uv run scripts/xxx.py --help` 输出正常
+- [ ] 没有 `print` 满天飞
+- [ ] `package.json` 入口用 `uv run`

@@ -1,0 +1,43 @@
+---
+description: 站点信息图与配图风格一致；新增/改插图前必须读视觉语言规范
+alwaysApply: false
+globs:
+  - "docs/**"
+  - "content/dist/**/*.md"
+---
+
+# 站点视觉语言一致性
+
+> 站点不是「一篇一画」，而是「一套语言」。所有插图必须沿用既有风格，方便读者一眼识别，也方便后续维护。
+
+## 读规范
+
+任何新增/重绘插图前，**先读**：[`docs/sre/planning/visual-language.md`](../../docs/sre/planning/visual-language.md)
+
+需要时再参考：[`docs/sre/planning/media-standards.md`](../../docs/sre/planning/media-standards.md)（上传与 CDN）
+
+## 硬约束
+
+- **语义配色**：开发 / 本地闭环 = 蓝 `#1890ff`；发布 / 生产路径 = 橙 `#fa8c16`；中性 = 灰 `#8c8c8c`。新增语义色先写进视觉语言规范再使用。
+- **角色 / 环境 ID**：统一 `actor.dev` / `env.local` / `env.server` / `env.public` 等。新增图标先在规范里登记 ID。
+- **次数角标**：可重复侧标 `×N`；验收后通常一次侧标 `×1` 或「通常 1 次」。
+- **静态优先**：对照与节奏图默认静态信息图；Mermaid 只用于 ≤ 6 节点的线性 / 决策分支。同一段不堆「表 + Mermaid + 信息图」三件套。
+- **不留档在文**：大图走 `docs/public/images/img-{slug}/` + COS + CDN（`https://media.xiaolin.fun/docs/...`），不进 Git。
+
+## 禁止
+
+- 不要紫渐变、3D、阴影、密集文字堆砌。
+- 不要自创角色或环境画法（用规范里的简笔约定）。
+- 不要为单篇文章单独定一套配色——必要时扩规范，再用于此文。
+
+## 自检清单（出图后）
+
+- [ ] 配色符合语义表（蓝 / 橙 / 灰）
+- [ ] 角色与环境都用约定 ID 标注
+- [ ] 次数角标到位（`×N` / `×1`）
+- [ ] CDN URL 已替换本地路径
+- [ ] `pnpm run media:cdn-check` 通过
+
+## 维护
+
+用户提出「更统一的风格 / 新增约定」时，更新 `visual-language.md` 并在此规则补充；不要把约定只放在对话里。
