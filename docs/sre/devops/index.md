@@ -59,7 +59,7 @@ graph TD
 | **02** | [02 ｜ 生产环境入门：部署到云服务器](./foundation/production-env.md) | 理解 7×24 与公网 IP，通过 SSH + scp 完成第一次手动部署 |
 | **03** | [03 ｜ Git 与 GitHub：版本管理与云端仓库](./foundation/git-github.md) | 版本管理核心价值，GitHub 云端备份，git pull 替代 scp 部署 |
 | **04** | [04 ｜ 服务端应用部署：依赖地狱与环境一致性](./foundation/server-side-deploy.md) | Flask 示例暴露两种部署策略的痛点，引出容器化需求 |
-| **05** | [05 ｜ 应用容器化实践](./foundation/docker-practice.md) | 容器化技术演练：将静态站点打包进 Docker |
+| **05** | [05 ｜ 单容器 Docker](./foundation/docker-basics.md) | 服务器回归本职：单容器命令式用法（pull / run / stop / rm / rmi） |
 | **06** | [06 ｜ 多服务容器编排](./foundation/docker-compose.md) | 声明式多服务治理：Docker Compose 容器编排 |
 | **07** | [07 ｜ 流水线工具选型](./foundation/pipeline-tools.md) | DevOps 工具链选型：常见 Pipeline 工具对比 |
 | **08** | [08 ｜ Actions 基础](./foundation/actions-basic.md) | 云原生流水线起步：GitHub Actions 核心概念 |

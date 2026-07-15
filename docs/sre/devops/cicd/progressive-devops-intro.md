@@ -44,7 +44,7 @@ graph TD
     *   [02 ｜ 生产环境入门：部署到云服务器](../foundation/production-env.md)
     *   [03 ｜ Git 与 GitHub：版本管理与云端仓库](../foundation/git-github.md)
     *   [04 ｜ 服务端应用部署：依赖地狱与环境一致性](../foundation/server-side-deploy.md)
-    *   [05 ｜ 应用容器化实践](../foundation/docker-practice.md)
+    *   [05 ｜ 单容器 Docker](../foundation/docker-basics.md)
     *   [06 ｜ 多服务容器编排](../foundation/docker-compose.md)
     *   [07 ｜ 流水线工具选型](../foundation/pipeline-tools.md)
     *   [08 ｜ Actions 基础](../foundation/actions-basic.md)
