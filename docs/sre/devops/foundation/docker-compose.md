@@ -1,5 +1,5 @@
 ---
-title: 07 ｜ 多服务容器编排：Docker Compose
+title: 08 ｜ 多服务容器编排：Docker Compose
 description: 从单容器部署过渡到多服务协作，理解声明式 API 的核心理念，用 Docker Compose 一键编排 Nginx、应用与可观测性套件。
 date: 2026-03-06
 updated: 2026-07-13

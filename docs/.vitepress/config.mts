@@ -126,12 +126,11 @@ export default withMermaid({
                                 { text: '02. 生产环境入门', link: `/sre/devops/foundation/production-env` },
                                 { text: '03. Git 与 GitHub 入门', link: `/sre/devops/foundation/git-github` },
                                 { text: '04. 服务端应用部署', link: `/sre/devops/foundation/server-side-deploy` },
-                                { text: '05. 单容器 Docker', link: `/sre/devops/foundation/docker-basics` },
-                                { text: '06. 流水线与 Jenkins', link: `/sre/devops/foundation/jenkins-basics` },
-                                { text: '07. 多服务容器编排', link: `/sre/devops/foundation/docker-compose` },
-                                { text: '08. 流水线工具选型', link: `/sre/devops/foundation/pipeline-tools` },
-                                { text: '09. Actions 基础', link: `/sre/devops/foundation/actions-basic` },
-                                { text: '10. Actions 实战', link: `/sre/devops/foundation/actions-practice` },
+                                { text: '05. 容器 Docker', link: `/sre/devops/foundation/docker-basics` },
+                                { text: '06. 流水线基础', link: `/sre/devops/foundation/jenkins-basics` },
+                                { text: '07. GitHub Actions', link: `/sre/devops/foundation/actions` },
+                                { text: '08. 多服务容器编排', link: `/sre/devops/foundation/docker-compose` },
+                                { text: '09. 基础篇总结', link: `/sre/devops/foundation/foundation-summary` },
                             ]
                         },
                         {

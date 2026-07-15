@@ -1,5 +1,5 @@
 ---
-title: 06 ｜ 流水线入门：Jenkins 与 Jenkinsfile
+title: 06 ｜ 流水线基础：从手动命令到 Jenkinsfile
 description: 把 04 篇的手动运维动作（pull → build → deploy → healthcheck）流水线化——用 Jenkinsfile 把动作写进代码仓库，运维左移到开发。
 date: 2026-07-15
 updated: 2026-07-15
@@ -165,19 +165,41 @@ Jenkins 的 agent 机器跑 `mvn package` 这一步，**它自己也得有 Maven
 - **保留策略**：默认保留 30 天；可调成「保留所有」+ 配置磁盘清理策略
 - 通知：装 **Email / Slack / 企业微信插件**，失败时自动推
 
-## 工具选型对比（附录）
+## 延伸阅读：主流流水线工具一览
 
-Jenkins 不是唯一的流水线引擎。常见选项对比：
+Jenkins 不是唯一的流水线引擎。基础篇选 Jenkins 是因为它的「**声明式流水线**」语法最清晰——理解 Jenkinsfile 就理解了「流水线 = 声明式动作链」这件事；实际项目里可以根据团队情况选其他工具。
 
-| 工具 | 部署方式 | 语言 | 插件生态 | 上手成本 | 适合谁 |
-| --- | --- | --- | --- | --- | --- |
-| **Jenkins** | 自托管（Java 进程） | Groovy DSL（Jenkinsfile） | 极丰富（1500+） | 中等 | 企业、强控制需求、复杂流水线 |
-| **GitHub Actions** | 托管（GitHub 内置） | YAML | 丰富（Marketplace） | 低 | 开源项目、个人 / 小团队 |
-| **GitLab CI** | 自托管或 SaaS | YAML | 丰富 | 低 | 用 GitLab 的团队 |
-| **CircleCI** | SaaS | YAML | 中等 | 低 | 海外团队、SaaS 优先 |
-| **Drone** | 自托管（容器化） | YAML | 中等 | 低 | 容器化偏好、轻量部署 |
+| 平台 / 技术 | 一句话定位 | 部署形态 | 推荐场景 |
+| --- | --- | --- | --- |
+| **Jenkins** | 插件最多、自托管「瑞士军刀」 | 自托管 | 传统架构、需深度定制 |
+| **Gitee Go** | Gitee 官方 SaaS CI/CD，国内网络友好 | SaaS | 国内网络生态 |
+| **GitHub Actions** | GitHub 原生 CI/CD，模板即开即用 | SaaS | 个人 / 开源项目首选 |
+| **极狐 GitLab** | 一站式 DevOps，可选 SaaS / 自管 | SaaS / 自托管 | 中小团队 All-in-One |
+| **Tekton** | K8s 原生流水线即代码 | 自托管 | K8s 深度用户 |
+| **Argo CD** | K8s 声明式 GitOps CD 工具 | 自托管 | 云原生 GitOps |
+| **阿里云效** | 阿里云一站式研发协同，注册即用 | SaaS | 阿里云生态 |
+| **腾讯云 CNB** | 腾讯云 DevOps SaaS，微信扫码即开 | SaaS | 微信、腾讯云生态 |
 
-**Jenkins 的位置**：自托管老牌、企业常用、插件多到「什么都能做」、但也因此「什么都要配」。新项目越来越多直接上 GitHub Actions / GitLab CI。**这一系列选 Jenkins 是因为 Jenkinsfile 是声明式流水线语法最清晰的一个，写一次就能理解「流水线 = 声明式动作链」这件事。**
+### 选型速记
+
+- **Jenkins** 作为入门产品可以学习，但界面复杂、体验较差；除非考虑兼容性 / 团队技术栈基础，否则新项目不推荐。
+- **GitLab / 阿里云效**功能相似，是一站式研发协同平台。小型开发团队推荐使用；**个人 / 一人公司**不推荐——产品生态丰富=功能复杂、上手困难，侧重开发协同。
+- **GitHub Actions / Gitee Go / 腾讯 CNB**主要提供代码托管 + CI 服务。GitHub Actions 功能强大但需要科学上网；后两者产品完善度较差但国内网络直连。
+- **Tekton / Argo CD**是云原生时代产物，设计之初就与 Kubernetes 深度结合，**基础设施即代码（IaC）**理念贯彻良好。但 Kubernetes 本身门槛高，对中小企业往往是「杀鸡用牛刀」。
+
+### 一句话选型
+
+- 个人开发者：GitHub Actions
+- 中小企业：阿里云效 / GitLab
+- 云原生 / 大型企业：Tekton、Argo CD
+
+### 更进一步：GitOps、IaC、Runner 机制
+
+- **GitOps**：把部署描述（YAML / Manifest）放进 Git 仓库，集群代理（Argo CD / Flux）拉取并同步——一切变更都通过 PR 完成
+- **基础设施即代码（IaC）**：Terraform / Pulumi 用声明式语言描述整套基础设施（服务器、网络、数据库）
+- **Runner 机制**：流水线任务实际由 Runner 执行；Runner 可以是物理机、虚拟机、容器，甚至 K8s Pod——Jenkins 的 agent / GitHub Actions 的 runner 都是这一思想的具体实践
+
+> 注：本节是流水线工具的全景概览。GitHub Actions 作为托管式流水线的代表，在下一篇 [07 GitHub Actions](./actions.md) 中展开实战。
 
 ## 小结
 
@@ -187,7 +209,7 @@ Jenkins 不是唯一的流水线引擎。常见选项对比：
 - 流水线引擎（Jenkins / Actions / GitLab CI）按 `git push` 自动触发、自动执行
 - **运维左移**让「上线步骤」从隐性知识变成显性、可版本管理的代码——这是 IaC 思想的入门
 
-下一步进入 [第 07 篇 · 多服务容器编排](./docker-compose.md)：06 把「手动」变成「自动」，但还是「单容器」。当你的应用需要 Nginx 反代 + 应用本身 + 数据库 + 缓存一起协作时，**多个容器如何用一份声明式 YAML 一起管理**？那是 docker-compose 的领域——它和 Jenkinsfile 一样是「声明式 + 写在仓库 + Git 版本管理」思想的进一步实践。
+下一步进入 [第 07 篇 · GitHub Actions](./actions.md)：Jenkinsfile 用 Groovy DSL，GitHub Actions 用 YAML，两者语法不同但「声明式动作链」的思想完全一致。GitHub Actions 是托管式流水线代表——零运维、模板即开即用，对个人开发者和开源项目尤其友好。
 
 ## 思考
 
@@ -202,3 +224,5 @@ Jenkins 不是唯一的流水线引擎。常见选项对比：
 2. [Jenkinsfile 语法参考](https://www.jenkins.io/doc/book/pipeline/syntax/)
 3. [Jenkins Credentials 管理](https://www.jenkins.io/doc/book/using/credentials/)
 4. [GitHub Actions 文档](https://docs.github.com/en/actions)
+5. [Tekton 官方文档](https://tekton.dev/docs/)
+6. [Argo CD 官方文档](https://argo-cd.readthedocs.io/en/stable/)

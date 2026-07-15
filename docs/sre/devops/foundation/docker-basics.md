@@ -1,5 +1,5 @@
 ---
-title: 05 ｜ 单容器 Docker：让服务器回归本职
+title: 05 ｜ 容器 Docker：让服务器回归本职
 description: 引入 Docker 单容器命令式用法——服务器回归本职，只跑进程不再装包；用 docker pull / run / stop / rm / rmi 把 04 的三类运维痛点一次性消除。
 date: 2026-07-15
 updated: 2026-07-15
