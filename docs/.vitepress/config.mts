@@ -28,6 +28,7 @@ export default withMermaid({
     description: "SRE、DevOps 与 AI 技术实践平台",
     srcExclude: [
         '**/wechat/**',
+        '**/_archived/**',
     ],
     vite: {
         plugins: [llms({
@@ -74,7 +75,15 @@ export default withMermaid({
             { text: 'SRE运维', link: `/sre/` },
             { text: '开发架构', link: `/software-development/` },
             { text: 'AI实践', link: `/ai/` },
-            { text: '软件产品', link: `/products/` },
+            {
+                text: '软件产品',
+                items: [
+                    { text: '产品总览', link: `/products/` },
+                    { text: 'AI 待办', link: `/products/ai-todo/` },
+                    { text: '聚会助手', link: `/products/party-helper/` },
+                    { text: '奶茶仙人', link: `/products/milktea-fairy/` }
+                ]
+            },
             { text: '效率工具', link: `/easy-office/` },
             { text: '关于本站', link: `/about/` },
             {
@@ -350,7 +359,9 @@ export default withMermaid({
                             text: '奶茶仙人',
                             link: `/products/milktea-fairy/`,
                             items: [
-                                { text: '产品规划', link: `/products/milktea-fairy/` }
+                                { text: '产品介绍', link: `/products/milktea-fairy/product` },
+                                { text: '快速上手', link: `/products/milktea-fairy/quick-start` },
+                                { text: '技术架构', link: `/products/milktea-fairy/architecture` }
                             ]
                         }
                     ]
