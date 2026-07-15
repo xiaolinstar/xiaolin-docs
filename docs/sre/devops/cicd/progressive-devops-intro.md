@@ -43,12 +43,13 @@ graph TD
     *   [01 ｜ Nginx 静态资源代理](../foundation/delivery-start.md)
     *   [02 ｜ 生产环境入门：部署到云服务器](../foundation/production-env.md)
     *   [03 ｜ Git 与 GitHub：版本管理与云端仓库](../foundation/git-github.md)
-    *   [04 ｜ 服务端应用部署：依赖地狱与环境一致性](../foundation/server-side-deploy.md)
-    *   [05 ｜ 单容器 Docker](../foundation/docker-basics.md)
-    *   [06 ｜ 多服务容器编排](../foundation/docker-compose.md)
-    *   [07 ｜ 流水线工具选型](../foundation/pipeline-tools.md)
-    *   [08 ｜ Actions 基础](../foundation/actions-basic.md)
-    *   [09 ｜ Actions 实战](../foundation/actions-practice.md)
+    *   [04 ｜ 服务端应用部署：依赖、运行时与进程保活](../foundation/server-side-deploy.md)
+*   [05 ｜ 单容器 Docker](../foundation/docker-basics.md)
+*   [06 ｜ 流水线与 Jenkins](../foundation/jenkins-basics.md)
+*   [07 ｜ 多服务容器编排](../foundation/docker-compose.md)
+*   [08 ｜ 流水线工具选型](../foundation/pipeline-tools.md)
+*   [09 ｜ Actions 基础](../foundation/actions-basic.md)
+*   [10 ｜ Actions 实战](../foundation/actions-practice.md)
 
 ### 1. L1 级：配置规范化（先标准化，后自动化）
 一切运维工作的痛点，几乎都源于**配置与代码的耦合**。

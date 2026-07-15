@@ -1,5 +1,5 @@
 ---
-title: 07 ｜ 流水线工具选型
+title: 08 ｜ 流水线工具选型
 description: 在阶段五中，引入 Docker Compose，实现了容器编排，支持容器集群一键启动、一键停止。
 date: 2026-03-06
 updated: 2026-03-06

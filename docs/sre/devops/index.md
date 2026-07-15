@@ -58,12 +58,13 @@ graph TD
 | **01** | [01 ｜ Nginx 静态资源代理](./foundation/delivery-start.md) | 从本地 `index.html` 到 VitePress `dist` 目录的静态资源代理 |
 | **02** | [02 ｜ 生产环境入门：部署到云服务器](./foundation/production-env.md) | 理解 7×24 与公网 IP，通过 SSH + scp 完成第一次手动部署 |
 | **03** | [03 ｜ Git 与 GitHub：版本管理与云端仓库](./foundation/git-github.md) | 版本管理核心价值，GitHub 云端备份，git pull 替代 scp 部署 |
-| **04** | [04 ｜ 服务端应用部署：依赖地狱与环境一致性](./foundation/server-side-deploy.md) | Flask 示例暴露两种部署策略的痛点，引出容器化需求 |
+| **04** | [04 ｜ 服务端应用部署：依赖、运行时与进程保活](./foundation/server-side-deploy.md) | 从静态站点升级到后端进程：双栈对比 + 运维视角三类痛点（脏 / 资源 / 网络） |
 | **05** | [05 ｜ 单容器 Docker](./foundation/docker-basics.md) | 服务器回归本职：单容器命令式用法（pull / run / stop / rm / rmi） |
-| **06** | [06 ｜ 多服务容器编排](./foundation/docker-compose.md) | 声明式多服务治理：Docker Compose 容器编排 |
-| **07** | [07 ｜ 流水线工具选型](./foundation/pipeline-tools.md) | DevOps 工具链选型：常见 Pipeline 工具对比 |
-| **08** | [08 ｜ Actions 基础](./foundation/actions-basic.md) | 云原生流水线起步：GitHub Actions 核心概念 |
-| **09** | [09 ｜ Actions 实战](./foundation/actions-practice.md) | 工作流自动化编写与 GitHub Actions 实战调试 |
+| **06** | [06 ｜ 流水线与 Jenkins](./foundation/jenkins-basics.md) | 流水线化运维动作：Jenkinsfile 把手动命令变成声明式代码，运维左移到开发 |
+| **07** | [07 ｜ 多服务容器编排](./foundation/docker-compose.md) | 声明式多服务治理：Docker Compose 容器编排 |
+| **08** | [08 ｜ 流水线工具选型](./foundation/pipeline-tools.md) | DevOps 工具链选型：常见 Pipeline 工具对比 |
+| **09** | [09 ｜ Actions 基础](./foundation/actions-basic.md) | 云原生流水线起步：GitHub Actions 核心概念 |
+| **10** | [10 ｜ Actions 实战](./foundation/actions-practice.md) | 工作流自动化编写与 GitHub Actions 实战调试 |
 
 ### 3. 中级篇
 拒绝过度工程，引入低成本、无痛的标准化自动化及声明式发布。
