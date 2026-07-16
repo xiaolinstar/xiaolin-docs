@@ -29,6 +29,7 @@ Origin 在 `docs/`，分发稿在 `content/dist/{slug}/`（不上站）。写文
 | 公众号 | `.agents/skills/creator-suite/wechat-publisher/SKILL.md` |
 | 语气与禁区 | `.agents/skills/creator-suite/shared/brand-voice.md` |
 | 平台规格 | `.agents/skills/creator-suite/shared/platform-specs.md` |
+| 系列文章插图/画图 | `.agents/skills/sre-visual-standard/SKILL.md`（优先于 `notion-infographic-v2`） |
 
 细则（文档命名、直角引号、加粗兼容）见 [`.agents/rules/core.md`](./.agents/rules/core.md)。
 

@@ -25,31 +25,18 @@ tags:
 
 ## 从「传文件」到「传代码」
 
-<!-- TODO(图)：把下方 scp / git pull 两段 text 代码块合并为左右对比信息图 `img-git-github/diagram-scp-vs-git.png`。
-     视觉规范：左蓝（#1890ff，旧范式 本地构建 + scp）/ 右橙（#fa8c16，新范式 服务器 pull + build），与 [站点视觉语言](../../planning/visual-language.md) 一致。
-     生图命令（CLI 未安装，需先 `curl -fsSL cli.inference.sh | sh`）：
-       belt app run google/gemini-3-1-flash-image-preview --input '{ "prompt": "...", "aspect_ratio": "16:9" }'
-     上传：cp 到 docs/public/images/img-git-github/ 后 pnpm run media:upload；Markdown 用 https://media.xiaolin.fun/docs/img-git-github/diagram-scp-vs-git.png。 -->
+从本地开发到线上生产，部署范式正在发生转换：
 
-上一篇的部署动作是：
+![从「传文件」到「传代码」](https://media.xiaolin.fun/docs/img-git-github/diagram-scp-vs-git.png)
 
-```text
-本地：构建 → scp dist → 服务器：覆盖站点目录 → 公网验证
-```
-
-这套动作有两个先天缺陷：
+这套旧动作有两个先天缺陷：
 
 - **传的是产物，不是意图。** 一次部署看上去就是「一堆文件被覆盖」，你很难从「服务器上现在的文件」反推「这次改了哪段代码」。
 - **构建在本地，环境差异没人兜底。** 本地 Mac 上的 Node / pnpm 版本、依赖锁文件里的间接依赖，都可能跟服务器不一致——尤其是改了一行依赖，本地 `pnpm install` 顺利，服务器跑就崩。
 
-<!-- TODO(图)：把下方 text 代码块替换为信息图 `img-git-github/diagram-deploy-pipeline.png`（横向链：本地 push → GitHub → 服务器 pull+install+build+cp → 公网）。生成工具 infsh / MCP 待接入。 -->
+把它们一起改，让构建动作在服务器上运行，服务器拿到的也是带版本历史的源码。这就是整个自动化发布的流水线链条：
 
-把它们一起改：构建动作上服务器，服务器拿到的是源码。这样：
-
-```text
-本地：git push 源码
-服务器：git pull → pnpm install → pnpm run docs:build → cp dist → 公网验证
-```
+![服务器源码构建流水线](https://media.xiaolin.fun/docs/img-git-github/diagram-deploy-pipeline.png)
 
 「传什么」从**一堆产物文件**变成**一次明确的代码变更**。这是本系列第一次范式转换：**部署动作的对象从「二进制产物」升级为「带历史的源码」**——任何一次部署都能精确对应到一次 commit。
 
@@ -179,14 +166,25 @@ sudo cp -r docs/.vitepress/dist/* /var/www/html/
 
 多人改同一项目时，Git 的价值会放大：两个人改了同一文件的同一处，`git pull` 可能出现冲突（Conflict），需要手动决定保留哪一边。
 
-分支策略、Code Review、Pull Request 等超出本系列基础篇范围。<!-- TODO(图)：下方工作流串 text 代码块改造成单线流程图 `img-git-github/diagram-workflow.png`。
-     视觉规范：蓝色调（这是开发闭环内部），横向 6 节点，箭头明确。
-     生图/上传路径同上。 -->
+分支策略、Code Review、Pull Request 等超出本系列基础篇范围。
 
 个人开发者先把下面这条链路用熟：
 
-```text
-status / diff → add → commit → push →（服务器）pull → build → 发布
+```mermaid
+graph LR
+    A[status / diff] --> B[add]
+    B --> C[commit]
+    C --> D[push]
+    D -.-> E[pull]
+    E --> F[build]
+    F --> G[发布]
+    style A fill:#1890ff,stroke:#1890ff,color:#fff
+    style B fill:#1890ff,stroke:#1890ff,color:#fff
+    style C fill:#1890ff,stroke:#1890ff,color:#fff
+    style D fill:#1890ff,stroke:#1890ff,color:#fff
+    style E fill:#fa8c16,stroke:#fa8c16,color:#fff
+    style F fill:#fa8c16,stroke:#fa8c16,color:#fff
+    style G fill:#fa8c16,stroke:#fa8c16,color:#fff
 ```
 
 ## 小结
