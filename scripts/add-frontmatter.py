@@ -53,7 +53,7 @@ SUB_DIR_TAGS = {
     "framework": ["AI 框架"],
     "dotai": ["AI 记忆系统"],
     "ai-todo": ["AI 待办"],
-    "milktea-fairy": ["奶茶仙人"],
+    "drinkzen": ["奶茶仙人"],
     "forward": ["前沿"],
 }
 

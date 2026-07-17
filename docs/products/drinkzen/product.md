@@ -2,10 +2,11 @@
 title: 产品介绍
 description: 奶茶仙人的产品定位、核心用户故事、功能细节以及新加坡营养评级标准。
 date: 2026-07-15
-updated: 2026-07-15
+updated: 2026-07-17
 category: 软件产品
 tags:
   - 奶茶仙人
+  - drinkzen
   - 产品介绍
 ---
 

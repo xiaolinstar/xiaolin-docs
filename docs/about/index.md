@@ -34,7 +34,7 @@ tags:
 | --- | --- | --- |
 | AI 待办 | 建设中 | [查看文档](/products/ai-todo/) |
 | 聚会助手 | 建设中 | [查看文档](/products/party-helper/) |
-| 奶茶仙人 | 建设中 | [查看文档](/products/milktea-fairy/) |
+| 奶茶仙人 | 建设中 | [查看文档](/products/drinkzen/) |
 
 ## 合作与反馈
 

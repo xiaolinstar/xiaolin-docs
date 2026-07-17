@@ -2,10 +2,11 @@
 title: 快速上手
 description: 快速上手使用奶茶仙人，并搭建本地多端开发环境与质量安全门禁。
 date: 2026-07-15
-updated: 2026-07-15
+updated: 2026-07-17
 category: 软件产品
 tags:
   - 奶茶仙人
+  - drinkzen
   - 快速上手
 ---
 

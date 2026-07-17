@@ -81,7 +81,7 @@ export default withMermaid({
                     { text: '产品总览', link: `/products/` },
                     { text: 'AI 待办', link: `/products/ai-todo/` },
                     { text: '聚会助手', link: `/products/party-helper/` },
-                    { text: '奶茶仙人', link: `/products/milktea-fairy/` }
+                    { text: '奶茶仙人', link: `/products/drinkzen/` }
                 ]
             },
             { text: '效率工具', link: `/easy-office/` },
@@ -357,11 +357,11 @@ export default withMermaid({
                         },
                         {
                             text: '奶茶仙人',
-                            link: `/products/milktea-fairy/`,
+                            link: `/products/drinkzen/`,
                             items: [
-                                { text: '产品介绍', link: `/products/milktea-fairy/product` },
-                                { text: '快速上手', link: `/products/milktea-fairy/quick-start` },
-                                { text: '技术架构', link: `/products/milktea-fairy/architecture` }
+                                { text: '产品介绍', link: `/products/drinkzen/product` },
+                                { text: '快速上手', link: `/products/drinkzen/quick-start` },
+                                { text: '技术架构', link: `/products/drinkzen/architecture` }
                             ]
                         }
                     ]

@@ -2,10 +2,11 @@
 title: 技术架构
 description: 奶茶仙人的技术栈选型、数据模型设计、评级算法以及跨端逻辑共享策略。
 date: 2026-07-15
-updated: 2026-07-15
+updated: 2026-07-17
 category: 软件产品
 tags:
   - 奶茶仙人
+  - drinkzen
   - 技术架构
 ---
 
