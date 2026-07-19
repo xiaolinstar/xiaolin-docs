@@ -199,6 +199,7 @@ export default withMermaid({
                                 { text: '项目优化规划', link: `/sre/planning/optimization-plan` },
                                 { text: '文档媒体规范', link: `/sre/planning/media-standards` },
                                 { text: '站点视觉语言', link: `/sre/planning/visual-language` },
+                                { text: 'DevOps 主题埋线范式', link: `/sre/planning/devops-theme-threads` },
                                 { text: '2026 运营规划', link: `/sre/planning/2026-plan` },
                                 { text: '自动生成 Skill 的价值', link: `/sre/planning/skill-value` },
                                 { text: 'AI 时代 SRE 的价值重塑', link: `/sre/planning/sre-ai-era` },
