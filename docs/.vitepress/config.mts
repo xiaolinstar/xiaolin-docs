@@ -3,6 +3,7 @@ import { withMermaid } from "vitepress-plugin-mermaid"
 import markdownItTaskListPlus from "markdown-it-task-list-plus"
 import markdownItKatexModule from '@vscode/markdown-it-katex'
 import llms from 'vitepress-plugin-llms'
+import { glossaryPlugin } from './glossary/plugin'
 
 // CJS 默认导出在 ESM 下可能包在 .default
 const markdownItKatex =
@@ -29,6 +30,8 @@ export default withMermaid({
     srcExclude: [
         '**/wechat/**',
         '**/_archived/**',
+        '**/superpowers/**',
+        '**/glossary/**',
     ],
     vite: {
         plugins: [llms({
@@ -426,6 +429,7 @@ export default withMermaid({
         config: (md) => {
             md.use(markdownItTaskListPlus)
             md.use(markdownItKatex)
+            md.use(glossaryPlugin)
         }
     },
 

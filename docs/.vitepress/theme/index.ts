@@ -2,6 +2,8 @@ import DefaultTheme from 'vitepress/theme'
 import type { Theme } from 'vitepress'
 import Layout from './Layout.vue'
 import RecommendCard from './components/RecommendCard.vue'
+import GlossaryTerm from './components/GlossaryTerm.vue'
+import GlossaryAside from './components/GlossaryAside.vue'
 import 'katex/dist/katex.min.css'
 
 declare global {
@@ -16,6 +18,8 @@ export default {
   enhanceApp({ app, router }) {
     // 注册推荐卡片组件
     app.component('RecommendCard', RecommendCard)
+    app.component('GlossaryTerm', GlossaryTerm)
+    app.component('GlossaryAside', GlossaryAside)
     
     if (typeof window !== 'undefined') {
       router.onAfterRouteChanged = (to: string) => {
