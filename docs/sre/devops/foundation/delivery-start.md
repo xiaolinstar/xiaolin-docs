@@ -15,7 +15,7 @@ tags:
 
 ## 什么是静态资源
 
-网站文件通常由三种资源组成：
+网站文件通常由三种资源组成——这些就是 {{term:静态资源}}：
 
 - **HTML**：网页的结构和内容
 - **CSS**：网页的样式和布局
@@ -184,7 +184,7 @@ sudo cp index.html /var/www/html/index.html
 sudo systemctl restart nginx
 ```
 
-访问 `http://localhost`，看到「你好，Nginx」，说明自定义页面已经生效。
+访问 `http://localhost`，看到“你好，Nginx”，说明自定义页面已经生效。
 
 ## 理解 root 指令
 
@@ -344,7 +344,7 @@ sudo systemctl restart nginx
 
 访问 `http://localhost` 验证部署是否成功。
 
-VitePress 适合开发者灵活地管理静态站点，好处是仅需关注 Markdown 文档和配置文件。但需要注意的是，每次无论大小修改，均需要重新构建和发布。在运维领域，这属于一次「生产变更」，是比较敏感的运维动作。
+VitePress 适合开发者灵活地管理静态站点，好处是仅需关注 Markdown 文档和配置文件。但需要注意的是，每次无论大小修改，均需要重新构建和发布。在运维领域，这属于一次 {{term:生产变更}}，是比较敏感的运维动作。
 
 ## 小结
 
