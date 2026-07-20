@@ -13,10 +13,10 @@ WORKDIR /app
 COPY . .
 
 # 安装 pnpm 11.x（与当前锁文件和 node_modules 版本保持一致）
-RUN npm install -g pnpm@11.1.3 --registry=http://mirrors.cloud.tencent.com/npm/
+RUN npm install -g pnpm@11.1.3
 
 # 安装依赖
-RUN pnpm install --frozen-lockfile --registry=http://mirrors.cloud.tencent.com/npm/
+RUN pnpm install --frozen-lockfile
 
 # 安装Git，lastUpdated=true需要
 # 使用官方 Alpine 镜像源（避免腾讯云镜像源 IO 错误）
