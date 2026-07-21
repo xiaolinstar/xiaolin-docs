@@ -30,25 +30,30 @@ function escapeAttr(s: string): string {
 
 function pushGlossaryTerm(
   state: StateInline,
-  attrs: { id: string; term: string; definition: string },
+  attrs: { id: string; term: string; en?: string; definition: string; fromShortcode?: boolean },
   content: string,
 ): void {
   const token = state.push('glossary_term', '', 0)
   token.content = content
   token.attrSet('id', attrs.id)
   token.attrSet('term', attrs.term)
+  if (attrs.en) token.attrSet('en', attrs.en)
   token.attrSet('definition', attrs.definition)
+  if (attrs.fromShortcode) {
+    token.attrSet('fromShortcode', 'true')
+  }
 }
 
 function createGlossaryTermToken(
   TokenCtor: typeof Token,
-  attrs: { id: string; term: string; definition: string },
+  attrs: { id: string; term: string; en?: string; definition: string },
   content: string,
 ): Token {
   const token = new TokenCtor('glossary_term', '', 0)
   token.content = content
   token.attrSet('id', attrs.id)
   token.attrSet('term', attrs.term)
+  if (attrs.en) token.attrSet('en', attrs.en)
   token.attrSet('definition', attrs.definition)
   return token
 }
@@ -69,13 +74,13 @@ function glossaryTermShortcode(state: StateInline, silent: boolean): boolean {
     if (entry) {
       pushGlossaryTerm(
         state,
-        { id: entry.id, term: entry.term, definition: entry.definition },
+        { id: entry.id, term: entry.term, en: entry.en, definition: entry.definition, fromShortcode: true },
         entry.term,
       )
     } else {
       console.warn(`[glossary] unknown term: ${key}`)
       const text = state.push('text', '', 0)
-      text.content = raw
+      text.content = key
     }
   }
 
@@ -161,6 +166,7 @@ function autolinkChildren(children: Token[], TokenCtor: typeof Token): Token[] {
           {
             id: hit.entry.id,
             term: hit.entry.term,
+            en: hit.entry.en,
             definition: hit.entry.definition,
           },
           hit.matched,
@@ -198,7 +204,10 @@ function glossaryOncePerPage(state: StateCore): void {
       if (child.type !== 'glossary_term') return child
       const id = child.attrGet('id')
       if (!id) return demoteGlossaryTermToText(child, TokenCtor)
-      if (seen.has(id)) return demoteGlossaryTermToText(child, TokenCtor)
+      const isFromShortcode = child.attrGet('fromShortcode') === 'true'
+      if (seen.has(id) && !isFromShortcode) {
+        return demoteGlossaryTermToText(child, TokenCtor)
+      }
       seen.add(id)
       return child
     })
@@ -221,6 +230,7 @@ function glossaryFirstAside(state: StateCore): void {
     const firstMentions: { term: string; definition: string }[] = []
     for (const child of token.children) {
       if (child.type !== 'glossary_term') continue
+      if (child.attrGet('fromShortcode') !== 'true') continue
       const id = child.attrGet('id')
       if (!id || asided.has(id)) continue
       asided.add(id)
@@ -255,8 +265,9 @@ export function glossaryPlugin(md: MarkdownIt): void {
   md.renderer.rules.glossary_term = (tokens, idx) => {
     const t = tokens[idx]
     const term = t.attrGet('term') || ''
+    const en = t.attrGet('en') || ''
     const definition = t.attrGet('definition') || ''
     const text = t.content
-    return `<GlossaryTerm term="${escapeAttr(term)}" definition="${escapeAttr(definition)}">${escapeHtml(text)}</GlossaryTerm>`
+    return `<GlossaryTerm term="${escapeAttr(term)}" en="${escapeAttr(en)}" definition="${escapeAttr(definition)}">${escapeHtml(text)}</GlossaryTerm>`
   }
 }

@@ -1,6 +1,7 @@
 export type GlossaryEntry = {
   id: string
   term: string
+  en?: string
   definition: string
   aliases: string[]
   enabled: boolean

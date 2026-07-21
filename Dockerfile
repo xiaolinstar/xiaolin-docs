@@ -24,7 +24,7 @@ RUN apk update \
     && apk add --no-cache bash git openssh
 
 # 构建生产环境下到Vue项目
-RUN pnpm run docs:build
+RUN pnpm run media:rewrite:apply && pnpm run docs:build
 
 
 

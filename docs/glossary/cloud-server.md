@@ -1,6 +1,7 @@
 ---
 id: cloud-server
 term: 云服务器
+en: Cloud Server
 aliases:
   - ECS
   - 轻量服务器

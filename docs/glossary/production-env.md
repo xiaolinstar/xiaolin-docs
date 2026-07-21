@@ -1,6 +1,7 @@
 ---
 id: production-env
 term: 生产环境
+en: Production Environment
 aliases:
   - 线上环境
 definition: 面向真实用户提供服务的运行环境，变更需受发布门禁约束。

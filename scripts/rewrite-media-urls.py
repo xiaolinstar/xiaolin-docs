@@ -103,7 +103,7 @@ def main() -> None:
     for path in targets:
         if ".vitepress" in path.parts:
             continue
-        original = path.read_text(encoding="utf-8")
+        original = path.read_text(encoding="utf-8", errors="ignore")
         updated, n = rewrite_text(original, args.cdn_base, args.cos_prefix)
         if n == 0:
             continue

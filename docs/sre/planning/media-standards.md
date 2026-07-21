@@ -37,7 +37,7 @@
 pnpm run media:upload
 
 # 3. Markdown 引用（二选一）
-#    A. 先写 /images/... 再批量改 CDN
+#    A. 先写 https://media.xiaolin.fun/docs/... 再批量改 CDN
 pnpm run media:rewrite:apply
 #    B. 直接写 CDN 绝对 URL
 

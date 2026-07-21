@@ -9,7 +9,7 @@ tags:
   - CI/CD
 ---
 
-编程入门的 Hello World 是打印一行文字，运维入门的 Hello World 是把网站发布到服务器上，让别人通过浏览器访问。
+如果说编程的 Hello World 是在控制台打印一行字符，那么运维的 Hello World 则是把网站送上服务器，用户可以通过浏览器访问。
 
 例如，你写了一个博客，希望别人能通过 `http://my-blog.com` 访问。这需要解决一个问题：**如何把本地的网站文件发布到服务器上？**
 
@@ -217,7 +217,7 @@ root /var/www/html;
 
 手写 `index.html` 适合理解原理，但真实文档站点通常不会手写每一个页面。
 
-VitePress 是一个由 Vite 和 Vue 驱动的静态站点生成器，将 Markdown 变成优雅的文档，只需几分钟。
+{{term:VitePress}} 是一个由 Vite 和 Vue 驱动的静态站点生成器，将 Markdown 变成优雅的文档，只需几分钟。
 
 开发者只需要专注于两件事：
 
@@ -236,17 +236,9 @@ VitePress 负责将 Markdown 渲染构建成面向浏览器的静态资源（HTM
 
 ![VitePress 文档页面](https://media.xiaolin.fun/docs/img-delivery-start/vitepress-docs.png)
 
-工作方式如下：
+**VitePress 开发与发布闭环工作流：**
 
-```text
-Markdown 文档 + 站点配置
-  ↓
-VitePress 构建
-  ↓
-dist 静态资源目录
-  ↓
-Nginx 代理访问
-```
+![VitePress 开发与发布闭环流程](/images/img-delivery-start/vitepress-workflow-aligned.png)
 
 ## 安装 VitePress
 
@@ -298,21 +290,7 @@ pnpm run docs:preview
 | `docs:build` | 构建生产版本 | 生成 `docs/.vitepress/dist/` 静态资源目录 |
 | `docs:preview` | 预览构建结果 | 模拟生产环境，验证构建是否正确 |
 
-`docs:dev` 使用本地 Node.js 服务器渲染，适合开发调试。但在生产环境中，需要使用 Nginx 代理 `dist` 静态资源。
-
-开发流程：
-
-```text
-编写 Markdown
-  ↓
-pnpm run docs:dev 本地调试（Node.js 服务器）
-  ↓
-pnpm run docs:build 构建生产版本
-  ↓
-pnpm run docs:preview 预览验证
-  ↓
-复制 dist 到 /var/www/html/，Nginx 代理发布
-```
+`docs:dev` 使用本地 Node.js 服务器渲染，适合开发调试。但在生产环境中，需要使用 Nginx 代理 `dist` 静态资源。整个开发与发布闭环流程可参看前文图示。
 
 ## 发布部署
 

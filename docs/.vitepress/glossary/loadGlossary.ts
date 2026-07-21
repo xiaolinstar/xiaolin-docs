@@ -13,6 +13,7 @@ export function loadGlossary(dir: string): TermIndex {
     return {
       id: String(data.id),
       term: String(data.term),
+      ...(data.en ? { en: String(data.en) } : {}),
       definition: String(data.definition),
       aliases: Array.isArray(data.aliases) ? data.aliases.map(String) : [],
       enabled: data.enabled !== false,

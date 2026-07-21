@@ -43,6 +43,9 @@ jobs:
       - name: Install dependencies
         run: pnpm install
 
+      - name: Rewrite media URLs to CDN
+        run: pnpm run media:rewrite:apply
+
       - name: Build documentation
         run: pnpm run docs:build
 

@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { ref, onMounted, onUnmounted, useId } from 'vue'
 
-defineProps<{ term: string; definition: string }>()
+defineProps<{ term: string; en?: string; definition: string }>()
 
 const open = ref(false)
 const rootRef = ref<HTMLElement | null>(null)
@@ -91,7 +91,10 @@ onUnmounted(() => {
       :id="tipId"
       role="tooltip"
       class="glossary-term__tip"
-    >{{ definition }}</span>
+    >
+      <span v-if="en" class="glossary-term__tip-en">{{ term }}（{{ en }}）</span>
+      <span class="glossary-term__tip-def">{{ definition }}</span>
+    </span>
   </span>
 </template>
 
@@ -134,5 +137,16 @@ onUnmounted(() => {
   text-align: left;
   box-shadow: var(--vp-shadow-2);
   pointer-events: none;
+}
+.glossary-term__tip-en {
+  display: block;
+  font-weight: 600;
+  font-size: 0.88em;
+  color: var(--vp-c-brand-1);
+  margin-bottom: 0.3em;
+}
+
+.glossary-term__tip-def {
+  display: block;
 }
 </style>
