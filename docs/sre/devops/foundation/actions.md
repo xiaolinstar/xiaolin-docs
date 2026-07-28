@@ -226,7 +226,7 @@ GitHub Actions 是托管式流水线代表：YAML 配置、零运维、模板即
 - **Greetings**：事件驱动 + 第三方 Action（`first-interaction`）
 - **Pages 部署**：完整 CI/CD（构建 → 制品 → 部署）+ Pages 一键发布
 
-下一步进入 [第 08 篇 · 多服务容器编排](./docker-compose.md)：07 把「托管式流水线」跑通，但**应用本身还是单一镜像**。当你的应用需要 Nginx 反代 + 应用本身 + 数据库 + 缓存一起协作时，**多个容器如何用一份声明式 YAML 一起管理**？那是 docker-compose 的领域——也是 DevOps 基础篇的最后一篇。
+下一步进入 [第 08 篇 · 多服务容器编排](./docker-compose.md)：07 把「托管式流水线」跑通，但**应用拓扑还停留在单容器心智**。当你的应用需要 Nginx 反代 + API + 数据库一起协作时，**多个容器如何用一份声明式 YAML 一起管理**？那是 Docker Compose 的领域——也是 DevOps 基础篇的收口篇。
 
 ## 思考
 

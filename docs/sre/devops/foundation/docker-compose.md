@@ -1,301 +1,180 @@
 ---
 title: 08 ｜ 多服务容器编排：Docker Compose
-description: 从单容器部署过渡到多服务协作，理解声明式 API 的核心理念，用 Docker Compose 一键编排 Nginx、应用与可观测性套件。
+description: 把 05 的单容器命令式用法升级为多服务声明式编排；一份 YAML 描述期望状态，与 Jenkinsfile 同属 IaC 思想，作为 DevOps 基础篇收口。
 date: 2026-03-06
-updated: 2026-07-13
+updated: 2026-07-17
 category: SRE 运维
 tags:
   - DevOps
   - Docker
   - Docker Compose
+  - IaC
 ---
 
-上一篇文章，我们用 Docker 把静态站点打包成容器镜像，实现了「到哪都能跑」。但那只涉及**一个容器**——一个 Nginx，一个站点。
+05 篇用五条命令把**一个**容器跑起来了；06 / 07 篇把操作写成了声明式流水线（Jenkinsfile / GitHub Actions YAML）。这一篇把两件事合在一起：
 
-真实项目通常不止一个服务：应用需要 Nginx 做反向代理，Nginx 需要配置文件，监控需要 Prometheus、Grafana、Loki……当容器数量增长到 5 个、8 个、10 个时，逐个执行 `docker run` 就变得不可维护了。
+> **当服务从 1 个变成 3 个、5 个时，逐条 `docker run` 也会变成另一套「靠记忆的运维琐事」——需要一份声明式文件，把多容器的期望状态写进仓库。**
 
-这篇文章要解决的问题是：**多个容器如何一键启动、一键停止、统一管理？**
+这就是 Docker Compose。它和 Jenkinsfile 是同一思想的两种落点：
 
-## 从一个容器到多个容器
+| | Jenkinsfile / Actions YAML | `docker-compose.yml` |
+| --- | --- | --- |
+| 声明的是 | **怎么构建与部署**（动作链） | **跑哪些服务、如何互联**（期望状态） |
+| 写在哪 | 代码仓库 | 代码仓库 |
+| 谁执行 | 流水线引擎 | `docker compose` CLI |
+| 思想 | 运维左移 / IaC | 运维左移 / IaC |
 
-回顾上一篇的部署流程：
+## 从「一条 docker run」到「八条 docker run」
+
+回顾 05 的最小闭环：
 
 ```bash
-docker build -t my-site .
-docker run -d -p 80:80 my-site
+docker pull nginx:1.27-alpine
+docker run -d --name my-nginx -p 80:80 nginx:1.27-alpine
 ```
 
-一个命令，一个容器，跑通了。但如果项目需要同时运行以下服务：
+真实项目通常不止一个进程。以「前端静态站 + 后端 API + 数据库」为例：
+
+| 服务 | 作用 | 典型端口 |
+| --- | --- | --- |
+| Nginx | 公网入口、静态资源、反代 API | 80 / 443 |
+| 应用（Spring Boot / Flask） | 业务 API | 8080（内部） |
+| PostgreSQL | 持久化数据 | 5432（内部） |
+
+用命令式写法，你要自己管网络、端口、卷、依赖顺序：
+
+```bash
+docker network create app-net
+
+docker run -d --name db --network app-net \
+  -e POSTGRES_PASSWORD=secret \
+  -v pgdata:/var/lib/postgresql/data \
+  postgres:16-alpine
+
+docker run -d --name api --network app-net \
+  -e DB_URL=jdbc:postgresql://db:5432/app \
+  your-registry/your-api:1.0.0
+
+docker run -d --name gateway --network app-net \
+  -p 80:80 \
+  -v ./nginx.conf:/etc/nginx/conf.d/default.conf:ro \
+  nginx:1.27-alpine
+```
+
+再加监控（Prometheus / Grafana / Loki）就是 6～8 条命令。问题立刻暴露：
+
+- **参数散落**：漏一个 `-v` / `-e` 就启动失败，且难复现
+- **顺序靠人记**：API 依赖 DB 就绪，谁保证？
+- **清理靠人记**：`stop` + `rm` 漏一个就成孤儿容器
+- **无法版本管理**：一坨 shell，没法 Code Review
+
+这和 02 篇「手动备份像错题本」、05 篇「服务器变脏」是同一类运维痛点——**动作靠记忆，状态不可声明**。
+
+## 声明式：描述「要什么」，而不是「怎么做」
+
+`docker run` 是**命令式**：你告诉系统每一步怎么做。
+
+`docker-compose.yml` 是**声明式**：你描述期望状态，由 Compose 把实际状态收敛过去。
+
+```yaml
+services:
+  db:
+    image: postgres:16-alpine
+    environment:
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+
+  api:
+    image: your-registry/your-api:1.0.0
+    environment:
+      DB_URL: jdbc:postgresql://db:5432/app
+    depends_on:
+      - db
+
+  gateway:
+    image: nginx:1.27-alpine
+    ports:
+      - "80:80"
+    volumes:
+      - ./nginx.conf:/etc/nginx/conf.d/default.conf:ro
+    depends_on:
+      - api
+
+volumes:
+  pgdata:
+```
+
+日常只需要：
+
+```bash
+docker compose up -d      # 创建网络、拉镜像、按依赖启动
+docker compose ps         # 看状态
+docker compose logs -f    # 看日志
+docker compose down       # 停掉并清理容器与网络（卷默认保留）
+```
+
+对比：
+
+| 维度 | 手动 `docker run` | Docker Compose |
+| --- | --- | --- |
+| 配置管理 | 散落在命令行 | YAML 进 Git，可追溯 |
+| 启动方式 | 逐个敲，记依赖顺序 | 一条命令，`depends_on` 声明顺序 |
+| 环境一致性 | 每次手敲易错 | 同一份 YAML 本地 / 测试 / 生产同构 |
+| 停止清理 | 逐个 `stop` + `rm` | `docker compose down` |
+| 团队协作 | 靠文档或口口相传 | `clone` + `compose up` 即可复现 |
+
+## 本站级示例：多服务可观测性栈
+
+上面是「应用三件套」的最小模型。本仓库实际用 Compose 编排了网关、站点与可观测性套件（示意结构）：
 
 | 服务 | 作用 |
 | --- | --- |
-| Nginx 网关 | 反向代理、负载均衡 |
-| VitePress 站点 | 你的文档网站 |
-| Prometheus | 指标采集 |
-| Grafana | 可视化面板 |
-| Loki + Promtail | 日志收集 |
+| Nginx 网关 | 反向代理、入口 |
+| VitePress 站点 | 文档站容器 |
+| Prometheus / Grafana | 指标与面板 |
+| Loki + Promtail | 日志采集与存储 |
 
-用 `docker run` 逐个启动，你需要：
+完整 YAML 可随项目仓库版本管理——**新人不必背命令，只需读文件**。这正是 07 篇说的「运维左移」：上线拓扑从某个人脑子里，变成仓库里的显性代码。
 
-```bash
-# 创建网络
-docker network create my-network
+> 生产密钥不要写进 YAML 明文。用 `.env`（加入 `.gitignore`）或密钥管理注入；YAML 里只写 `${POSTGRES_PASSWORD}` 这类引用。
 
-# 启动 VitePress 站点
-docker run -d --name vitepress-website --network my-network \
-  -v ./volumes/website/logs:/var/log/nginx \
-  -e TZ=Asia/Shanghai \
-  xiaolinstar/xiaolin-docs:0.0.1
+## 与流水线怎么配合
 
-# 启动 Nginx 网关
-docker run -d --name nginx-gateway --network my-network \
-  -p 80:80 \
-  -v ./nginx.conf:/etc/nginx/conf.d/default.conf \
-  nginx:alpine3.20-perl
+Compose **不替代**流水线，而是流水线的**部署动作载体**：
 
-# 启动 Prometheus
-docker run -d --name prometheus-website --network my-network \
-  -v ./volumes/prometheus/prometheus.yml:/etc/prometheus/prometheus.yml \
-  -e TZ=Asia/Shanghai \
-  prom/prometheus:v2.53.3 \
-  --config.file=/etc/prometheus/prometheus.yml \
-  --storage.tsdb.path=/prometheus
-
-# 启动 Grafana
-docker run -d --name grafana-website --network my-network \
-  -p 9000:3000 \
-  -v ./volumes/grafana/grafana.ini:/etc/grafana/grafana.ini:ro \
-  -e TZ=Asia/Shanghai \
-  -e GF_AUTH_ANONYMOUS_ENABLED=true \
-  grafana/grafana:11.3.2-ubuntu
-
-# 还有 Loki、Promtail、node-exporter、nginx-exporter……
+```text
+git push
+  → CI 构建镜像并推仓库（06 / 07）
+  → CD 在服务器上：git pull（拿到最新 compose）→ docker compose pull → docker compose up -d
 ```
 
-问题立刻暴露出来：
+服务器仍然**只装 Docker**——不装 `mvn` / `pip`，不在生产机构建（除非你明确用 `compose up --build`，那会把 04 的「脏 / 资源」痛点请回来）。推荐路径是：**CI 出镜像，服务器只 pull + up**。
 
-- **命令长、参数多**：每个容器的端口、网络、挂载卷、环境变量都要手动指定，漏一个参数就启动失败。
-- **启动顺序要人工维护**：Promtail 依赖 Loki，Loki 要先启动。谁来记住这个顺序？
-- **停止和清理麻烦**：要逐个 `docker stop` + `docker rm`，漏掉一个就成了孤儿容器。
-- **无法版本管理**：一坨 shell 命令，没法提交到 Git，团队无法复现。
+## 边界：Compose 够用到哪一步
 
-8 个容器就是 8 条 `docker run`，每条十几个参数。繁琐是一方面，出差错才是致命的。
+| 场景 | 建议 |
+| --- | --- |
+| 个人 / 中小项目，单机或少数机器 | **Compose 足够**——基础篇终点 |
+| 数十服务、多节点、弹性扩缩 | 再考虑 K3s / Kubernetes |
+| 多区域容灾、灰度发布 | Service Mesh / GitOps（进阶篇） |
 
-## 声明式 API
-
-上述问题的根源在于：`docker run` 是**命令式 API**——你必须告诉系统「怎么做」，每一步都由你手动执行。
-
-与之对应的是**声明式 API**（Declarative API），你只需描述「要什么」，系统自动将实际状态收敛到期望状态。
-
-这个概念并非 Docker Compose 独创，它是云原生的核心理念。以下按领域对比两种范式：
-
-| 领域 | 命令式（Imperative） | 声明式（Declarative） |
-| --- | --- | --- |
-| **容器** | `docker run`、`docker stop` 逐条执行 | `docker-compose.yml` 描述期望状态 |
-| **基础设施** | Shell 脚本一步步安装配置 | Terraform HCL 描述基础设施 |
-| **Kubernetes** | `kubectl run`、`kubectl scale` 手动操作 | Deployment YAML 声明副本数，控制器自动调和 |
-| **数据库** | 手写遍历、连接、过滤逻辑 | SQL 查询 `SELECT * FROM users WHERE age > 18` |
-| **前端** | jQuery 手动操作 DOM | Vue/React 模板声明 UI 结构 |
-
-声明式的本质是：**配置即代码**。你把期望状态写在一个文件里，这个文件可以提交到 Git、可以 Code Review、可以在任何环境复现。
-
-Docker Compose 的 `docker-compose.yml` 就是容器编排领域的声明式 API。
-
-## Docker Compose 实践
-
-Docker Compose 通过一个 YAML 文件定义所有服务、网络、卷等资源，一条命令启动整个应用栈。
-
-### 编写 docker-compose.yml
-
-以本项目为例，8 个容器服务的完整编排：
-
-```yaml
-networks:
-  tiny-sparrow-network:
-    external: false
-services:
-  # 软负载
-  nginx-gateway:
-    image: nginx:alpine3.20-perl
-    container_name: nginx-gateway
-    ports:
-      - "80:80"
-    networks:
-      - tiny-sparrow-network
-    volumes:
-      - ./nginx.conf:/etc/nginx/conf.d/default.conf
-
-  # VitePress 静态网站
-  vitepress-website:
-    image: xiaolinstar/xiaolin-docs:0.0.1
-    build: ./
-    container_name: vitepress-website
-    volumes:
-      - ./volumes/website/logs:/var/log/nginx
-    networks:
-      - tiny-sparrow-network
-    environment:
-      TZ: Asia/Shanghai
-
-  # Grafana
-  grafana-website:
-    image: grafana/grafana:11.3.2-ubuntu
-    container_name: grafana-website
-    networks:
-      - tiny-sparrow-network
-    ports:
-      - "9000:3000"
-    volumes:
-      - ./volumes/grafana/grafana.ini:/etc/grafana/grafana.ini:ro
-      - ./volumes/grafana/provisioning/etc/datasources:/etc/grafana/provisioning/datasources:ro
-      - ./volumes/grafana/provisioning/etc/dashboards:/etc/grafana/provisioning/dashboards:ro
-      - ./volumes/grafana/provisioning/var/dashboards:/var/lib/grafana/dashboards:ro
-    environment:
-      TZ: Asia/Shanghai
-      GF_AUTH_ANONYMOUS_ENABLED: true
-      GF_AUTH_ANONYMOUS_ORG_ROLE: Admin
-      GF_USERS_ALLOW_SIGN_UP: false
-
-  # Prometheus
-  prometheus-website:
-    image: prom/prometheus:v2.53.3
-    container_name: prometheus-website
-    volumes:
-      - ./volumes/prometheus/prometheus.yml:/etc/prometheus/prometheus.yml
-    environment:
-      TZ: Asia/Shanghai
-    networks:
-      - tiny-sparrow-network
-    command:
-      - "--config.file=/etc/prometheus/prometheus.yml"
-      - "--storage.tsdb.path=/prometheus"
-
-  # node-exporter（仅支持 Linux，host 模式）
-  node-exporter-website:
-    image: prom/node-exporter:v1.8.2
-    container_name: node-exporter-website
-    environment:
-      TZ: Asia/Shanghai
-    network_mode: host
-    pid: host
-    volumes:
-      - '/:/host:ro,rslave'
-    command:
-      - '--path.rootfs=/host'
-
-  # nginx-prometheus-exporter
-  nginx-exporter-website:
-    image: nginx/nginx-prometheus-exporter:1.4
-    container_name: nginx-exporter-website
-    environment:
-      TZ: Asia/Shanghai
-    networks:
-      - tiny-sparrow-network
-    command: "--nginx.scrape-uri=http://vitepress-website:8081/stub_status"
-
-  # Promtail（日志采集 → Loki）
-  promtail-website:
-    image: grafana/promtail:3.4
-    container_name: promtail-website
-    volumes:
-      - ./volumes/promtail/promtail.yaml:/etc/promtail/promtail.yaml:ro
-      - ./volumes/website/logs:/var/log
-    environment:
-      TZ: Asia/Shanghai
-    networks:
-      - tiny-sparrow-network
-    command:
-      - "--config.file=/etc/promtail/promtail.yaml"
-    depends_on:
-      - loki-website
-
-  # Loki（日志存储）
-  loki-website:
-    image: grafana/loki:3.4
-    container_name: loki-website
-    ports:
-      - "3100:3100"
-    volumes:
-      - ./volumes/loki/loki-local-config.yaml:/etc/loki/local-config.yaml:ro
-    environment:
-      TZ: Asia/Shanghai
-    networks:
-      - tiny-sparrow-network
-    command:
-      - "--config.file=/etc/loki/local-config.yaml"
-```
-
-对比前面的 8 条 `docker run`，一个 YAML 文件把所有信息集中在一起：哪些服务、用什么镜像、挂载什么目录、暴露什么端口、依赖谁——一目了然。
-
-### 核心指令
-
-项目配置完成后，日常操作只需要三条命令：
-
-```bash
-# 构建镜像并启动所有服务（后台运行）
-docker compose up -d --build
-
-# 停止并删除所有容器、网络
-docker compose down
-
-# 查看所有服务状态
-docker compose ps
-
-# 查看日志
-docker compose logs -f
-```
-
-对比手动部署的 7 个步骤（构建镜像 → 推送仓库 → 拉取镜像 → 创建网络 → 逐个启动容器），`docker compose up -d` 一条命令完成全部工作。
-
-### 不使用镜像仓库的部署流程
-
-如果不想推送到 DockerHub 或 ghcr，可以在服务器上直接构建：
-
-```bash
-# 克隆项目
-git clone https://github.com/你的用户名/你的仓库名.git
-cd 你的仓库名
-
-# 构建并启动
-docker compose up -d --build
-```
-
-三行命令，整个多容器应用栈就跑起来了。
-
-## 容器编排的价值
-
-Docker Compose 的价值与项目复杂度呈正相关。
-
-对于**只有 1-2 个容器**的简单场景（比如一个前端 + 一个 Nginx），`docker run` 手动管理问题不大。
-
-但当容器数量增长，Docker Compose 的优势立刻凸显：
-
-| 维度 | 手动 docker run | Docker Compose |
-| --- | --- | --- |
-| 配置管理 | 参数散落在命令行，无法版本化 | YAML 文件提交到 Git，可追溯 |
-| 启动方式 | 逐个手动执行，考虑依赖顺序 | 一条命令，`depends_on` 自动处理顺序 |
-| 环境一致性 | 每次部署手动输入参数，容易出错 | 同一份 YAML 在本地、测试、生产都能跑 |
-| 停止清理 | 逐个 stop + rm，容易遗漏 | `docker compose down` 一键清理 |
-| 团队协作 | 依赖操作手册或口口相传 | 新人 clone 仓库，`docker compose up` 即可启动 |
-
-此外，当团队进一步发展，容器数量达到几十上百个时，会需要 Kubernetes 这样的容器编排平台。但对中小团队和个人项目，Docker Compose 已经是最优解。
+**掌握 Compose + 前面 01–07，已经能覆盖绝大多数中小型项目的运维工作。** 这就是基础篇把 Compose 放在最后一篇的原因——不是因为它最难，而是因为它把「可移植性 + 声明式 + 多服务」收成一个可落地的闭环。
 
 ## 小结
 
-Docker Compose 是声明式容器编排工具，通过一个 YAML 文件定义多服务的期望状态，一条命令管理整个应用栈的生命周期。
+Docker Compose 把 05 的单容器能力扩展为**多服务期望状态**：一份 YAML、一条 `up`、一键 `down`。它与 Jenkinsfile / Actions YAML 同属 IaC——区别只是声明对象不同（拓扑 vs 动作链）。
 
-它的核心价值是**配置即代码**：所有服务配置集中在一个文件里，提交到 Git 即可版本管理，任何人 clone 仓库后一条命令就能复现完整的运行环境。
-
-对个人项目和中小团队来说，如果你在 GitHub 上搜过开源项目，Docker Compose 已经是开箱即用的标准实践。
+下一步进入 [第 09 篇 · 基础篇总结](./foundation-summary.md)：回顾 01–08 的范式跃迁、能力清单，以及「够用」与「还差得远」的边界。
 
 ## 思考
 
-1. `docker-compose.yml` 文件应该提交到 Git 仓库吗？如果里面有数据库密码等敏感信息，怎么处理？
-2. `depends_on` 能保证服务「启动就绪」吗？如果 MySQL 容器启动了但还没初始化完成，依赖它的应用连接数据库会怎样？
-3. 你的项目目前有几个容器？如果引入 Docker Compose，最大的收益是什么？
+1. `docker-compose.yml` 应该提交到 Git 吗？里面有数据库密码时怎么处理？
+2. `depends_on` 能保证依赖服务「已就绪」吗？MySQL 容器 `Up` 了但还在初始化，应用连库会怎样？
+3. 为什么推荐「CI 构建镜像 + 服务器 `compose pull && up`」，而不是在生产机 `compose up --build`？
 
 ## 参考
 
 1. [Docker Compose 官方文档](https://docs.docker.com/compose/)
-2. [Docker Compose 命令参考](https://docs.docker.com/compose/reference/)
-3. [Docker Compose 文件规范](https://docs.docker.com/compose/compose-file/)
+2. [Compose 文件规范](https://docs.docker.com/compose/compose-file/)
+3. [Compose CLI 参考](https://docs.docker.com/compose/reference/)

@@ -1,4 +1,13 @@
 {
+  "env": {
+    "ANTHROPIC_BASE_URL": "https://api.kimi.com/coding/",
+    "ANTHROPIC_AUTH_TOKEN": "sk-kimi-5Q3RnBUNl08nEx8adtVylbTg1OaSGgkS79F5Ke6x0xZoHqdCcl1czrI2MivJe1wS",
+    "ANTHROPIC_MODEL": "kimi-for-coding",
+    "ANTHROPIC_DEFAULT_SONNET_MODEL": "kimi-for-coding",
+    "ANTHROPIC_DEFAULT_OPUS_MODEL": "kimi-for-coding",
+    "ANTHROPIC_DEFAULT_HAIKU_MODEL": "kimi-for-coding",
+    "CLAUDE_CODE_EXPERIMENTAL_AGENT_TEAMS": "1"
+  },
   "permissions": {
     "allow": [
       "Bash(ai-todo *)"

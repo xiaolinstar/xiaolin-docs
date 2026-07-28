@@ -137,7 +137,7 @@ pull ─→ run ─→ stop ─→ rm
 
 这就是单容器生命周期的完整闭环。
 
-## 真实例子：用 Docker 跑 03 篇的 Spring Boot jar
+## 真实例子：用 Docker 跑 04 篇的 Spring Boot jar
 
 04 篇那个 Spring Boot 应用：`java -jar app.jar` 启动时，服务器需要：
 
@@ -186,7 +186,9 @@ Docker 把「代码 + 依赖 + 运行时」打包成镜像，服务器只负责�
 
 这一篇只覆盖**单容器、命令式**用法：5 个命令（`pull` / `run` / `ps` / `stop` / `rm` / `rmi`）就够把单容器应用跑起来、停掉、清理掉。
 
-但真实项目通常不止一个服务：你的应用需要 Nginx 反代，Nginx 需要配置文件，监控需要 Prometheus / Grafana……**当容器数量增长到 3 个、5 个、10 个时，逐条 `docker run` 也会变得繁琐**——下一篇会引入 [Docker Compose](./docker-compose.md)，把多个容器用一个 YAML 文件统一管理。
+但真实项目通常不止一个服务：你的应用需要 Nginx 反代，Nginx 需要配置文件，监控需要 Prometheus / Grafana……**当容器数量增长到 3 个、5 个、10 个时，逐条 `docker run` 也会变得繁琐**——那是 [第 08 篇 · Docker Compose](./docker-compose.md) 要解决的事。
+
+下一篇先不急着编排多容器，而是把「手动 `docker run`」也流水线化——进入 [第 06 篇 · 流水线基础](./jenkins-basics.md)。
 
 ## 思考
 

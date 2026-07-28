@@ -1,6 +1,6 @@
 ---
 title: 06 ｜ 流水线基础：从手动命令到 Jenkinsfile
-description: 把 04 篇的手动运维动作（pull → build → deploy → healthcheck）流水线化——用 Jenkinsfile 把动作写进代码仓库，运维左移到开发。
+description: 把 05 篇的手动操作（pull → build → deploy → healthcheck）流水线化——用 Jenkinsfile 把操作写进代码仓库，运维左移到开发。
 date: 2026-07-15
 updated: 2026-07-15
 category: SRE 运维
@@ -12,7 +12,7 @@ tags:
   - IaC
 ---
 
-04 篇的服务器动作链还是手动的：
+05 篇的服务器动作链还是手动的：
 
 ```bash
 ssh ubuntu@server
@@ -25,13 +25,13 @@ sleep 5 && curl -fsS http://localhost:8080/health
 
 每一步都要登录服务器、复制粘贴命令；漏一步就出问题，**上线靠记忆**。
 
-这一篇要做的事：**把 04 的动作链流水线化**——用一个声明式文件描述「要做哪些动作」，**每次 `git push` 自动执行**。带来的不只是「少敲几次命令」，而是**运维动作可版本管理、可 Code Review、可沉淀**——这就是「**运维左移**」（Shift Left）。
+这一篇要做的事：**把 05 的操作链流水线化**——用一个声明式文件描述「要做哪些操作」，**每次 `git push` 自动执行**。带来的不只是「少敲几次命令」，而是**运维动作可版本管理、可 Code Review、可沉淀**——这就是「**运维左移**」（Shift Left）。
 
 这一篇以 **Jenkins** 作为流水线引擎为代表。它不是唯一的工具，但**Jenkinsfile** 的语法清晰展示了「声明式流水线」的核心理念。
 
 ## 流水线是什么
 
-**流水线**（Pipeline）是「一组运维动作按顺序串起来，按触发条件自动执行」。三个关键属性：
+**流水线**（Pipeline）是「一组操作按顺序串起来，按触发条件自动执行」。三个关键属性：
 
 | 属性 | 说明 |
 | --- | --- |
@@ -51,9 +51,9 @@ Pipeline（首字母大写）特指具体工具：**Jenkins Pipeline / GitHub Ac
 
 ## Jenkinsfile：从手动命令到声明式代码
 
-**Jenkinsfile** 是 Jenkins 流水线的声明文件——把 04 篇的「ssh 上去敲命令」写成一个文本文件，由 Jenkins 引擎读取并执行。
+**Jenkinsfile** 是 Jenkins 流水线的声明文件——把 05 篇的「ssh 上去敲命令」写成一个文本文件，由 Jenkins 引擎读取并执行。
 
-一个对应 04 篇 Spring Boot 部署的 Jenkinsfile：
+一个对应 05 篇 Spring Boot 部署的 Jenkinsfile：
 
 ```groovy
 pipeline {
@@ -155,7 +155,7 @@ steps {
 
 ### 3. Agent 也要 Maven / JDK
 
-Jenkins 的 agent 机器跑 `mvn package` 这一步，**它自己也得有 Maven / JDK**——这正是 04 篇「服务器变脏」的翻版，只不过现在「脏」的是 Jenkins agent，不是生产服务器。
+Jenkins 的 agent 机器跑 `mvn package` 这一步，**它自己也得有 Maven / JDK**——这正是 05 篇「服务器变脏」的翻版，只不过现在「脏」的是 Jenkins agent，不是生产服务器。
 
 后续篇章会用**容器化 agent**（`agent { docker { image 'maven:3.9' } }`）来解决——agent 启动时拉一个带 Maven 的镜像，pipeline 跑完即销毁。这正好把 04 学到的容器知识用到 Jenkins 上。
 
@@ -201,9 +201,45 @@ Jenkins 不是唯一的流水线引擎。基础篇选 Jenkins 是因为它的「
 
 > 注：本节是流水线工具的全景概览。GitHub Actions 作为托管式流水线的代表，在下一篇 [07 GitHub Actions](./actions.md) 中展开实战。
 
+## $f$ 的完整结构：从线性到并行
+
+02 篇定义了 $\forall x \in X,\; f(x) = c$，06 篇的 Jenkinsfile 正是 $f$ 的**具体实现**——把"人记着步骤"变成"文件写明步骤 + 引擎自动执行"。
+
+02 篇的 $f$ 是最简线性 DAG（构建 → 上传 → 验证），但流水线引擎原生支持更复杂的拓扑。**DAG 的价值在于它能表达并行**——一旦流程变复杂，线性箭头就不够用了：
+
+```
+v₁（构建）
+    ├── v₂（上传华东）──── v₄（验证华东）──┐
+    └── v₃（上传华北）──── v₅（验证华北）──┤
+                                           v₆（全量切流）
+```
+
+$v_2$ 与 $v_3$ 之间没有边，可以并行；$v_6$ 同时依赖 $v_4$ 和 $v_5$，必须等两者都完成。这种"局部并行、整体有序"的约束，DAG 能精确表达，单纯的"$\to$"写法做不到。对应到 Jenkinsfile，`parallel` 块正是这一结构的代码化：
+
+```groovy
+stage('Deploy') {
+    parallel {
+        stage('华东') { steps { sh './deploy.sh cn-east' } }
+        stage('华北') { steps { sh './deploy.sh cn-north' } }
+    }
+}
+stage('全量切流') {
+    steps { sh './switch-traffic.sh' }
+}
+```
+
+因此，**$f$ 的完整定义**：输入变更 $x$，沿 DAG $G$ 的拓扑序依次（或并行）执行各节点，最终输出结果 $c$：
+
+$$
+f(x) = \bigl(v_n \circ \cdots \circ v_2 \circ v_1\bigr)(x) = c
+\qquad \text{其中执行序满足拓扑序 } \tau
+$$
+
+**流水线引擎就是拓扑序的执行器**——Jenkins / GitHub Actions / GitLab CI 读取声明式文件，按 DAG 依赖自动调度节点的执行顺序与并行度。
+
 ## 小结
 
-这一篇做了第三次范式升级：**手动运维动作 → 流水线化**。
+这一篇做了第三次范式升级：**手动操作 → 流水线化**。
 
 - **Jenkinsfile** 把 04 的命令链从「ssh 上去敲」变成「写在仓库里的代码」
 - 流水线引擎（Jenkins / Actions / GitLab CI）按 `git push` 自动触发、自动执行
@@ -214,7 +250,7 @@ Jenkins 不是唯一的流水线引擎。基础篇选 Jenkins 是因为它的「
 ## 思考
 
 1. Jenkinsfile 应该和应用代码放在同一个仓库吗？如果放在独立仓库（专门的 `infra` 仓库）有什么利弊？
-2. Jenkins agent 机器也要装 Maven / JDK——这跟 04 篇「服务器变脏」是不是同一类问题？怎么解决？
+2. Jenkins agent 机器也要装 Maven / JDK——这跟 05 篇「服务器变脏」是不是同一类问题？怎么解决？
 3. Pipeline 跑挂了应该通知谁？只通知提交者，还是整个团队？理由是什么？
 4. `post { failure { ... } }` 这一段如果通知发送本身失败了（比如 Slack 挂），你要怎么兜底？
 

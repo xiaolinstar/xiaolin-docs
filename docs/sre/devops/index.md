@@ -62,7 +62,7 @@ graph TD
 | **05** | [05 ｜ 容器 Docker](./foundation/docker-basics.md) | 服务器回归本职：Docker 命令式用法（pull / run / stop / rm / rmi） |
 | **06** | [06 ｜ 流水线基础](./foundation/jenkins-basics.md) | 流水线化运维动作：Jenkinsfile 把手动命令变成声明式代码，运维左移到开发 |
 | **07** | [07 ｜ GitHub Actions](./foundation/actions.md) | 托管式流水线：核心概念 + Greetings / VitePress Pages 两个实战 |
-| **08** | [08 ｜ 多服务容器编排](./foundation/docker-compose.md) | 声明式多服务治理：Docker Compose 一份 YAML 启动整个应用栈 |
+| **08** | [08 ｜ 多服务容器编排](./foundation/docker-compose.md) | 声明式多服务 + IaC：Compose 收口基础篇，CI 出镜像、服务器 pull + up |
 | **09** | [09 ｜ 基础篇总结](./foundation/foundation-summary.md) | DevOps 基础篇收尾：演进全景 / 能力清单 / 选型建议 |
 
 ### 3. 中级篇

@@ -238,7 +238,7 @@ VitePress 负责将 Markdown 渲染构建成面向浏览器的静态资源（HTM
 
 **VitePress 开发与发布闭环工作流：**
 
-![VitePress 开发与发布闭环流程](/images/img-delivery-start/vitepress-workflow-aligned.png)
+![VitePress 开发与发布闭环流程](https://media.xiaolin.fun/docs/img-delivery-start/vitepress-workflow-aligned.png)
 
 ## 安装 VitePress
 
@@ -322,7 +322,7 @@ sudo systemctl restart nginx
 
 访问 `http://localhost` 验证部署是否成功。
 
-VitePress 适合开发者灵活地管理静态站点，好处是仅需关注 Markdown 文档和配置文件。但需要注意的是，每次无论大小修改，均需要重新构建和发布。在运维领域，这属于一次 {{term:生产变更}}，是比较敏感的运维动作。
+VitePress 适合开发者灵活地管理静态站点，好处是仅需关注 Markdown 文档和配置文件。但需要注意的是，每次无论大小修改，均需要重新构建和发布。在运维领域，这属于一次 {{term:生产变更}}，是比较敏感的操作。
 
 ## 小结
 
