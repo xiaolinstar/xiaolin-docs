@@ -155,9 +155,9 @@ steps {
 
 ### 3. Agent 也要 Maven / JDK
 
-Jenkins 的 agent 机器跑 `mvn package` 这一步，**它自己也得有 Maven / JDK**——这正是 05 篇「服务器变脏」的翻版，只不过现在「脏」的是 Jenkins agent，不是生产服务器。
+Jenkins 的 agent 机器跑 `mvn package` 这一步，**它自己也得有 Maven / JDK**——这正是 03 篇「服务器变脏」的翻版，只不过现在「脏」的是 Jenkins agent，不是生产服务器。
 
-后续篇章会用**容器化 agent**（`agent { docker { image 'maven:3.9' } }`）来解决——agent 启动时拉一个带 Maven 的镜像，pipeline 跑完即销毁。这正好把 04 学到的容器知识用到 Jenkins 上。
+后续篇章会用**容器化 agent**（`agent { docker { image 'maven:3.9' } }`）来解决——agent 启动时拉一个带 Maven 的镜像，pipeline 跑完即销毁。这正好把 05 学到的容器知识用到 Jenkins 上。
 
 ### 4. 流水线失败时日志去哪查
 
@@ -201,7 +201,7 @@ Jenkins 不是唯一的流水线引擎。基础篇选 Jenkins 是因为它的「
 
 > 注：本节是流水线工具的全景概览。GitHub Actions 作为托管式流水线的代表，在下一篇 [07 GitHub Actions](./actions.md) 中展开实战。
 
-## $f$ 的完整结构：从线性到并行
+## 范式完整结构：从线性到并行
 
 02 篇定义了 $\forall x \in X,\; f(x) = c$，06 篇的 Jenkinsfile 正是 $f$ 的**具体实现**——把"人记着步骤"变成"文件写明步骤 + 引擎自动执行"。
 
@@ -241,7 +241,7 @@ $$
 
 这一篇做了第三次范式升级：**手动操作 → 流水线化**。
 
-- **Jenkinsfile** 把 04 的命令链从「ssh 上去敲」变成「写在仓库里的代码」
+- **Jenkinsfile** 把 03 的命令链从「ssh 上去敲」变成「写在仓库里的代码」
 - 流水线引擎（Jenkins / Actions / GitLab CI）按 `git push` 自动触发、自动执行
 - **运维左移**让「上线步骤」从隐性知识变成显性、可版本管理的代码——这是 IaC 思想的入门
 
