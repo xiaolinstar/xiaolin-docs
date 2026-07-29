@@ -21,7 +21,7 @@ RUN pnpm install --frozen-lockfile
 # 安装Git，lastUpdated=true需要
 # 使用官方 Alpine 镜像源（避免腾讯云镜像源 IO 错误）
 RUN apk update \
-    && apk add --no-cache bash git openssh
+    && apk add --no-cache bash git openssh python3
 
 # 构建生产环境下到Vue项目
 RUN pnpm run media:rewrite:apply && pnpm run docs:build
