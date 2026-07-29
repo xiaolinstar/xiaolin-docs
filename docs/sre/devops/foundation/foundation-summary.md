@@ -142,7 +142,7 @@ tags:
 ```
 01 Nginx 静态代理
 02 手动部署跑通一遍
-03 git push 源码
+04 git push 源码
 05 docker run 单容器
 07 GitHub Actions 自动构建 + 部署
 08 docker-compose 起多服务
@@ -162,7 +162,7 @@ tags:
 
 1. **不要一上来就用最复杂的方案**——K8s / Argo CD / Terraform 是进阶工具，先把 01-08 走通。
 2. **每篇都动手做一遍**——「跑通一次」>「读十遍」。基础篇的核心是 muscle memory。
-3. **遇到问题先看 04 三类运维痛点**——服务器脏 / 资源争抢 / 网络不对等是常见根因。
+3. **遇到问题先看 03 三类运维痛点**——服务器脏 / 资源争抢 / 网络不对等是常见根因。
 4. **保持版本管理习惯**——任何运维脚本（systemd unit / nginx conf / Jenkinsfile）都该在 Git 仓库里。
 5. **理解「声明式」思想**——Jenkinsfile、docker-compose.yml、IaC 都是同一思想的不同体现。
 

@@ -149,7 +149,7 @@ git push
   → CD 在服务器上：git pull（拿到最新 compose）→ docker compose pull → docker compose up -d
 ```
 
-服务器仍然**只装 Docker**——不装 `mvn` / `pip`，不在生产机构建（除非你明确用 `compose up --build`，那会把 04 的「脏 / 资源」痛点请回来）。推荐路径是：**CI 出镜像，服务器只 pull + up**。
+服务器仍然**只装 Docker**——不装 `mvn` / `pip`，不在生产机构建（除非你明确用 `compose up --build`，那会把 03 的「脏 / 资源」痛点请回来）。推荐路径是：**CI 出镜像，服务器只 pull + up**。
 
 ## 边界：Compose 够用到哪一步
 

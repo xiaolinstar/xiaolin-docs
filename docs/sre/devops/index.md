@@ -19,9 +19,9 @@ DevOps 方法论与实践经验。本站 DevOps 板块设计了「**双轨并行
 graph TD
     subgraph 基础篇 ["基础篇：从静态资源代理到自动化流水线"]
         start["01 Nginx 静态资源代理"] --> prod["02 生产环境入门"]
-        prod --> git["03 Git 与 GitHub"]
-        git --> server["04 服务端应用部署"]
-        server --> docker["05 Docker 容器化"]
+        prod --> server["03 服务端应用部署"]
+        server --> git["04 Git 与 GitHub"]
+        git --> docker["05 Docker 容器化"]
         docker --> compose["06 Compose 编排"]
         compose --> pipeline["07 流水线选型"]
         pipeline --> actions["08-09 Actions 实践"]
@@ -57,10 +57,10 @@ graph TD
 | :--- | :--- | :--- |
 | **01** | [01 ｜ Nginx 静态资源代理](./foundation/delivery-start.md) | 从本地 `index.html` 到 VitePress `dist` 目录的静态资源代理 |
 | **02** | [02 ｜ 生产环境入门：部署到云服务器](./foundation/production-env.md) | 理解 7×24 与公网 IP，通过 SSH + scp 完成第一次手动部署 |
-| **03** | [03 ｜ Git 与 GitHub：版本管理与云端仓库](./foundation/git-github.md) | 版本管理核心价值，GitHub 云端备份，git pull 替代 scp 部署 |
-| **04** | [04 ｜ 服务端应用部署：依赖、运行时与进程保活](./foundation/server-side-deploy.md) | 从静态站点升级到后端进程：双栈对比 + 运维视角三类痛点（脏 / 资源 / 网络） |
+| **03** | [03 ｜ 服务端应用部署：依赖、运行时与进程保活](./foundation/server-side-deploy.md) | 从静态站点升级到后端进程：双栈对比 + 运维视角三类痛点（脏 / 资源 / 网络） |
+| **04** | [04 ｜ Git 与 GitHub：版本管理与云端仓库](./foundation/git-github.md) | 版本管理核心价值，GitHub 云端备份，为后续流水线奠定代码版本基础 |
 | **05** | [05 ｜ 容器 Docker](./foundation/docker-basics.md) | 服务器回归本职：Docker 命令式用法（pull / run / stop / rm / rmi） |
-| **06** | [06 ｜ 流水线基础](./foundation/jenkins-basics.md) | 流水线化运维动作：Jenkinsfile 把手动命令变成声明式代码，运维左移到开发 |
+| **06** | [06 ｜ 流水线基础](./foundation/pipeline-basics.md) | 流水线化运维动作：Jenkinsfile 把手动命令变成声明式代码，运维左移到开发 |
 | **07** | [07 ｜ GitHub Actions](./foundation/actions.md) | 托管式流水线：核心概念 + Greetings / VitePress Pages 两个实战 |
 | **08** | [08 ｜ 多服务容器编排](./foundation/docker-compose.md) | 声明式多服务 + IaC：Compose 收口基础篇，CI 出镜像、服务器 pull + up |
 | **09** | [09 ｜ 基础篇总结](./foundation/foundation-summary.md) | DevOps 基础篇收尾：演进全景 / 能力清单 / 选型建议 |
