@@ -69,3 +69,15 @@ Clean white background with lots of negative space. No gradients, no 3D effects,
    ```
 3. **CDN 引用**：在 Markdown 中直接以以下绝对 URL 形式引用图片：
    `https://media.xiaolin.fun/docs/img-{slug}/{image-name}`
+
+---
+
+## 图 + Prompt 落位规范
+
+当 mermaid 流程图后续可能升级为静态信息图时，**在文章中嵌入 `<details>` 块含 Prompt**：
+
+- 块首用简要 `<summary>`（如「📐 静态信息图 Prompt（可选升级）」）
+- 块内含完整 Prompt（模板见上文「静态信息图生成规范」）
+- 末尾给预期产物路径 + CDN 引用
+
+这样后续 Codex / Antigravity 生成静态图时，Prompt 在文档中自带——**不依赖外部维护表**。

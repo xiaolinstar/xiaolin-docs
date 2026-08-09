@@ -24,3 +24,9 @@ cert/
 # 文档大图已迁 COS/CDN（本地目录仅作上传源）
 docs/public/images/**
 !docs/public/images/.gitkeep
+
+# 第三方参考资料 / 素材：本地查阅用，非自有产出，不入库
+/references/
+
+# Claude / agent 本地配置（不入库；本地工具状态，非代码）
+/.claude/settings*.json
