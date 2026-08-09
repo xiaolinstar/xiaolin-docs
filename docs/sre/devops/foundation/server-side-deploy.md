@@ -22,15 +22,32 @@ tags:
 
 03 篇要解决的问题很具体：**怎么把后端进程（Spring Boot / Flask）像 Nginx 一样稳定挂起**——让客户端访问时不会看到 502。
 
-链路看起来是这样：
+```mermaid
+flowchart LR
+    Browser([浏览器]) --> Nginx["Nginx :80/443\n公网入口"]
+    Nginx -->|静态路径| dist["dist/ 目录\nHTML / CSS / JS"]
+    Nginx -->|反向代理| Backend["Java/Python 进程\n:8080/:8000"]
+```
+
+<details>
+<summary>📐 静态信息图 Prompt（可选升级）</summary>
 
 ```
-前端：浏览器 → Nginx(:80/443，公网入口) → 读 dist/ 文件 → 返回 HTML/CSS/JS
-后端：浏览器 → Nginx(:80/443，公网入口) → 反代到 :8080 → Java/Python 进程 → 返回 JSON
-                                 ↑
-                          这一段由 Nginx 维护
-                          后端进程一般监听内部端口，不直接暴露公网
+Notion style minimalist line art infographic, hand-drawn marker stroke texture. 16:9 aspect ratio.
+
+Single horizontal chain left to right:
+  浏览器 (browser icon, env.public) --[HTTP]--> Nginx :80/443 (cloud server icon, neutral gray #8c8c8c)
+  Nginx splits into two paths below:
+    Top path (blue #1890ff): --[静态路径]--> dist/ 目录 HTML/CSS/JS (folder icon)
+    Bottom path (orange #fa8c16): --[反向代理]--> Java/Python 进程 :8080/:8000 (server process icon)
+
+Clean white background with lots of negative space. No gradients, no 3D effects, no shadows.
 ```
+
+预期产物路径：`docs/public/images/img-server-side-deploy/diagram-nginx-chain.png`
+CDN 引用：`https://media.xiaolin.fun/docs/img-server-side-deploy/diagram-nginx-chain.png`
+</details>
+
 
 **这是典型部署示意**——它假设已经用 Nginx 反向代理。但**本篇不要求 Nginx**：后端进程**默认**直接监听 :8080/8000 即可（个人开发者起步、内网服务、K8s 内部都这样）。**当规模上去**、需要软负载 + 网络隔离 + 浏览器跨域规避 + 静态资源代理 + TLS 终止 等能力时，Nginx 才是最佳实践。
 
@@ -41,7 +58,7 @@ tags:
 | 部署对象 | `dist/` 文件系统层 | 带运行时的进程（jar / wheel + JVM / Python） |
 | 部署动作 | scp 文件到 Nginx 目录 | scp 产物 + 拉起进程 + 监听端口 |
 | 进程类型 | Nginx | Java / Python |
-| 客户端可见 | Nginx 进程（直接打） | Nginx 反代后的后端进程（客户端只看到 502） |
+| 客户端可见 | Nginx 进程（直接打） | Nginx 反代后的后端进程（后端进程一旦挂掉，客户端才会看到 502） |
 
 依赖上看，后端比前端厚一叠：除了 Nginx 这层「系统级」依赖，还要叠加 `pom.xml` / `pyproject.toml` 这层「业务级」依赖，版本要对齐、编译环境要齐备、跨平台要一致。**部署对象从文件系统层抬到带运行时层，是这一篇要讲的关键跃迁**——进程挂起的难度也跟着抬一档，但**运维动作的本质是同一种**（拉起、监听、保活）。
 
@@ -49,7 +66,6 @@ tags:
 
 ## 静态资源与动态资源
 
-Web 服务器按其服务的资源类型分为两类——这是 03 篇讨论"在哪跑"的前置概念。
 
 ### 静态资源：Nginx 直接服务
 
@@ -83,7 +99,7 @@ Web 服务器按其服务的资源类型分为两类——这是 03 篇讨论"�
 
 ## 服务端应用开发
 
-03 篇讨论的**服务端应用**，是**承载业务逻辑的进程**——接收请求、调用代码、读数据库、动态生成响应。02 篇里的 Nginx 是同类进程（监听 :80），但处理的是**静态文件**，属基础设施层。03 篇要解决的是这类业务进程怎么挂稳——**默认**直接监听 :8080/8000，不依赖 Nginx 反代。**规模上去时**才考虑 Nginx 反代作为最佳实践——它提供软负载 + 网络隔离 + 浏览器跨域规避 + 静态资源代理 + TLS 终止能力。
+03 篇讨论的**服务端应用**，是**承载业务逻辑的进程**——接收请求、调用代码、读数据库、动态生成响应。02 篇里的 Nginx 是同类进程（监听 :80），但处理的是**静态文件**，属基础设施层。03 篇要解决的是这类业务进程怎么挂稳——默认直接监听 :8080/8000 即可（Nginx 反代的适用场景详见本篇延伸阅读）。
 
 当下最流行和常见的两个栈：**Java SpringBoot** 和 **Python Flask**。
 
@@ -142,49 +158,7 @@ Spring Boot 和 Flask 对开发者、运维工程师都是**必须了解的基�
 
 **补充说明**：前端**也**有构建路线问题——`npm run build` 也是资源密集型任务（大型 webpack / vite 工程 CPU 内存吃紧）。但**因为前端产物是 `dist/` 静态资源 + 可迁移性强**（HTML / CSS / JS / 字体跨系统一致），**这两个痛点（资源占用 / 跨平台）的影响轻得多**——本地构建后 `scp` 上去即可，与 02 篇的路径完全一致。**前端"也"字背后的逻辑**：产物的强可迁移性**自然补偿**了构建痛点的影响。
 
-```mermaid
-flowchart LR
-    subgraph 路线A["路线 A · 服务器构建"]
-        A1[git pull 源码] --> A2[mvn package / pip install] --> A3[启动]
-    end
-    subgraph 路线B["路线 B · 本地构建后传产物"]
-        B1[本地 mvn package 出 jar] --> B2[scp 上传] --> B3[启动]
-    end
-
-    A2 -.-> P1[资源占用 / 版本漂移]:::pain
-    B2 -.-> P2[glibc 缺失 / 跨平台失败]:::pain
-    A3 --> S[服务器拉起]:::union
-    B3 --> S
-
-    classDef pain stroke:#ff4d4f,stroke-width:2px,stroke-dasharray: 4 2
-    classDef union stroke:#1890ff,stroke-width:2px,fill:#e6f7ff
-```
-
-<details>
-<summary>📐 静态信息图 Prompt（可选升级）</summary>
-
-如需升级为 Notion 极简线稿静态信息图，可喂给 Codex / Antigravity：
-
-​```
-Notion style minimalist line art infographic, hand-drawn marker stroke texture.
-16:9 aspect ratio.
-
-Left side (蓝色 #1890ff): 路线 A · 服务器构建
-  - 流程：git pull 源码 → mvn package / pip install → 启动
-  - 痛点：资源占用 / 版本漂移（红色虚线标注）
-
-Right side (橙色 #fa8c16): 路线 B · 本地构建后传产物
-  - 流程：本地 mvn package 出 jar → scp 上传 → 启动
-  - 痛点：glibc 缺失 / 跨平台失败（红色虚线标注）
-
-Bottom (灰 #8c8c8c): 共同根问题 = 构建与运行环境割裂 → 05 篇 Docker 解决
-
-Clean white background with lots of negative space. No gradients, no 3D effects, no shadows.
-​```
-
-预期产物路径：`docs/public/images/img-server-side-deploy/diagram-build-route-a-vs-b.png`
-CDN 引用：`https://media.xiaolin.fun/docs/img-server-side-deploy/diagram-build-route-a-vs-b.png`
-</details>
+![两类构建部署路线对比](https://media.xiaolin.fun/docs/img-server-side-deploy/diagram-build-route-a-vs-b.png)
 
 ## 三类被低估的运维痛点
 
@@ -233,6 +207,8 @@ CDN 引用：`https://media.xiaolin.fun/docs/img-server-side-deploy/diagram-buil
 | 构建打满资源 | 线上服务卡顿 / OOM | 构建任务和运行任务共享资源 |
 | 网络不对等 | 依赖下载慢 / 失败 | 服务器网络环境受限 |
 
+![三类运维痛点汇总](https://media.xiaolin.fun/docs/img-server-side-deploy/diagram-three-pain-points.png)
+
 三类痛点指向**同一个方向**：**构建动作不该和运行动作挤在同一台服务器上**。大型企业通常有两条成熟路径——
 
 - **专门的 Build Server / CI Server**（构建机）：资源密集型服务器专门跑构建（CI 流水线或 Build Farm），与运行服务器物理分离
@@ -244,7 +220,7 @@ CDN 引用：`https://media.xiaolin.fun/docs/img-server-side-deploy/diagram-buil
 
 ## 让后端进程稳定挂起 24 小时
 
-后端进程要长期运行——不是"调试一次按 Ctrl+C 退出"那种开发期模式。**默认**进程直接监听 :8080/8000（Spring Boot 默认 8080，Flask + Gunicorn 默认 8000），关了就有 502。**规模上去时**才考虑 Nginx 反代作为最佳实践——它提供软负载 + 网络隔离 + 浏览器跨域规避 + 静态资源代理 + TLS 终止能力。本篇先讲"默认路径"。
+后端进程要长期运行——不是「调试一次按 Ctrl+C 退出」那种开发期模式。进程默认监听 :8080/8000（Spring Boot 默认 8080，Flask + Gunicorn 默认 8000），关了就有 502。本篇聚焦「怎么让进程稳定挂起」这个核心问题。
 
 启动命令：
 
@@ -299,6 +275,38 @@ journalctl -u myapp -n 100 -f           # systemd 方式
 tail -f /var/log/myapp.log              # nohup + log 文件方式
 ```
 
+```mermaid
+flowchart LR
+    A([启动进程]) --> B[前台运行\njava -jar / gunicorn]
+    B --> C[后台挂起\nnohup ... &]
+    C --> D{验证}
+    D -->|ps / curl 通过| E[✅ 稳定运行]
+    D -->|502 / 进程不在| F[排查日志\njournalctl / tail -f]
+    F --> C
+```
+
+<details>
+<summary>📐 静态信息图 Prompt（可选升级）</summary>
+
+```
+Notion style minimalist line art infographic, hand-drawn marker stroke texture. 16:9 aspect ratio.
+
+Horizontal flow left to right with a feedback loop:
+  Step 1 (gray #8c8c8c): 启动进程 (play button icon)
+  Step 2 (gray #8c8c8c): 前台运行  java -jar / gunicorn
+  Step 3 (blue #1890ff): 后台挂起  nohup ... &
+  Step 4 (diamond decision node, gray): 验证 ps / curl
+    -- 成功 path (green checkmark, orange #fa8c16 accent): → 稳定运行
+    -- 失败 path (red dashed): → 排查日志 journalctl/tail -f → 循环回 Step 3
+
+Clean white background with lots of negative space. No gradients, no 3D effects, no shadows.
+```
+
+预期产物路径：`docs/public/images/img-server-side-deploy/diagram-process-lifecycle.png`
+CDN 引用：`https://media.xiaolin.fun/docs/img-server-side-deploy/diagram-process-lifecycle.png`
+</details>
+
+
 进程挂了，验证命令先告诉你为什么不挂；下一步再考虑怎么让它自动活过来。
 
 **Spring Boot 独有**：
@@ -310,9 +318,6 @@ tail -f /var/log/myapp.log              # nohup + log 文件方式
 
 - Flask 自带的 `app.run()` 是 dev server，**生产环境不能用**（性能差、稳定性差、无并发处理）。
 - 生产用 `gunicorn`（同步）或 `uvicorn`（异步 ASGI）这类 WSGI / ASGI server。
-
-
-
 ## 服务端部署范式
 
 这一篇确立**服务端部署范式**——与 02 篇"前端部署范式"并列：
@@ -328,7 +333,7 @@ tail -f /var/log/myapp.log              # nohup + log 文件方式
 
 **客户端 → Nginx(:80/443) → 反代到 :8080/8000 → 后端进程** —— Nginx 充当"软负载 + 网络隔离 + 浏览器跨域规避 + 静态资源代理 + TLS 终止"多个角色（延伸阅读展开过）
 
-但**本篇不要求 Nginx**——服务端进程**默认**直接监听 :8080/8000 即可。**当规模上去、需要软负载 + 网络隔离 + 浏览器跨域规避 + 静态资源代理 + TLS 终止**时，Nginx 才是最佳实践。**本篇讲的是"后端进程怎么挂稳"**——这条路径与 Nginx 是否启用无关。
+但**本篇不要求 Nginx**——服务端进程**默认**直接监听 :8080/8000 即可，**本篇讲的是「后端进程怎么挂稳」**——这条路径与 Nginx 是否启用无关。
 
 这一篇揭示的根本问题：**构建动作和运行环境割裂**——05 篇 Docker 用"把运行时打包成镜像"来根治。
 
@@ -346,7 +351,7 @@ tail -f /var/log/myapp.log              # nohup + log 文件方式
 1. Spring Boot 的 `java -jar app.jar` 和 Flask 的 `python app.py` 都启动了，但哪一个在生产环境**不应该用**？为什么？
 2. 服务器上 `pip install psycopg2` 失败提示缺 `libpq-dev`，这属于「服务器构建」还是「本地构建」路线的问题？
 3. `nohup java -jar app.jar &` 和 `systemctl start myapp` 有什么区别？服务器重启后谁会活下来？
-4. 这一篇比前两篇的部署动作多出了**哪一类新动作**？
+4. 这一篇比前两篇的部署动作多出了**哪一类新动作**？（提示：Nginx 在 02 篇装完后不需要你手动管它的生命周期，但 Spring Boot / Flask 进程你需要显式处理哪件事？）
 
 ## 延伸阅读：Nginx 角色的单一职责
 
