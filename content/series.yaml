@@ -1,0 +1,44 @@
+# 内容系列清单（数据层）
+# 命名规则见 .agents/skills/creator-suite/shared/brand-voice.md §5.4
+# 维护：本文件是系列数据的**唯一定义源**；新增系列追加一条
+# Origin 标题：title 字段即分发改编直接复用的标题
+
+series:
+  - id: devops-basics
+    name: DevOps 基础
+    pillar: 云原生
+    number_range: "01-09"
+    origin_dir: docs/sre/devops/foundation/
+    index: docs/sre/devops/index.md
+    status: writing        # planned | writing | published | archived
+    started: 2026-03-06
+    notes: 基础篇 01 已生成公众号稿（content/dist/delivery-start/）
+
+  - id: devops-intermediate
+    name: DevOps 中级
+    pillar: 云原生
+    number_range: "10-17"
+    origin_dir: docs/sre/devops/cicd/
+    index: docs/sre/devops/index.md
+    status: planned
+    started:
+
+  - id: devops-advanced
+    name: DevOps 高级
+    pillar: 云原生
+    number_range: "18-23"
+    origin_dir: docs/sre/devops/cicd/
+    index: docs/sre/devops/index.md
+    status: planned
+    started:
+
+# 字段说明
+# id: 系列唯一标识（kebab-case），meta.yaml 的 series_ref 引用此值
+# name: 系列显示名（含空格形式，用于标题拼接）
+# pillar: 内容支柱（云原生 / Vibe Coding / 独立产品）
+# number_range: 序号区间（字符串，保留 0 补位语义）
+# origin_dir: Origin 文档所在目录
+# index: 系列的索引页（站点导航 / 系列总览）
+# status: planned=未开写 | writing=部分发布 | published=完结 | archived=归档
+# started: 首次发布日期（YYYY-MM-DD）
+# notes: 自由备注

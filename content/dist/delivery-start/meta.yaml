@@ -1,0 +1,16 @@
+slug: delivery-start
+origin: docs/sre/devops/foundation/delivery-start.md
+origin_url: https://xiaolinstar.cn/sre/devops/foundation/delivery-start.html
+title: DevOps 基础 01 ｜ Nginx 静态资源代理
+pillar: 云原生
+series: DevOps 基础（01–09）
+naming_convention: brand-voice §5.4  # DevOps 基础 NN ｜ 标题
+created: 2026-08-10
+updated: 2026-08-10
+platforms:
+  wechat:
+    account: AI持续运维
+    status: ready
+    output: wechat.md
+    origin_sync: generated
+    title_selected: DevOps 基础 01 ｜ Nginx 静态资源代理

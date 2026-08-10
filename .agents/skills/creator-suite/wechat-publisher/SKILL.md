@@ -19,7 +19,7 @@ docs/ Origin（权威原文，上站）
         └─ Polish（可选，二次润色）
 ```
 
-启动前读取：[../shared/brand-voice.md](../shared/brand-voice.md)、[../shared/platform-specs.md](../shared/platform-specs.md) §3.2  
+启动前读取：[../shared/brand-voice.md](../shared/brand-voice.md)（含 §5.4 系列命名约定）、[../shared/platform-specs.md](../shared/platform-specs.md) §3.2  
 详细规则：[repurpose-from-origin.md](references/repurpose-from-origin.md)
 
 ---
@@ -38,6 +38,7 @@ docs/ Origin（权威原文，上站）
 1. 读 `docs/{path}.md` + brand-voice
 2. 转换正文：去内链、图片上传提醒、保留个人细节
 3. 生成标题 ×3、摘要 80–120 字、文末引流
+   - **系列文章**（DevOps 基础 / 中级 / 高级等）按 [brand-voice §5.4](../shared/brand-voice.md#54-系列文章命名约定) 命名：`{系列名} {序号} ｜ {主题}`；Origin 标题已带序号时直接复用
 4. 写入 `content/dist/{slug}/wechat.md`，更新 `meta.yaml`
 
 **异常系列**（`exception-*.md` 站内链）：先运行脚本再补元数据：

@@ -2,18 +2,30 @@
 
 本目录存放 **由站点原文加工** 的多平台发布素材，与 `docs/` 中的权威原文（Origin）分离。
 
-## Origin vs Output
+## 目录概览
 
-| 类型 | 路径 | Git | 站点展示 |
-|------|------|-----|----------|
-| **Origin 原文** | `docs/**/*.md` | ✅ 提交 | ✅ 公开收录 |
-| **Output 加工** | `content/dist/{slug}/` | ✅ 提交（文本） | ❌ 不公开 |
+```
+content/
+├── README.md            # 上级 README（content/ 级元数据说明）
+├── series.yaml          # 系列清单（数据层；命名规则见 brand-voice §5.4）
+└── dist/                # 分发改编（加工文，按 slug 分子目录）
+    ├── README.md        # 本文件
+    └── {slug}/
+        ├── meta.yaml
+        └── *.md
+```
 
-## 目录结构
+| 类型 | 路径 | 职责 | Git | 站点展示 |
+|------|------|------|-----|----------|
+| **Origin 原文** | `docs/**/*.md` | 权威原文、SEO、长期沉淀 | ✅ 提交 | ✅ 公开收录 |
+| **系列清单** | `../series.yaml` | 系列元数据（id / 名称 / 序号区间 / 状态） | ✅ 提交 | ❌ 不公开（纯元数据） |
+| **Output 加工** | `{slug}/` | 公众号 / 掘金 / 小红书 / B 站等分发稿 | ✅ 提交（文本） | ❌ 不公开 |
+
+## dist 目录结构
 
 ```
 content/dist/{slug}/
-├── meta.yaml              # 溯源：origin 路径、平台、发布状态
+├── meta.yaml              # 溯源：origin 路径、系列引用、平台、发布状态
 ├── wechat.md              # 公众号（AI持续运维）
 ├── juejin.md              # 掘金
 ├── zhihu.md               # 知乎（可选）
@@ -32,18 +44,35 @@ content/dist/{slug}/
 slug: harness-engineering
 origin: docs/ai/theory/harness-engineering.md
 origin_url: https://xiaolinstar.cn/ai/theory/harness-engineering.html
-created: 2026-06-24
-updated: 2026-06-24
+title: 个人开发者视角的驾驭工程：从「结对编程」到「圈养」 AI
 pillar: Vibe Coding
+created: 2026-06-24
+updated: 2026-06-27
 platforms:
   wechat:
     account: AI持续运维
-    status: draft  # draft | scheduled | published
+    status: draft
     published_at:
   xiaohongshu:
     account: 一只羊驼驼
     status: draft
 ```
+
+## 系列引用（series_ref）
+
+系列文章（如 DevOps 基础 01）的 `meta.yaml` 应通过 `series_ref` 字段指向 [`../series.yaml`](../series.yaml) 的系列 id：
+
+```yaml
+slug: delivery-start
+title: DevOps 基础 01 ｜ Nginx 静态资源代理
+series_ref: devops-basics    # 指向 content/series.yaml 的 id
+```
+
+系列命名格式（`{系列名} {序号} ｜ {主题}`）由 `brand-voice §5.4` 规定，系列名 / 序号区间在 `series.yaml` 定义。**规则与数据分离**：
+
+- `brand-voice §5.4` → 命名格式（规则）
+- `content/series.yaml` → 系列清单（数据）
+- `meta.yaml` 的 `series_ref` → 关联两者
 
 ## 原则
 
