@@ -81,13 +81,21 @@ content/dist/{slug}/
 `meta.yaml` 示例：
 
 ```yaml
+slug: delivery-start
+origin: docs/sre/devops/foundation/delivery-start.md
+title: DevOps 基础 01 ｜ Nginx 静态资源代理
+series_ref: devops-basics          # 指向 content/series.yaml
+pillar: 云原生
 platforms:
   wechat:
     account: AI持续运维
-    status: draft
+    status: ready
     output: wechat.md
+    title_selected: DevOps 基础 01 ｜ Nginx 静态资源代理
     origin_sync: generated   # generated | polished
 ```
+
+**`series_ref`**：系列文章的 `meta.yaml` 必须包含此字段，引用 `content/series.yaml` 的系列 id。命名格式由 `brand-voice §5.4` 规定。
 
 ### 1.5 异常系列快捷路径
 

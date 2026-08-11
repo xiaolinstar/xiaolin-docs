@@ -1,0 +1,9 @@
+sequenceDiagram
+    participant 浏览器
+    participant Nginx
+    participant 服务器文件系统
+
+    浏览器->>Nginx: HTTP 请求（如 GET /index.html）
+    Nginx->>服务器文件系统: 查找 /index.html
+    服务器文件系统-->>Nginx: 返回文件内容
+    Nginx-->>浏览器: 返回 HTML、CSS、JS 等静态资源

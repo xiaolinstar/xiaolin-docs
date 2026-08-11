@@ -1,0 +1,20 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="540" viewBox="0 0 1200 540">
+  <rect width="1200" height="540" rx="16" fill="#f6f8fa"/>
+  <rect x="24" y="24" width="1152" height="492" rx="10" fill="#ffffff" stroke="#d9e2ec" stroke-width="2"/>
+  <text x="60" y="88" font-family="Menlo,Consolas,monospace" font-size="28" fill="#175da4">Nginx Welcome Page</text>
+  <text x="60" y="140" font-family="Menlo,Consolas,monospace" font-size="22" fill="#222">
+    <tspan x="60" dy="0">┌─────────────────────────────────────────────────────────────┐</tspan>
+    <tspan x="60" dy="34">│                                                             │</tspan>
+    <tspan x="60" dy="34">│                    Welcome to nginx!                       │</tspan>
+    <tspan x="60" dy="34">│  If you see this page, the nginx web server is successfully │</tspan>
+    <tspan x="60" dy="34">│  installed and working. Further configuration is required.  │</tspan>
+    <tspan x="60" dy="34">│                                                             │</tspan>
+    <tspan x="60" dy="34">│  For online documentation and support please refer to       │</tspan>
+    <tspan x="60" dy="34">│  nginx.org.                                                 │</tspan>
+    <tspan x="60" dy="34">│  Commercial support is available at nginx.com.              │</tspan>
+    <tspan x="60" dy="34">│                                                             │</tspan>
+    <tspan x="60" dy="34">│  Thank you for using nginx.                                 │</tspan>
+    <tspan x="60" dy="34">│                                                             │</tspan>
+    <tspan x="60" dy="34">└─────────────────────────────────────────────────────────────┘</tspan>
+  </text>
+</svg>

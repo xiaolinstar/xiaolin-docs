@@ -3,10 +3,13 @@ origin: docs/sre/devops/foundation/delivery-start.md
 origin_url: https://xiaolinstar.cn/sre/devops/foundation/delivery-start.html
 slug: delivery-start
 account: AI持续运维
-mode: repurpose
+mode: repurpose+polish
 status: ready
 polish:
   - 标题系列化：DevOps 基础 NN ｜ 标题（沿用至 09）
+  - 钩子段后补 1 处「我第一次看到 Welcome 页面」细节
+  - 「理解 root 指令」段后补 1 处「盯着表看十分钟」细节
+  - 「引入 VitePress」段补 1 处「内容好写样式难调，认同 VitePress 关注内容不关注格式」（不预设亲历）
 ---
 
 # 发布元数据
@@ -21,7 +24,11 @@ polish:
 
 ## 摘要（119 字）
 
-编程有 Hello World，运维的 Hello World 是把网站送上服务器。最近我重新梳理了从最简单的一行 HTML，到 VitePress 文档站上线的完整过程：Nginx 安装、配置、代理原理、VitePress 构建闭环。这篇是写给和我一样想补运维第一课的同学，全程命令可复现，配置可直接抄。
+编程有 Hello World，运维的 Hello World 是把网站送上服务器。这篇从一行 HTML 出发，讲清 Nginx 安装、配置、静态资源代理，再用 VitePress 完成文档站构建与发布。命令可复现，适合补上运维的第一课。
+
+## 搜索关键词（4 个）
+
+Nginx、静态资源代理、VitePress、DevOps
 
 ---
 
@@ -32,6 +39,8 @@ polish:
 如果说编程的 Hello World 是在控制台打印一行字符，那么运维的 Hello World 则是把网站送上服务器，让别人通过浏览器访问。
 
 例如，你写了一个博客，希望别人能通过 `http://my-blog.com` 访问。这需要解决一个问题：**如何把本地的网站文件发布到服务器上？**
+
+我自己也是从 `sudo apt install nginx` 看到那行 Welcome 页面，才算真正"上线"过第一个网页的。
 
 ## 什么是静态资源
 
@@ -233,9 +242,13 @@ root /var/www/html;
 
 这就是 Nginx 代理静态资源最核心的工作方式。
 
+刚学那会儿我盯着这个表看了十分钟，才把「浏览器路径 = root + URI」这条规律刻进肌肉记忆。
+
 ## 引入 VitePress
 
 手写 `index.html` 适合理解原理，但真实文档站点通常不会手写每一个页面。
+
+做过技术文档的人都知道，内容好写，样式难调。VitePress 的解法是把样式交给框架，Markdown 只管内容——这种"关注内容、不关注格式"的思路，正是我想要的。
 
 VitePress 是一个由 Vite 和 Vue 驱动的静态站点生成器，将 Markdown 变成优雅的文档，只需几分钟。
 
@@ -371,10 +384,52 @@ Nginx 静态资源代理的核心很简单：
 
 ---
 
+## 封面图（Codex 生成）
+
+> 按 `sre-visual-standard` 视觉语言（Notion 手绘线稿风、浅色背景、蓝橙语义色）生成；尺寸 2.35:1（900×383）；构图居中、兼容横向裁剪。
+
+<details>
+<summary>📐 封面图 Prompt（Codex / Antigravity 直接复制生成）</summary>
+
+```text
+Notion style minimalist line art infographic, hand-drawn marker stroke texture.
+2.35:1 aspect ratio (900x383). Centered composition, safe for horizontal crop.
+
+Left side (blue accent #1890ff): a simple laptop icon showing a one-line
+HTML file "<h1>Hello, Nginx</h1>" - labeled "Local".
+
+Right side (orange accent #fa8c16): a small cloud / rack server icon
+with a folder labeled "dist/" inside - labeled "Server".
+
+Connecting them: a hand-drawn dashed arrow in the middle labeled "Nginx".
+
+Top-left small text: "DevOps 基础 01"
+Bottom-center main title: "Nginx 静态资源代理"
+
+Clean white background with lots of negative space.
+No gradients, no 3D effects, no shadows.
+```
+
+**预期产物**：
+
+| 项 | 值 |
+|----|----|
+| 本地路径 | `docs/public/images/img-delivery-start/01-wechat-cover.png` |
+| COS 键 | `docs/img-delivery-start/01-wechat-cover.png` |
+| CDN URL | `https://media.xiaolin.fun/docs/img-delivery-start/01-wechat-cover.png` |
+| 公众号用途 | 仅封面，不进正文 |
+
+**上传**：`pnpm run media:upload` → 状态改 `done`（见 `assets/README.md`）。
+
+</details>
+
+---
+
 # 发布 checklist
 
 - [ ] 标题已选 1 个（见标题备选）
 - [ ] 摘要已填入公众号后台
 - [ ] 3 张 VitePress 截图已上传微信后台
+- [ ] 封面图（900×383）已生成并上传微信后台（见上方 Prompt）
 - [ ] 后台预览排版正常
 - [ ] `meta.yaml` → `platforms.wechat.status: published`

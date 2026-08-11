@@ -38,8 +38,10 @@ docs/ Origin（权威原文，上站）
 1. 读 `docs/{path}.md` + brand-voice
 2. 转换正文：去内链、图片上传提醒、保留个人细节
 3. 生成标题 ×3、摘要 80–120 字、文末引流
+   - 生成 4 个搜索关键词：1 个主关键词 + 3 个长尾关键词，并同步写入 `meta.yaml` 的 `search_keywords`
    - **系列文章**（DevOps 基础 / 中级 / 高级等）按 [brand-voice §5.4](../shared/brand-voice.md#54-系列文章命名约定) 命名：`{系列名} {序号} ｜ {主题}`；Origin 标题已带序号时直接复用
-4. 写入 `content/dist/{slug}/wechat.md`，更新 `meta.yaml`
+   - 系列清单（系列名 / 序号区间 / Origin 目录）从 [`content/series.yaml`](../../../content/series.yaml) 读取；不在 SKILL 内硬编码
+4. 写入 `content/dist/{slug}/wechat.md`，更新 `meta.yaml`（含 `series_ref` 字段）
 
 **异常系列**（`exception-*.md` 站内链）：先运行脚本再补元数据：
 
