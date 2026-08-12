@@ -127,39 +127,6 @@ git remote add origin https://github.com/your-username/your-repo.git
 git push -u origin main
 ```
 
-之后三条核心命令：
-
-| 命令 | 方向 | 作�前提之上。
-
-## 思考
-
-1. `git commit -m "update"` 这样的说明有什么问题？好的提交说明至少应包含什么信息？
-2. 如果有人直接在服务器上改了已跟踪文件（没走 Git），再执行 `git pull` 可能发生什么？
-3. GitHub 仓库若误含密码或 API Key，只删文件再推一次够不够？正确做法是什么？
-4. 为什么“版本管理”比“手动备份目录”更适合作为部署的前置能力？
-5. 团队正在协作写一本小说，应该用 Git 还是 Word 协同编辑？为什么？如果坚持用 Git，会遇到什么挑战？
-6. Conventional Commits 的 `feat:` / `fix:` 前缀对自动化有什么帮助？为什么 CI/CD 系统通常能根据 commit 类型自动判断是否触发发布、自动生成 CHANGELOG？
-
-## 延伸阅读：其他 Git 托管平台
-
-GitHub 不是唯一的 Git 托管平台。选择时主要看**网络可达性**和**功能需求**：
-
-| 平台 | 特点 | 推荐场景 |
-| --- | --- | --- |
-| [GitHub](https://github.com) | 全球最大开源社区，CI/CD（GitHub Actions）生态完善 | 个人开发者、开源项目 |
-| [GitLab](https://gitlab.com) | 一站式 DevOps（代码 + CI + 镜像仓库 + CD），可自托管 | 中小团队、企业内网 |
-| [Gitee](https://gitee.com) | 国内直连、无需科学上网，功能与 GitHub 类似 | 国内开发者、网络受限环境 |
-
-三者底层都用 Git，`git push` / `git pull` 命令完全一样——只是远程地址不同。选哪个取决于你的网络环境和团队需求，不影响本地 Git 的使用。
-
-## 参考
-
-1. [Git 官方文档](https://git-scm.com/doc)
-2. [GitHub 官方文档](https://docs.github.com)
-3. [Conventional Commits](https://www.conventionalcommits.org/)
-4. [GitHub Hello World](https://docs.github.com/en/get-started/start-your-journey/hello-world)
-私钥。用 `.gitignore` 忽略 `.env` 等敏感文件；万一推上去了，应立刻轮换密钥，而不是只删文件再推一次。
-
 ## Git 在部署路径中的位置
 
 03 篇确立的服务端部署范式：

@@ -88,6 +88,7 @@ export default withMermaid({
                 ]
             },
             { text: '效率工具', link: `/easy-office/` },
+            { text: '流程工作流', link: `/process-workflow/` },
             { text: '关于本站', link: `/about/` },
             {
                 text: '优惠推荐',
@@ -382,6 +383,17 @@ export default withMermaid({
                         { text: 'Mac 办公体验', link: `/easy-office/mac` },
                         { text: 'OpenClaw 个人助手', link: `/easy-office/openclaw-personal-assistant` },
                         { text: '腾讯 QClaw 与 WorkBuddy', link: `/easy-office/tencent-qclaw-workbuddy` }
+                    ]
+                }
+            ],
+            '/process-workflow/': [
+                {
+                    text: '流程与工作流', link: `/process-workflow/`,
+                    items: [
+                        { text: '流程驱动工作：从纸质审批到智能门闩', link: `/process-workflow/workflow-design-philosophy` },
+                        { text: '流程即镜像（上）：审批流程和 CI 流水线撞上的同一组坑', link: `/process-workflow/pipeline-mirror` },
+                        { text: '流程即镜像（下）：流水线该怎么设计', link: `/process-workflow/pipeline-design` },
+                        { text: '变更管控体系设计与实践', link: `/process-workflow/publish-change` },
                     ]
                 }
             ],
