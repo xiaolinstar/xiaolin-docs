@@ -25,7 +25,7 @@ tags:
 
 ## Nginx 简介
 
-Nginx 是一个 Web 服务器，负责把静态资源返回给浏览器。
+Nginx（engine x）是一个**高性能 Web 服务器**与反向代理服务器，由俄罗斯工程师 Igor Sysoev 于 2004 年发布。它以**事件驱动架构**和**异步非阻塞 I/O** 著称——单个 worker 进程可以同时处理成千上万个并发连接，内存占用极低。这让 Nginx 在静态资源、反向代理、高并发场景里几乎是默认选择。
 
 在静态网站场景中，它做 3 件事：
 
@@ -43,9 +43,18 @@ sequenceDiagram
 
 例如浏览器访问 `http://my-blog.com`，Nginx 返回服务器上的 `index.html`。
 
+**和传统 Apache 的对比**（简要）：
+
+| 维度 | Nginx | Apache |
+| --- | --- | --- |
+| 架构 | 事件驱动、异步非阻塞 | 进程/线程模型（prefork / worker） |
+| 高并发连接 | 资源占用极低 | 资源占用与连接数线性增长 |
+| 配置粒度 | 简洁，配置文件层级清晰 | `.htaccess` 支持目录级覆盖（更灵活但也更复杂） |
+| 适用场景 | 静态资源 / 反向代理 / 高并发 | 动态内容（PHP / .htaccess 重写） |
+
 Nginx 还可以做反向代理、负载均衡、HTTPS、限流等事情，但这些不是本文重点。作为开发者，我们只需要关注**配置文件**。
 
-## 安装 Nginx
+## 安装 Nginx 与常用命令
 
 在 Ubuntu 环境下安装 Nginx：
 
@@ -60,7 +69,7 @@ sudo apt install nginx
 nginx -v
 ```
 
-## 常用命令
+常用命令一览：
 
 ```bash
 # 启动
@@ -69,13 +78,13 @@ sudo systemctl start nginx
 # 停止
 sudo systemctl stop nginx
 
-# 重启
+# 重启（断开所有连接，仅在必要时用）
 sudo systemctl restart nginx
 
 # 查看状态
 sudo systemctl status nginx
 
-# 重新加载配置（不中断服务）
+# 重新加载配置（不中断服务，**生产环境首选**）
 sudo systemctl reload nginx
 
 # 测试配置文件语法
@@ -178,13 +187,13 @@ server {
 sudo cp index.html /var/www/html/index.html
 ```
 
-重启 Nginx：
+重载 Nginx 配置（不中断服务）：
 
 ```bash
-sudo systemctl restart nginx
+sudo nginx -t && sudo systemctl reload nginx
 ```
 
-访问 `http://localhost`，看到“你好，Nginx”，说明自定义页面已经生效。
+访问 `http://localhost`，看到"你好，Nginx"，说明自定义页面已经生效。
 
 ## 理解 root 指令
 
@@ -240,9 +249,11 @@ VitePress 负责将 Markdown 渲染构建成面向浏览器的静态资源（HTM
 
 ![VitePress 开发与发布闭环流程](https://media.xiaolin.fun/docs/img-delivery-start/vitepress-workflow-aligned.png)
 
-## 安装 VitePress
+## VitePress 开发闭环
 
 VitePress 需要 Node.js v18+ 环境，推荐使用 pnpm（一个快速、节省磁盘空间的包管理器）。
+
+**安装与初始化**：
 
 ```bash
 # 安装 pnpm（如果尚未安装）
@@ -259,17 +270,7 @@ pnpm add -D vitepress
 npx vitepress init
 ```
 
-初始化完成后，启动开发服务器：
-
-```bash
-npx vitepress dev docs
-```
-
-> 更多细节参考 [VitePress 官方文档](https://vitepress.dev/guide/getting-started)。
-
-## 本地调试、构建与预览
-
-VitePress 提供三个核心命令，分别对应开发的不同阶段：
+**三个核心命令**（对应开发的不同阶段）：
 
 ```bash
 # 本地调试：开发时使用，支持热更新
@@ -291,6 +292,8 @@ pnpm run docs:preview
 | `docs:preview` | 预览构建结果 | 模拟生产环境，验证构建是否正确 |
 
 `docs:dev` 使用本地 Node.js 服务器渲染，适合开发调试。但在生产环境中，需要使用 Nginx 代理 `dist` 静态资源。整个开发与发布闭环流程可参看前文图示。
+
+> 更多细节参考 [VitePress 官方文档](https://vitepress.dev/guide/getting-started)。
 
 ## 发布部署
 
@@ -314,15 +317,29 @@ server {
 }
 ```
 
-重新加载 Nginx 使配置生效：
+重新加载 Nginx 使配置生效（reload 不中断正在处理的请求，优于 restart）：
 
 ```bash
-sudo systemctl restart nginx
+sudo nginx -t && sudo systemctl reload nginx
 ```
 
 访问 `http://localhost` 验证部署是否成功。
 
 VitePress 适合开发者灵活地管理静态站点，好处是仅需关注 Markdown 文档和配置文件。但需要注意的是，每次无论大小修改，均需要重新构建和发布。在运维领域，这属于一次 {{term:生产变更}}，是比较敏感的操作。
+
+## 常见问题排查
+
+发布过程中容易踩的几个坑：
+
+| 现象 | 常见原因 | 排查命令 |
+| --- | --- | --- |
+| 访问 `http://localhost` 打不开 | Nginx 未启动 / 端口被占 | `sudo systemctl status nginx`、`sudo ss -tlnp \| grep :80` |
+| 修改页面后浏览器无变化 | 浏览器缓存 / 静态文件未覆盖 | `ls -la /var/www/html/`、`curl -I http://localhost`（看是否 200） |
+| 修改 Nginx 配置后启动失败 | 配置语法错误 | `sudo nginx -t`（会指出错误行号） |
+| reload 后 502 / 502 Bad Gateway | 反向代理配置或上游服务问题 | `sudo tail -f /var/log/nginx/error.log` |
+| 端口被占（`bind() to 0.0.0.0:80 failed`） | Apache / 其他服务占用 80 | `sudo ss -tlnp \| grep :80`，停掉冲突服务 |
+
+> 修改 Nginx 配置前先 `nginx -t` 测试语法，再 `reload`——这是把"重启失败 → 整个服务挂掉"降到"reload 失败 → 旧配置继续运行"的最小动作。
 
 ## 小结
 
