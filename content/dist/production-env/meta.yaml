@@ -1,0 +1,21 @@
+slug: production-env
+origin: docs/sre/devops/foundation/production-env.md
+origin_url: https://xiaolinstar.cn/sre/devops/foundation/production-env.html
+title: DevOps 基础 02 ｜ 生产环境：公网服务器与手动发布
+pillar: 云原生
+series_ref: devops-basics
+created: 2026-08-12
+updated: 2026-08-12
+summary: 从本地站点到公网服务器，本文用一次 SSH、Nginx、scp 手动发布，讲清生产环境的 7×24 与公网 IP。你还会看到构建、上传、验证如何组成一张有向无环图（DAG），以及环境不一致、重复上传和版本难追踪为何推动自动化交付的现实边界。
+platforms:
+  wechat:
+    account: AI持续运维
+    status: ready
+    output: wechat.md
+    origin_sync: generated
+    title_selected: DevOps 基础 02 ｜ 生产环境：公网服务器与手动发布
+    search_keywords:
+      - 生产环境
+      - 云服务器部署
+      - SSH 登录
+      - scp 文件上传

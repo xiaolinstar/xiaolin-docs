@@ -1,0 +1,103 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>公众号列表兼容性对照</title>
+  <style>
+    body{margin:0;background:#f5f6f7;color:#222;font-family:-apple-system,BlinkMacSystemFont,"PingFang SC","Microsoft YaHei",sans-serif}
+    main{max-width:680px;margin:0 auto;padding:24px 18px;background:#fff}
+    h1{font-size:22px}.case{margin:24px 0;padding:16px;border:1px solid #e5e7eb;border-radius:6px}.copy{border:0;border-radius:5px;padding:8px 14px;background:#175da4;color:#fff;font-size:14px}.note{color:#667085;font-size:13px;line-height:1.6}
+  </style>
+</head>
+<body>
+  <main>
+    <h1>公众号列表兼容性对照</h1>
+    <p class="note">点击一次复制全部方案，粘贴到公众号草稿后用手机预览。推荐优先测试方案 A。</p>
+    <button class="copy" id="copy-all">一键复制全部对照内容</button>
+
+    <section class="case">
+      <h2>方案 A：原生 ul / li（推荐）</h2>
+      <div data-copy>
+        <p style="margin:0 0 6px;font-size:15px;line-height:1.65;color:#222;">这条命令做了什么：</p>
+        <ul style="margin:0;padding-left:20px;font-size:15px;line-height:1.55;color:#222;">
+          <li style="margin:0 0 2px;"><code style="font-family:Menlo,Consolas,monospace;font-size:13px;background:#f3f5f7;color:#175da4;padding:1px 3px;">scp</code>：基于 SSH 的文件复制命令</li>
+          <li style="margin:0 0 2px;"><code style="font-family:Menlo,Consolas,monospace;font-size:13px;background:#f3f5f7;color:#175da4;padding:1px 3px;">-r</code>：递归复制目录</li>
+          <li style="margin:0;"><code style="font-family:Menlo,Consolas,monospace;font-size:13px;background:#f3f5f7;color:#175da4;padding:1px 3px;">docs/.vitepress/dist</code>：本地构建产物目录</li>
+        </ul>
+      </div>
+      <button class="copy">复制方案 A</button>
+    </section>
+
+    <section class="case">
+      <h2>方案 B：原生 ol / li</h2>
+      <div data-copy>
+        <p style="margin:0 0 6px;font-size:15px;line-height:1.65;color:#222;">上传后需要追加两步：</p>
+        <ol style="margin:0;padding-left:22px;font-size:15px;line-height:1.55;color:#222;">
+          <li style="margin:0 0 2px;"><code style="font-family:Menlo,Consolas,monospace;font-size:13px;background:#f3f5f7;color:#175da4;padding:1px 3px;">sudo nginx -t</code>：测试新配置语法</li>
+          <li style="margin:0;"><code style="font-family:Menlo,Consolas,monospace;font-size:13px;background:#f3f5f7;color:#175da4;padding:1px 3px;">sudo nginx -s reload</code>：平滑重载</li>
+        </ol>
+      </div>
+      <button class="copy">复制方案 B</button>
+    </section>
+
+    <section class="case">
+      <h2>方案 C：段落项目符号</h2>
+      <div data-copy>
+        <p style="margin:0 0 6px;font-size:15px;line-height:1.65;color:#222;">这条命令做了什么：</p>
+        <p style="margin:0;font-size:15px;line-height:1.45;color:#222;">• <code style="font-family:Menlo,Consolas,monospace;font-size:13px;background:#f3f5f7;color:#175da4;padding:1px 3px;">scp</code>：基于 SSH 的文件复制命令</p>
+        <p style="margin:0;font-size:15px;line-height:1.45;color:#222;">• <code style="font-family:Menlo,Consolas,monospace;font-size:13px;background:#f3f5f7;color:#175da4;padding:1px 3px;">-r</code>：递归复制目录</p>
+        <p style="margin:0;font-size:15px;line-height:1.45;color:#222;">• <code style="font-family:Menlo,Consolas,monospace;font-size:13px;background:#f3f5f7;color:#175da4;padding:1px 3px;">docs/.vitepress/dist</code>：本地构建产物目录</p>
+      </div>
+      <button class="copy">复制方案 C</button>
+    </section>
+
+    <section class="case">
+      <h2>方案 D：纯文本编号</h2>
+      <div data-copy>
+        <p style="margin:0 0 6px;font-size:15px;line-height:1.65;color:#222;">上传后需要追加两步：</p>
+        <p style="margin:0;font-size:15px;line-height:1.45;color:#222;">1. <code style="font-family:Menlo,Consolas,monospace;font-size:13px;background:#f3f5f7;color:#175da4;padding:1px 3px;">sudo nginx -t</code>：测试新配置语法</p>
+        <p style="margin:0;font-size:15px;line-height:1.45;color:#222;">2. <code style="font-family:Menlo,Consolas,monospace;font-size:13px;background:#f3f5f7;color:#175da4;padding:1px 3px;">sudo nginx -s reload</code>：平滑重载</p>
+      </div>
+      <button class="copy">复制方案 D</button>
+    </section>
+  </main>
+  <script>
+    document.getElementById('copy-all').addEventListener('click', () => {
+      const source = document.querySelector('main').cloneNode(true);
+      source.querySelectorAll('h1,.note,.copy').forEach((node) => node.remove());
+      const holder = document.createElement('div');
+      holder.contentEditable = 'true';
+      holder.style.cssText = 'position:fixed;left:-99999px;top:0;width:680px;background:#fff;';
+      holder.innerHTML = source.innerHTML;
+      document.body.appendChild(holder);
+      const range = document.createRange();
+      range.selectNodeContents(holder);
+      const selection = getSelection();
+      selection.removeAllRanges();
+      selection.addRange(range);
+      document.execCommand('copy');
+      selection.removeAllRanges();
+      holder.remove();
+      document.getElementById('copy-all').textContent = '已复制全部内容，可粘贴到草稿箱';
+    });
+    document.querySelectorAll('.case').forEach((section) => section.querySelector('.copy').addEventListener('click', () => {
+      const source = section.querySelector('[data-copy]');
+      const holder = document.createElement('div');
+      holder.contentEditable = 'true';
+      holder.style.cssText = 'position:fixed;left:-99999px;top:0;width:680px;background:#fff;';
+      holder.innerHTML = source.innerHTML;
+      document.body.appendChild(holder);
+      const range = document.createRange();
+      range.selectNodeContents(holder);
+      const selection = getSelection();
+      selection.removeAllRanges();
+      selection.addRange(range);
+      document.execCommand('copy');
+      selection.removeAllRanges();
+      holder.remove();
+      section.querySelector('.copy').textContent = '已复制，可粘贴到草稿箱';
+    }));
+  </script>
+</body>
+</html>
