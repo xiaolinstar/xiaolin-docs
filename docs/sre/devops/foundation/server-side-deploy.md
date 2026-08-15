@@ -77,9 +77,7 @@ MySQL / Redis / Kafka（数据与中间件）
 1. **进程由谁拉起**——前端进程（Nginx）由云服务器或操作系统的标准流程启动；后端进程要自己拉起、自己保活。
 2. **进程挂了用户怎么感知**——前端进程挂了是基础设施问题；后端进程挂了是**应用层问题**，运维要先怀疑后端、再去查 Nginx 日志。
 
-依赖上看，后端比前端厚一叠：除了 Nginx 这层”系统级”依赖，还要叠加 `pom.xml` / `requirements.txt` 这层”业务级”依赖，版本要对齐、编译环境要齐备、跨平台要一致。这才是这一篇真正要展开的事——**进程从”现成的”换成”用户自己启的”，依赖从”系统级”叠到”业务级”**。
-
-03 篇先给两类构建路线把脉，下一篇（04 Git 与 GitHub）会给出{{term:版本管理}}这层解法。用两个最常见的栈对比看：
+用两个最常见的栈对比看：
 
 **这是典型部署示意**——它假设已经用 Nginx 反向代理。但**本篇不要求 Nginx**：后端进程**默认**直接监听 :8080/8000 即可（个人开发者起步、内网服务、K8s 内部都这样）。**当规模上去**、需要软负载 + 网络隔离 + 浏览器跨域规避 + 静态资源代理 + TLS 终止 等能力时，Nginx 才是最佳实践。
 
@@ -102,7 +100,7 @@ MySQL / Redis / Kafka（数据与中间件）
 ### 静态资源：Nginx 直接服务
 
 - **服务的对象**：HTML / CSS / JS / 图片 / 字体等文件
-- **特点**：文件本身不变化，服务器只做"读文件 → 返回"的动作
+- **特点**：部署后不再由服务器生成，服务器只做"读文件 → 返回"的动作
 - **典型 Web 服务器**：Nginx、Apache、Caddy
 - **本系列**：02 篇里 Nginx 已经在做这件事——把 `dist/` 里的文件读出来返回
 
@@ -131,7 +129,7 @@ MySQL / Redis / Kafka（数据与中间件）
 
 ## 服务端应用开发
 
-03 篇讨论的**服务端应用**，是**承载业务逻辑的进程**——接收请求、调用代码、读数据库、动态生成响应。02 篇里的 Nginx 是同类进程（监听 :80），但处理的是**静态文件**，属基础设施层。03 篇要解决的是这类业务进程怎么挂稳——默认直接监听 :8080/8000 即可（Nginx 反代的适用场景详见本篇延伸阅读）。
+承接上节的链路图：02 篇里的 Nginx 也是同类进程（监听 :80，处理静态文件，属基础设施层）；03 篇讨论的是**承载业务逻辑的后端进程**——接收请求、调用代码、读数据库、动态生成响应。这类进程默认监听 :8080（Spring Boot）/ :8000（Flask + gunicorn）即可（Nginx 反代的适用场景详见本篇延伸阅读）。
 
 当下最流行和常见的两个栈：**Java SpringBoot** 和 **Python Flask**。
 
@@ -149,7 +147,7 @@ Spring 生态的脚手架——开箱即用，约定大于配置（starter）、
 
 轻量 WSGI 微框架——"小而精"，适合 API / 中小服务。
 
-- **监听端口**：默认 8000（生产用 gunicorn）
+- **监听端口**：Flask 自带 dev server 默认 5000（仅本地开发用）；生产用 gunicorn 时默认 8000
 - **依赖声明**：`pyproject.toml`（PEP 621 标准）
 - **启动命令**：`gunicorn app:app`（生产，WSGI server）/ `python app.py`（仅 dev，Flask 自带 dev server）
 - **关键优势**：上手快、生态深
@@ -161,7 +159,7 @@ Spring Boot 和 Flask 对开发者、运维工程师都是**必须了解的基�
 
 ## 三栈构建对比
 
-03 篇（本文）先给两类构建路线把脉，下一篇（04 Git 与 GitHub）会给出「版本管理」这层解法。三栈横向对比：
+三栈横向对比：
 
 | 步骤 | 前端（VitePress / Vite） | Spring Boot（Java） | Flask（Python） |
 | --- | --- | --- | --- |
@@ -188,7 +186,7 @@ Spring Boot 和 Flask 对开发者、运维工程师都是**必须了解的基�
 
 两种路线都解决不了所有问题：**Spring Boot 因为自带 fat jar 比 Flask 更有{{term:可移植性}}，但两类栈共享同一个根本问题：构建动作和运行环境是割裂的——我们只传了代码和依赖，没传“运行环境本身”。**
 
-**补充说明**：前端**也**有构建路线问题——`npm run build` 也是资源密集型任务（大型 webpack / vite 工程 CPU 内存吃紧）。但**因为前端产物是 `dist/` 静态资源 + 可迁移性强**（HTML / CSS / JS / 字体跨系统一致），**这两个痛点（资源占用 / 跨平台）的影响轻得多**——本地构建后 `scp` 上去即可，与 02 篇的路径完全一致。**前端"也"字背后的逻辑**：产物的强可迁移性**自然补偿**了构建痛点的影响。
+**补充说明**：前端**同样**有构建路线问题——`npm run build` 也是资源密集型任务（大型 webpack / vite 工程 CPU/内存吃紧）。但**因为前端产物是 `dist/` 静态资源 + 可迁移性强**（HTML / CSS / JS / 字体跨系统一致），这两个痛点（资源占用 / 跨平台）的影响比后端轻得多——本地构建后 `scp` 上去即可，与 02 篇的路径完全一致。换句话说：**前端产物的强可迁移性自然补偿了构建痛点的影响**，这才是前端构建路线看起来"轻松"的根本原因。
 
 ![两类构建部署路线对比](https://media.xiaolin.fun/docs/img-server-side-deploy/diagram-build-route-a-vs-b.png)
 
@@ -261,6 +259,7 @@ Spring Boot 和 Flask 对开发者、运维工程师都是**必须了解的基�
 java -jar app.jar
 
 # Flask（生产用 gunicorn；通常监听 8000，同上）
+# `app:app` 是 gunicorn 的 module:variable 写法，指向 Flask 应用对象（通常在 `wsgi.py` 或 `app.py` 里以 `app = Flask(__name__)` 定义）
 gunicorn -w 4 -b 0.0.0.0:8000 app:app
 ```
 
@@ -277,7 +276,7 @@ gunicorn -w 4 -b 0.0.0.0:8000 app:app
 | 日志 | Nginx access log | 应用 stdout + 框架日志（Spring Boot / Flask） |
 | 内存管理 | Nginx 自身 worker | JVM 堆内存 `-Xmx`、Python 进程数 |
 
-**前后端对等**：Nginx 也是进程——它一样需要后台挂稳。02 篇里你用 `apt install nginx` 装了它，它默认通过 systemd 拉起；Java / Python 进程和它没有本质不同，只是后端的"后台挂稳"在这一篇才刚开始。
+Nginx 也是进程——它一样需要后台挂稳。02 篇里你用 `apt install nginx` 装了它，它默认通过 {{term:systemd}} 拉起；Java / Python 进程和它没有本质不同，只是后端的"后台挂稳"在这一篇才刚开始。
 
 进程从「前台调试」切换到「后台挂稳」的最朴素方式：
 
@@ -285,7 +284,7 @@ gunicorn -w 4 -b 0.0.0.0:8000 app:app
 # 临时调试：终端关了就退出
 java -jar app.jar
 
-# 临时后台：终端关了仍在跑
+# 临时后台：终端关了仍在跑（日志默认落到当前目录的 nohup.out）
 nohup java -jar app.jar &
 
 # 后台脱离终端：日志走文件，进程不占前台
@@ -342,16 +341,17 @@ CDN 引用：`https://media.xiaolin.fun/docs/img-server-side-deploy/diagram-proc
 
 进程挂了，验证命令先告诉你为什么不挂；下一步再考虑怎么让它自动活过来。
 
-**Spring Boot 独有**：
+### Spring Boot 独有
 
 - JVM 启动慢、预热慢；要理解 classpath、堆内存、GC。
 - fat jar 让「跨机器传产物」这条路线**变得可行**——它把代码、依赖、JDK 运行时打成一个自包含的产物。对比 02 篇的 `dist/` 是文件系统层的纯静态文件，jar 已经是**带运行时**的产物，是镜像层前一步。这就是 Spring Boot 的天然优势。
 
-**Flask 独有**：
+### Flask 独有
 
 - Flask 自带的 `app.run()` 是 dev server，**{{term:生产环境}}不能用**（性能差、稳定性差、无并发处理）。典型场景：本地开发时 `python app.py` 启动的就是它——端口 5000、控制台日志、单线程，适合“改一行看一行”，**不适合扛线上流量**。
-- 生产用 `gunicorn`（同步）或 `uvicorn`（异步 ASGI）这类 WSGI / ASGI server。
-## 服务端部署范式
+- 生产用 `gunicorn`（同步）或 `uvicorn`（异步 ASGI）这类 {{term:WSGI}} / {{term:ASGI}} server。
+
+## 真实生产：应用 + 中间件 + 数据库
 
 ### 应用不只是进程：还有中间件和数据库
 
@@ -365,7 +365,7 @@ CDN 引用：`https://media.xiaolin.fun/docs/img-server-side-deploy/diagram-proc
 | **搜索** | Elasticsearch | 全文检索、日志分析 |
 | **数据库** | MySQL / PostgreSQL / MongoDB | 持久化 |
 
-严格说 DB 属于”数据持久化中间件”——广义中间件指一切位于操作系统和应用之间的支撑服务，DB 显然在内；本文为了把”不可丢失的数据”单独强调出来，把 DB 单列一行：**任意一个依赖连不上，后端对用户都是 502**——和应用进程挂了是一模一样的脸。但运维排查方向不一样：进程挂了查 JVM / Gunicorn 日志，中间件挂了查 Redis / Kafka 日志，DB 挂了查慢查询、连接数、磁盘。
+严格说 DB 属于”数据持久化{{term:中间件}}”——广义中间件指一切位于操作系统和应用之间的支撑服务，DB 显然在内；本文为了把”不可丢失的数据”单独强调出来，把 DB 单列一行：**任意一个依赖连不上，后端对用户都是 502**——和应用进程挂了是一模一样的脸。但运维排查方向不一样：进程挂了查 JVM / Gunicorn 日志，中间件挂了查 Redis / Kafka 日志，DB 挂了查慢查询、连接数、磁盘。
 
 这一篇先聚焦**应用进程本身**的部署与保活——它是开发者最熟悉的入口。中间件与 DB 的部署、扩容、迁移、监控是独立的大话题：本系列 05 篇的 Docker 容器化、08 篇的 Docker Compose 会把”应用 + 中间件 + DB”一起编排进同一个声明文件，**”依赖”从散落在服务器各处的进程变成一份 `docker-compose.yml`**——本篇先按下不表。
 
@@ -383,7 +383,14 @@ CDN 引用：`https://media.xiaolin.fun/docs/img-server-side-deploy/diagram-proc
 
 但**本篇不要求 Nginx**——服务端进程**默认**直接监听 :8080/8000 即可，**本篇讲的是「后端进程怎么挂稳」**——这条路径与 Nginx 是否启用无关。
 
-这一篇揭示的根本问题：**构建动作和运行环境割裂**——05 篇 Docker 用"把运行时打包成镜像"来根治。
+这一篇揭示的根本问题：**构建动作和运行环境割裂**——05 篇 Docker 用「把运行时打包成镜像」从根本上缓解。
+
+将服务注册为 {{term:systemd}} unit 才是生产级保活。把下面的内容保存为 `/etc/systemd/system/myapp.service`（系统级路径，需 `sudo`）：
+
+```ini
+[Unit]
+Description=My Spring Boot Application
+After=network.target
 
 [Service]
 User=ubuntu
@@ -391,6 +398,7 @@ ExecStart=/usr/bin/java -jar /opt/myapp/app.jar
 Restart=on-failure
 RestartSec=5
 Environment=SPRING_PROFILES=prod
+# 日志默认走 journald，可用 `journalctl -u myapp` 查看（无需配置）
 
 [Install]
 WantedBy=multi-user.target
@@ -436,7 +444,7 @@ $$
 
 下一步进入 [第 04 篇](./git-github.md)：版本管理解决代码追踪问题，但运行环境一致性需要后续容器化——05 篇的 Docker 将登场。
 
-## 流程旁白
+## 流程角色：谁发起 / 谁执行 / 谁审批
 
 - **谁发起**：开发者决定交付构建产物（本地构建）还是源码（服务器构建），交接物不同，服务器要承担的责任就不同
 - **谁执行**：运维或开发在服务器上拉起进程、配置 systemd 保活
