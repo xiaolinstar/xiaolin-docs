@@ -248,7 +248,7 @@ docker run -d \
 虽然 Docker 彻底解决了 **单容器运行** 的全部痛点，但在真实生产环境中依然面临新的工程诉求：
 
 1. **镜像从何而来？**
-   生产镜像如何编写 Dockerfile，又如何在 Git 代码 push 后自动触发构建并推送到镜像仓库？这将在 [第 06 篇（流水线基础）](./pipeline-basics.md) 与 [第 07 篇（GitHub Actions）](./github-actions.md) 中全面展开；
+   生产镜像如何编写 Dockerfile，又如何在 Git 代码 push 后自动触发构建并推送到镜像仓库？这将在 [第 06 篇（流水线基础）](./pipeline-basics.md) 与 [第 07 篇（GitHub Actions）](./actions.md) 中全面展开；
 2. **多组件依然繁琐**：
    在 03 篇确立的“Nginx + Spring Boot + MySQL”最小生产组合中，如果继续通过命令行一条条手动 `docker run`、手动管理端口与容器互联，依然陷入了 **高运维苦工**（High Toil）。如何用一份声明式配置文件一键启动与编排整套集群？这就是 [第 08 篇（Docker Compose 多服务编排）](./docker-compose.md) 的核心使命。
 
