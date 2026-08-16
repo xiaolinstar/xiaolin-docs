@@ -241,6 +241,14 @@ function glossaryFirstAside(state: StateCore): void {
     }
     if (firstMentions.length === 0) continue
 
+    // Skip aside injection inside table cells: <GlossaryAside /> is an html_block
+    // token, which breaks markdown-it's table structure (the tag escapes the <td>
+    // and is rendered as an extra <tr> child → "phantom column" in browsers).
+    const prevToken = i > 0 ? tokens[i - 1] : undefined
+    if (prevToken && (prevToken.type === 'td_open' || prevToken.type === 'th_open')) {
+      continue
+    }
+
     let insertAt = i
     if (i > 0 && tokens[i - 1].type.endsWith('_open')) {
       insertAt = i - 1

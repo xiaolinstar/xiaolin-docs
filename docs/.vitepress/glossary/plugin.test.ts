@@ -89,3 +89,21 @@ describe('glossaryPlugin aside restriction (Option A)', () => {
   })
 })
 
+describe('glossaryPlugin inside table cells', () => {
+  it('does not inject GlossaryAside inside <td> (would break table layout)', () => {
+    const md = new MarkdownIt()
+    md.use(glossaryPlugin)
+    const html = md.render(
+      '| 类别 | 代表 |\n| --- | --- |\n| 应用 | {{term:生产环境}} Foo |',
+    )
+    // The shortcode still wraps as GlossaryTerm...
+    assert.match(html, /<GlossaryTerm[^>]*>生产环境<\/GlossaryTerm>/)
+    // ...but no GlossaryAside leaks into the <tr> as a sibling element.
+    assert.doesNotMatch(html, /<GlossaryAside/)
+    // And the table row contains exactly 2 cells.
+    const firstRow = html.match(/<tr>[\s\S]*?<\/tr>/)![0]
+    const cells = firstRow.match(/<(th|td)/g) || []
+    assert.equal(cells.length, 2)
+  })
+})
+
