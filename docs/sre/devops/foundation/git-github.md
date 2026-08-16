@@ -10,7 +10,7 @@ tags:
   - GitHub
 ---
 
-[上一篇（03 服务端应用部署）](./server-side-deploy.md)把构建动作搬到了服务器：SpringBoot 要 `mvn package`，Flask 要 `pip install`，服务器上多出源码、依赖、构建产物三套东西。这里藏着一个真问题：**服务器上正在跑的这次构建，对应哪一份代码？**
+[上一篇（03 服务端应用部署）](./server-side-deploy.md)把构建动作搬到了服务器：{{term:Spring Boot}} 要 `mvn package`，Flask 要 `pip install`，服务器上多出源码、依赖、构建产物三套东西。这里藏着一个真问题：**服务器上正在跑的这次构建，对应哪一份代码？**
 
 如果回答不了这个问题，回退、排查、复现都会变成“靠记忆猜”。**痛点三：没有版本追踪**——手动备份会被跳过、没有上下文、回退要重做一遍——在服务端部署场景下变得更加危险。
 
@@ -32,8 +32,7 @@ tags:
 
 ![Git 分布式协作与部署架构图](https://media.xiaolin.fun/docs/img-git-github/diagram-git-distributed-collaboration.png)
 
-<details>
-<summary>📐 静态信息图 Prompt 与 Mermaid 结构参考</summary>
+::: details 📐 静态信息图 Prompt 与 Mermaid 结构参考
 
 ```mermaid
 flowchart TD
@@ -62,7 +61,8 @@ Notion style minimalist line art infographic, hand-drawn marker stroke texture. 
 
 - 产物路径：`docs/public/images/img-git-github/diagram-git-distributed-collaboration.png`
 - CDN 引用：`https://media.xiaolin.fun/docs/img-git-github/diagram-git-distributed-collaboration.png`
-</details>
+
+:::
 
 ## Git：给变更拍快照
 
@@ -101,7 +101,7 @@ A → B → C → D
 
 ## Commit 信息：开发者最该写好的那一行
 
-`git init` / `add` / `push` 都会变成肌肉记忆，**唯独 commit 信息写什么，过去时常是一件伤脑筋的事**——三个月后排查问题的人、接手代码的新同事、回溯事故的运维，先看的都是这一行。`"update"` / `"fix bug"` / `"tmp"` 这类含糊写法，会让历史变成“考古谜题”。
+`git init` / `add` / `push` 都会变成肌肉记忆，**唯独 commit 信息写什么，过去时常是一件伤脑筋的事**——三个月后排查问题的人、接手代码的新同事、回溯事故的运维，先看的都是这一行。`“update”` / `“fix bug”` / `“tmp”` 这类含糊写法，会让历史变成“考古谜题”。
 
 ### Conventional Commits：把 commit 信息结构化
 
@@ -115,18 +115,14 @@ A → B → C → D
 [可选脚注]
 ```
 
-最常见的类型前缀：
+日常高频使用的 4 个核心类型：
 
-| 前缀 | 用途 |
-| --- | --- |
-| `feat` | 新功能 |
-| `fix` | Bug 修复 |
-| `docs` | 仅文档变更 |
-| `refactor` | 重构（既不修复 bug 也不新增功能） |
-| `test` | 添加或修改测试 |
-| `chore` | 构建、依赖、工具链等杂项 |
-| `perf` | 性能优化 |
-| `style` | 代码格式（不影响语义） |
+| 前缀 | 用途 | 典型示例 |
+| --- | --- | --- |
+| `feat` | 新增功能 | `feat: 增加用户登录登出接口` |
+| `fix` | Bug 修复 | `fix: 修复静态文件路径 404 问题` |
+| `chore` | 杂项变动（构建、依赖升级、配置调整） | `chore: 升级 vitepress 版本至 1.0` |
+| `docs` | 仅文档修改 | `docs: 补充生产部署环境架构图` |
 
 格式化的价值在于**让 commit 信息变成可机读的结构化数据**：
 
@@ -136,7 +132,7 @@ A → B → C → D
 
 ### AI 时代的新挑战：从“靠自觉”到“靠工程化治理”
 
-过去写 commit 信息是开发者的“软素质”——靠自觉、靠 code review 提醒、靠团队规范约束。在 AI Agent 时代则升级为 **“靠工程化治理”**：自动提交拦截、Conventional Commits 强校验（commitlint）、自动信息填充、commit 质量门禁（pre-commit + 服务端分支保护）等议题本文暂不展开。
+过去写 commit 信息是开发者的“软素质”——靠自觉、靠 code review 提醒、靠团队规范约束。在 AI Agent 时代则升级为 **靠工程化治理**：自动提交拦截、Conventional Commits 强校验（commitlint）、自动信息填充、commit 质量门禁（pre-commit + 服务端分支保护）等议题本文暂不展开。
 
 详见 [《AI Agent 时代下重新审视 Git》](../../../ai/theory/git-in-ai-agent-era.md)。
 
@@ -183,6 +179,9 @@ cd your-repo
 
 每次更新，服务器上 `git pull` 就拿到最新代码——不再需要手动 scp。
 
+> [!TIP]
+> **生产服务器拉取守则**：生产环境严禁直接修改工作区文件。如果执行 `git pull` 提示 `error: Your local changes to the following files would be overwritten by merge`，说明服务器上存在未提交的临时修改。规范流程应保持服务器为纯净的只读拉取端，变更统一在开发端 commit 并 push 后，再在服务端拉取。
+
 ### 推荐用 SSH 协议：非对称密钥替代密码
 
 HTTPS 协议每次推送都要输入用户名密码（或 Personal Access Token），CI/CD 场景下基本不可用。**推荐改用 SSH 协议 + 非对称密钥**：本地生成密钥对，把公钥交给 GitHub，之后推送用私钥签名、GitHub 用公钥验签——全程不传密码，CI 也能免密跑。
@@ -210,7 +209,9 @@ HTTPS 协议每次推送都要输入用户名密码（或 Personal Access Token�
    看到 `Hi username! You've successfully authenticated...` 即表示配置成功。
 
 > [!WARNING]
-> **私钥千万不能泄漏！** 私钥（`id_ed25519`）留在本地和目标服务器，绝对不能提交到 Git 仓库，更不能公开发布。用 `.gitignore` 忽略 `.env` 等敏感文件；万一误推，应立刻轮换密钥，而不是仅删除文件再提交。
+> **私钥安全与权限排查**：
+> 1. **私钥千万不能泄漏**：私钥（`id_ed25519`）留在本地和目标服务器，绝对不能提交到 Git 仓库，更不能公开发布。万一误推，应立刻在 GitHub 后台删除公钥并轮换新密钥。
+> 2. **权限过大报错**：若连接时提示 `Permissions 0644 for 'id_ed25519' are too open` 或 `UNPROTECTED PRIVATE KEY FILE!`，是因为私钥文件权限过于宽松，运行 `chmod 600 ~/.ssh/id_ed25519` 限制权限即可解决。
 
 ## Git 在部署路径中的位置
 
@@ -233,7 +234,7 @@ Git 在公众视野里几乎和“程序员”绑定——但这是职业视角�
 
 ### 为什么特别适合纯文本
 
-Git 的快照是按文件整体存的，但只有**纯文本**能让它发挥最大价值——文本可读、可搜索、可对比、可合并。绝大多数职业的核心产出物都是文本：代码、配置、需求文档、合同条款、论文、小说章节。**所有人都需要版本管理，只是大多数人叫它“另存为 -v2-final.docx”**。
+Git 的快照是按文件整体存的，但只有**纯文本**能让它发挥最大价值——文本可读、可搜索、可对比、可合并。绝大多数职业的核心产出物都是文本：代码、配置、需求文档、合同条款、论文、小说章节。**所有人都需要版本管理，只是大多数人叫它另存为 v2-final.docx**。
 
 ### 与 Markdown 的天然协同
 
