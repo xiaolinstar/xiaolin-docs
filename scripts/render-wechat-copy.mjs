@@ -7,24 +7,45 @@ import MarkdownIt from 'markdown-it';
 const input = process.argv[2] ?? 'content/dist/delivery-start/wechat.md';
 const output = process.argv[3] ?? input.replace(/\.md$/, '-copy.html');
 const source = fs.readFileSync(input, 'utf8');
-const articleImagePath = path.join(path.dirname(input), 'assets', 'diagram-dev-iter-delivery.png');
-const articleImageData = fs.existsSync(articleImagePath)
-  ? `data:image/jpeg;base64,${fs.readFileSync(articleImagePath).toString('base64')}`
-  : 'https://media.xiaolin.fun/docs/img-production-env/diagram-dev-iter-delivery.png';
-const mermaidAsset = path.join(path.dirname(input), 'assets', 'nginx-request-flow.png');
-const mermaidFlowImage = fs.existsSync(mermaidAsset)
-  ? `data:image/png;base64,${fs.readFileSync(mermaidAsset).toString('base64')}`
-  : '';
-const body = source
+const originPath = source.match(/^origin:\s*(docs\/[^\n]+)$/m)?.[1];
+const articleSource = originPath && fs.existsSync(originPath) ? fs.readFileSync(originPath, 'utf8') : source;
+const imageDataUri = (imageUrl) => {
+  const matched = imageUrl.match(/^(?:https:\/\/media\.xiaolin\.fun\/docs\/|\/images\/)(img-[^/]+)\/([^/?#]+)$/);
+  if (!matched) return imageUrl;
+
+  const imagePath = path.join('docs', 'public', 'images', matched[1], matched[2]);
+  if (!fs.existsSync(imagePath)) return imageUrl;
+
+  const data = fs.readFileSync(imagePath);
+  const mime = data.subarray(0, 3).equals(Buffer.from([0xff, 0xd8, 0xff])) ? 'image/jpeg' : 'image/png';
+  return `data:${mime};base64,${data.toString('base64')}`;
+};
+const body = articleSource
   .replace(/^---[\s\S]*?---\n/, '')
   .replace(/^# 发布元数据[\s\S]*?^# 正文（粘贴到公众号后台）\n/m, '')
   .replace(/^---\n\n## 封面图（Codex 生成）[\s\S]*$/m, '')
-  .replace(/```mermaid[\s\S]*?```\n?/g, mermaidFlowImage ? `<img src="${mermaidFlowImage}" alt="流程图" style="display:block;width:100%;height:auto;margin:20px 0;">` : '')
+  .replace(/```mermaid[\s\S]*?```\n?/g, '> **流程图提示**：完整流程图请查看站点原文；公众号稿保留对应的步骤说明与验证命令。\n\n')
   .replace(/^完整版与延伸阅读.*\n\n?/m, '')
   .replace(/^关注 \*\*AI持续运维\*\*，.*\n\n?/m, '')
   .replace(/^不积跬步，无以至千里。\n\n?/m, '')
+  .replace(/^详见专题解析：\[[^\]]+\]\([^)]+\)。\n\n?/m, '')
+  .replace(/### 补充视角：前后端不分离架构在部署上的差异[\s\S]*$/, `### 补充视角：模板渲染应用如何部署
+
+模板渲染并不“过时”，它只是把页面生成和业务处理放进了同一个部署单元。
+
+> **一个部署单元 = 页面 + 静态资源 + 业务逻辑**
+>
+> JSP、PHP、Thymeleaf、Django Templates 等应用会由后端进程直接生成 HTML，静态资源也随应用工程一起交付。
+
+这会带来两个直接后果：页面改动不再是简单覆盖 \`dist/\`，而是重新构建并重启应用；Nginx 也从静态资源宿主变成统一的反向代理入口。
+
+如果页面需要独立迭代、独立缓存或多端复用 API，前后端分离更合适；若是低频变更的内部后台或单体系统，模板渲染仍是一个足够务实的选择。\n`)
   .replace(/^## 搜索关键词（4 个）\n\n[^\n]+\n\n?/m, '')
-  .replace(/^## 参考[\s\S]*?(?=^# 发布 checklist)/m, '')
+  .replace(/^## 参考[\s\S]*$/m, '')
+  .replace(/::: details[\s\S]*?\n:::\n?/g, '')
+  .replace(/^> \[!NOTE\]\n> \*\*(.+?)\*\*[：:]?\n/gm, '> **提示｜$1**\n>\n')
+  .replace(/\{\{term:([^}]+)\}\}/g, '$1')
+  .replace(/^ {2,}[-*] (.+)$/gm, '   <br><span class="wechat-subitem">↳</span> $1')
   .replace(/^# 发布 checklist[\s\S]*$/m, '')
   .replace(/^## 封面图[\s\S]*$/m, '')
   .replace(/```text\n[\s\S]*?Welcome to nginx![\s\S]*?```\n?/m, '> **Welcome to nginx!**\n>\n> Nginx 已安装并正常运行。接下来还需要配置站点，才能代理你自己的静态资源。\n\n')
@@ -59,8 +80,12 @@ const toWechatFormulaText = (formula) => normalizeFormula(formula)
   .replace(/\\/g, '')
   .replace(/\s+/g, ' ')
   .trim();
-const formulaHtmlText = (formula) => escapeHtml(toWechatFormulaText(formula))
-  .replace(/([A-Za-z])([₀₁₂₃₄₅₆₇₈₉ᵢₙⱼₖₘᵣₛₓ]+)/g, (_, letter, subscript) => `${letter}<sub style="font-size:0.72em;line-height:0;vertical-align:-0.35em;">${subscript}</sub>`);
+const formulaHtmlText = (formula) => escapeHtml(normalizeFormula(formula)
+  .replace(/\\longrightarrow/g, '→')
+  .replace(/\\implies/g, '⇒')
+  .replace(/\\/g, ''))
+  .replace(/([A-Za-z])_\{?([A-Za-z0-9]+)\}?/g, (_, letter, subscript) => `${letter}<sub style="font-size:0.76em;line-height:0;vertical-align:-0.32em;">${subscript}</sub>`)
+  .replace(/([A-Za-z])([₀₁₂₃₄₅₆₇₈₉ᵢₙⱼₖₘᵣₛₓ]+)/g, (_, letter, subscript) => `${letter}<sub style="font-size:0.76em;line-height:0;vertical-align:-0.32em;">${subscript}</sub>`);
 const formulaParts = (formula) => {
   const notes = [];
   const math = formula.trim()
@@ -109,9 +134,9 @@ const renderInlineFormula = (formula) => {
   return `<span style="font-family:'STIX Two Math','Cambria Math',Georgia,'Times New Roman',serif;font-size:1.02em;color:#0a152f;white-space:normal;">${formulaHtmlText(formula)}</span>`;
 };
 const normalizedBody = body
-  .replace(/https:\/\/media\.xiaolin\.fun\/docs\/img-production-env\/diagram-dev-iter-delivery\.png/g, articleImageData)
+  .replace(/!\[([^\]]*)\]\(((?:https:\/\/media\.xiaolin\.fun\/docs\/|\/images\/)[^)]+)\)/g, (_, alt, imageUrl) => `![${alt}](${imageDataUri(imageUrl)})`)
   .replace(/!\[([^\]]*)\]\(([^)]+)\)/g, (_, alt, imagePath) => `![${alt}](${imagePath})`)
-  .replace(/(?<!\!)\[([^\]]+)\]\((?:https?:\/\/|\.\/)[^)]+\)/g, '$1')
+  .replace(/(?<!\!)\[([^\]]+)\]\((?:https?:\/\/|\.\.?\/)[^)]+\)/g, '$1')
   .replace(/X\s*\\xrightarrow\{\\text\{突破\}\}\s*X'/g, 'X → X\'')
   .replace(/\$\$([\s\S]*?)\$\$/g, (_, formula) => renderFormula(formula) + '\n\n')
   .replace(/\$([^$\n]+)\$/g, (_, formula) => renderInlineFormula(formula));
@@ -134,20 +159,48 @@ const md = new MarkdownIt({
   html: true,
   linkify: false,
   breaks: false,
-  highlight: (source, language) => `<pre style="margin:16px 0;padding:12px 14px;overflow-x:auto;background:#f6f8fa;border:1px solid #e5e6eb;border-radius:5px;line-height:1.45;white-space:pre;"><code style="font-family:Menlo,Consolas,monospace;font-size:12px;white-space:pre;">${highlightCode(source, language)}</code></pre>`
+  highlight: (source, language) => language === 'text'
+    ? `<pre class="text-diagram" style="margin:16px 0;padding:12px 14px;overflow-x:auto;background:#f6f8fa;border:1px solid #e5e6eb;border-radius:5px;line-height:1.45;white-space:pre;"><code style="font-family:Menlo,Consolas,monospace;font-size:12px;white-space:pre;">${escapeHtml(source)}</code></pre>`
+    : `<pre style="margin:16px 0;padding:12px 14px;overflow-x:auto;background:#f6f8fa;border:1px solid #e5e6eb;border-radius:5px;line-height:1.45;white-space:pre;"><code style="font-family:Menlo,Consolas,monospace;font-size:12px;white-space:pre;">${highlightCode(source, language)}</code></pre>`
 });
 md.renderer.rules.code_inline = (tokens, index) => `<code style="font-family:Menlo,Consolas,monospace;font-size:12px;white-space:nowrap;background:#f3f5f7;color:#175da4;padding:2px 4px;border-radius:3px;">${escapeHtml(tokens[index].content).replace(/ /g, '&nbsp;')}</code>`;
 const renderedArticle = md.render(normalizedBody.replace(/^# [^\n]+\n+/, ''));
-const articleHtml = renderedArticle.replace(/<ul>\s*([\s\S]*?)\s*<\/ul>/g, (_, items) => {
+const tableRows = (table) => [...table.matchAll(/<tr>([\s\S]*?)<\/tr>/g)].map(([, row]) => [...row.matchAll(/<(?:th|td)>([\s\S]*?)<\/(?:th|td)>/g)].map(([, cell]) => cell.trim()));
+const compactTable = (table) => table
+  .replace('<table>', '<table style="width:100%;table-layout:fixed;border-collapse:collapse;margin:16px 0;font-size:13px;line-height:1.45;word-break:break-word;overflow-wrap:anywhere;">')
+  .replace(/<th>/g, '<th style="border:1px solid #d9e2ec;padding:5px 6px;background:#f3f6f9;color:#172033;font-weight:700;text-align:left;vertical-align:top;word-break:break-word;overflow-wrap:anywhere;">')
+  .replace(/<td>/g, '<td style="border:1px solid #d9e2ec;padding:5px 6px;color:#344054;text-align:left;vertical-align:top;word-break:break-word;overflow-wrap:anywhere;">');
+const cardShell = (title, content, accent = '#1890ff', background = '#f7f9fc') => `<section style="margin:8px 0;padding:9px 11px;border-left:4px solid ${accent};background:${background};border-radius:0 6px 6px 0;"><p style="margin:0 0 4px;font-size:15px;line-height:1.4;font-weight:700;color:#172033;">${title}</p>${content}</section>`;
+const cardCell = (cell) => cell.replace(/white-space:nowrap/g, 'white-space:normal;overflow-wrap:anywhere');
+const cardsByColumn = (table) => {
+  const [headers, ...rows] = tableRows(table);
+  return headers.slice(1).map((title, column) => cardShell(title, rows.map((row) => `<p style="margin:3px 0;font-size:13px;line-height:1.5;color:#344054;"><strong style="color:#475467;">${row[0]}：</strong>${cardCell(row[column + 1])}</p>`).join(''), ['#1890ff', '#fa8c16', '#52c41a'][column] ?? '#1890ff')).join('');
+};
+const cardsByRow = (table, accent = '#1890ff') => {
+  const [headers, ...rows] = tableRows(table);
+  return rows.map((row) => cardShell(row[0], row.slice(1).map((cell, index) => `<p style="margin:3px 0;font-size:13px;line-height:1.5;color:#344054;"><strong style="color:#475467;">${headers[index + 1]}：</strong>${cardCell(cell)}</p>`).join(''), accent)).join('');
+};
+let tableIndex = 0;
+const tableOptimizedArticle = renderedArticle.replace(/<table>[\s\S]*?<\/table>/g, (table) => {
+  tableIndex += 1;
+  if (tableIndex === 3) return cardsByColumn(table);
+  if (tableIndex === 5) return cardsByRow(table, '#8c8c8c');
+  if (tableIndex === 6) return cardsByRow(table, '#fa8c16');
+  if (tableIndex === 1 || tableIndex === 2) return cardsByRow(table, '#1890ff');
+  if (tableIndex === 4) return cardsByRow(table, '#fa8c16');
+  if (tableIndex === 7) return cardsByRow(table, '#8c8c8c');
+  return compactTable(table);
+});
+const articleHtml = tableOptimizedArticle.replace(/<span class="wechat-subitem">↳<\/span>/g, '<span style="display:inline-block;margin:4px 0 0 0;padding-left:0.2em;color:#667085;font-size:0.93em;">↳</span>').replace(/<ul>\s*([\s\S]*?)\s*<\/ul>/g, (_, items) => {
   const listItems = [...items.matchAll(/<li>([\s\S]*?)<\/li>/g)];
   const compactItems = listItems
-    .map(([__, item], index) => `<p style="margin:0 0 ${index === listItems.length - 1 ? 0 : 4}px;padding-left:1.05em;text-indent:-1.05em;font-size:15px;line-height:1.6;letter-spacing:0;color:#222;">•&nbsp;${item.trim()}</p>`)
+    .map(([__, item], index) => `<p style="margin:0 0 ${index === listItems.length - 1 ? 0 : 3}px;padding-left:1.05em;text-indent:-1.05em;font-size:15px;line-height:1.5;letter-spacing:0;color:#222;">•&nbsp;${item.trim().replace(/^<p>|<\/p>$/g, '')}</p>`)
     .join('');
   return `<section style="margin:0 0 10px;">${compactItems}</section>`;
 }).replace(/<ol>\s*([\s\S]*?)\s*<\/ol>/g, (_, items) => {
   const listItems = [...items.matchAll(/<li>([\s\S]*?)<\/li>/g)];
   const numberedItems = listItems
-    .map(([__, item], index) => `<p style="margin:0 0 ${index === listItems.length - 1 ? 0 : 10}px;padding-left:1.55em;text-indent:-1.55em;font-size:15px;line-height:1.65;letter-spacing:0;color:#222;">${index + 1}.&nbsp;${item.trim()}</p>`)
+    .map(([__, item], index) => `<p style="margin:0 0 ${index === listItems.length - 1 ? 0 : 5}px;padding-left:1.55em;text-indent:-1.55em;font-size:15px;line-height:1.55;letter-spacing:0;color:#222;">${index + 1}.&nbsp;${item.trim().replace(/^<p>|<\/p>$/g, '')}</p>`)
     .join('');
   return `<section style="margin:0 0 10px;">${numberedItems}</section>`;
 });
