@@ -1,0 +1,22 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1600" height="900" viewBox="0 0 1600 900">
+  <rect width="1600" height="900" fill="#ffffff"/>
+  <text x="100" y="105" fill="#172033" font-family="PingFang SC, Microsoft YaHei, sans-serif" font-size="48" font-weight="700">服务器构建的 3 个隐性成本</text>
+  <text x="100" y="155" fill="#697386" font-family="PingFang SC, Microsoft YaHei, sans-serif" font-size="25">它们共同指向同一个问题：构建环境与运行环境强耦合</text>
+  <g font-family="PingFang SC, Microsoft YaHei, sans-serif">
+    <rect x="100" y="240" width="430" height="410" rx="26" fill="#fff7e6" stroke="#fa8c16" stroke-width="4"/>
+    <circle cx="180" cy="330" r="43" fill="#fa8c16"/><text x="180" y="345" text-anchor="middle" fill="#fff" font-size="38" font-weight="700">1</text>
+    <text x="245" y="337" fill="#a85b00" font-size="33" font-weight="700">环境变脏</text>
+    <text x="150" y="430" fill="#4b5563" font-size="27">构建工具、依赖与运行时</text><text x="150" y="475" fill="#4b5563" font-size="27">不断写入生产机，版本漂移</text><text x="150" y="520" fill="#4b5563" font-size="27">最终让生产机像开发机</text>
+    <rect x="585" y="240" width="430" height="410" rx="26" fill="#fff7e6" stroke="#fa8c16" stroke-width="4"/>
+    <circle cx="665" cy="330" r="43" fill="#fa8c16"/><text x="665" y="345" text-anchor="middle" fill="#fff" font-size="38" font-weight="700">2</text>
+    <text x="730" y="337" fill="#a85b00" font-size="33" font-weight="700">资源争抢</text>
+    <text x="635" y="430" fill="#4b5563" font-size="27">编译与链接是重资源任务</text><text x="635" y="475" fill="#4b5563" font-size="27">会与常驻服务争抢 CPU / 内存</text><text x="635" y="520" fill="#4b5563" font-size="27">高峰时可能触发 OOM</text>
+    <rect x="1070" y="240" width="430" height="410" rx="26" fill="#fff7e6" stroke="#fa8c16" stroke-width="4"/>
+    <circle cx="1150" cy="330" r="43" fill="#fa8c16"/><text x="1150" y="345" text-anchor="middle" fill="#fff" font-size="38" font-weight="700">3</text>
+    <text x="1215" y="337" fill="#a85b00" font-size="33" font-weight="700">网络差异</text>
+    <text x="1120" y="430" fill="#4b5563" font-size="27">服务器访问依赖源受限</text><text x="1120" y="475" fill="#4b5563" font-size="27">系统库与本地也可能不一致</text><text x="1120" y="520" fill="#4b5563" font-size="27">构建失败难以复现</text>
+  </g>
+  <path d="M800 685v60" stroke="#8c8c8c" stroke-width="5"/><path d="M780 728l20 25 20-25" fill="none" stroke="#8c8c8c" stroke-width="5"/>
+  <rect x="280" y="770" width="1040" height="75" rx="18" fill="#e6f7ff" stroke="#1890ff" stroke-width="3"/>
+  <text x="800" y="820" text-anchor="middle" fill="#126fc5" font-family="PingFang SC, Microsoft YaHei, sans-serif" font-size="31" font-weight="700">演进方向：构建机与运行服务器隔离，再用容器封装运行环境</text>
+</svg>

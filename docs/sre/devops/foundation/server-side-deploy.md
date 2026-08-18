@@ -15,15 +15,7 @@ tags:
 
 但绝大多数真实业务绝不只是静态展示——用户登录、购物车、订单支付、数据统计，这些都需要“执行业务代码、读写数据库、记录会话状态”。这一层**不在浏览器里运行**，而是以**后端 API 进程**的形态常驻在服务器上：
 
-```text
-浏览器 / 客户端（发起请求）
-    ↓ HTTP
-Nginx（公网入口，80/443）
-    ↓ 反向代理
-Java / Python 进程（8080/8000，处理业务 API）
-    ↓ 读写
-MySQL / Redis / Kafka（数据持久化与中间件）
-```
+![一次服务端请求如何流转](/images/img-server-side-deploy/infographic-request-flow.png)
 
 这就是本篇的核心跃迁：**当部署对象从“纯静态文件”升级为“需要{{term:运行时}}、第三方依赖库、常驻监听端口的后端 API 进程”时，前两篇的部署方式还够用吗？哪里不够？**
 
@@ -42,13 +34,7 @@ MySQL / Redis / Kafka（数据持久化与中间件）
 
 链路看起来是这样：
 
-```text
-前端：浏览器 → Nginx(:80/443，公网入口) → 读 dist/ 文件 → 返回 HTML/CSS/JS
-后端：浏览器 → Nginx(:80/443，公网入口) → 反代到 :8080 → Java/Python 进程 → 返回 JSON
-                                 ↑
-                          这一段由 Nginx 维护
-                          后端进程一般监听内部端口，不直接暴露公网
-```
+![Nginx 在前后端分离中的位置](/images/img-server-side-deploy/infographic-nginx-routing.png)
 
 **客户端只跟 Nginx 通信**——它根本不知道后端进程的端口是什么。后端进程死了，客户端看到的是“502 Bad Gateway”，但**它不知道是 Nginx 挂还是后端挂**。
 
@@ -146,7 +132,7 @@ Spring 生态的脚手架——开箱即用，约定大于配置（starter）、
 
 **补充说明**：前端**同样**有构建路线问题——`npm run build` 也是资源密集型任务。但**因为前端产物是 `dist/` 静态资源 + 可迁移性强**，这两个痛点（资源占用 / 跨平台）的影响比后端轻得多——本地构建后 `scp` 上去即可。前端产物的强可迁移性自然补偿了构建痛点的影响。
 
-![两类构建部署路线对比](https://media.xiaolin.fun/docs/img-server-side-deploy/diagram-build-route-a-vs-b.png)
+![两类构建部署路线对比](/images/img-server-side-deploy/infographic-build-routes.png)
 
 ### 三类被低估的运维痛点
 
@@ -170,7 +156,7 @@ Spring 生态的脚手架——开箱即用，约定大于配置（starter）、
 | 构建打满资源 | 线上服务卡顿 / OOM | 构建任务和运行任务共享资源 |
 | 网络不对等 | 依赖下载慢 / 失败 | 服务器网络环境受限 |
 
-![三类运维痛点汇总](https://media.xiaolin.fun/docs/img-server-side-deploy/diagram-three-pain-points.png)
+![三类运维痛点汇总](/images/img-server-side-deploy/infographic-deployment-risks.png)
 
 三类痛点在 SRE 运维视角下归结为同一个核心瓶颈——**低可移植性（Low Portability，环境强耦合）**：构建动作与运行环境割裂，产物只包含了代码和依赖，没包含“运行环境本身”，脱离了特定机器就面临环境漂移。成熟工程实践通常采用：
 
@@ -223,15 +209,7 @@ journalctl -u myapp -n 100 -f     # systemd 方式
 tail -f /var/log/myapp.log        # nohup 方式
 ```
 
-```mermaid
-flowchart LR
-    A([启动进程]) --> B[前台运行\njava -jar / gunicorn]
-    B --> C[后台挂起\nnohup ... &]
-    C --> D{验证}
-    D -->|ps / curl 通过| E[✅ 稳定运行]
-    D -->|502 / 进程不在| F[排查日志\njournalctl / tail -f]
-    F --> C
-```
+![进程生命周期：启动、后台运行、验证与日志回环](/images/img-server-side-deploy/diagram-process-lifecycle-wechat.png)
 
 ::: details 📐 静态信息图 Prompt 与路径参考
 
@@ -387,24 +365,7 @@ $$
 
 静态资源 `dist/` **并不是一个独立运行的组件或进程**，而是被 Nginx 进程直接包裹并读取的文件资产。因此，生产变更的操作清单 $Y$ 正式解耦为两个独立的操作子集：
 
-```mermaid
-flowchart TD
-    User([🌐 公网用户]) -->|HTTP / HTTPS| Nginx
-
-    Nginx["🔀 Nginx 服务进程\n进程 1 · 监听 80/443"]:::nginxBox
-    Dist["📁 静态载荷 dist/"]:::distFile
-    App["☕ Spring Boot 应用\n进程 2 · 监听 8080"]:::appNode
-    DB["🐬 MySQL 数据库\n进程 3 · 监听 3306"]:::dbNode
-
-    Nginx -.->|读静态文件| Dist
-    Nginx -->|反代 /api| App
-    App -->|HikariCP| DB
-
-    classDef nginxBox fill:#e6f7ff,stroke:#1890ff,stroke-width:1.5px;
-    classDef appNode fill:#fff7e6,stroke:#fa8c16,stroke-width:1.5px;
-    classDef dbNode fill:#fff0f6,stroke:#eb2f96,stroke-width:1.5px;
-    classDef distFile fill:#f6ffed,stroke:#52c41a,stroke-dasharray: 4 4;
-```
+![服务端部署拓扑：Nginx、静态文件、应用进程与数据库](/images/img-server-side-deploy/diagram-service-topology-wechat.png)
 
 ### 两种独立的生产变更操作集
 

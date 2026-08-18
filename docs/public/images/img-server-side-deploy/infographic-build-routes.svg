@@ -1,0 +1,29 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1600" height="900" viewBox="0 0 1600 900">
+  <rect width="1600" height="900" fill="#ffffff"/>
+  <text x="100" y="105" fill="#172033" font-family="PingFang SC, Microsoft YaHei, sans-serif" font-size="48" font-weight="700">两条后端部署路线</text>
+  <text x="100" y="155" fill="#697386" font-family="PingFang SC, Microsoft YaHei, sans-serif" font-size="25">差别不在“能否启动”，而在构建发生的位置与运行环境是否一致</text>
+  <rect x="100" y="220" width="650" height="520" rx="28" fill="#fff7e6" stroke="#fa8c16" stroke-width="4"/>
+  <rect x="850" y="220" width="650" height="520" rx="28" fill="#e6f7ff" stroke="#1890ff" stroke-width="4"/>
+  <text x="150" y="300" fill="#c56a00" font-family="PingFang SC, Microsoft YaHei, sans-serif" font-size="36" font-weight="700">路线 A · 服务器构建</text>
+  <text x="900" y="300" fill="#126fc5" font-family="PingFang SC, Microsoft YaHei, sans-serif" font-size="36" font-weight="700">路线 B · 本地构建后传产物</text>
+  <g font-family="PingFang SC, Microsoft YaHei, sans-serif" font-size="28" fill="#253046">
+    <rect x="150" y="350" width="160" height="76" rx="16" fill="#ffffff" stroke="#fa8c16" stroke-width="3"/><text x="184" y="398">拉取源码</text>
+    <path d="M325 388h64" stroke="#fa8c16" stroke-width="5"/><path d="M377 373l22 15-22 15" fill="none" stroke="#fa8c16" stroke-width="5"/>
+    <rect x="410" y="350" width="160" height="76" rx="16" fill="#ffffff" stroke="#fa8c16" stroke-width="3"/><text x="445" y="398">在线构建</text>
+    <path d="M585 388h64" stroke="#fa8c16" stroke-width="5"/><path d="M637 373l22 15-22 15" fill="none" stroke="#fa8c16" stroke-width="5"/>
+    <rect x="900" y="350" width="160" height="76" rx="16" fill="#ffffff" stroke="#1890ff" stroke-width="3"/><text x="935" y="398">本地构建</text>
+    <path d="M1075 388h64" stroke="#1890ff" stroke-width="5"/><path d="M1127 373l22 15-22 15" fill="none" stroke="#1890ff" stroke-width="5"/>
+    <rect x="1160" y="350" width="160" height="76" rx="16" fill="#ffffff" stroke="#1890ff" stroke-width="3"/><text x="1195" y="398">上传产物</text>
+    <path d="M1335 388h64" stroke="#1890ff" stroke-width="5"/><path d="M1387 373l22 15-22 15" fill="none" stroke="#1890ff" stroke-width="5"/>
+  </g>
+  <text x="180" y="505" fill="#8f4a00" font-family="PingFang SC, Microsoft YaHei, sans-serif" font-size="29" font-weight="700">风险集中在生产机</text>
+  <text x="180" y="560" fill="#4b5563" font-family="PingFang SC, Microsoft YaHei, sans-serif" font-size="26">• 依赖下载与版本对齐</text>
+  <text x="180" y="610" fill="#4b5563" font-family="PingFang SC, Microsoft YaHei, sans-serif" font-size="26">• CPU / 内存与线上服务争抢</text>
+  <text x="180" y="660" fill="#4b5563" font-family="PingFang SC, Microsoft YaHei, sans-serif" font-size="26">• 网络源与系统库差异</text>
+  <text x="930" y="505" fill="#126fc5" font-family="PingFang SC, Microsoft YaHei, sans-serif" font-size="29" font-weight="700">优势是发布机更干净</text>
+  <text x="930" y="560" fill="#4b5563" font-family="PingFang SC, Microsoft YaHei, sans-serif" font-size="26">• 产物可审计、可回滚</text>
+  <text x="930" y="610" fill="#4b5563" font-family="PingFang SC, Microsoft YaHei, sans-serif" font-size="26">• 构建资源与运行资源隔离</text>
+  <text x="930" y="660" fill="#4b5563" font-family="PingFang SC, Microsoft YaHei, sans-serif" font-size="26">• 仍需处理跨平台运行时</text>
+  <rect x="100" y="785" width="1400" height="68" rx="16" fill="#f3f6f9"/>
+  <text x="800" y="830" text-anchor="middle" fill="#172033" font-family="PingFang SC, Microsoft YaHei, sans-serif" font-size="28" font-weight="700">核心判断：代码与依赖之外，运行环境本身也是部署对象</text>
+</svg>
