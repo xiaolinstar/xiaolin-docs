@@ -1,0 +1,21 @@
+slug: server-side-deploy
+origin: docs/sre/devops/foundation/server-side-deploy.md
+origin_url: https://xiaolinstar.cn/sre/devops/foundation/server-side-deploy.html
+title: DevOps 基础 03 ｜ 服务端应用部署：依赖、运行时与进程保活
+pillar: 云原生
+series_ref: devops-basics
+created: 2026-08-16
+updated: 2026-08-16
+summary: 静态网站上线后，真正麻烦的是后端服务：它有运行时、依赖和必须长期存活的进程。本文以 Spring Boot 与 Flask 为例，拆解构建位置、进程保活和多组件依赖三类问题，并用 systemd 跑通裸机部署的最小验证闭环，也为容器化铺路。
+platforms:
+  wechat:
+    account: AI持续运维
+    status: ready
+    output: wechat.md
+    origin_sync: generated
+    title_selected: DevOps 基础 03 ｜ 服务端应用部署：依赖、运行时与进程保活
+    search_keywords:
+      - 服务端部署
+      - Spring Boot 部署
+      - systemd 进程保活
+      - Flask Gunicorn
