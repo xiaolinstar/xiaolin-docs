@@ -34,6 +34,10 @@
     "creator-suite": {
       "source": ".agents/skills/creator-suite",
       "sourceType": "local"
+    },
+    "katex-math": {
+      "source": ".agents/skills/katex-math",
+      "sourceType": "local"
     }
   }
 }
