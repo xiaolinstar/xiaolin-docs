@@ -1,0 +1,20 @@
+const fs = require('fs');
+const marked = require('/Users/xlxing/Library/pnpm/store/v11/links/@/wechat-format-cli/1.1.2/f2827d7792384b1bf794d7f58201ee9aca2015f45b2d92ad3a9d482dc59b8b7d/node_modules/marked');
+const base = '/Users/xlxing/Library/pnpm/store/v11/links/@/wechat-format-cli/1.1.2/f2827d7792384b1bf794d7f58201ee9aca2015f45b2d92ad3a9d482dc59b8b7d/node_modules/wechat-format-cli';
+const defaultTheme = require(`${base}/assets/scripts/themes/default.js`);
+const WxRenderer = require(`${base}/assets/scripts/renderers/wx-renderer.js`);
+const input = process.argv[2];
+const output = process.argv[3];
+const renderer = new WxRenderer({ theme: defaultTheme, fonts: "Optima-Regular, Optima, PingFangSC-light, PingFangTC-light, 'PingFang SC', Cambria, Cochin, Georgia, Times, 'Times New Roman', serif", size: '16px' });
+let markdown = fs.readFileSync(input, 'utf8');
+markdown = markdown.replace(/!\[([^\]]*)\]\(\/images\/([^\)]+)\)/g, (_, alt, relative) => {
+  const file = `/Users/xlxing/AgentProjects/xiaolin-docs/docs/public/images/${relative}`;
+  if (!fs.existsSync(file)) return `![${alt}](/images/${relative})`;
+  const ext = file.split('.').pop().toLowerCase();
+  const mime = ext === 'jpg' || ext === 'jpeg' ? 'image/jpeg' : 'image/png';
+  return `![${alt}](data:${mime};base64,${fs.readFileSync(file).toString('base64')})`;
+});
+let html = marked(markdown, { renderer: renderer.getRenderer() });
+if (renderer.hasFootnotes()) html += renderer.buildFootnotes();
+fs.writeFileSync(output, `<!doctype html><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><div id="output">${html}</div>`);
+console.log(output);
