@@ -30,23 +30,23 @@ tags:
 
 核心能力：**给每一次变更拍一张带上下文的快照（commit）**。快照连成链，任何一次部署都能精确对应到链上的某一个节点。
 
-![Git 分布式协作与部署架构图](https://media.xiaolin.fun/docs/img-git-github/diagram-git-distributed-collaboration.png)
+![Git 分布式协作与部署架构图](/images/img-git-github/diagram-git-distributed-collaboration.png)
 
 ::: details 📐 静态信息图 Prompt 与 Mermaid 结构参考
 
 ```mermaid
 flowchart TD
-    subgraph Devs["💻 分布式开发闭环 (Blue)"]
-        DevA["Developer A\nLocal Repo (C1->C2)"]
-        DevB["Developer B\nLocal Repo (C1->C3)"]
+    subgraph Devs["💻 分布式开发闭环（蓝）"]
+        DevA["开发者 A\n本地仓库（C1 → C2）"]
+        DevB["开发者 B\n本地仓库（C1 → C3）"]
     end
 
-    subgraph Hub["☁️ 云端集中仓库 (Gray)"]
-        GitHub["GitHub Remote Repo\nMerged Commit Graph (C1->C2->C3)"]
+    subgraph Hub["☁️ 云端集中仓库（灰）"]
+        GitHub["GitHub 远程仓库\n合并提交链（C1 → C2 → C3）"]
     end
 
-    subgraph Prod["🖥️ 生产部署环境 (Orange)"]
-        Server["Production Server\n(git pull C3 & Build/Deploy)"]
+    subgraph Prod["🖥️ 生产部署环境（橙）"]
+        Server["生产服务器\n拉取 C3 后构建部署"]
     end
 
     DevA -->|git push| GitHub
@@ -56,11 +56,11 @@ flowchart TD
 
 **Prompt**:
 ```text
-Notion style minimalist line art infographic, hand-drawn marker stroke texture. 16:9 aspect ratio. Distributed Version Control & Deployment Architecture: Top-left (blue accent #1890ff): 'Developer A (Local Repo)' with laptop showing local commit chain (C1 -> C2). Bottom-left (blue accent #1890ff): 'Developer B (Local Repo)' with desktop showing local commit chain (C1 -> C3). Center (neutral gray accent #8c8c8c): 'GitHub Remote Repo' with large cloud icon containing merged commit graph (C1 -> C2 -> C3), receiving 'git push' arrows. Right (orange accent #fa8c16): 'Production Server' with server rack pulling commit (C3) via 'git pull' to build and deploy. Clear hand-drawn diagrams, legible labels, rich structure filling the 16:9 canvas cleanly. White background, black line art. No drop shadows, no gradients.
+极简手绘马克笔信息图，16:9 横版。主题为「Git：从本地快照到生产部署」：左上蓝色笔记本标注「开发者 A」「本地仓库」「C1 → C2」；左下蓝色笔记本标注「开发者 B」「本地仓库」「C1 → C3」；中间灰色云朵标注「GitHub 远程仓库」，云内是合并提交链「C1 → C2 → C3」，两条入云箭头标注 `git push`；右侧橙色服务器标注「生产服务器」，从云到服务器的箭头标注 `git pull`，服务器下方依次标注「拉取 C3」「构建并部署」。暖白背景、黑色线稿、留白充足，所有自然语言使用简体中文；无阴影、无渐变、无 3D 效果。
 ```
 
 - 产物路径：`docs/public/images/img-git-github/diagram-git-distributed-collaboration.png`
-- CDN 引用：`https://media.xiaolin.fun/docs/img-git-github/diagram-git-distributed-collaboration.png`
+- 站点引用：`/images/img-git-github/diagram-git-distributed-collaboration.png`
 
 :::
 
