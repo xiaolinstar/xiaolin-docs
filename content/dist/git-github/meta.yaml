@@ -1,0 +1,21 @@
+slug: git-github
+origin: docs/sre/devops/foundation/git-github.md
+origin_url: https://xiaolinstar.cn/sre/devops/foundation/git-github.html
+title: DevOps 基础 04 ｜ Git 与 GitHub：版本管理与云端仓库
+pillar: 云原生
+series_ref: devops-basics
+created: 2026-08-24
+updated: 2026-08-24
+summary: 我把 Git 放进 DevOps 基础系列，是因为部署真正怕的不是发错，而是根本不知道服务器跑的是哪份代码。本文从手动备份的断点出发，讲清 Git 快照、GitHub 远程仓库、SSH 免密协作，以及如何让每次发布都能定位、复现和回退。
+platforms:
+  wechat:
+    account: AI持续运维
+    status: ready
+    output: wechat.md
+    origin_sync: generated
+    title_selected: DevOps 基础 04 ｜ Git 与 GitHub：版本管理与云端仓库
+    search_keywords:
+      - Git
+      - GitHub
+      - Git 版本管理
+      - SSH 密钥配置

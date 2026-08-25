@@ -26,6 +26,8 @@ docs/public/images/**
 !docs/public/images/.gitkeep
 !docs/public/images/img-server-side-deploy/
 !docs/public/images/img-server-side-deploy/**
+!docs/public/images/img-git-github/
+!docs/public/images/img-git-github/**
 
 # 第三方参考资料 / 素材：本地查阅用，非自有产出，不入库
 /references/

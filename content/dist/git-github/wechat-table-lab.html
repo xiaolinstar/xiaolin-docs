@@ -1,0 +1,73 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>公众号表格兼容性对照</title>
+  <style>
+    body{margin:0;background:#f5f6f7;color:#222;font-family:-apple-system,BlinkMacSystemFont,"PingFang SC","Microsoft YaHei",sans-serif}
+    main{max-width:700px;margin:0 auto;padding:24px 18px;background:#fff}
+    h1{margin:0 0 8px;font-size:22px}.note{color:#667085;font-size:13px;line-height:1.65}.case{margin:28px 0}.case h2{margin:0 0 8px;padding-left:10px;border-left:4px solid #1677ff;font-size:18px}.copy{position:sticky;top:0;z-index:2;border:0;border-radius:6px;padding:10px 18px;background:#175da4;color:#fff;font-size:15px;cursor:pointer}.tip{margin-left:10px;color:#667085;font-size:13px}
+    table{width:100%;border-collapse:collapse;margin:14px 0;font-size:14px;line-height:1.6;color:#344054}.a th,.a td{border:1px solid #d9e2ec;padding:7px 8px;text-align:left;vertical-align:top}.a th{background:#f3f7fb;color:#172033;font-weight:700}.a td:nth-child(1){width:28%}.a td:nth-child(2){width:31%}.a td:nth-child(3){width:41%}
+    .b{border-top:2px solid #175da4;border-bottom:1px solid #d9e2ec}.b th,.b td{padding:8px 5px;text-align:left;vertical-align:top;border-bottom:1px solid #e8edf3}.b th{color:#175da4;font-weight:700}.b tr:last-child td{border-bottom:0}.b td:nth-child(1){width:28%;font-weight:700;color:#172033}.b td:nth-child(2){width:72%}
+    .c{border:1px solid #d9e2ec}.c th,.c td{padding:8px 9px;text-align:left;vertical-align:top;border-bottom:1px solid #e8edf3}.c th{background:#f7f9fc;color:#172033}.c tr:last-child td{border-bottom:0}.c td:first-child{width:31%;color:#175da4;font-weight:700}
+    .d{border:1px solid #d9e2ec}.d th,.d td{padding:8px 9px;text-align:left;vertical-align:top;border:1px solid #d9e2ec}.d th{background:#f3f7fb;color:#172033}.d td:first-child{width:27%;font-weight:700;color:#172033}.d td:nth-child(2){width:36%;color:#667085}.d td:nth-child(3){width:37%;color:#175da4}
+    code{padding:1px 4px;border-radius:3px;background:#f0f2f5;color:#175da4;font-family:Menlo,Consolas,monospace;font-size:12px;white-space:nowrap}
+  </style>
+</head>
+<body>
+  <main id="article">
+    <h1>公众号表格兼容性对照</h1>
+    <p class="note">一次复制全部内容，粘贴到公众号临时草稿后用手机预览。四种方案都使用原文中的真实信息，只比较结构和样式。</p>
+
+    <section class="case">
+      <h2>方案 A：三列细边框表格</h2>
+      <p class="note">最接近 Markdown 表格，适合内容较短、三列都必须并排比较的场景。</p>
+      <table class="a"><thead><tr><th>前缀</th><th>用途</th><th>典型示例</th></tr></thead><tbody>
+        <tr><td><code>feat</code></td><td>新增功能</td><td><code>feat: 增加用户登录登出接口</code></td></tr>
+        <tr><td><code>fix</code></td><td>Bug 修复</td><td><code>fix: 修复静态文件路径 404 问题</code></td></tr>
+        <tr><td><code>chore</code></td><td>构建、依赖或配置调整</td><td><code>chore: 升级 vitepress 版本至 1.0</code></td></tr>
+        <tr><td><code>docs</code></td><td>仅文档修改</td><td><code>docs: 补充生产部署环境架构图</code></td></tr>
+      </tbody></table>
+    </section>
+
+    <section class="case">
+      <h2>方案 B：两列无竖线行表</h2>
+      <p class="note">去掉竖线，把内容收敛为“命令 + 解释”，在手机上通常最稳。</p>
+      <table class="b"><thead><tr><th>命令</th><th>作用</th></tr></thead><tbody>
+        <tr><td><code>git push</code></td><td>本地 → GitHub，把本地新 commit 送到云端。</td></tr>
+        <tr><td><code>git pull</code></td><td>GitHub → 本地 / 服务器，把云端新 commit 拉下来。</td></tr>
+        <tr><td><code>git clone</code></td><td>GitHub → 任意机器，首次把整个仓库和历史复制过来。</td></tr>
+      </tbody></table>
+    </section>
+
+    <section class="case">
+      <h2>方案 C：两列带底纹表格</h2>
+      <p class="note">保留表格边界，但只保留两列。适合“运维场景 → 命令与说明”的信息。</p>
+      <table class="c"><thead><tr><th>运维场景</th><th>命令与说明</th></tr></thead><tbody>
+        <tr><td>初始化项目版本管理</td><td><code>git init</code>：把当前目录变成 Git 仓库。</td></tr>
+        <tr><td>先确认改了什么</td><td><code>git status</code> / <code>git diff</code>：commit 前确认改动范围。</td></tr>
+        <tr><td>记录本次变更</td><td><code>git add .</code> → <code>git commit -m "说明"</code>：给变更拍快照。</td></tr>
+        <tr><td>出问题时回退</td><td><code>git revert &lt;commit&gt;</code>：生成反向 commit，不丢历史。</td></tr>
+      </tbody></table>
+    </section>
+
+    <section class="case">
+      <h2>方案 D：三列重点对照表</h2>
+      <p class="note">只用于真正的“旧方式 vs 新方式”对比；第一列窄、后两列内容集中。</p>
+      <table class="d"><thead><tr><th>断点</th><th>手动备份</th><th>Git</th></tr></thead><tbody>
+        <tr><td>会被跳过</td><td>改动小时直接覆盖。</td><td><code>git commit</code> 是轻量操作，不会跳过。</td></tr>
+        <tr><td>没有上下文</td><td>只有日期。</td><td>每次 commit 附带修改人、时间、说明。</td></tr>
+        <tr><td>回退要重做</td><td><code>mv</code> 目录 + 重启。</td><td><code>git revert</code> / <code>git checkout</code>，秒级回退。</td></tr>
+      </tbody></table>
+    </section>
+  </main>
+  <div style="position:sticky;bottom:0;padding:12px;text-align:center;background:#fff;border-top:1px solid #e8e8e8"><button class="copy" id="copy">一键复制全部方案</button><span class="tip" id="status">粘贴到临时草稿，用手机预览</span></div>
+  <script>
+    document.getElementById('copy').addEventListener('click',()=>{
+      const holder=document.createElement('div');holder.contentEditable='true';holder.style.cssText='position:fixed;left:-99999px;top:0;width:700px;background:#fff';holder.innerHTML=document.getElementById('article').innerHTML;document.body.appendChild(holder);
+      const range=document.createRange();range.selectNodeContents(holder);const selection=getSelection();selection.removeAllRanges();selection.addRange(range);const ok=document.execCommand('copy');selection.removeAllRanges();holder.remove();document.getElementById('status').textContent=ok?'已复制全部方案，可粘贴到临时草稿':'复制失败，请使用 Chrome 打开后重试';
+    });
+  </script>
+</body>
+</html>
