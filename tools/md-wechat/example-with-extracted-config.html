@@ -1,0 +1,503 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>微信公众号文章</title>
+  
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
+
+  <style>
+
+/**
+ * MD 基础主题样式
+ */
+section {
+  font-family: var(--md-font-family);
+  font-size: var(--md-font-size);
+  line-height: 1.75;
+  text-align: left;
+  color: #333;
+}
+
+section > :first-child {
+  margin-top: 0 !important;
+}
+
+:root {
+  --md-primary-color: #0F4C81;
+  --md-font-family: -apple-system-font, BlinkMacSystemFont, Helvetica Neue, PingFang SC, sans-serif;
+  --md-font-size: 16px;
+  --md-text-color: #3f3f3f;
+  --md-bg-color: #ffffff;
+  --md-line-height: 1.6;
+  --md-link-color: #0F4C81;
+  --md-image-radius: 4px;
+}
+
+/**
+ * MD 默认主题（经典主题）
+ */
+
+h1 {
+  display: table;
+  padding: 0 1em;
+  border-bottom: 2px solid var(--md-primary-color);
+  margin: 2em auto 1em;
+  color: #333;
+  font-size: 1.2em;
+  font-weight: bold;
+  text-align: center;
+}
+
+h2 {
+  display: table;
+  padding: 0 0.2em;
+  margin: 2em auto 1em;
+  color: #fff;
+  background: var(--md-primary-color);
+  font-size: 1.2em;
+  font-weight: bold;
+  text-align: center;
+}
+
+h3 {
+  padding-left: 8px;
+  border-left: 3px solid var(--md-primary-color);
+  margin: 1.5em 8px 0.75em 0;
+  color: #333;
+  font-size: 1.1em;
+  font-weight: bold;
+}
+
+h4 {
+  margin: 1.5em 8px 0.5em;
+  color: var(--md-primary-color);
+  font-size: 1em;
+  font-weight: bold;
+}
+
+p {
+  margin: 1.2em 8px;
+  letter-spacing: 0.1em;
+  color: #333;
+}
+
+blockquote {
+  font-style: normal;
+  padding: 1em;
+  border-left: 4px solid var(--md-primary-color);
+  border-radius: 6px;
+  color: #333;
+  background: #f7f7f7;
+  margin: 1em 8px;
+}
+
+blockquote p {
+  margin: 0;
+}
+
+pre {
+  font-size: 90%;
+  overflow-x: auto;
+  border-radius: 8px;
+  padding: 1em;
+  margin: 10px 8px;
+  background: #282c34;
+  color: #abb2bf;
+}
+
+pre code {
+  background: none;
+  padding: 0;
+  color: inherit;
+}
+
+code {
+  font-size: 90%;
+  color: #d14;
+  background: rgba(27, 31, 35, 0.05);
+  padding: 3px 5px;
+  border-radius: 4px;
+}
+
+s, del {
+  text-decoration: line-through;
+  color: #999;
+}
+
+mark {
+  background: var(--md-primary-color);
+  color: #fff;
+  padding: 2px 4px;
+  border-radius: 2px;
+}
+
+u {
+  text-decoration: underline;
+}
+
+ruby {
+  display: inline-ruby;
+}
+
+ruby rt {
+  font-size: 0.65em;
+  color: #666;
+}
+
+img {
+  display: block;
+  max-width: 100%;
+  margin: 0.5em auto;
+  border-radius: 4px;
+}
+
+figcaption {
+  text-align: center;
+  color: #888;
+  font-size: 0.8em;
+  margin-top: 0.5em;
+}
+
+ol, ul {
+  padding-left: 1.5em;
+  margin: 0.5em 8px;
+  color: #333;
+}
+
+li {
+  margin: 0.3em 0;
+}
+
+hr {
+  border: none;
+  border-top: 2px solid #eee;
+  margin: 1.5em 0;
+}
+
+strong {
+  color: var(--md-primary-color);
+  font-weight: bold;
+}
+
+em {
+  font-style: italic;
+}
+
+a {
+  color: #576b95;
+  text-decoration: none;
+}
+
+table {
+  border-collapse: collapse;
+  width: 100%;
+  margin: 1em 0;
+}
+
+th, td {
+  border: 1px solid #ddd;
+  padding: 0.5em;
+  text-align: left;
+}
+
+th {
+  background: #f5f5f5;
+  font-weight: bold;
+}
+
+/* KaTeX 样式 */
+.katex-display {
+  margin: 1em 0;
+  overflow-x: auto;
+  text-align: center;
+}
+
+.katex {
+  font-size: 1.1em;
+}
+
+/* Mermaid 图表 */
+.mermaid-diagram {
+  text-align: center;
+  margin: 1em 0;
+}
+
+.mermaid-diagram svg {
+  max-width: 100%;
+  height: auto;
+}
+
+
+  </style>
+</head>
+<body style="margin:0;padding:20px;background:#ffffff;">
+<section style="
+  font-family: -apple-system-font, BlinkMacSystemFont, Helvetica Neue, PingFang SC, sans-serif;
+  font-size: 16px;
+  line-height: 1.6;
+  max-width: 100%;
+  color: #3f3f3f;
+">
+
+<blockquote style="border-left:4px solid #0F4C81;padding:1em;background:#f7f7f7;">
+<p style="margin:0;">字数 15088，阅读大约需 37 分钟</p>
+</blockquote>
+
+<h1>探索 Markdown 的奇妙世界</h1>
+<p>欢迎来到 Markdown 的奇妙世界！无论你是写作爱好者、开发者、博主，还是想要简单记录点什么的人，Markdown 都能成为你新的好伙伴。它不仅让写作变得简单明了，还能轻松地将内容转化为漂亮的网页格式。今天，我们将全面探讨 Markdown 的基础和进阶语法，让你在这个过程中充分享受写作的乐趣！</p>
+<p>Markdown 是一种轻量级标记语言，用于格式化纯文本。它以简单、直观的语法而著称，可以快速地生成 HTML。Markdown 是写作与代码的完美结合，既简单又强大。</p>
+<h2>Markdown 基础语法</h2>
+<h3>1. 标题：让你的内容层次分明</h3>
+<p>用 <code>#</code> 号来创建标题。标题从 <code>#</code> 开始，<code>#</code> 的数量表示标题的级别。</p>
+<pre style="position:relative;background:#282c34;color:#abb2bf;padding:1em;border-radius:8px;overflow-x:auto;">
+      <svg xmlns="http://www.w3.org/2000/svg" width="45" height="13" style="position:absolute;top:0;right:0;padding:10px 14px 0;">
+        <ellipse cx="50" cy="65" rx="50" ry="52" stroke="rgb(220,60,54)" stroke-width="2" fill="rgb(237,108,96)"/>
+        <ellipse cx="225" cy="65" rx="50" ry="52" stroke="rgb(218,151,33)" stroke-width="2" fill="rgb(247,193,81)"/>
+        <ellipse cx="400" cy="65" rx="50" ry="52" stroke="rgb(27,161,37)" stroke-width="2" fill="rgb(100,200,86)"/>
+      </svg>
+    <code class="language-markdown"><span class="hljs-section"># 一级标题</span>
+
+<span class="hljs-section">## 二级标题</span>
+
+<span class="hljs-section">### 三级标题</span>
+
+<span class="hljs-section">#### 四级标题</span></code></pre><p>以上代码将渲染出一组层次分明的标题，使你的内容井井有条。</p>
+<h3>2. 段落与换行：自然流畅</h3>
+<p>Markdown 中的段落就是一行接一行的文本。要创建新段落，只需在两行文本之间空一行。</p>
+<h3>3. 字体样式：强调你的文字</h3>
+<ul>
+<li><strong>粗体</strong>：用两个星号或下划线包裹文字，如 <code>**粗体**</code> 或 <code>__粗体__</code>。</li>
+<li><em>斜体</em>：用一个星号或下划线包裹文字，如 <code>*斜体*</code> 或 <code>_斜体_</code>。</li>
+<li><s>删除线</s>：用两个波浪线包裹文字，如 <code>~~删除线~~</code>。</li>
+<li><mark>高亮</mark>：用两个等号包裹文字，如 <code>==高亮==</code>。</li>
+<li><u>下划线</u>：用两个加号包裹文字，如 <code>++下划线++</code>。</li>
+<li><del>波浪线</del>：用一个波浪线包裹文字，如 <code>~波浪线~</code>。</li>
+</ul>
+<p>这些简单的标记可以让你的内容更有层次感和重点突出。</p>
+<h3>4. 列表：整洁有序</h3>
+<ul>
+<li><strong>无序列表</strong>：用 <code>-</code>、<code>*</code> 或 <code>+</code> 加空格开始一行。</li>
+<li><strong>有序列表</strong>：使用数字加点号（<code>1.</code>、<code>2.</code>）开始一行。</li>
+</ul>
+<p>在列表中嵌套其他内容？只需缩进即可实现嵌套效果。</p>
+<ul>
+<li>无序列表项 1<ol>
+<li>嵌套有序列表项 1</li>
+<li>嵌套有序列表项 2</li>
+</ol>
+</li>
+<li>无序列表项 2</li>
+</ul>
+<ol>
+<li>有序列表项 1</li>
+<li>有序列表项 2</li>
+</ol>
+<h3>5. 链接与图片：丰富内容</h3>
+<ul>
+<li><strong>链接</strong>：用方括号和圆括号创建链接 <code>[显示文本](链接地址)</code>。</li>
+<li><strong>图片</strong>：和链接类似，只需在前面加上 <code>!</code>，如 <code>![描述文本](图片链接)</code>。</li>
+</ul>
+<p><a href="https://github.com/doocs">访问 Doocs</a></p>
+<p><img src="https://cdn-doocs.oss-cn-shenzhen.aliyuncs.com/gh/doocs/md/images/logo-2.png" alt="doocs"></p>
+<p>轻松实现富媒体内容展示！</p>
+<blockquote>
+<p>因微信公众号平台不支持除公众号内容以外的链接，故其他平台的链接，会呈现链接样式但无法点击跳转。</p>
+</blockquote>
+<blockquote>
+<p>对于这些链接请注意明文书写，或点击左上角「格式-&gt;微信外链接转底部引用」开启引用，这样就可以在底部观察到链接指向。</p>
+</blockquote>
+<p>另外，使用 <code>&lt;![alt](url),![alt](url)&gt;</code> 语法可以创建横屏滑动幻灯片，支持微信公众号平台。建议使用相似尺寸的图片以获得最佳显示效果。</p>
+<h3>6. 引用：引用名言或引人深思的句子</h3>
+<p>使用 <code>&gt;</code> 来创建引用，只需在文本前面加上它。多层引用？在前一层 <code>&gt;</code> 后再加一个就行。</p>
+<blockquote>
+<p>这是一个引用</p>
+<blockquote>
+<p>这是一个嵌套引用</p>
+</blockquote>
+</blockquote>
+<p>这让你的引用更加富有层次感。</p>
+<h3>7. 代码块：展示你的代码</h3>
+<ul>
+<li><strong>行内代码</strong>：用反引号包裹，如 <code>code</code>。</li>
+<li><strong>代码块</strong>：用三个反引号包裹，并指定语言，如：</li>
+</ul>
+<pre style="position:relative;background:#282c34;color:#abb2bf;padding:1em;border-radius:8px;overflow-x:auto;">
+      <svg xmlns="http://www.w3.org/2000/svg" width="45" height="13" style="position:absolute;top:0;right:0;padding:10px 14px 0;">
+        <ellipse cx="50" cy="65" rx="50" ry="52" stroke="rgb(220,60,54)" stroke-width="2" fill="rgb(237,108,96)"/>
+        <ellipse cx="225" cy="65" rx="50" ry="52" stroke="rgb(218,151,33)" stroke-width="2" fill="rgb(247,193,81)"/>
+        <ellipse cx="400" cy="65" rx="50" ry="52" stroke="rgb(27,161,37)" stroke-width="2" fill="rgb(100,200,86)"/>
+      </svg>
+    <code class="language-js"><span class="hljs-variable language_">console</span>.<span class="hljs-title function_">log</span>(<span class="hljs-string">`Hello, Doocs!`</span>)</code></pre><p>语法高亮让你的代码更易读。</p>
+<h3>8. 分割线：分割内容</h3>
+<p>用三个或更多的 <code>-</code>、<code>*</code> 或 <code>_</code> 来创建分割线。</p>
+<hr>
+<p>为你的内容添加视觉分隔。</p>
+<h3>9. 表格：清晰展示数据</h3>
+<p>Markdown 支持简单的表格，用 <code>|</code> 和 <code>-</code> 分隔单元格和表头。</p>
+<table>
+<thead>
+<tr>
+<th>项目人员</th>
+<th>邮箱</th>
+<th>微信号</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><a href="https://github.com/yanglbme">yanglbme</a></td>
+<td><a href="mailto:contact@yanglibin.info">contact@yanglibin.info</a></td>
+<td>YLB0109</td>
+</tr>
+<tr>
+<td><a href="https://github.com/YangFong">YangFong</a></td>
+<td><a href="mailto:yangfong2022@gmail.com">yangfong2022@gmail.com</a></td>
+<td>yq2419731931</td>
+</tr>
+<tr>
+<td><a href="https://github.com/thinkasany">thinkasany</a></td>
+<td><a href="mailto:thinkasany@gmail.com">thinkasany@gmail.com</a></td>
+<td>thinkasany</td>
+</tr>
+</tbody></table>
+<p>这样的表格让数据展示更为清爽！</p>
+<blockquote>
+<p>手动编写标记太麻烦？我们提供了便捷方式。左上方点击「编辑-&gt;插入表格」，即可快速实现表格渲染。</p>
+</blockquote>
+<h2>Markdown 进阶技巧</h2>
+<h3>1. LaTeX 公式：完美展示数学表达式</h3>
+<p>Markdown 允许嵌入 LaTeX 语法展示数学公式：</p>
+<ul>
+<li><strong>行内公式</strong>：用 <code>$</code> 包裹公式，如 <span class="katex"><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.6833em;"></span><span class="mord mathnormal" style="margin-right:0.05764em;">E</span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:0.8141em;"></span><span class="mord mathnormal">m</span><span class="mord"><span class="mord mathnormal">c</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.8141em;"><span style="top:-3.063em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight">2</span></span></span></span></span></span></span></span></span></span></span>。</li>
+<li><strong>块级公式</strong>：用 <code>$$</code> 包裹公式，如：</li>
+</ul>
+<span class="katex-display"><span class="katex"><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:6em;vertical-align:-2.75em;"></span><span class="mord"><span class="mtable"><span class="col-align-r"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:3.25em;"><span style="top:-5.41em;"><span class="pstrut" style="height:3em;"></span><span class="mord"><span class="mord"><span class="mord mathnormal">d</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3117em;"><span style="top:-2.55em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mathnormal mtight">i</span><span class="mpunct mtight">,</span><span class="mord mathnormal mtight" style="margin-right:0.05724em;">j</span></span></span></span></span><span class="vlist-s"></span></span><span class="vlist-r"><span class="vlist" style="height:0.2861em;"><span></span></span></span></span></span></span></span></span><span style="top:-3.91em;"><span class="pstrut" style="height:3em;"></span><span class="mord"><span class="mord"><span class="mord mathnormal">d</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3117em;"><span style="top:-2.55em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mathnormal mtight">i</span><span class="mpunct mtight">,</span><span class="mord mathnormal mtight" style="margin-right:0.03588em;">y</span><span class="mbin mtight">+</span><span class="mord mtight">1</span></span></span></span></span><span class="vlist-s"></span></span><span class="vlist-r"><span class="vlist" style="height:0.2861em;"><span></span></span></span></span></span></span></span></span><span style="top:-2.41em;"><span class="pstrut" style="height:3em;"></span><span class="mord"><span class="mord"><span class="mord mathnormal">d</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3117em;"><span style="top:-2.55em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mathnormal mtight">x</span><span class="mbin mtight">+</span><span class="mord mtight">1</span><span class="mpunct mtight">,</span><span class="mord mathnormal mtight" style="margin-right:0.05724em;">j</span></span></span></span></span><span class="vlist-s"></span></span><span class="vlist-r"><span class="vlist" style="height:0.2861em;"><span></span></span></span></span></span></span></span></span><span style="top:-0.91em;"><span class="pstrut" style="height:3em;"></span><span class="mord"><span class="mord"><span class="mord mathnormal">d</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3011em;"><span style="top:-2.55em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mathnormal mtight">x</span><span class="mbin mtight">+</span><span class="mord mtight">1</span><span class="mpunct mtight">,</span><span class="mord mathnormal mtight" style="margin-right:0.03588em;">y</span><span class="mbin mtight">+</span><span class="mord mtight">1</span></span></span></span></span><span class="vlist-s"></span></span><span class="vlist-r"><span class="vlist" style="height:0.2861em;"><span></span></span></span></span></span></span></span></span></span><span class="vlist-s"></span></span><span class="vlist-r"><span class="vlist" style="height:2.75em;"><span></span></span></span></span></span><span class="col-align-l"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:3.25em;"><span style="top:-5.41em;"><span class="pstrut" style="height:3em;"></span><span class="mord"><span class="mord"></span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">←</span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mord"><span class="mord mathnormal">d</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3117em;"><span style="top:-2.55em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mathnormal mtight">i</span><span class="mpunct mtight">,</span><span class="mord mathnormal mtight" style="margin-right:0.05724em;">j</span></span></span></span></span><span class="vlist-s"></span></span><span class="vlist-r"><span class="vlist" style="height:0.2861em;"><span></span></span></span></span></span></span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">+</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mord">1</span></span></span><span style="top:-3.91em;"><span class="pstrut" style="height:3em;"></span><span class="mord"><span class="mord"></span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">←</span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mord"><span class="mord mathnormal">d</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3117em;"><span style="top:-2.55em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mathnormal mtight">i</span><span class="mpunct mtight">,</span><span class="mord mathnormal mtight" style="margin-right:0.03588em;">y</span><span class="mbin mtight">+</span><span class="mord mtight">1</span></span></span></span></span><span class="vlist-s"></span></span><span class="vlist-r"><span class="vlist" style="height:0.2861em;"><span></span></span></span></span></span></span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">−</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mord">1</span></span></span><span style="top:-2.41em;"><span class="pstrut" style="height:3em;"></span><span class="mord"><span class="mord"></span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">←</span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mord"><span class="mord mathnormal">d</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3117em;"><span style="top:-2.55em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mathnormal mtight">x</span><span class="mbin mtight">+</span><span class="mord mtight">1</span><span class="mpunct mtight">,</span><span class="mord mathnormal mtight" style="margin-right:0.05724em;">j</span></span></span></span></span><span class="vlist-s"></span></span><span class="vlist-r"><span class="vlist" style="height:0.2861em;"><span></span></span></span></span></span></span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">−</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mord">1</span></span></span><span style="top:-0.91em;"><span class="pstrut" style="height:3em;"></span><span class="mord"><span class="mord"></span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">←</span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mord"><span class="mord mathnormal">d</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3011em;"><span style="top:-2.55em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mathnormal mtight">x</span><span class="mbin mtight">+</span><span class="mord mtight">1</span><span class="mpunct mtight">,</span><span class="mord mathnormal mtight" style="margin-right:0.03588em;">y</span><span class="mbin mtight">+</span><span class="mord mtight">1</span></span></span></span></span><span class="vlist-s"></span></span><span class="vlist-r"><span class="vlist" style="height:0.2861em;"><span></span></span></span></span></span></span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">+</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mord">1</span></span></span></span><span class="vlist-s"></span></span><span class="vlist-r"><span class="vlist" style="height:2.75em;"><span></span></span></span></span></span></span></span></span></span></span></span><p>现在还支持 <strong>LaTeX 标准格式</strong>：</p>
+<ul>
+<li><strong>行内公式</strong>：用 <code>\(...\)</code> 包裹公式，如 <span class="katex"><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.8974em;vertical-align:-0.0833em;"></span><span class="mord"><span class="mord mathnormal">x</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.8141em;"><span style="top:-3.063em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight">2</span></span></span></span></span></span></span></span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">+</span><span class="mspace" style="margin-right:0.2222em;"></span></span><span class="base"><span class="strut" style="height:1.0085em;vertical-align:-0.1944em;"></span><span class="mord"><span class="mord mathnormal" style="margin-right:0.03588em;">y</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.8141em;"><span style="top:-3.063em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight">2</span></span></span></span></span></span></span></span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:0.8141em;"></span><span class="mord"><span class="mord mathnormal" style="margin-right:0.04398em;">z</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.8141em;"><span style="top:-3.063em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight">2</span></span></span></span></span></span></span></span></span></span></span>。</li>
+<li><strong>块级公式</strong>：用 <code>\[...\]</code> 包裹公式，如：</li>
+</ul>
+<span class="katex-display"><span class="katex"><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:2.2222em;vertical-align:-0.8622em;"></span><span class="mop op-symbol large-op" style="margin-right:0.44445em;position:relative;top:-0.0011em;">∫</span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mord" style="margin-right:0.02778em;">_</span><span class="mord"><span class="mord"><span class="mord">−</span><span class="mord">∞</span></span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.7144em;"><span style="top:-3.113em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mtight">∞</span></span></span></span></span></span></span></span></span><span class="mord"><span class="mord mathnormal">e</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:1.0369em;"><span style="top:-3.113em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mtight">−</span><span class="mord mtight"><span class="mord mathnormal mtight">x</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.8913em;"><span style="top:-2.931em;margin-right:0.0714em;"><span class="pstrut" style="height:2.5em;"></span><span class="sizing reset-size3 size1 mtight"><span class="mord mtight">2</span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span><span class="mord mathnormal">d</span><span class="mord mathnormal">x</span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:1.04em;vertical-align:-0.1908em;"></span><span class="mord sqrt"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.8492em;"><span class="svg-align" style="top:-3em;"><span class="pstrut" style="height:3em;"></span><span class="mord" style="padding-left:0.833em;"><span class="mord mathnormal" style="margin-right:0.03588em;">π</span></span></span><span style="top:-2.8092em;"><span class="pstrut" style="height:3em;"></span><span class="hide-tail" style="min-width:0.853em;height:1.08em;"><svg xmlns="http://www.w3.org/2000/svg" width="400em" height="1.08em" viewBox="0 0 400000 1080" preserveAspectRatio="xMinYMin slice"><path d="M95,702
+c-2.7,0,-7.17,-2.7,-13.5,-8c-5.8,-5.3,-9.5,-10,-9.5,-14
+c0,-2,0.3,-3.3,1,-4c1.3,-2.7,23.83,-20.7,67.5,-54
+c44.2,-33.3,65.8,-50.3,66.5,-51c1.3,-1.3,3,-2,5,-2c4.7,0,8.7,3.3,12,10
+s173,378,173,378c0.7,0,35.3,-71,104,-213c68.7,-142,137.5,-285,206.5,-429
+c69,-144,104.5,-217.7,106.5,-221
+l0 -0
+c5.3,-9.3,12,-14,20,-14
+H400000v40H845.2724
+s-225.272,467,-225.272,467s-235,486,-235,486c-2.7,4.7,-9,7,-19,7
+c-6,0,-10,-1,-12,-3s-194,-422,-194,-422s-65,47,-65,47z
+M834 80h400000v40h-400000z"/></svg></span></span></span><span class="vlist-s"></span></span><span class="vlist-r"><span class="vlist" style="height:0.1908em;"><span></span></span></span></span></span></span></span></span></span><p>混合使用示例：传统格式 <span class="katex"><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.6667em;vertical-align:-0.0833em;"></span><span class="mord mathnormal">a</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">+</span><span class="mspace" style="margin-right:0.2222em;"></span></span><span class="base"><span class="strut" style="height:0.6944em;"></span><span class="mord mathnormal">b</span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:0.4306em;"></span><span class="mord mathnormal">c</span></span></span></span> 和 LaTeX 格式 <span class="katex"><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.7778em;vertical-align:-0.0833em;"></span><span class="mord mathnormal">d</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">+</span><span class="mspace" style="margin-right:0.2222em;"></span></span><span class="base"><span class="strut" style="height:0.4306em;"></span><span class="mord mathnormal">e</span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:0.8889em;vertical-align:-0.1944em;"></span><span class="mord mathnormal" style="margin-right:0.10764em;">f</span></span></span></span> 可以在同一段落中共存。</p>
+<ol>
+<li>列表内块公式 1</li>
+</ol>
+<span class="katex-display"><span class="katex"><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1.0585em;vertical-align:-0.1944em;"></span><span class="mord"><span class="mord mathnormal">χ</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.8641em;"><span style="top:-3.113em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight">2</span></span></span></span></span></span></span></span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:2.1771em;vertical-align:-0.686em;"></span><span class="mop op-symbol large-op" style="position:relative;top:0em;">∑</span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mord"><span class="mopen nulldelimiter"></span><span class="mfrac"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:1.4911em;"><span style="top:-2.314em;"><span class="pstrut" style="height:3em;"></span><span class="mord"><span class="mord mathnormal" style="margin-right:0.05764em;">E</span></span></span><span style="top:-3.23em;"><span class="pstrut" style="height:3em;"></span><span class="frac-line" style="border-bottom-width:0.04em;"></span></span><span style="top:-3.677em;"><span class="pstrut" style="height:3em;"></span><span class="mord"><span class="mopen">(</span><span class="mord mathnormal" style="margin-right:0.02778em;">O</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">−</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mord mathnormal" style="margin-right:0.05764em;">E</span><span class="mclose"><span class="mclose">)</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.8141em;"><span style="top:-3.063em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight">2</span></span></span></span></span></span></span></span></span></span></span><span class="vlist-s"></span></span><span class="vlist-r"><span class="vlist" style="height:0.686em;"><span></span></span></span></span></span><span class="mclose nulldelimiter"></span></span></span></span></span></span><ol start="2">
+<li>列表内块公式 2</li>
+</ol>
+<span class="katex-display"><span class="katex"><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1.0585em;vertical-align:-0.1944em;"></span><span class="mord"><span class="mord mathnormal">χ</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.8641em;"><span style="top:-3.113em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight">2</span></span></span></span></span></span></span></span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:2.1771em;vertical-align:-0.686em;"></span><span class="mop op-symbol large-op" style="position:relative;top:0em;">∑</span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mord"><span class="mopen nulldelimiter"></span><span class="mfrac"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:1.4911em;"><span style="top:-2.314em;"><span class="pstrut" style="height:3em;"></span><span class="mord"><span class="mord mathnormal" style="margin-right:0.05764em;">E</span></span></span><span style="top:-3.23em;"><span class="pstrut" style="height:3em;"></span><span class="frac-line" style="border-bottom-width:0.04em;"></span></span><span style="top:-3.677em;"><span class="pstrut" style="height:3em;"></span><span class="mord"><span class="mopen">(</span><span class="mord">∣</span><span class="mord mathnormal" style="margin-right:0.02778em;">O</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">−</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mord mathnormal" style="margin-right:0.05764em;">E</span><span class="mord">∣</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">−</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mord">0.5</span><span class="mclose"><span class="mclose">)</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.8141em;"><span style="top:-3.063em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight">2</span></span></span></span></span></span></span></span></span></span></span><span class="vlist-s"></span></span><span class="vlist-r"><span class="vlist" style="height:0.686em;"><span></span></span></span></span></span><span class="mclose nulldelimiter"></span></span></span></span></span></span><p>这是展示复杂数学表达的利器！</p>
+<h3>2. Mermaid 流程图：可视化流程</h3>
+<p>Mermaid 是强大的可视化工具，可以在 Markdown 中创建流程图、时序图等。</p>
+<div class="mermaid-diagram"><svg id="mermaid-svg" width="100%" xmlns="http://www.w3.org/2000/svg" class="flowchart" style="max-width: 523.9375px;" viewBox="0 0 523.9375 278" role="graphics-document document" aria-roledescription="flowchart-v2"><style>#mermaid-svg{font-family:"trebuchet ms",verdana,arial,sans-serif;font-size:16px;fill:#333;}@keyframes edge-animation-frame{from{stroke-dashoffset:0;}}@keyframes dash{to{stroke-dashoffset:0;}}#mermaid-svg .edge-animation-slow{stroke-dasharray:9,5!important;stroke-dashoffset:900;animation:dash 50s linear infinite;stroke-linecap:round;}#mermaid-svg .edge-animation-fast{stroke-dasharray:9,5!important;stroke-dashoffset:900;animation:dash 20s linear infinite;stroke-linecap:round;}#mermaid-svg .error-icon{fill:#552222;}#mermaid-svg .error-text{fill:#552222;stroke:#552222;}#mermaid-svg .edge-thickness-normal{stroke-width:1px;}#mermaid-svg .edge-thickness-thick{stroke-width:3.5px;}#mermaid-svg .edge-pattern-solid{stroke-dasharray:0;}#mermaid-svg .edge-thickness-invisible{stroke-width:0;fill:none;}#mermaid-svg .edge-pattern-dashed{stroke-dasharray:3;}#mermaid-svg .edge-pattern-dotted{stroke-dasharray:2;}#mermaid-svg .marker{fill:#333333;stroke:#333333;}#mermaid-svg .marker.cross{stroke:#333333;}#mermaid-svg svg{font-family:"trebuchet ms",verdana,arial,sans-serif;font-size:16px;}#mermaid-svg p{margin:0;}#mermaid-svg .label{font-family:"trebuchet ms",verdana,arial,sans-serif;color:#333;}#mermaid-svg .cluster-label text{fill:#333;}#mermaid-svg .cluster-label span{color:#333;}#mermaid-svg .cluster-label span p{background-color:transparent;}#mermaid-svg .label text,#mermaid-svg span{fill:#333;color:#333;}#mermaid-svg .node rect,#mermaid-svg .node circle,#mermaid-svg .node ellipse,#mermaid-svg .node polygon,#mermaid-svg .node path{fill:#ECECFF;stroke:#9370DB;stroke-width:1px;}#mermaid-svg .rough-node .label text,#mermaid-svg .node .label text,#mermaid-svg .image-shape .label,#mermaid-svg .icon-shape .label{text-anchor:middle;}#mermaid-svg .node .katex path{fill:#000;stroke:#000;stroke-width:1px;}#mermaid-svg .rough-node .label,#mermaid-svg .node .label,#mermaid-svg .image-shape .label,#mermaid-svg .icon-shape .label{text-align:center;}#mermaid-svg .node.clickable{cursor:pointer;}#mermaid-svg .root .anchor path{fill:#333333!important;stroke-width:0;stroke:#333333;}#mermaid-svg .arrowheadPath{fill:#333333;}#mermaid-svg .edgePath .path{stroke:#333333;stroke-width:2.0px;}#mermaid-svg .flowchart-link{stroke:#333333;fill:none;}#mermaid-svg .edgeLabel{background-color:rgba(232,232,232, 0.8);text-align:center;}#mermaid-svg .edgeLabel p{background-color:rgba(232,232,232, 0.8);}#mermaid-svg .edgeLabel rect{opacity:0.5;background-color:rgba(232,232,232, 0.8);fill:rgba(232,232,232, 0.8);}#mermaid-svg .labelBkg{background-color:rgba(232, 232, 232, 0.5);}#mermaid-svg .cluster rect{fill:#ffffde;stroke:#aaaa33;stroke-width:1px;}#mermaid-svg .cluster text{fill:#333;}#mermaid-svg .cluster span{color:#333;}#mermaid-svg div.mermaidTooltip{position:absolute;text-align:center;max-width:200px;padding:2px;font-family:"trebuchet ms",verdana,arial,sans-serif;font-size:12px;background:hsl(80, 100%, 96.2745098039%);border:1px solid #aaaa33;border-radius:2px;pointer-events:none;z-index:100;}#mermaid-svg .flowchartTitleText{text-anchor:middle;font-size:18px;fill:#333;}#mermaid-svg rect.text{fill:none;stroke-width:0;}#mermaid-svg .icon-shape,#mermaid-svg .image-shape{background-color:rgba(232,232,232, 0.8);text-align:center;}#mermaid-svg .icon-shape p,#mermaid-svg .image-shape p{background-color:rgba(232,232,232, 0.8);padding:2px;}#mermaid-svg .icon-shape .label rect,#mermaid-svg .image-shape .label rect{opacity:0.5;background-color:rgba(232,232,232, 0.8);fill:rgba(232,232,232, 0.8);}#mermaid-svg .label-icon{display:inline-block;height:1em;overflow:visible;vertical-align:-0.125em;}#mermaid-svg .node .label-icon path{fill:currentColor;stroke:revert;stroke-width:revert;}#mermaid-svg :root{--mermaid-font-family:"trebuchet ms",verdana,arial,sans-serif;}</style><g><marker id="mermaid-svg_flowchart-v2-pointEnd" class="marker flowchart-v2" viewBox="0 0 10 10" refX="5" refY="5" markerUnits="userSpaceOnUse" markerWidth="8" markerHeight="8" orient="auto"><path d="M 0 0 L 10 5 L 0 10 z" class="arrowMarkerPath" style="stroke-width: 1; stroke-dasharray: 1, 0;"></path></marker><marker id="mermaid-svg_flowchart-v2-pointStart" class="marker flowchart-v2" viewBox="0 0 10 10" refX="4.5" refY="5" markerUnits="userSpaceOnUse" markerWidth="8" markerHeight="8" orient="auto"><path d="M 0 5 L 10 10 L 10 0 z" class="arrowMarkerPath" style="stroke-width: 1; stroke-dasharray: 1, 0;"></path></marker><marker id="mermaid-svg_flowchart-v2-circleEnd" class="marker flowchart-v2" viewBox="0 0 10 10" refX="11" refY="5" markerUnits="userSpaceOnUse" markerWidth="11" markerHeight="11" orient="auto"><circle cx="5" cy="5" r="5" class="arrowMarkerPath" style="stroke-width: 1; stroke-dasharray: 1, 0;"></circle></marker><marker id="mermaid-svg_flowchart-v2-circleStart" class="marker flowchart-v2" viewBox="0 0 10 10" refX="-1" refY="5" markerUnits="userSpaceOnUse" markerWidth="11" markerHeight="11" orient="auto"><circle cx="5" cy="5" r="5" class="arrowMarkerPath" style="stroke-width: 1; stroke-dasharray: 1, 0;"></circle></marker><marker id="mermaid-svg_flowchart-v2-crossEnd" class="marker cross flowchart-v2" viewBox="0 0 11 11" refX="12" refY="5.2" markerUnits="userSpaceOnUse" markerWidth="11" markerHeight="11" orient="auto"><path d="M 1,1 l 9,9 M 10,1 l -9,9" class="arrowMarkerPath" style="stroke-width: 2; stroke-dasharray: 1, 0;"></path></marker><marker id="mermaid-svg_flowchart-v2-crossStart" class="marker cross flowchart-v2" viewBox="0 0 11 11" refX="-1" refY="5.2" markerUnits="userSpaceOnUse" markerWidth="11" markerHeight="11" orient="auto"><path d="M 1,1 l 9,9 M 10,1 l -9,9" class="arrowMarkerPath" style="stroke-width: 2; stroke-dasharray: 1, 0;"></path></marker><g class="root"><g class="clusters"></g><g class="edgePaths"><path d="M124.005,112L137.818,99.167C151.632,86.333,179.259,60.667,196.572,47.833C213.885,35,220.885,35,224.385,35L227.885,35" id="L_A_B_0" class="edge-thickness-normal edge-pattern-solid edge-thickness-normal edge-pattern-solid flowchart-link" style=";" data-edge="true" data-et="edge" data-id="L_A_B_0" data-points="W3sieCI6MTI0LjAwNDc2MDgxNTU0NzA2LCJ5IjoxMTJ9LHsieCI6MjA2Ljg4NTQyMTc1MjkyOTcsInkiOjM1fSx7IngiOjIzMS44ODU0MjE3NTI5Mjk3LCJ5IjozNX1d" marker-end="url(#mermaid-svg_flowchart-v2-pointEnd)"></path><path d="M181.885,139L186.052,139C190.219,139,198.552,139,207.76,139C216.969,139,227.052,139,232.094,139L237.135,139" id="L_A_C_0" class="edge-thickness-normal edge-pattern-solid edge-thickness-normal edge-pattern-solid flowchart-link" style=";" data-edge="true" data-et="edge" data-id="L_A_C_0" data-points="W3sieCI6MTgxLjg4NTQyMTc1MjkyOTcsInkiOjEzOX0seyJ4IjoyMDYuODg1NDIxNzUyOTI5NywieSI6MTM5fSx7IngiOjI0MS4xMzU0MjE3NTI5Mjk3LCJ5IjoxMzl9XQ==" marker-end="url(#mermaid-svg_flowchart-v2-pointEnd)"></path><path d="M124.005,166L137.818,178.833C151.632,191.667,179.259,217.333,198.004,230.167C216.75,243,226.615,243,231.547,243L236.479,243" id="L_A_D_0" class="edge-thickness-normal edge-pattern-solid edge-thickness-normal edge-pattern-solid flowchart-link" style=";" data-edge="true" data-et="edge" data-id="L_A_D_0" data-points="W3sieCI6MTI0LjAwNDc2MDgxNTU0NzA2LCJ5IjoxNjZ9LHsieCI6MjA2Ljg4NTQyMTc1MjkyOTcsInkiOjI0M30seyJ4IjoyNDAuNDc5MTcxNzUyOTI5NywieSI6MjQzfV0=" marker-end="url(#mermaid-svg_flowchart-v2-pointEnd)"></path><path d="M341.938,35L346.104,35C350.271,35,358.604,35,366.271,35C373.938,35,380.938,35,384.438,35L387.938,35" id="L_B_B1_0" class="edge-thickness-normal edge-pattern-solid edge-thickness-normal edge-pattern-solid flowchart-link" style=";" data-edge="true" data-et="edge" data-id="L_B_B1_0" data-points="W3sieCI6MzQxLjkzNzUwNzYyOTM5NDUzLCJ5IjozNX0seyJ4IjozNjYuOTM3NTA3NjI5Mzk0NTMsInkiOjM1fSx7IngiOjM5MS45Mzc1MDc2MjkzOTQ1MywieSI6MzV9XQ==" marker-end="url(#mermaid-svg_flowchart-v2-pointEnd)"></path><path d="M332.688,139L338.396,139C344.104,139,355.521,139,364.729,139C373.938,139,380.938,139,384.438,139L387.938,139" id="L_C_C1_0" class="edge-thickness-normal edge-pattern-solid edge-thickness-normal edge-pattern-solid flowchart-link" style=";" data-edge="true" data-et="edge" data-id="L_C_C1_0" data-points="W3sieCI6MzMyLjY4NzUwNzYyOTM5NDUzLCJ5IjoxMzl9LHsieCI6MzY2LjkzNzUwNzYyOTM5NDUzLCJ5IjoxMzl9LHsieCI6MzkxLjkzNzUwNzYyOTM5NDUzLCJ5IjoxMzl9XQ==" marker-end="url(#mermaid-svg_flowchart-v2-pointEnd)"></path><path d="M333.344,243L338.943,243C344.542,243,355.74,243,364.839,243C373.938,243,380.938,243,384.438,243L387.938,243" id="L_D_D1_0" class="edge-thickness-normal edge-pattern-solid edge-thickness-normal edge-pattern-solid flowchart-link" style=";" data-edge="true" data-et="edge" data-id="L_D_D1_0" data-points="W3sieCI6MzMzLjM0Mzc1NzYyOTM5NDUzLCJ5IjoyNDN9LHsieCI6MzY2LjkzNzUwNzYyOTM5NDUzLCJ5IjoyNDN9LHsieCI6MzkxLjkzNzUwNzYyOTM5NDUzLCJ5IjoyNDN9XQ==" marker-end="url(#mermaid-svg_flowchart-v2-pointEnd)"></path></g><g class="edgeLabels"><g class="edgeLabel"><g class="label" data-id="L_A_B_0" transform="translate(0, 0)"><foreignObject width="0" height="0"><div xmlns="http://www.w3.org/1999/xhtml" class="labelBkg" style="display: table-cell; white-space: nowrap; line-height: 1.5; max-width: 200px; text-align: center;"><span class="edgeLabel"></span></div></foreignObject></g></g><g class="edgeLabel"><g class="label" data-id="L_A_C_0" transform="translate(0, 0)"><foreignObject width="0" height="0"><div xmlns="http://www.w3.org/1999/xhtml" class="labelBkg" style="display: table-cell; white-space: nowrap; line-height: 1.5; max-width: 200px; text-align: center;"><span class="edgeLabel"></span></div></foreignObject></g></g><g class="edgeLabel"><g class="label" data-id="L_A_D_0" transform="translate(0, 0)"><foreignObject width="0" height="0"><div xmlns="http://www.w3.org/1999/xhtml" class="labelBkg" style="display: table-cell; white-space: nowrap; line-height: 1.5; max-width: 200px; text-align: center;"><span class="edgeLabel"></span></div></foreignObject></g></g><g class="edgeLabel"><g class="label" data-id="L_B_B1_0" transform="translate(0, 0)"><foreignObject width="0" height="0"><div xmlns="http://www.w3.org/1999/xhtml" class="labelBkg" style="display: table-cell; white-space: nowrap; line-height: 1.5; max-width: 200px; text-align: center;"><span class="edgeLabel"></span></div></foreignObject></g></g><g class="edgeLabel"><g class="label" data-id="L_C_C1_0" transform="translate(0, 0)"><foreignObject width="0" height="0"><div xmlns="http://www.w3.org/1999/xhtml" class="labelBkg" style="display: table-cell; white-space: nowrap; line-height: 1.5; max-width: 200px; text-align: center;"><span class="edgeLabel"></span></div></foreignObject></g></g><g class="edgeLabel"><g class="label" data-id="L_D_D1_0" transform="translate(0, 0)"><foreignObject width="0" height="0"><div xmlns="http://www.w3.org/1999/xhtml" class="labelBkg" style="display: table-cell; white-space: nowrap; line-height: 1.5; max-width: 200px; text-align: center;"><span class="edgeLabel"></span></div></foreignObject></g></g></g><g class="nodes"><g class="node default" id="flowchart-A-0" transform="translate(94.94271087646484, 139)"><rect class="basic label-container" style="" x="-86.94271087646484" y="-27" width="173.8854217529297" height="54"></rect><g class="label" style="" transform="translate(-56.942710876464844, -12)"><rect></rect><foreignObject width="113.88542175292969" height="24"><div xmlns="http://www.w3.org/1999/xhtml" style="display: table-cell; white-space: nowrap; line-height: 1.5; max-width: 200px; text-align: center;"><span class="nodeLabel"><p>GraphCommand</p></span></div></foreignObject></g></g><g class="node default" id="flowchart-B-1" transform="translate(286.9114646911621, 35)"><rect class="basic label-container" style="" x="-55.02604293823242" y="-27" width="110.05208587646484" height="54"></rect><g class="label" style="" transform="translate(-25.026042938232422, -12)"><rect></rect><foreignObject width="50.052085876464844" height="24"><div xmlns="http://www.w3.org/1999/xhtml" style="display: table-cell; white-space: nowrap; line-height: 1.5; max-width: 200px; text-align: center;"><span class="nodeLabel"><p>update</p></span></div></foreignObject></g></g><g class="node default" id="flowchart-C-3" transform="translate(286.9114646911621, 139)"><rect class="basic label-container" style="" x="-45.776041984558105" y="-27" width="91.55208396911621" height="54"></rect><g class="label" style="" transform="translate(-15.776041984558105, -12)"><rect></rect><foreignObject width="31.55208396911621" height="24"><div xmlns="http://www.w3.org/1999/xhtml" style="display: table-cell; white-space: nowrap; line-height: 1.5; max-width: 200px; text-align: center;"><span class="nodeLabel"><p>goto</p></span></div></foreignObject></g></g><g class="node default" id="flowchart-D-5" transform="translate(286.9114646911621, 243)"><rect class="basic label-container" style="" x="-46.43229293823242" y="-27" width="92.86458587646484" height="54"></rect><g class="label" style="" transform="translate(-16.432292938232422, -12)"><rect></rect><foreignObject width="32.864585876464844" height="24"><div xmlns="http://www.w3.org/1999/xhtml" style="display: table-cell; white-space: nowrap; line-height: 1.5; max-width: 200px; text-align: center;"><span class="nodeLabel"><p>send</p></span></div></foreignObject></g></g><g class="node default" id="flowchart-B1-7" transform="translate(453.93750762939453, 35)"><rect class="basic label-container" style="" x="-62" y="-27" width="124" height="54"></rect><g class="label" style="" transform="translate(-32, -12)"><rect></rect><foreignObject width="64" height="24"><div xmlns="http://www.w3.org/1999/xhtml" style="display: table-cell; white-space: nowrap; line-height: 1.5; max-width: 200px; text-align: center;"><span class="nodeLabel"><p>更新状态</p></span></div></foreignObject></g></g><g class="node default" id="flowchart-C1-9" transform="translate(453.93750762939453, 139)"><rect class="basic label-container" style="" x="-62" y="-27" width="124" height="54"></rect><g class="label" style="" transform="translate(-32, -12)"><rect></rect><foreignObject width="64" height="24"><div xmlns="http://www.w3.org/1999/xhtml" style="display: table-cell; white-space: nowrap; line-height: 1.5; max-width: 200px; text-align: center;"><span class="nodeLabel"><p>流程控制</p></span></div></foreignObject></g></g><g class="node default" id="flowchart-D1-11" transform="translate(453.93750762939453, 243)"><rect class="basic label-container" style="" x="-62" y="-27" width="124" height="54"></rect><g class="label" style="" transform="translate(-32, -12)"><rect></rect><foreignObject width="64" height="24"><div xmlns="http://www.w3.org/1999/xhtml" style="display: table-cell; white-space: nowrap; line-height: 1.5; max-width: 200px; text-align: center;"><span class="nodeLabel"><p>消息传递</p></span></div></foreignObject></g></g></g></g></g></svg></div><div class="mermaid-diagram"><svg id="mermaid-svg" width="100%" xmlns="http://www.w3.org/2000/svg" class="flowchart" style="max-width: 204.63543701171875px;" viewBox="0 0 204.63543701171875 278" role="graphics-document document" aria-roledescription="flowchart-v2"><style>#mermaid-svg{font-family:"trebuchet ms",verdana,arial,sans-serif;font-size:16px;fill:#333;}@keyframes edge-animation-frame{from{stroke-dashoffset:0;}}@keyframes dash{to{stroke-dashoffset:0;}}#mermaid-svg .edge-animation-slow{stroke-dasharray:9,5!important;stroke-dashoffset:900;animation:dash 50s linear infinite;stroke-linecap:round;}#mermaid-svg .edge-animation-fast{stroke-dasharray:9,5!important;stroke-dashoffset:900;animation:dash 20s linear infinite;stroke-linecap:round;}#mermaid-svg .error-icon{fill:#552222;}#mermaid-svg .error-text{fill:#552222;stroke:#552222;}#mermaid-svg .edge-thickness-normal{stroke-width:1px;}#mermaid-svg .edge-thickness-thick{stroke-width:3.5px;}#mermaid-svg .edge-pattern-solid{stroke-dasharray:0;}#mermaid-svg .edge-thickness-invisible{stroke-width:0;fill:none;}#mermaid-svg .edge-pattern-dashed{stroke-dasharray:3;}#mermaid-svg .edge-pattern-dotted{stroke-dasharray:2;}#mermaid-svg .marker{fill:#333333;stroke:#333333;}#mermaid-svg .marker.cross{stroke:#333333;}#mermaid-svg svg{font-family:"trebuchet ms",verdana,arial,sans-serif;font-size:16px;}#mermaid-svg p{margin:0;}#mermaid-svg .label{font-family:"trebuchet ms",verdana,arial,sans-serif;color:#333;}#mermaid-svg .cluster-label text{fill:#333;}#mermaid-svg .cluster-label span{color:#333;}#mermaid-svg .cluster-label span p{background-color:transparent;}#mermaid-svg .label text,#mermaid-svg span{fill:#333;color:#333;}#mermaid-svg .node rect,#mermaid-svg .node circle,#mermaid-svg .node ellipse,#mermaid-svg .node polygon,#mermaid-svg .node path{fill:#ECECFF;stroke:#9370DB;stroke-width:1px;}#mermaid-svg .rough-node .label text,#mermaid-svg .node .label text,#mermaid-svg .image-shape .label,#mermaid-svg .icon-shape .label{text-anchor:middle;}#mermaid-svg .node .katex path{fill:#000;stroke:#000;stroke-width:1px;}#mermaid-svg .rough-node .label,#mermaid-svg .node .label,#mermaid-svg .image-shape .label,#mermaid-svg .icon-shape .label{text-align:center;}#mermaid-svg .node.clickable{cursor:pointer;}#mermaid-svg .root .anchor path{fill:#333333!important;stroke-width:0;stroke:#333333;}#mermaid-svg .arrowheadPath{fill:#333333;}#mermaid-svg .edgePath .path{stroke:#333333;stroke-width:2.0px;}#mermaid-svg .flowchart-link{stroke:#333333;fill:none;}#mermaid-svg .edgeLabel{background-color:rgba(232,232,232, 0.8);text-align:center;}#mermaid-svg .edgeLabel p{background-color:rgba(232,232,232, 0.8);}#mermaid-svg .edgeLabel rect{opacity:0.5;background-color:rgba(232,232,232, 0.8);fill:rgba(232,232,232, 0.8);}#mermaid-svg .labelBkg{background-color:rgba(232, 232, 232, 0.5);}#mermaid-svg .cluster rect{fill:#ffffde;stroke:#aaaa33;stroke-width:1px;}#mermaid-svg .cluster text{fill:#333;}#mermaid-svg .cluster span{color:#333;}#mermaid-svg div.mermaidTooltip{position:absolute;text-align:center;max-width:200px;padding:2px;font-family:"trebuchet ms",verdana,arial,sans-serif;font-size:12px;background:hsl(80, 100%, 96.2745098039%);border:1px solid #aaaa33;border-radius:2px;pointer-events:none;z-index:100;}#mermaid-svg .flowchartTitleText{text-anchor:middle;font-size:18px;fill:#333;}#mermaid-svg rect.text{fill:none;stroke-width:0;}#mermaid-svg .icon-shape,#mermaid-svg .image-shape{background-color:rgba(232,232,232, 0.8);text-align:center;}#mermaid-svg .icon-shape p,#mermaid-svg .image-shape p{background-color:rgba(232,232,232, 0.8);padding:2px;}#mermaid-svg .icon-shape .label rect,#mermaid-svg .image-shape .label rect{opacity:0.5;background-color:rgba(232,232,232, 0.8);fill:rgba(232,232,232, 0.8);}#mermaid-svg .label-icon{display:inline-block;height:1em;overflow:visible;vertical-align:-0.125em;}#mermaid-svg .node .label-icon path{fill:currentColor;stroke:revert;stroke-width:revert;}#mermaid-svg :root{--mermaid-font-family:"trebuchet ms",verdana,arial,sans-serif;}</style><g><marker id="mermaid-svg_flowchart-v2-pointEnd" class="marker flowchart-v2" viewBox="0 0 10 10" refX="5" refY="5" markerUnits="userSpaceOnUse" markerWidth="8" markerHeight="8" orient="auto"><path d="M 0 0 L 10 5 L 0 10 z" class="arrowMarkerPath" style="stroke-width: 1; stroke-dasharray: 1, 0;"></path></marker><marker id="mermaid-svg_flowchart-v2-pointStart" class="marker flowchart-v2" viewBox="0 0 10 10" refX="4.5" refY="5" markerUnits="userSpaceOnUse" markerWidth="8" markerHeight="8" orient="auto"><path d="M 0 5 L 10 10 L 10 0 z" class="arrowMarkerPath" style="stroke-width: 1; stroke-dasharray: 1, 0;"></path></marker><marker id="mermaid-svg_flowchart-v2-circleEnd" class="marker flowchart-v2" viewBox="0 0 10 10" refX="11" refY="5" markerUnits="userSpaceOnUse" markerWidth="11" markerHeight="11" orient="auto"><circle cx="5" cy="5" r="5" class="arrowMarkerPath" style="stroke-width: 1; stroke-dasharray: 1, 0;"></circle></marker><marker id="mermaid-svg_flowchart-v2-circleStart" class="marker flowchart-v2" viewBox="0 0 10 10" refX="-1" refY="5" markerUnits="userSpaceOnUse" markerWidth="11" markerHeight="11" orient="auto"><circle cx="5" cy="5" r="5" class="arrowMarkerPath" style="stroke-width: 1; stroke-dasharray: 1, 0;"></circle></marker><marker id="mermaid-svg_flowchart-v2-crossEnd" class="marker cross flowchart-v2" viewBox="0 0 11 11" refX="12" refY="5.2" markerUnits="userSpaceOnUse" markerWidth="11" markerHeight="11" orient="auto"><path d="M 1,1 l 9,9 M 10,1 l -9,9" class="arrowMarkerPath" style="stroke-width: 2; stroke-dasharray: 1, 0;"></path></marker><marker id="mermaid-svg_flowchart-v2-crossStart" class="marker cross flowchart-v2" viewBox="0 0 11 11" refX="-1" refY="5.2" markerUnits="userSpaceOnUse" markerWidth="11" markerHeight="11" orient="auto"><path d="M 1,1 l 9,9 M 10,1 l -9,9" class="arrowMarkerPath" style="stroke-width: 2; stroke-dasharray: 1, 0;"></path></marker><g class="root"><g class="clusters"></g><g class="edgePaths"><path d="M71.213,62L66.433,66.167C61.653,70.333,52.092,78.667,47.312,86.333C42.531,94,42.531,101,42.531,104.5L42.531,108" id="L_A_B_0" class="edge-thickness-normal edge-pattern-solid edge-thickness-normal edge-pattern-solid flowchart-link" style=";" data-edge="true" data-et="edge" data-id="L_A_B_0" data-points="W3sieCI6NzEuMjEzMzkxMTIwNjE3MiwieSI6NjJ9LHsieCI6NDIuNTMxMjUsInkiOjg3fSx7IngiOjQyLjUzMTI1LCJ5IjoxMTJ9XQ==" marker-end="url(#mermaid-svg_flowchart-v2-pointEnd)"></path><path d="M133.167,62L137.947,66.167C142.728,70.333,152.288,78.667,157.069,86.333C161.849,94,161.849,101,161.849,104.5L161.849,108" id="L_A_C_0" class="edge-thickness-normal edge-pattern-solid edge-thickness-normal edge-pattern-solid flowchart-link" style=";" data-edge="true" data-et="edge" data-id="L_A_C_0" data-points="W3sieCI6MTMzLjE2NjgxNTk0MTE1MDM2LCJ5Ijo2Mn0seyJ4IjoxNjEuODQ4OTU3MDYxNzY3NTgsInkiOjg3fSx7IngiOjE2MS44NDg5NTcwNjE3Njc1OCwieSI6MTEyfV0=" marker-end="url(#mermaid-svg_flowchart-v2-pointEnd)"></path><path d="M42.531,166L42.531,170.167C42.531,174.333,42.531,182.667,46.809,190.562C51.087,198.457,59.642,205.915,63.92,209.643L68.198,213.372" id="L_B_D_0" class="edge-thickness-normal edge-pattern-solid edge-thickness-normal edge-pattern-solid flowchart-link" style=";" data-edge="true" data-et="edge" data-id="L_B_D_0" data-points="W3sieCI6NDIuNTMxMjUsInkiOjE2Nn0seyJ4Ijo0Mi41MzEyNSwieSI6MTkxfSx7IngiOjcxLjIxMzM5MTEyMDYxNzIsInkiOjIxNn1d" marker-end="url(#mermaid-svg_flowchart-v2-pointEnd)"></path><path d="M161.849,166L161.849,170.167C161.849,174.333,161.849,182.667,157.571,190.562C153.293,198.457,144.738,205.915,140.46,209.643L136.182,213.372" id="L_C_D_0" class="edge-thickness-normal edge-pattern-solid edge-thickness-normal edge-pattern-solid flowchart-link" style=";" data-edge="true" data-et="edge" data-id="L_C_D_0" data-points="W3sieCI6MTYxLjg0ODk1NzA2MTc2NzU4LCJ5IjoxNjZ9LHsieCI6MTYxLjg0ODk1NzA2MTc2NzU4LCJ5IjoxOTF9LHsieCI6MTMzLjE2NjgxNTk0MTE1MDM2LCJ5IjoyMTZ9XQ==" marker-end="url(#mermaid-svg_flowchart-v2-pointEnd)"></path></g><g class="edgeLabels"><g class="edgeLabel"><g class="label" data-id="L_A_B_0" transform="translate(0, 0)"><foreignObject width="0" height="0"><div xmlns="http://www.w3.org/1999/xhtml" class="labelBkg" style="display: table-cell; white-space: nowrap; line-height: 1.5; max-width: 200px; text-align: center;"><span class="edgeLabel"></span></div></foreignObject></g></g><g class="edgeLabel"><g class="label" data-id="L_A_C_0" transform="translate(0, 0)"><foreignObject width="0" height="0"><div xmlns="http://www.w3.org/1999/xhtml" class="labelBkg" style="display: table-cell; white-space: nowrap; line-height: 1.5; max-width: 200px; text-align: center;"><span class="edgeLabel"></span></div></foreignObject></g></g><g class="edgeLabel"><g class="label" data-id="L_B_D_0" transform="translate(0, 0)"><foreignObject width="0" height="0"><div xmlns="http://www.w3.org/1999/xhtml" class="labelBkg" style="display: table-cell; white-space: nowrap; line-height: 1.5; max-width: 200px; text-align: center;"><span class="edgeLabel"></span></div></foreignObject></g></g><g class="edgeLabel"><g class="label" data-id="L_C_D_0" transform="translate(0, 0)"><foreignObject width="0" height="0"><div xmlns="http://www.w3.org/1999/xhtml" class="labelBkg" style="display: table-cell; white-space: nowrap; line-height: 1.5; max-width: 200px; text-align: center;"><span class="edgeLabel"></span></div></foreignObject></g></g></g><g class="nodes"><g class="node default" id="flowchart-A-0" transform="translate(102.19010353088379, 35)"><rect class="basic label-container" style="" x="-34.71875" y="-27" width="69.4375" height="54"></rect><g class="label" style="" transform="translate(-4.71875, -12)"><rect></rect><foreignObject width="9.4375" height="24"><div xmlns="http://www.w3.org/1999/xhtml" style="display: table-cell; white-space: nowrap; line-height: 1.5; max-width: 200px; text-align: center;"><span class="nodeLabel"><p>A</p></span></div></foreignObject></g></g><g class="node default" id="flowchart-B-1" transform="translate(42.53125, 139)"><rect class="basic label-container" style="" x="-34.53125" y="-27" width="69.0625" height="54"></rect><g class="label" style="" transform="translate(-4.53125, -12)"><rect></rect><foreignObject width="9.0625" height="24"><div xmlns="http://www.w3.org/1999/xhtml" style="display: table-cell; white-space: nowrap; line-height: 1.5; max-width: 200px; text-align: center;"><span class="nodeLabel"><p>B</p></span></div></foreignObject></g></g><g class="node default" id="flowchart-C-3" transform="translate(161.84895706176758, 139)"><rect class="basic label-container" style="" x="-34.78645849227905" y="-27" width="69.5729169845581" height="54"></rect><g class="label" style="" transform="translate(-4.786458492279053, -12)"><rect></rect><foreignObject width="9.572916984558105" height="24"><div xmlns="http://www.w3.org/1999/xhtml" style="display: table-cell; white-space: nowrap; line-height: 1.5; max-width: 200px; text-align: center;"><span class="nodeLabel"><p>C</p></span></div></foreignObject></g></g><g class="node default" id="flowchart-D-5" transform="translate(102.19010353088379, 243)"><rect class="basic label-container" style="" x="-34.90625" y="-27" width="69.8125" height="54"></rect><g class="label" style="" transform="translate(-4.90625, -12)"><rect></rect><foreignObject width="9.8125" height="24"><div xmlns="http://www.w3.org/1999/xhtml" style="display: table-cell; white-space: nowrap; line-height: 1.5; max-width: 200px; text-align: center;"><span class="nodeLabel"><p>D</p></span></div></foreignObject></g></g></g></g></g></svg></div><div class="mermaid-diagram"><svg id="mermaid-svg" width="100%" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 595.8854217529297 450" style="max-width: 595.8854217529297px;" role="graphics-document document" aria-roledescription="pie"><style>#mermaid-svg{font-family:"trebuchet ms",verdana,arial,sans-serif;font-size:16px;fill:#333;}@keyframes edge-animation-frame{from{stroke-dashoffset:0;}}@keyframes dash{to{stroke-dashoffset:0;}}#mermaid-svg .edge-animation-slow{stroke-dasharray:9,5!important;stroke-dashoffset:900;animation:dash 50s linear infinite;stroke-linecap:round;}#mermaid-svg .edge-animation-fast{stroke-dasharray:9,5!important;stroke-dashoffset:900;animation:dash 20s linear infinite;stroke-linecap:round;}#mermaid-svg .error-icon{fill:#552222;}#mermaid-svg .error-text{fill:#552222;stroke:#552222;}#mermaid-svg .edge-thickness-normal{stroke-width:1px;}#mermaid-svg .edge-thickness-thick{stroke-width:3.5px;}#mermaid-svg .edge-pattern-solid{stroke-dasharray:0;}#mermaid-svg .edge-thickness-invisible{stroke-width:0;fill:none;}#mermaid-svg .edge-pattern-dashed{stroke-dasharray:3;}#mermaid-svg .edge-pattern-dotted{stroke-dasharray:2;}#mermaid-svg .marker{fill:#333333;stroke:#333333;}#mermaid-svg .marker.cross{stroke:#333333;}#mermaid-svg svg{font-family:"trebuchet ms",verdana,arial,sans-serif;font-size:16px;}#mermaid-svg p{margin:0;}#mermaid-svg .pieCircle{stroke:black;stroke-width:2px;opacity:0.7;}#mermaid-svg .pieOuterCircle{stroke:black;stroke-width:2px;fill:none;}#mermaid-svg .pieTitleText{text-anchor:middle;font-size:25px;fill:black;font-family:"trebuchet ms",verdana,arial,sans-serif;}#mermaid-svg .slice{font-family:"trebuchet ms",verdana,arial,sans-serif;fill:#333;font-size:17px;}#mermaid-svg .legend text{fill:black;font-family:"trebuchet ms",verdana,arial,sans-serif;font-size:17px;}#mermaid-svg :root{--mermaid-font-family:"trebuchet ms",verdana,arial,sans-serif;}</style><g></g><g transform="translate(225,225)"><circle cx="0" cy="0" r="186" class="pieOuterCircle"></circle><path d="M0,-185A185,185,0,0,1,42.237,180.114L0,0Z" fill="#ECECFF" class="pieCircle"></path><path d="M42.237,180.114A185,185,0,0,1,-141.768,-118.856L0,0Z" fill="#ffffde" class="pieCircle"></path><path d="M-141.768,-118.856A185,185,0,0,1,-53.049,-177.231L0,0Z" fill="hsl(80, 100%, 56.2745098039%)" class="pieCircle"></path><path d="M-53.049,-177.231A185,185,0,0,1,0,-185L0,0Z" fill="hsl(240, 100%, 86.2745098039%)" class="pieCircle"></path><text transform="translate(137.83081132226457,-15.944589999316447)" class="slice" style="text-anchor: middle;">46%</text><text transform="translate(-118.16338954916978,72.72534544607646)" class="slice" style="text-anchor: middle;">40%</text><text transform="translate(-76.26559717903304,-115.90997017912422)" class="slice" style="text-anchor: middle;">9%</text><text transform="translate(-20.105598508463803,-137.2855688286881)" class="slice" style="text-anchor: middle;">5%</text><text x="0" y="-200" class="pieTitleText">Key elements in Product X</text><g class="legend" transform="translate(216,-44)"><rect width="18" height="18" style="fill: rgb(255, 255, 222); stroke: rgb(255, 255, 222);"></rect><text x="22" y="14">Calcium</text></g><g class="legend" transform="translate(216,-22)"><rect width="18" height="18" style="fill: rgb(236, 236, 255); stroke: rgb(236, 236, 255);"></rect><text x="22" y="14">Potassium</text></g><g class="legend" transform="translate(216,0)"><rect width="18" height="18" style="fill: rgb(181, 255, 32); stroke: rgb(181, 255, 32);"></rect><text x="22" y="14">Magnesium</text></g><g class="legend" transform="translate(216,22)"><rect width="18" height="18" style="fill: rgb(185, 185, 255); stroke: rgb(185, 185, 255);"></rect><text x="22" y="14">Iron</text></g></g></svg></div><div class="mermaid-diagram"><svg id="mermaid-svg" width="100%" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 581 450" style="max-width: 581px;" role="graphics-document document" aria-roledescription="pie"><style>#mermaid-svg{font-family:"trebuchet ms",verdana,arial,sans-serif;font-size:16px;fill:#333;}@keyframes edge-animation-frame{from{stroke-dashoffset:0;}}@keyframes dash{to{stroke-dashoffset:0;}}#mermaid-svg .edge-animation-slow{stroke-dasharray:9,5!important;stroke-dashoffset:900;animation:dash 50s linear infinite;stroke-linecap:round;}#mermaid-svg .edge-animation-fast{stroke-dasharray:9,5!important;stroke-dashoffset:900;animation:dash 20s linear infinite;stroke-linecap:round;}#mermaid-svg .error-icon{fill:#552222;}#mermaid-svg .error-text{fill:#552222;stroke:#552222;}#mermaid-svg .edge-thickness-normal{stroke-width:1px;}#mermaid-svg .edge-thickness-thick{stroke-width:3.5px;}#mermaid-svg .edge-pattern-solid{stroke-dasharray:0;}#mermaid-svg .edge-thickness-invisible{stroke-width:0;fill:none;}#mermaid-svg .edge-pattern-dashed{stroke-dasharray:3;}#mermaid-svg .edge-pattern-dotted{stroke-dasharray:2;}#mermaid-svg .marker{fill:#333333;stroke:#333333;}#mermaid-svg .marker.cross{stroke:#333333;}#mermaid-svg svg{font-family:"trebuchet ms",verdana,arial,sans-serif;font-size:16px;}#mermaid-svg p{margin:0;}#mermaid-svg .pieCircle{stroke:black;stroke-width:2px;opacity:0.7;}#mermaid-svg .pieOuterCircle{stroke:black;stroke-width:2px;fill:none;}#mermaid-svg .pieTitleText{text-anchor:middle;font-size:25px;fill:black;font-family:"trebuchet ms",verdana,arial,sans-serif;}#mermaid-svg .slice{font-family:"trebuchet ms",verdana,arial,sans-serif;fill:#333;font-size:17px;}#mermaid-svg .legend text{fill:black;font-family:"trebuchet ms",verdana,arial,sans-serif;font-size:17px;}#mermaid-svg :root{--mermaid-font-family:"trebuchet ms",verdana,arial,sans-serif;}</style><g></g><g transform="translate(225,225)"><circle cx="0" cy="0" r="186" class="pieOuterCircle"></circle><path d="M0,-185A185,185,0,1,1,-177.401,52.477L0,0Z" fill="#ECECFF" class="pieCircle"></path><path d="M-177.401,52.477A185,185,0,0,1,-157.417,-97.185L0,0Z" fill="#ffffde" class="pieCircle"></path><path d="M-157.417,-97.185A185,185,0,0,1,-71.741,-170.524L0,0Z" fill="hsl(80, 100%, 56.2745098039%)" class="pieCircle"></path><path d="M-71.741,-170.524A185,185,0,0,1,0,-185L0,0Z" fill="hsl(240, 100%, 86.2745098039%)" class="pieCircle"></path><text transform="translate(111.1586590294788,83.03803359165046)" class="slice" style="text-anchor: middle;">70%</text><text transform="translate(-137.52935116229378,-18.364097279160795)" class="slice" style="text-anchor: middle;">13%</text><text transform="translate(-90.22757207877248,-105.4065829859308)" class="slice" style="text-anchor: middle;">10%</text><text transform="translate(-27.445016536740585,-136.00857902095012)" class="slice" style="text-anchor: middle;">6%</text><text x="0" y="-200" class="pieTitleText">为什么总是宅在家里？</text><g class="legend" transform="translate(216,-44)"><rect width="18" height="18" style="fill: rgb(185, 185, 255); stroke: rgb(185, 185, 255);"></rect><text x="22" y="14">喜欢宅</text></g><g class="legend" transform="translate(216,-22)"><rect width="18" height="18" style="fill: rgb(181, 255, 32); stroke: rgb(181, 255, 32);"></rect><text x="22" y="14">天气太热</text></g><g class="legend" transform="translate(216,0)"><rect width="18" height="18" style="fill: rgb(236, 236, 255); stroke: rgb(236, 236, 255);"></rect><text x="22" y="14">穷</text></g><g class="legend" transform="translate(216,22)"><rect width="18" height="18" style="fill: rgb(255, 255, 222); stroke: rgb(255, 255, 222);"></rect><text x="22" y="14">没人约</text></g></g></svg></div><p>这种方式不仅能直观展示流程，还能提升文档的专业性。</p>
+<blockquote>
+<p>更多用法，参见：<a href="https://mermaid.js.org/intro/getting-started.html">Mermaid User Guide</a>。</p>
+</blockquote>
+<h3>3. PlantUML 流程图：可视化流程</h3>
+<p>PlantUML 是强大的可视化工具，可以在 Markdown 中创建流程图、时序图等。</p>
+<pre><code class="language-plantuml">@startuml
+participant Participant as Foo
+actor       Actor       as Foo1
+boundary    Boundary    as Foo2
+control     Control     as Foo3
+entity      Entity      as Foo4
+database    Database    as Foo5
+collections Collections as Foo6
+queue       Queue       as Foo7
+Foo -&gt; Foo1 : To actor
+Foo -&gt; Foo2 : To boundary
+Foo -&gt; Foo3 : To control
+Foo -&gt; Foo4 : To entity
+Foo -&gt; Foo5 : To database
+Foo -&gt; Foo6 : To collections
+Foo -&gt; Foo7: To queue
+@enduml</code></pre><blockquote>
+<p>更多用法，参见：<a href="https://plantuml.com/zh/">PlantUML 主页</a>。</p>
+</blockquote>
+<h3>4. Infographic 信息图：可视化数据</h3>
+<p>新一代信息图可视化引擎，让文字信息栩栩如生！</p>
+<pre><code class="language-infographic">infographic list-row-horizontal-icon-arrow
+data
+  title 客户增长引擎
+  desc 多渠道触达与复购提升
+  items
+    - label 线索获取
+      value 18.6
+      desc 渠道投放与内容获客
+      icon rocket-launch
+    - label 转化提效
+      value 12.4
+      desc 线索评分与自动跟进
+      icon progress-check
+    - label 复购提升
+      value 9.8
+      desc 会员体系与权益运营
+      icon account-sync
+    - label 口碑传播
+      value 6.2
+      desc 社群激励与推荐裂变
+      icon account-group</code></pre><blockquote>
+<p>更多用法，参见：<a href="https://infographic.antv.vision/gallery">AntV Infographic Gallery</a>。</p>
+</blockquote>
+<h3>5. Ruby 注音：注音标注</h3>
+<p>支持两种格式：</p>
+<pre style="position:relative;background:#282c34;color:#abb2bf;padding:1em;border-radius:8px;overflow-x:auto;">
+      <svg xmlns="http://www.w3.org/2000/svg" width="45" height="13" style="position:absolute;top:0;right:0;padding:10px 14px 0;">
+        <ellipse cx="50" cy="65" rx="50" ry="52" stroke="rgb(220,60,54)" stroke-width="2" fill="rgb(237,108,96)"/>
+        <ellipse cx="225" cy="65" rx="50" ry="52" stroke="rgb(218,151,33)" stroke-width="2" fill="rgb(247,193,81)"/>
+        <ellipse cx="400" cy="65" rx="50" ry="52" stroke="rgb(27,161,37)" stroke-width="2" fill="rgb(100,200,86)"/>
+      </svg>
+    <code class="language-md"><span class="hljs-bullet">1.</span> [文字]{注音}
+<span class="hljs-bullet">2.</span> [文字]^(注音)</code></pre><p>渲染效果如下：</p>
+<p><ruby>你好<rt>nǐ hǎo</rt></ruby> <ruby>世界<rt>shì jiè</rt></ruby></p>
+<p>支持四种分隔符： <code>・</code>（中点）、<code>．</code> (全角句点)、<code>。</code> (中文句号)、<code>-</code> (英文减号)</p>
+<p>示例：</p>
+<pre style="position:relative;background:#282c34;color:#abb2bf;padding:1em;border-radius:8px;overflow-x:auto;">
+      <svg xmlns="http://www.w3.org/2000/svg" width="45" height="13" style="position:absolute;top:0;right:0;padding:10px 14px 0;">
+        <ellipse cx="50" cy="65" rx="50" ry="52" stroke="rgb(220,60,54)" stroke-width="2" fill="rgb(237,108,96)"/>
+        <ellipse cx="225" cy="65" rx="50" ry="52" stroke="rgb(218,151,33)" stroke-width="2" fill="rgb(247,193,81)"/>
+        <ellipse cx="400" cy="65" rx="50" ry="52" stroke="rgb(27,161,37)" stroke-width="2" fill="rgb(100,200,86)"/>
+      </svg>
+    <code class="language-md">[你好世界]{nǐ・hǎo・shì・jiè}
+[小夜時雨]^(さ・よ・しぐれ)</code></pre><p><ruby>你好世界<rt>nǐ・hǎo・shì・jiè</rt></ruby>
+<ruby>小夜時雨<rt>さ・よ・しぐれ</rt></ruby></p>
+<p>当字符串数量与分隔符数量不匹配时，会自动匹配到最合适的分隔符。</p>
+<pre style="position:relative;background:#282c34;color:#abb2bf;padding:1em;border-radius:8px;overflow-x:auto;">
+      <svg xmlns="http://www.w3.org/2000/svg" width="45" height="13" style="position:absolute;top:0;right:0;padding:10px 14px 0;">
+        <ellipse cx="50" cy="65" rx="50" ry="52" stroke="rgb(220,60,54)" stroke-width="2" fill="rgb(237,108,96)"/>
+        <ellipse cx="225" cy="65" rx="50" ry="52" stroke="rgb(218,151,33)" stroke-width="2" fill="rgb(247,193,81)"/>
+        <ellipse cx="400" cy="65" rx="50" ry="52" stroke="rgb(27,161,37)" stroke-width="2" fill="rgb(100,200,86)"/>
+      </svg>
+    <code class="language-md">[小夜時雨]{さ・よ・しぐれ}
+[小夜時雨]{さ・よ}
+[小夜]{さ・よ・しぐれ}
+[小夜時雨]{さ・よ・しぐれ・extra}</code></pre><p><ruby>小夜時雨<rt>さ・よ・しぐれ</rt></ruby>
+<ruby>小夜時雨<rt>さ・よ</rt></ruby>
+<ruby>小夜<rt>さ・よ・しぐれ</rt></ruby>
+<ruby>小夜時雨<rt>さ・よ・しぐれ・extra</rt></ruby></p>
+<h2>结语</h2>
+<p>Markdown 是一种简单、强大且易于掌握的标记语言，通过学习基础和进阶语法，你可以快速创作内容并有效传达信息。无论是技术文档、个人博客还是项目说明，Markdown 都是你的得力助手。希望这篇内容能够带你全面了解 Markdown 的潜力，让你的写作更加丰富多彩！</p>
+<p>现在，拿起 Markdown 编辑器，开始创作吧！探索 Markdown 的世界，你会发现它远比想象中更精彩！</p>
+<h4>推荐阅读</h4>
+<ul>
+<li><a href="https://mp.weixin.qq.com/s/RNKDCK2KoyeuMeEs6GUrow">阿里又一个 20k+ stars 开源项目诞生，恭喜 fastjson！</a></li>
+<li><a href="https://mp.weixin.qq.com/s/rjGqxUvrEqJNlo09GrT1Dw">刷掉 90% 候选人的互联网大厂海量数据面试题（附题解 + 方法总结）</a></li>
+<li><a href="https://mp.weixin.qq.com/s/kalGv5T8AZGxTnLHr2wDsA">好用！期待已久的文本块功能究竟如何在 Java 13 中发挥作用？</a></li>
+<li><a href="https://mp.weixin.qq.com/s/_q812aGD1b9QvZ2WFI0Qgw">2019 GitHub 开源贡献排行榜新鲜出炉！微软谷歌领头，阿里跻身前 12！</a></li>
+</ul>
+<hr>
+<center>
+    <img src="https://cdn-doocs.oss-cn-shenzhen.aliyuncs.com/gh/doocs/md/images/1648303220922-7e14aefa-816e-44c1-8604-ade709ca1c69.png" style="width: 100px;">
+</center>
+
+</section>
+</body>
+</html>

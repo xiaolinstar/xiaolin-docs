@@ -1,0 +1,38 @@
+# Dependencies
+node_modules/
+
+# Build outputs
+*-wechat.html
+*-test.html
+*-green-theme.html
+*-with-extracted-config.html
+extracted-config.json
+!md-config.json
+
+# Python cache
+__pycache__/
+*.pyc
+*.pyo
+
+# Temporary scripts
+check-unicode.js
+scan-all.js
+clean-files.js
+
+# IDE
+.idea/
+.vscode/
+*.swp
+*.swo
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Logs
+*.log
+npm-debug.log*
+
+# Temporary files
+*.tmp
+*.temp

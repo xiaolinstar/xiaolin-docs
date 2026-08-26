@@ -34,3 +34,7 @@ docs/public/images/**
 
 # Claude / agent 本地配置（不入库；本地工具状态，非代码）
 /.claude/settings*.json
+
+# tools/md-wechat: 嵌入工具目录，跟踪源码但排除 node_modules 与内部 .git
+tools/md-wechat/node_modules/
+tools/md-wechat/.git/

@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>微信公众号文章</title>
+</head>
+<body style="margin:0;padding:20px;background:#fff;">
+<section style="
+  font-family: -apple-system-font,BlinkMacSystemFont, Helvetica Neue, PingFang SC, Hiragino Sans GB , Microsoft YaHei UI , Microsoft YaHei ,Arial,sans-serif;
+  font-size: 16px;
+  line-height: 1.75;
+  max-width: 100%;
+  color: #333;
+">
+
+<blockquote style="border-left:4px solid #0F4C81;padding:1em;background:#f7f7f7;">
+<p style="margin:0;">字数 2470，阅读大约需 6 分钟</p>
+</blockquote>
+
+<style>
+/**
+ * MD 基础主题样式
+ */
+section, container {
+  font-family: var(--md-font-family);
+  font-size: var(--md-font-size);
+  line-height: 1.75;
+  text-align: left;
+}
+
+/* 去除第一个元素的 margin-top */
+section > :first-child {
+  margin-top: 0 !important;
+}
+
+
+:root {
+  --md-primary-color: #0F4C81;
+  --md-font-family: -apple-system-font,BlinkMacSystemFont, Helvetica Neue, PingFang SC, Hiragino Sans GB , Microsoft YaHei UI , Microsoft YaHei ,Arial,sans-serif;
+  --md-font-size: 16px;
+}
+
+
+/**
+ * MD 优雅主题 (@brzhang)
+ */
+
+h1 {
+  padding: 0.5em 1em;
+  border-bottom: 2px solid var(--md-primary-color);
+  font-size: 1.4em;
+}
+
+h2 {
+  padding: 0.3em 1em;
+  border-radius: 8px;
+  font-size: 1.3em;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+h3 {
+  padding-left: 12px;
+  font-size: 1.2em;
+  border-left: 4px solid var(--md-primary-color);
+  border-bottom: 1px dashed var(--md-primary-color);
+}
+
+blockquote {
+  font-style: italic;
+  padding: 1em 1em 1em 2em;
+  border-left: 4px solid var(--md-primary-color);
+  border-radius: 6px;
+  color: rgba(0, 0, 0, 0.6);
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+}
+
+pre {
+  box-shadow: inset 0 0 10px rgba(0, 0, 0, 0.05);
+}
+
+img {
+  border-radius: 8px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+hr {
+  height: 1px;
+  border: none;
+  background: linear-gradient(to right, transparent, rgba(0,0,0,0.1), transparent);
+}
+
+table {
+  border-collapse: separate;
+  border-spacing: 0;
+  border-radius: 8px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  overflow: hidden;
+}
+
+
+pre { background: #282c34; color: #abb2bf; }
+.hljs-keyword, .hljs-selector-tag { color: #c678dd; }
+.hljs-string, .hljs-title { color: #98c379; }
+.hljs-number { color: #d19a66; }
+.hljs-function { color: #61afef; }
+.hljs-comment { color: #5c6370; font-style: italic; }
+.hljs-variable, .hljs-attr { color: #e06c75; }
+</style>
+<h1>微信公众号文章排版示例</h1>
+<p>这是一篇展示 Markdown 排版功能的示例文章。</p>
+<h2>功能演示</h2>
+<h3>代码块展示</h3>
+<p>下面是一段 Python 代码示例：</p>
+<pre><code class="language-python">def hello_world():
+    """Hello World 示例函数"""
+    print("Hello, WeChat!")
+    return True
+
+# 调用函数
+if __name__ == "__main__":
+    hello_world()</code></pre>
+<p>JavaScript 示例：</p>
+<pre><code class="language-javascript">const greeting = (name) =&gt; {
+  console.log(`Hello, ${name}!`);
+  return {
+    success: true,
+    message: 'Greeting sent'
+  };
+};
+
+greeting('WeChat');</code></pre>
+<h3>引用块</h3>
+<blockquote><p>这是一段引用文字。</p></blockquote>
+<blockquote><p>引用块常用于强调重要内容或引用他人观点。</p></blockquote>
+<h3>列表展示</h3>
+<p>无序列表：</p>
+<ul>
+<li>第一项内容</li>
+<li>第二项内容</li>
+<li>第三项内容</li>
+</ul>
+<p>有序列表：</p>
+<ol>
+<li>步骤一：准备材料</li>
+<li>步骤二：开始制作</li>
+<li>步骤三：完成检查</li>
+</ol>
+<h3>表格展示</h3>
+<table>
+<thead><tr><th>功能</th><th>支持情况</th><th>说明</th></tr></thead>
+<tbody>
+<tr><td>标题</td><td>✓</td><td>支持 H1-H6</td></tr>
+<tr><td>代码块</td><td>✓</td><td>支持高亮</td></tr>
+<tr><td>表格</td><td>✓</td><td>基础表格</td></tr>
+<tr><td>图片</td><td>✓</td><td>需上传微信</td></tr>
+</tbody>
+</table>
+<h3>文字格式</h3>
+<p>这是<strong>粗体文字</strong>，这是<em>斜体文字</em>，这是<code>行内代码</code>。</p>
+<p>这是<a href="https://github.com">一个链接</a>，点击可以跳转。</p>
+<hr>
+<h2>总结</h2>
+<p>微信公众号排版需要注意以下几点：</p>
+<ol>
+<li>样式需要内联</li>
+<li>外链会被屏蔽</li>
+<li>图片需要上传到微信服务器</li>
+<li>不支持复杂的 CSS 选择器</li>
+</ol>
+<p>希望这篇示例文章能帮助你了解排版效果！</p>
+</section>
+</body>
+</html>
