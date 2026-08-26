@@ -8,6 +8,7 @@ const output = process.argv[3] ?? input?.replace(/\.md$/, '-wechat.html');
 if (!input || !output) throw new Error('用法：node scripts/render-wechat.mjs <origin.md> [output.html]');
 
 const root = process.cwd();
+const config = path.join(root, 'scripts/wechat-style.json');
 let markdown = await fs.readFile(input, 'utf8');
 const title = markdown.match(/^title:\s*(.+)$/m)?.[1]?.trim() ?? path.basename(input, '.md');
 markdown = markdown.replace(/^---\n[\s\S]*?\n---\n?/, '');
@@ -27,6 +28,6 @@ markdown = markdown.replace(/!\[([^\]]*)\]\(\/images\/([^\)]+)\)/g, (_, alt, rel
 const temp = path.join('/tmp', `wechat-${process.pid}.md`);
 await fs.writeFile(temp, markdown);
 const cli = path.join(root, 'tools/md-wechat/scripts/convert.js');
-const result = spawnSync(process.execPath, [cli, temp, '--no-auto-install', '-o', path.resolve(output)], { stdio: 'inherit' });
+const result = spawnSync(process.execPath, [cli, temp, '--no-auto-install', '-c', config, '-o', path.resolve(output)], { stdio: 'inherit' });
 await fs.rm(temp, { force: true });
 if (result.status !== 0) process.exit(result.status ?? 1);
