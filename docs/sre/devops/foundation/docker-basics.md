@@ -103,6 +103,16 @@ A、B 两条路线表面看是构建工具的选择，**根源却是同一种运
 | `docker rm X` | 已停止容器 | （销毁） | 释放端口 + 写时复制层空间 |
 | `docker rmi registry/repo:tag` | 本地镜像 | （销毁） | 若仍被容器引用则报错，需先 `docker rm` |
 
+## 起一个服务的两种方式
+
+上一节给了概念边界，本节用「起一个 Nginx 反代 / 起一个 MySQL 数据库」这个最常见的场景，把 VM 与 Docker 的实操差异落到操作层面。
+
+VM 方式起步就重：下载 Ubuntu Server ISO，新建 VirtualBox 或 VMware 虚拟机，装系统，`apt install nginx`，改配置——30 多分钟、10 多步手动操作都算顺利；服务跑起来后还有独立 OS 内核占着内存，磁盘上更留下一个 10 GB+ 的 `vmdk`。删除时 `vmdk` 文件往往还在，Nginx 配置、`/var/log/nginx/` 日志、`/var/lib/` 数据可能半年里漂到宿主机——最后的状态谁也说不清。
+
+Docker 把这套动作收成一句 `docker run -d -p 80:80 nginx:1.27-alpine`：镜像从 Docker Hub 拉取约 50 MB，容器秒级启动；`docker rm` 释放端口与写时复制层，`-v` 命名的数据卷可独立保留复用。顺带还带来版本与空间两个收益——同一台宿主机上 `nginx:1.25`、`nginx:1.27`、`mysql:5.7`、`mysql:8.0` 可各自跑在独立容器里互不干扰，多服务还能共享同一基础镜像（`alpine`、`ubuntu:22.04`）的只读 layer，把磁盘占用从 100 GB+ 压回几 MB 到几十 MB 的可写层。
+
+——一句话：**创建极简、删除干净、版本可并行、空间可复用**，正是「不可变基础设施」理念在日常运维里最直接的体现。
+
 ## 容器应用：Docker 工具集
 
 本节从 5 大核心命令起步，逐步展开 Docker 工具集的完整视图——基础命令（pull / run / ps / stop / rmi）、Docker Hub 镜像仓库、Dockerfile 镜像构建描述符，以及预告多容器场景的网络与卷：
