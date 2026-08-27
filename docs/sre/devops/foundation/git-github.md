@@ -16,7 +16,7 @@ tags:
 
 这个痛点在生产发布流程里的体现是：**每一次变更的内容缺乏精确、不可篡改的物理锚点**。你改了什么、什么时候改的、改坏了回哪个版本、服务器上那次构建对应哪次提交——这些关键的发布溯源信息散落在操作记忆里，没有被固化下来。
 
-这一篇的解法是**版本管理**。
+这一篇的解法分两步：**本地用 Git 拍快照 + GitHub 把快照搬到云端**。第一步解决"找不到对应版本"，第二步解决"代码传不到服务器"。
 
 ## 版本管理：03 篇痛点三的解法
 
@@ -30,7 +30,7 @@ tags:
 
 核心能力：**给每一次变更拍一张带上下文的快照（commit）**。快照连成链，任何一次部署都能精确对应到链上的某一个节点。
 
-![Git 分布式协作与部署架构图](/images/img-git-github/diagram-git-distributed-collaboration.png)
+![Git 分布式协作与部署架构图](/images/img-git-github/diagram-git-distributed-collaboration-v2.png)
 
 ::: details 📐 静态信息图 Prompt 与 Mermaid 结构参考
 
@@ -59,8 +59,8 @@ flowchart TD
 极简手绘马克笔信息图，16:9 横版。主题为「Git：从本地快照到生产部署」：左上蓝色笔记本标注「开发者 A」「本地仓库」「C1 → C2」；左下蓝色笔记本标注「开发者 B」「本地仓库」「C1 → C3」；中间灰色云朵标注「GitHub 远程仓库」，云内是合并提交链「C1 → C2 → C3」，两条入云箭头标注 `git push`；右侧橙色服务器标注「生产服务器」，从云到服务器的箭头标注 `git pull`，服务器下方依次标注「拉取 C3」「构建并部署」。暖白背景、黑色线稿、留白充足，所有自然语言使用简体中文；无阴影、无渐变、无 3D 效果。
 ```
 
-- 产物路径：`docs/public/images/img-git-github/diagram-git-distributed-collaboration.png`
-- 站点引用：`/images/img-git-github/diagram-git-distributed-collaboration.png`
+- 产物路径：`docs/public/images/img-git-github/diagram-git-distributed-collaboration-v2.png`
+- 站点引用：`/images/img-git-github/diagram-git-distributed-collaboration-v2.png`
 
 :::
 
@@ -126,7 +126,7 @@ A → B → C → D
 
 格式化的价值在于**让 commit 信息变成可机读的结构化数据**：
 
-- **CI/CD 自动化**：`feat:` 触发 minor 版本号、`fix:` 触发 patch 版本号、`BREAKING CHANGE` 触发 major。
+- **CI/CD 自动化**：`feat:` 触发 minor 版本号、`fix:` 触发 patch 版本号、`BREAKING CHANGE` 或 `feat!:` / `fix!:` 触发 major。
 - **CHANGELOG 自动生成**：工具按类型分组输出变更摘要，无需人工整理。
 - **排查提速**：扫一眼前缀就知道本次改动的性质，无需打开 diff。
 
@@ -138,7 +138,41 @@ A → B → C → D
 
 ## GitHub：让快照离开本地硬盘
 
-Git 在本地管理版本——但本地硬盘坏了，历史一起没了。而且手动 scp 上传代码本身就是 02 篇的痛点。GitHub 解决两件事：
+Git 在本地管理版本——但本地硬盘坏了，历史一起没了。而且手动 scp 上传代码本身就是 02 篇的痛点。
+
+![scp 与 git pull 的发布方式对比图](/images/img-git-github/diagram-scp-vs-git-v2.png)
+
+::: details 📐 静态信息图 Prompt 与 Mermaid 结构参考
+
+```mermaid
+flowchart LR
+    subgraph Old["02 篇方式：手动 scp（橙，不推荐）"]
+        Dev1["开发者本地<br/>代码 + 依赖"]
+        SCP["scp 命令<br/>无历史、无版本"]
+        Srv1["服务器<br/>裸文件覆盖"]
+    end
+    subgraph New["04 篇方式：git pull + GitHub（蓝，推荐）"]
+        Dev2["开发者本地<br/>git commit 拍快照"]
+        Hub["GitHub 远程仓库<br/>带历史 + commit 链"]
+        Srv2["服务器<br/>git pull → 精确 commit"]
+    end
+    Dev1 -->|scp| SCP --> Srv1
+    Dev2 -->|git push| Hub
+    Hub -->|git pull| Srv2
+```
+
+**Prompt**:
+
+```text
+极简手绘马克笔信息图，16:9 横版。主题为「scp vs git pull：代码从本地到服务器的两种方式」：左侧橙色色块标注「02 篇方式：手动 scp」，含本机图标 → 「scp 命令（无历史、无版本）」→ 服务器图标（裸文件覆盖），从上到下用橙色箭头串联，路径下方标注「覆盖式、易出错、无版本」；右侧蓝色色块标注「04 篇方式：git pull + GitHub」，含本机图标 → 中间灰色云朵图标「GitHub 远程仓库（带历史 + commit 链）」→ 服务器图标（git pull → 精确 commit），从上到下用蓝色箭头串联，路径下方标注「快照式、可回退、有锚点」。所有自然语言使用简体中文；无阴影、无渐变、无 3D 效果。
+```
+
+- 产物路径：`docs/public/images/img-git-github/diagram-scp-vs-git-v2.png`
+- 站点引用：`/images/img-git-github/diagram-scp-vs-git-v2.png`
+
+:::
+
+GitHub 解决两件事：
 
 1. **备份**：本地仓库同步到云端，硬盘坏了历史还在。
 2. **传输**：服务器通过 `git clone` / `git pull` 拿到代码，不需要 scp。
@@ -289,7 +323,7 @@ Git 是本地版本管理工具，不依赖 GitHub 也能独立使用——它�
 虽然 Git 解决了**“代码版本锚定”**与**“源码免 scp 传输”**，但回到服务器端，03 篇提出的核心噩梦依然存在：
 
 - 服务器通过 `git pull` 拿到源码后，依然要在线执行 `mvn package`，依然要装 JDK / Python，依然存在编译争抢 CPU 以及 **低可移植性（环境强耦合）** 的问题。
-- **Git 锁定了代码版本，但锁不住运行环境**。如何把“编译好的产物 + 运行环境本身”一起打包？这就是 [第 05 篇（Docker 容器化）](./docker-basics.md) 登场要解决的根本问题。
+- **Git 锁定了代码版本，但锁不住运行环境**。如何把”编译好的产物 + 运行环境本身”一起打包？这就是 [05 篇（Docker 容器化）](./docker-basics.md) 登场要解决的根本问题。
 
 ## 思考
 
