@@ -29,13 +29,13 @@ tags:
 极简手绘马克笔信息图，16:9 横版。主题为「三种部署路线对比」：
 - 左侧「路线 A：服务器即时构建（Build in Server）」：服务器机柜图，
   CPU/内存火焰图标被 `mvn package` 任务压满；左上方红色标签
-  「❌ 资源争抢 · 服务器变脏」
+  「资源争抢 · 服务器变脏」
 - 中间「路线 B：本地编译 scp」：本地 Mac 笔记本 → scp 箭头 → 服务器；
   箭头中标注 `GLIBC not found`；中上方黄色标签
-  「⚠️ 环境异构 · 低可移植」
+  「环境异构 · 低可移植」
 - 右侧「路线 C：Docker 镜像」：构建机（CI）→ push 到镜像仓库 →
   服务器 pull → 容器齿轮图标；右上方绿色标签
-  「✅ 不可变镜像 · 服务器零污染」
+  「不可变镜像 · 服务器零污染」
 三条路线并排用相同高度的框分隔，顶部三种标签依次红、黄、绿。
 暖白背景、黑色线稿；所有自然语言使用简体中文；无阴影、无渐变、无 3D。
 ```
@@ -102,7 +102,6 @@ A、B 两条路线表面看是构建工具的选择，**根源却是同一种运
 | `docker start X` | 已停止容器 | 运行中容器 | 复用已有的写时复制层 |
 | `docker rm X` | 已停止容器 | （销毁） | 释放端口 + 写时复制层空间 |
 | `docker rmi registry/repo:tag` | 本地镜像 | （销毁） | 若仍被容器引用则报错，需先 `docker rm` |
-
 
 ## 容器应用：Docker 工具集
 
@@ -212,9 +211,9 @@ docker push registry.cn-hangzhou.aliyuncs.com/xiaolin-docs/spring-app:1.0.0
 
 **构建一次，任何机器拉取这条镜像跑出的进程都 100% 等价**——这就是视角 1 里 03 篇「环境异构、低可移植」问题的物理消除点。
 
-### 8. Docker 网络与卷（预告第 08 篇）
+### 8. Docker 网络与卷（预告 08 篇）
 
-单容器场景下，本篇的命令已经够用。一旦进入"Spring Boot + MySQL + Nginx"这样的多容器组合，会立刻碰到两类新的工程诉求——本节只点一下名字，详细展开留给 [第 08 篇 Docker Compose](./docker-compose.md)：
+单容器场景下，本篇的命令已经够用。一旦进入"Spring Boot + MySQL + Nginx"这样的多容器组合，会立刻碰到两类新的工程诉求——本节只点一下名字，详细展开留给 [08 篇 Docker Compose](./docker-compose.md)：
 
 - **Docker Network**：让多个容器在同一台服务器上**互相通信**——MySQL 容器不需要对外暴露，Spring Boot 容器只需通过内部网络访问 `mysql:3306`。`docker network create` 创建网络，`--network` 参数加入。
 - **Docker Volume**：让容器的数据**不被 `docker rm` 销毁**。MySQL 容器一旦 `rm`，所有数据丢失；通过 `-v mysql_data:/var/lib/mysql` 把数据写入命名卷，重启 / 重建容器数据仍在。
@@ -227,7 +226,7 @@ docker push registry.cn-hangzhou.aliyuncs.com/xiaolin-docs/spring-app:1.0.0
 - 新 $v_1'$（镜像构建）：在离线构建机或 CI 上执行，产物是不可变的自包含镜像；
 - 转移到服务器侧：$v_1''$（pull）→ $v_2$（run）→ $v_3$（verify），三个轻动作闭环。
 
-这一剥离正是 04 篇末尾留给本篇的根本问题——"如何把编译好的产物 + 运行环境打包"——的完整回答。下一步进入 [第 06 篇（流水线基础）](./pipeline-basics.md)：把这三个轻动作写进 `Jenkinsfile`，让"手动 ssh"彻底退出部署流程。
+这一剥离正是 04 篇末尾留给本篇的根本问题——"如何把编译好的产物 + 运行环境打包"——的完整回答。下一步进入 [06 篇（流水线基础）](./pipeline-basics.md)：把这三个轻动作写进 pipeline 配置文件，让"手动 ssh"彻底退出部署流程。
 
 ## 实战贯穿：从 03 篇的命令链到三件套编排
 
@@ -274,7 +273,7 @@ Docker 化的关键不是把所有 step 替换成"等价 step"，而是**把每�
 
 > **核心洞察**：映射 $g$ 让每个 $J'_k$ 内部 step 数从 3-4 折叠到 2——「装环境 + 拷产物 + 写配置 + 起服务」被「pull 镜像 + run 容器」两动作取代。**$Y$ 的 job 集合不变，每个 job 内部 step 数大幅减少，job 之间拓扑序保持稳定**——这就是「容器化让运维精简」的形式化证据。
 
-这两层粒度也为 [第 06 篇（流水线基础）](./pipeline-basics.md) 埋下伏笔：**流水线就是把 $Y$ 写成代码、由引擎按拓扑序自动执行**——CI 与 CD 分离后，「构建镜像」与「部署镜像」就是 2 个独立 job。
+这两层粒度也为 [06 篇（流水线基础）](./pipeline-basics.md) 埋下伏笔：**流水线就是把 $Y$ 写成代码、由引擎按拓扑序自动执行**——CI 与 CD 分离后，「构建镜像」与「部署镜像」就是 2 个独立 job。
 
 ### 视角 2：三件套编排的完整 docker run
 
@@ -317,7 +316,7 @@ location /api/ {
 
 > **第 2 步 `--name spring-app` 与 `nginx.conf` 的 `proxy_pass http://spring-app:8080` 是关键**：Docker 默认桥接网络下容器名即为 DNS 名称，Nginx 容器可以直接通过 `spring-app` 这个名字访问 Spring Boot 容器——这是 § 5「Docker 网络与卷」提到的「容器互联」在朴素场景下的应用，无需手工 `--link` 或额外别名。
 >
-> 但启动顺序仍然是手工依赖（MySQL 先 → App 后），容易产生「MySQL 还未就绪 → App 启动失败」的时序问题。第 08 篇 Docker Compose 用 `depends_on` 解决这个。
+> 但启动顺序仍然是手工依赖（MySQL 先 → App 后），容易产生「MySQL 还未就绪 → App 启动失败」的时序问题。08 篇 Docker Compose 用 `depends_on` 解决这个。
 
 ### 视角 3：升级与回退——三件套场景下的「只换不修」
 
@@ -347,7 +346,7 @@ docker run -d --name spring-app -e DB_HOST=mysql -p 8080:8080 \
   registry.cn-hangzhou.aliyuncs.com/xiaolin-docs/spring-app:1.0.0
 ```
 
-> ⚠️ **关键边界——有状态服务（MySQL）**：MySQL 容器**不能**像 Spring Boot 那样「想 rm 就 rm」——它的数据在 `-v mysql_data:/var/lib/mysql` 命名卷里。升级 MySQL 大版本（`8.0 → 8.4`）时，先备份数据卷：
+> **关键边界——有状态服务（MySQL）**：MySQL 容器**不能**像 Spring Boot 那样「想 rm 就 rm」——它的数据在 `-v mysql_data:/var/lib/mysql` 命名卷里。升级 MySQL 大版本（`8.0 → 8.4`）时，先备份数据卷：
 >
 > ```bash
 > docker exec mysql mysqldump -uroot -prootpass appdb > backup-$(date +%F).sql
@@ -359,9 +358,9 @@ docker run -d --name spring-app -e DB_HOST=mysql -p 8080:8080 \
 
 视角 2 的形式化映射落到运维视角上，本质上是**把运维人员从「依赖环境的手工维护」中剥离出来**：
 
-- ✅ **可迁移性问题（03 的死局二）**：镜像自带运行时，宿主机换 Ubuntu / Debian / 阿里云镜像都不会影响——「本地能跑、线上报错」的 `GLIBC not found` 一类问题彻底消失。
-- ✅ **服务器变脏（03 的死局一）**：业务容器一删即净，`docker rm` 之后服务器只跑 Docker Daemon，没有任何 Java、Python、Maven 残留。
-- ✅ **回退要重做（04 的痛点）**：`docker run app:1.0.0` 一条命令拉回历史版本，不再依赖「备份目录 mv」。
+- **可迁移性问题（03 的死局二）**：镜像自带运行时，宿主机换 Ubuntu / Debian / 阿里云镜像都不会影响——「本地能跑、线上报错」的 `GLIBC not found` 一类问题彻底消失。
+- **服务器变脏（03 的死局一）**：业务容器一删即净，`docker rm` 之后服务器只跑 Docker Daemon，没有任何 Java、Python、Maven 残留。
+- **回退要重做（04 的痛点）**：`docker run app:1.0.0` 一条命令拉回历史版本，不再依赖「备份目录 mv」。
 
 一句话：**运维人员不再花时间维护「依赖环境」，转而只关心「镜像版本表」**——这是 03 篇留下的工程债务在 05 篇被结构性清偿。
 
@@ -378,9 +377,9 @@ docker run -d --name spring-app -e DB_HOST=mysql -p 8080:8080 \
 
 要真正进入「push → pull」的工业级流水线，还需要：
 
-- ❓ **业务镜像从代码自动构建并 push 到 Registry** → [第 07 篇（GitHub Actions）](./actions.md) 解决
-- ❓ **多容器编排（MySQL 未就绪就启动 App、`docker run` 参数散落多处）** → [第 08 篇 Docker Compose](./docker-compose.md) 解决
-- ❓ **国内网络镜像加速**（阿里云 ACR、中科大镜像站）→ Docker 工具集配置范畴
+- **业务镜像从代码自动构建并 push 到 Registry** → [07 篇（GitHub Actions）](./actions.md) 解决
+- **多容器编排（MySQL 未就绪就启动 App、`docker run` 参数散落多处）** → [08 篇 Docker Compose](./docker-compose.md) 解决
+- **国内网络镜像加速**（阿里云 ACR、中科大镜像站）→ Docker 工具集配置范畴
 
 **一句话总结**：**05 篇解决的是「可迁移性」，但「运维步骤繁琐」与「网络瓶颈」这两类现实问题，留给 07 / 08 篇以及工程实践一起打**——本篇的任务是把容器化这个「起点」立稳，让后续工具链有清晰的接力棒。
 
@@ -407,7 +406,7 @@ docker run -d --name spring-app -e DB_HOST=mysql -p 8080:8080 \
 面对可变基础设施的泥潭，云原生架构给出了颠覆性的设计原则。
 
 > [!NOTE]
-> **💡 云原生的四大核心支柱理念**：
+> **云原生的四大核心支柱理念**：
 > 在 CNCF（云原生计算基金会）的官方定义中，云原生并非简单地“把代码部署在云上”，而是一整套构建弹性、松耦合与高自动化系统的体系标准。其核心支柱包括：**微服务**、**{{term:容器}}**、**服务网格** 与 **{{term:不可变基础设施}}**（Immutable Infrastructure）。
 
 #### 1. 核心哲学：只换不修（Replace, don't repair）
