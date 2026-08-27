@@ -7,6 +7,18 @@ import MarkdownIt from 'markdown-it';
 const input = process.argv[2] ?? 'content/dist/delivery-start/wechat.md';
 const output = process.argv[3] ?? input.replace(/\.md$/, '-copy.html');
 const source = fs.readFileSync(input, 'utf8');
+const flattenMarkdownTables = (text) => text.replace(/(^|\n)((?:\|[^\n]+\|\n)+)/g, (full, prefix, block) => {
+  const lines = block.trim().split('\n').map((line) => line.trim()).filter(Boolean);
+  if (lines.length < 2 || !/^\|?\s*:?-{3,}:?\s*(?:\|\s*:?-{3,}:?\s*)+\|?$/.test(lines[1])) return full;
+  const cells = (line) => line.replace(/^\|\s*|\s*\|$/g, '').split('|').map((cell) => cell.trim());
+  const headers = cells(lines[0]);
+  const rows = lines.slice(2).map(cells);
+  return `${prefix}${rows.map((row) => {
+    const title = row[0] ?? '';
+    const details = row.slice(1).map((value, index) => `${headers[index + 1] ?? '说明'}：${value}`).join('；');
+    return `**${title}**${details ? `：${details}` : ''}`;
+  }).join('\n\n')}\n\n`;
+});
 const originPath = source.match(/^origin:\s*(docs\/[^\n]+)$/m)?.[1];
 const articleSource = originPath && fs.existsSync(originPath) ? fs.readFileSync(originPath, 'utf8') : source;
 const imageDataUri = (imageUrl) => {
@@ -21,6 +33,7 @@ const imageDataUri = (imageUrl) => {
   return `data:${mime};base64,${data.toString('base64')}`;
 };
 const body = articleSource
+  .replace(/\]\(([^)]+)\)\s+提到/g, ']($1)提到')
   .replace(/^---[\s\S]*?---\n/, '')
   .replace(/^# 发布元数据[\s\S]*?^# 正文（粘贴到公众号后台）\n/m, '')
   .replace(/^---\n\n## 封面图（Codex 生成）[\s\S]*$/m, '')
@@ -180,8 +193,8 @@ md.renderer.rules.code_inline = (tokens, index) => {
   const content = tokens[index].content;
   const isLong = content.length > 34;
   const style = isLong
-    ? 'display:inline;box-decoration-break:clone;-webkit-box-decoration-break:clone;font-family:Menlo,Consolas,monospace;font-size:12px;line-height:1.6;white-space:normal;overflow-wrap:anywhere;word-break:break-word;background:#f3f5f7;color:#175da4;padding:2px 4px;border-radius:3px;'
-    : 'font-family:Menlo,Consolas,monospace;font-size:12px;white-space:nowrap;background:#f3f5f7;color:#175da4;padding:2px 4px;border-radius:3px;';
+    ? 'font-family:inherit;font-size:inherit;line-height:inherit;white-space:normal;color:inherit;'
+    : 'font-family:inherit;font-size:inherit;line-height:inherit;white-space:normal;color:inherit;';
   const renderedContent = isLong ? escapeHtml(content) : escapeHtml(content).replace(/ /g, '&nbsp;');
   return `<code style="${style}">${renderedContent}</code>`;
 };
@@ -291,19 +304,22 @@ const tableOptimizedArticle = renderedArticle.replace(/<table>[\s\S]*?<\/table>/
   if (tableIndex === 7) return cardsByRow(table, '#8c8c8c');
   return compactTable(table);
 });
-const articleHtml = tableOptimizedArticle.replace(/<span class="wechat-subitem">↳<\/span>/g, '<span style="display:inline-block;margin:4px 0 0 0;padding-left:0.2em;color:#667085;font-size:0.93em;">↳</span>').replace(/<ul>\s*([\s\S]*?)\s*<\/ul>/g, (_, items) => {
+const articleHtml = tableOptimizedArticle.replace(/<span class="wechat-subitem">↳<\/span>/g, '<span style="display:inline-block;margin:4px 0 0 0;padding-left:0.2em;color:#667085;font-size:0.93em;">↳</span>').replace(/<td([^>]*)>([\s\S]*?)<\/td>/gi, (_, attrs, cell) => `<td${attrs}>${cell.replace(/<code[^>]*>([\s\S]*?)<\/code>/gi, '$1')}</td>`).replace(/<ul>\s*([\s\S]*?)\s*<\/ul>/g, (_, items) => {
   const listItems = [...items.matchAll(/<li>([\s\S]*?)<\/li>/g)];
   const compactItems = listItems
-    .map(([__, item], index) => `<p style="margin:0 0 ${index === listItems.length - 1 ? 0 : 3}px;padding-left:1.05em;text-indent:-1.05em;font-size:15px;line-height:1.5;letter-spacing:0;color:#222;">•&nbsp;${item.trim().replace(/^<p>|<\/p>$/g, '')}</p>`)
+    .map(([__, item], index) => `<p style="margin:0 0 ${index === listItems.length - 1 ? 0 : 6}px;padding-left:1.35em;text-indent:-1.35em;font-size:16px;line-height:1.75;letter-spacing:0;color:#343a40;">•&nbsp;${item.trim().replace(/^<p>|<\/p>$/g, '')}</p>`)
     .join('');
   return `<section style="margin:0 0 10px;">${compactItems}</section>`;
 }).replace(/<ol>\s*([\s\S]*?)\s*<\/ol>/g, (_, items) => {
   const listItems = [...items.matchAll(/<li>([\s\S]*?)<\/li>/g)];
   const numberedItems = listItems
-    .map(([__, item], index) => `<p style="margin:0 0 ${index === listItems.length - 1 ? 0 : 5}px;padding-left:1.55em;text-indent:-1.55em;font-size:15px;line-height:1.55;letter-spacing:0;color:#222;">${index + 1}.&nbsp;${item.trim().replace(/^<p>|<\/p>$/g, '')}</p>`)
+    .map(([__, item], index) => `<p style="margin:0 0 ${index === listItems.length - 1 ? 0 : 6}px;padding-left:1.6em;text-indent:-1.6em;font-size:16px;line-height:1.75;letter-spacing:0;color:#343a40;">${index + 1}.&nbsp;${item.trim().replace(/^<p>|<\/p>$/g, '')}</p>`)
     .join('');
   return `<section style="margin:0 0 10px;">${numberedItems}</section>`;
-});
+}).replace(/<h2(?:\s[^>]*)?>([\s\S]*?)<\/h2>/gi, '<h2 style="width:72%;margin:32px auto 16px;padding:0 0 7px;border-left:0;border-right:0;border-top:0;border-bottom:2px solid #e27842;background:transparent;color:#343a40;font-size:19px;line-height:1.5;text-align:center;font-weight:700;">$1</h2>')
+  .replace(/<h3(?:\s[^>]*)?>([\s\S]*?)<\/h3>/gi, '<h3 style="margin:22px 0 10px;padding:0 0 0 9px;border-left:3px solid #e27842;color:#343a40;font-size:17px;line-height:1.55;font-weight:700;">$1</h3>')
+  .replace(/<h4(?:\s[^>]*)?>([\s\S]*?)<\/h4>/gi, '<p style="margin:18px 0 10px;color:#175da4;font-size:16px;line-height:1.55;font-weight:700;">$1</p>')
+  .replace(/<blockquote(?:\s[^>]*)?>([\s\S]*?)<\/blockquote>/gi, (_, content) => `<section style="margin:12px 0;padding:6px 10px;border-left:2px solid #e6a06a;color:#8a6a52;font-size:14px;line-height:1.6;">${content.replace(/font-size:16px/g, 'font-size:14px').replace(/line-height:1.75/g, 'line-height:1.6').replace(/margin:0 0 6px/g, 'margin:0 0 3px')}</section>`);
 const title = source.match(/^title:\s*(.+)$/m)?.[1]?.trim()
   ?? source.match(/^1\.\s+(.+?)(?:（系列化）)?$/m)?.[1]?.trim()
   ?? 'AI持续运维';
@@ -315,7 +331,7 @@ const html = `<!doctype html>
 <html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
 <title>${title}</title><style>
 body{margin:0;background:#f3f6f9;color:#243447;font-family:-apple-system,BlinkMacSystemFont,"PingFang SC","Microsoft YaHei",sans-serif}.toolbar{position:sticky;top:0;z-index:2;padding:14px;text-align:center;background:#fff;border-bottom:1px solid #e8e8e8}.copy{border:0;border-radius:6px;padding:10px 22px;background:#175da4;color:#fff;font-size:15px;cursor:pointer}.hint{margin-left:12px;color:#888;font-size:13px}.article{box-sizing:border-box;max-width:760px;margin:24px auto;padding:38px 46px;background:#fff;line-height:1.95;font-size:16px;letter-spacing:.01em}.brand-header{display:flex;align-items:center;gap:12px;margin-bottom:18px;color:#0a152f}.brand-mark{display:grid;place-items:center;width:38px;height:38px;border-radius:12px 12px 12px 3px;background:#175da4;color:#fff;font-weight:800;letter-spacing:-1px}.brand-header strong{display:block;font-size:16px;letter-spacing:1px}.brand-header span{display:block;margin-top:2px;color:#718096;font-size:12px}.brand-rule{height:4px;margin-bottom:28px;background:#175da4}.brand-footer{margin-top:36px;padding:18px 0 0;border-top:1px solid #d9e2ec;color:#718096;font-size:13px;line-height:1.8}.brand-footer-mark{color:#175da4;font-size:16px;font-weight:700}.brand-slogan{margin-top:10px;color:#e27842}.article h1{font-size:28px;line-height:1.4;margin:0 0 28px;color:#0a152f}.article h2{margin:36px 0 16px;font-size:21px;line-height:1.5;border-left:4px solid #175da4;padding:7px 0 7px 12px;background:#f7f9fc;color:#0a152f}.article h3{font-size:17px;line-height:1.55;color:#175da4}.article p{margin:0 0 16px}.article blockquote{margin:20px 0;padding:12px 16px;border-left:4px solid #e27842;background:#fff8ed;color:#4b5563;line-height:1.8}.article pre{margin:18px 0;padding:14px 16px;overflow-x:auto;background:#f6f8fa;border:1px solid #e5e6eb;border-radius:5px;line-height:1.5;white-space:pre;font-size:12px}.article pre code{font-family:Menlo,Consolas,monospace;font-size:12px;white-space:pre}.article code{font-family:Menlo,Consolas,monospace;font-size:12px}.article img{max-width:100%;height:auto}.article table{border-collapse:collapse;width:100%;margin:18px 0;font-size:14px}.article th,.article td{border:1px solid #d9d9d9;padding:8px 10px;line-height:1.6}.article th{background:#f3f6f9;color:#0a152f}@media(max-width:600px){.article{margin:0;padding:26px 18px;font-size:16px}.article h1{font-size:25px}.article h2{font-size:20px}.hint{display:block;margin:8px 0 0}}
-</style></head><body><div class="toolbar"><button class="copy" id="copy">原生复制正文</button><span class="hint" id="status">使用与 Cmd + C 相同的复制方式；图片请单独插入</span></div><main class="article" id="article">${brandHeader}${articleTitle}${articleHtml}${brandFooter}</main>
+</style></head><body><div class="toolbar"><button class="copy" id="copy">原生复制正文</button><span class="hint" id="status">使用与 Cmd + C 相同的复制方式；图片请单独插入</span></div><main class="article" id="article">${brandHeader}${articleHtml}${brandFooter}</main>
 <script>function copyNativeRichText(){const source=document.getElementById('article');const range=document.createRange();range.selectNodeContents(source);const selection=getSelection();selection.removeAllRanges();selection.addRange(range);let ok=false;try{ok=document.execCommand('copy')}catch(e){}selection.removeAllRanges();return ok}
 document.getElementById('copy').addEventListener('click',()=>{const status=document.getElementById('status');if(copyNativeRichText()){status.textContent='已按浏览器原生方式复制；图片请在公众号后台单独插入';}else{status.textContent='复制失败，请使用 Cmd + A（正文区域）后按 Cmd + C';}});</script></body></html>`;
 fs.mkdirSync(path.dirname(output), { recursive: true });

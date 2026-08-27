@@ -853,7 +853,23 @@ ${content}
 document.getElementById('copy-wechat').addEventListener('click', async () => {
   const article = document.getElementById('wechat-article');
   const status = document.getElementById('copy-status');
-  const html = article.innerHTML;
+  // 公众号编辑器会过滤页面级 CSS。复制前将关键排版属性写入节点，保证粘贴后仍保持布局。
+  const clone = article.cloneNode(true);
+  const selectors = 'h1,h2,h3,h4,p,blockquote,pre,pre code,code,table,thead,tbody,tr,th,td,ul,ol,li,hr,a,strong,em,img';
+  const properties = [
+    'display', 'width', 'max-width', 'margin', 'padding', 'font-family', 'font-size',
+    'font-weight', 'font-style', 'line-height', 'letter-spacing', 'color', 'background',
+    'border', 'border-left', 'border-bottom', 'border-collapse', 'text-align',
+    'text-decoration', 'vertical-align', 'white-space', 'overflow-x', 'box-sizing'
+  ];
+  const sourceNodes = Array.from(article.querySelectorAll(selectors));
+  clone.querySelectorAll(selectors).forEach((node, index) => {
+    const source = sourceNodes[index];
+    const computed = getComputedStyle(source);
+    const styles = properties.map((property) => property + ':' + computed.getPropertyValue(property)).join(';');
+    node.setAttribute('style', (node.getAttribute('style') || '') + ';' + styles);
+  });
+  const html = clone.innerHTML;
   const text = article.innerText;
   try {
     if (navigator.clipboard && window.ClipboardItem) {
