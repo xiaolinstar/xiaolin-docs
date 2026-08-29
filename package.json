@@ -32,8 +32,5 @@
     "media:normalize:apply": "python3 scripts/normalize-media-names.py --apply",
     "sync:github-env": "node scripts/cd/sync-github-env.mjs",
     "test:glossary": "node --test --experimental-strip-types docs/.vitepress/glossary/matchTerms.test.ts docs/.vitepress/glossary/plugin.test.ts"
-  },
-  "dependencies": {
-    "wechat-format-cli": "^1.1.2"
   }
 }

@@ -3,4 +3,9 @@ packages:
 
 allowBuilds:
   esbuild: true
-  puppeteer: true
+
+# vitepress 1.x 把 markdown-it-mathjax3 锁在 4.3.2，4.x 仍依赖已弃用的
+# mathjax-full@3.x 与 cheerio→encoding-sniffer→whatwg-encoding 链。
+# 站点 math: false，vitepress 仅在 math:true 时动态 import 该包，升 5.x 零运行时风险。
+overrides:
+  markdown-it-mathjax3: ^5.2.0
