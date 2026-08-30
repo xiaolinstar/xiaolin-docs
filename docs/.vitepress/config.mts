@@ -210,17 +210,6 @@ export default withMermaid({
                             ]
                         },
                         {
-                            text: 'Jenkins',
-                            link: `/sre/jenkins`,
-                            collapsed: true,
-                            items: [
-                                { text: '你好 Jenkins', link: `/sre/jenkins/hello-jenkins` },
-                                { text: 'CI/CD 初体验', link: `/sre/jenkins/cicd-taste` },
-                                { text: 'VitePress 快速搭建个人网站', link: `/sre/jenkins/vitepress-docs` },
-                                { text: 'VitePress 数学公式修复（KaTeX）', link: `/sre/jenkins/vitepress-math-fix` },
-                            ],
-                        },
-                        {
                             text: 'Exception 异常架构专栏',
                             link: `/sre/devops/exception/exception-00`,
                             collapsed: true,
@@ -430,7 +419,11 @@ export default withMermaid({
         }
     },
     // 支持mermaid
-    mermaid: {},
+    mermaid: {
+        // Mermaid 图内公式继续使用 $$...$$；Safari 优先走原生 MathML，KaTeX CSS 作为回退。
+        legacyMathML: true,
+        forceLegacyMathML: false,
+    },
     mermaidPlugin: {
         class: "mermaid my-class"
     },

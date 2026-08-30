@@ -18,7 +18,6 @@ tags: []
 - [运维工具](./tools/) - 运维工具使用指南与最佳实践
 - [运营规划](./planning/) - 网站运营规划与内容策略
 - [CI/CD 与 DevOps](./devops/) - CI/CD 流水线建设与实践
-- [Jenkins](./jenkins/) - Jenkins 实战经验
 - [可观测性](./observability/) - 日志、监控、追踪体系
 
 ## 学习与思考

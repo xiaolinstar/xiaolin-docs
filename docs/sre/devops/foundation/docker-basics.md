@@ -268,7 +268,7 @@ $$
 - **$J_3$（Nginx）**：手写 `nginx.conf` + `nginx -s reload`
 - **$J_4$（verify）**：`curl -fsS http://localhost/api/health`
 
-**job 之间的拓扑序**：$J_1$（DB）→ $J_2$（App）→ $J_3$（Nginx）→ $J_4$（verify），即「DB 就绪 → App 部署 → 反代配置 → 访问验证」。每个 job 内部也是有向无环图（如 $J_2$ 内 v_2a → v_2b → v_2c → v_2d）。
+**job 之间的拓扑序**：$J_1$（DB）→ $J_2$（App）→ $J_3$（Nginx）→ $J_4$（verify），即「DB 就绪 → App 部署 → 反代配置 → 访问验证」。每个 job 内部也是有向无环图（如 $J_2$ 内 $v_{2a} \to v_{2b} \to v_{2c} \to v_{2d}$）。
 
 ---
 
@@ -276,10 +276,10 @@ Docker 化的关键不是把所有 step 替换成"等价 step"，而是**把每�
 
 | $J_k$ | 03 篇 job 内部 step 数 | 05 篇折叠为 | 承载物 |
 | :--- | :--- | :--- | :--- |
-| $J_1$ `DB` | `{v_1a, v_1b, v_1c}` | `pull mysql:8` → `run`（2 step） | 官方镜像 + volume |
-| $J_2$ `App` | `{v_2a, v_2b, v_2c, v_2d}` | `build app` → `run`（2 step） | Dockerfile 构建 |
-| $J_3$ `Nginx` | `{v_3a, v_3b}` | `pull nginx` → `run`（2 step） | 官方镜像 + volume |
-| $J_4$ `verify` | `{v_4a}` | `curl`（不变） | 不变 |
+| $J_1$ `DB` | $\{v_{1a},\ v_{1b},\ v_{1c}\}$ | `pull mysql:8` → `run`（2 step） | 官方镜像 + volume |
+| $J_2$ `App` | $\{v_{2a},\ v_{2b},\ v_{2c},\ v_{2d}\}$ | `build app` → `run`（2 step） | Dockerfile 构建 |
+| $J_3$ `Nginx` | $\{v_{3a},\ v_{3b}\}$ | `pull nginx` → `run`（2 step） | 官方镜像 + volume |
+| $J_4$ `verify` | $\{v_{4a}\}$ | `curl`（不变） | 不变 |
 
 > **核心洞察**：映射 $g$ 让每个 $J'_k$ 内部 step 数从 3-4 折叠到 2——「装环境 + 拷产物 + 写配置 + 起服务」被「pull 镜像 + run 容器」两动作取代。**$Y$ 的 job 集合不变，每个 job 内部 step 数大幅减少，job 之间拓扑序保持稳定**——这就是「容器化让运维精简」的形式化证据。
 
