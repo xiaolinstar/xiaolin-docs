@@ -75,6 +75,8 @@ Git 解决了代码版本锚定与源码免 scp 传输，但服务器拿到源�
 
 const escapeHtml = (value) => value.replace(/[&<>"']/g, (char) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[char]));
 const normalizeFormula = (formula) => formula
+  .replace(/\\begin\{aligned\}|\\end\{aligned\}/g, '')
+  .replace(/\\begin\{array\}\{[^}]*\}|\\end\{array\}/g, '')
   .replace(/\\xrightarrow(?:\{[^}]*\})+/g, ' → ')
   .replace(/\\Rightarrow/g, ' ⇒ ')
   .replace(/\\forall/g, '∀')
@@ -150,7 +152,7 @@ const renderFormula = (formula) => {
   return `<div style="margin:22px 0;padding:12px 16px;text-align:center;background:#f7f9fc;border:1px solid #d9e2ec;border-radius:6px;color:#0a152f;font-size:18px;font-weight:600;line-height:1.8;">${escapeHtml(normalizeFormula(formula))}</div>`;
 };
 const renderInlineFormula = (formula) => {
-  return `<span style="display:inline-block;font-family:'STIX Two Math','Cambria Math',Georgia,'Times New Roman',serif;font-size:1.02em;color:#0a152f;white-space:nowrap;">${formulaHtmlText(formula)}</span>`;
+  return `<span style="display:inline;font-family:'STIX Two Math','Cambria Math',Georgia,'Times New Roman',serif;font-size:1em;color:inherit;white-space:normal;">${formulaHtmlText(formula)}</span>`;
 };
 const inlineCodeTokens = [];
 const bodyWithProtectedInlineCode = body.replace(/`([^`\n]+)`/g, (_, code) => {
@@ -284,8 +286,10 @@ const renderWechatTableProse = (table) => {
   return section('这组信息可以这样理解：', rows.map((row) => item(`${keepShortTablePhrases(cardCell(row[0]))}：`, row.slice(1).map((cell, index) => `${headers[index + 1]} 为“${keepShortTablePhrases(cardCell(cell))}”`).join('；') + '。')).join(''));
 };
 let tableIndex = 0;
+const preserveNativeTables = /docker-basics/.test(input);
 const tableOptimizedArticle = renderedArticle.replace(/<table>[\s\S]*?<\/table>/g, (table) => {
   tableIndex += 1;
+  if (preserveNativeTables) return compactTable(table);
   const [, ...rows] = tableRows(table);
   if (input.includes('content/dist/git-github/')) {
     return compactTable(table);
