@@ -1,0 +1,21 @@
+slug: pipeline-basics
+origin: docs/sre/devops/foundation/pipeline-basics.md
+origin_url: https://xiaolinstar.cn/sre/devops/foundation/pipeline-basics.html
+title: DevOps 基础 06 ｜ 流水线基础：把运维动作写成自动化脚本
+pillar: 云原生
+series_ref: devops-basics
+created: 2026-08-30
+updated: 2026-08-30
+summary: 05 篇用 Docker 固化了运行环境，但上线时仍可能要人工 SSH、逐条执行命令。本文从命令式 shell 脚本开始，讲清 Job、step、DAG 与流水线引擎的关系，再以 Jenkinsfile 说明如何把运维动作写进 Git，让构建、部署和审计从依赖个人经验转向可复现的自动化流程。
+platforms:
+  wechat:
+    account: AI持续运维
+    status: ready
+    output: wechat.md
+    origin_sync: generated
+    title_selected: DevOps 基础 06 ｜ 流水线基础：把运维动作写成自动化脚本
+    search_keywords:
+      - DevOps 流水线
+      - Jenkinsfile
+      - DAG 任务依赖
+      - Shell 自动化部署

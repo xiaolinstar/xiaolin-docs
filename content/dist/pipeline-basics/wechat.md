@@ -1,19 +1,4 @@
----
-title: 06 ｜ 流水线基础：把运维动作写成自动化脚本
-description: 把 05 篇的手动操作链用命令式 shell 脚本固化；澄清"命令式 vs 声明式"，并解释为什么命令式脚本本身无法直接建模 DAG（并行/拓扑依赖），需要交给流水线引擎按拓扑序调度。
-date: 2026-07-15
-updated: 2026-08-30
-category: SRE 运维
-tags:
-  - DevOps
-  - 自动化
-  - Shell
-  - 命令式
-  - 声明式
-  - DAG
-  - Jenkinsfile
-  - IaC
----
+# 06 ｜ 流水线基础：把运维动作写成自动化脚本
 
 05 篇用 Docker 把「运行环境」封装成不可变镜像，攻克了 03~04 篇留下的可迁移性与服务器污染两大死局。但 05 末尾自己也点明：**每一条部署路径的最后一步，依然要人去执行**。
 
@@ -175,30 +160,9 @@ ssh h3 "./app.sh" &
 wait
 ```
 
-`wait` 不知道谁依赖谁、谁等谁；每加一台机器都要再敲一行 `&` 和一行 `wait`——维护项随机器数量线性增加，拓扑关系变复杂后，整体管理复杂度会快速上升。
+`wait` 不知道谁依赖谁、谁等谁；每加一台机器都要再敲一行 `&` 和一行 `wait`——维护成本随机器数**指数级**上涨。
 
 ![shell 命令流与 DAG 依赖图对比](/images/img-pipeline-basics/infographic-shell-flow-vs-dag.png)
-
-::: details 📐 静态信息图 Prompt 与路径参考（左侧：shell 命令流 / 右侧：DAG 依赖图）
-
-**Prompt**：
-
-```text
-极简手绘马克笔信息图，16:9 横版。主题为「shell 命令流 vs DAG 依赖图」：
-- 左侧「shell 命令流」：自上而下 5 条命令序列方块（h1, h2, h3, h4, h5），
-  每条都是 ssh + ./app.sh；h1/h2/h3 末尾各有一个 "&" 标记，h3 之后接
-  一个虚线框「wait」；最下方红色标签「并行靠硬模拟 · 维护成本指数上涨」
-- 右侧「DAG 依赖图」：顶部 1 个「build」节点向下展开为 h1/h2/h3/h4/h5
-  共 5 个并列节点（横向并排、无连线），下方一个「healthcheck」节点
-  接收来自 5 个节点的箭头汇入；右侧绿色标签「引擎按图自动调度」
-左右两栏用一条细灰线分隔；顶部居中标题「边界一：shell 无法建模生产变更的操作拓扑」。
-暖白背景、黑色线稿；所有自然语言使用简体中文；无阴影、无渐变、无 3D。
-```
-
-- 产物路径：`docs/public/images/img-pipeline-basics/infographic-shell-flow-vs-dag.png`
-- 站点引用：`/images/img-pipeline-basics/infographic-shell-flow-vs-dag.png`
-
-:::
 
 **边界一的本质**：shell 脚本**无法有效建模生产变更的操作拓扑**。前者是「拓扑排序」（按依赖排出的命令序列）的命令式模拟，后者是「DAG」（直接表达依赖关系的数据结构）的声明式描述。两者的差别不在语法，在「能不能让工具直接看到依赖图」——**shell 给你一条命令流（并行与依赖靠人维护）；DAG 给你一张依赖图（引擎自己调度）。**
 
@@ -245,24 +209,8 @@ set -euo pipefail                   # 任一步失败就退出
 
 继续把 $f$ 拆细：**生产变更**很少是「一条直线」。它通常长得像这样——**有先后、有并行、有汇总**：
 
-```mermaid
-flowchart TD
-    v1["$$v_1$$ 单元测试"]
-    v2["$$v_2$$ 构建镜像"]
-    v3["$$v_3$$ 推送华东 Registry"]
-    v4["$$v_4$$ 推送华北 Registry"]
-    v5["$$v_5$$ 华东健康检查"]
-    v6["$$v_6$$ 华北健康检查"]
-    v7["$$v_7$$ 全量切流"]
+> 流程图已整理为正文信息图，公众号中直接阅读图片即可。
 
-    v1 --> v2
-    v2 --> v3
-    v2 --> v4
-    v3 --> v5
-    v4 --> v6
-    v5 --> v7
-    v6 --> v7
-```
 
 这种「局部并行、整体有序」的拓扑，**线性箭头写不出来**——$v_3$ 与 $v_4$ 之间没有依赖，可以同时跑；$v_7$ 必须等 $v_5$ 和 $v_6$ 都成功。
 
@@ -335,22 +283,8 @@ Jenkins 不是唯一的 CI 引擎，但它有几个独特点——**自托管**�
 
 Jenkins 最早、最朴素的部署形态就是：一台专门的服务器，自居「CI server」，装 JDK / Maven / Git / SSH / Docker，监听 git push 的 webhook，自动跑构建并部署到生产。
 
-```mermaid
-sequenceDiagram
-    actor Dev as 开发者
-    participant GH as GitHub 仓库
-    participant Jenkins as Jenkins CI 服务器
-    participant Prod as 生产服务器
+> 流程图已整理为正文信息图，公众号中直接阅读图片即可。
 
-    Dev->>GH: git push
-    GH-->>Jenkins: webhook 通知（异步）
-    activate Jenkins
-    Jenkins->>GH: git pull 拉代码
-    Jenkins->>Jenkins: mvn package · docker build · push Registry
-    Jenkins->>Prod: SSH · docker pull · docker run
-    Jenkins-->>Dev: 部署结果通知
-    deactivate Jenkins
-```
 
 部署步骤大致是：
 
@@ -437,8 +371,7 @@ pipeline {
         }
         stage('Verify') {
             steps {
-                // 将 APP_HEALTHCHECK_URL 配置为 Jenkins Agent 可访问的实际地址
-                sh 'curl -fsS "${APP_HEALTHCHECK_URL}"'
+                sh 'curl -fsS http://app:8080/health'
             }
         }
     }
@@ -505,30 +438,6 @@ pipeline {
 
 ![传统运维交接与运维左移对比](/images/img-pipeline-basics/infographic-traditional-ops.png)
 
-::: details 📐 静态信息图 Prompt 与路径参考
-
-**Prompt**：
-
-```text
-极简手绘马克笔信息图，16:9 横版。主题为「传统运维场景：开发面向运维人员交付」：
-- 左侧「开发角色」：开发者人物头像 + 笔记本电脑图；笔记本电脑屏幕里
-  显示代码窗口；开发者手里拿着一份 Markdown 文档图标；左上方蓝色
-  标签「开发交付运维文档」
-- 中间「手动交接线」：一条虚线箭头从左侧指向右侧，箭头中标注
-  「人工交接 · 靠记忆/文档」；中间红色标签「面向人」
-- 右侧「运维角色」：运维人员人物头像 + 服务器机柜图；运维人员
-  正在用 SSH 客户端连服务器，命令行终端闪烁；服务器图标里跑着
-  一摞进程方块；右上方黄色标签「读文档 + 手动敲命令」
-左右两栏用一条细灰线分隔；底部统一一条横线标注
-「运维手册面向人 · 文档是载体 · 人是执行者」。
-暖白背景、黑色线稿；所有自然语言使用简体中文；无阴影、无渐变、无 3D。
-```
-
-- 产物路径：`docs/public/images/img-pipeline-basics/infographic-traditional-ops.png`
-- 站点引用：`/images/img-pipeline-basics/infographic-traditional-ops.png`
-
-:::
-
 这套模式的核心特征是「**运维文档面向人**」——文档是载体、运维人员是执行者。**开发和运维是天然分开的两个角色**：**开发面向运维人员交付**，运维负责把开发交付的产物搬上生产。两个角色之间有一道**手动交接线**——开发把 jar 传给运维，运维手动 ssh、敲命令、记运维笔记。这条交接线是 06 篇所有问题的根源：
 
 - **交接靠记忆、靠文档**——没有可审计；
@@ -555,7 +464,7 @@ Jenkinsfile 不是完整的 IaC（完整 IaC 包括 Terraform、Ansible、K8s YA
 
 贯穿 5 层的核心观察：**「上线要从一次生产变更落到一个结果」这件事没变**——变化的是抽象层级（手敲 → shell → DAG → 引擎 → 文件即基础设施）。
 
-下一篇 [07 篇 · GitHub Actions](./actions.md) 是更现代的 CI/CD 流水线工具——云端托管、零运维、YAML 纯声明式，对新手入门、一人公司或中小型团队特别友好，是 Jenkins 的纯声明式替代方案。
+下一篇 07 篇 · GitHub Actions 是更现代的 CI/CD 流水线工具——云端托管、零运维、YAML 纯声明式，对新手入门、一人公司或中小型团队特别友好，是 Jenkins 的纯声明式替代方案。
 
 ## 思考
 
