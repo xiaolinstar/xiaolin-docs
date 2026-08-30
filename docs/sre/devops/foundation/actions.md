@@ -11,7 +11,7 @@ tags:
   - IaC
 ---
 
-06 篇讲了 Jenkinsfile——用 Groovy DSL 描述「手动命令 → 声明式动作链」。GitHub Actions 是**托管式流水线**的另一代表：用 YAML 配置、零运维、模板即开即用。两者语法不同，「**声明式动作链 + 运维左移**」的思想完全一致。
+06 篇讲了 Jenkinsfile——用 Groovy DSL 描述「手动命令 → 声明式动作链」。GitHub Actions 是**托管式流水线**的另一代表：用 YAML 配置、无需自建执行服务器、模板即开即用。两者语法不同，「**声明式动作链 + 运维左移**」的思想完全一致。
 
 这一篇把核心概念与两个实战合并：一篇就能上手 GitHub Actions。
 
@@ -28,7 +28,7 @@ tags:
 | **Actions** | 可复用的扩展（GitHub 官方 / 第三方 Marketplace） | 共享库（Shared Libraries） |
 | **Runner** | 实际执行 Job 的虚拟机（Ubuntu / Windows / macOS） | `agent` |
 
-GitHub Actions 让仓库里发生**任何事件**都能触发一段自动化：
+GitHub Actions 让仓库里配置的事件触发一段自动化。它同时提供两层能力：GitHub Actions 负责 Workflow 的编排、触发和状态管理；Runner 负责实际执行 Job。使用 GitHub 托管 Runner 时，执行环境由 GitHub 按任务临时提供和回收，使用体验接近 Serverless，但它本质上仍是托管的虚拟机执行环境。
 
 - 推送代码 → 自动跑测试 / 构建 / 部署
 - 创建 issue → 自动加标签 / 派发
@@ -91,11 +91,11 @@ on:
       - opened
 ```
 
-模板只解决 50% 的事，**改一改触发条件和文案，就能贴合自己仓库**。
+`pull_request_target` 会在目标仓库的权限上下文中运行。它适合需要向 Issue / PR 写入评论的场景，但不要在该事件中执行未经审查的 PR 代码，也不要 checkout 外部 PR 分支。模板只解决 50% 的事，**改一改触发条件和文案，就能贴合自己仓库**。
 
 ## 实战二：VitePress Pages 自动化部署
 
-这是本项目（xiaolin-docs）实际用的 pipeline——**完全自动化**、无需手动点 GitHub Pages 设置、无需手动建 Token。
+这是本项目（xiaolin-docs）实际用的 pipeline——完成生产变更自动化，无需自建 CI/CD 服务器，也无需手动创建 Token。
 
 ### 1. 修改 URL 配置
 
@@ -120,26 +120,32 @@ on:
 env:
   TZ: Asia/Shanghai
 
+# 默认只允许构建读取仓库；部署权限在 deploy Job 中单独声明
+permissions:
+  contents: read
+
 jobs:
   build:
     runs-on: ubuntu-latest
+    permissions:
+      contents: read
     steps:
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
 
       - name: Setup Pages
-        uses: actions/configure-pages@v5
+        uses: actions/configure-pages@v6
 
-      - uses: pnpm/action-setup@v4
+      - uses: pnpm/action-setup@v6
         name: Install pnpm
         with:
-          version: 9
+          version: '11.10.0'
           run_install: false
 
       - name: Setup Node
-        uses: actions/setup-node@v4
+        uses: actions/setup-node@v6
         with:
-          node-version: 20
+          node-version: 24
           cache: 'pnpm'
 
       - name: Install dependencies
@@ -149,7 +155,7 @@ jobs:
         run: pnpm run docs:build
 
       - name: Upload pages artifact
-        uses: actions/upload-pages-artifact@v3
+        uses: actions/upload-pages-artifact@v5
         with:
           name: 'github-pages'
           path: docs/.vitepress/dist
@@ -166,7 +172,7 @@ jobs:
     steps:
       - name: Deploy to GitHub Pages
         id: deployment
-        uses: actions/deploy-pages@v4
+        uses: actions/deploy-pages@v5
 ```
 
 ### 3. 流水线分两段
@@ -176,39 +182,44 @@ jobs:
 | `build` | checkout → 装 pnpm/Node → 装依赖 → 构建 | 上传制品 `docs/.vitepress/dist` |
 | `deploy` | 拉制品 → 部署到 GitHub Pages | 公网 URL |
 
-`deploy` 用 `needs: build` 显式依赖 `build`——这就是 06 篇说的 `stages` 思想，只是语法更 YAML 化。
+`deploy` 用 `needs: build` 显式依赖 `build`——这就是 06 篇说的 `stages` 思想，只是语法更 YAML 化。首次使用 GitHub Pages 时，仍需在仓库 Settings → Pages → Build and deployment → Source 中选择 GitHub Actions；完成后，后续推送才会按该 Workflow 自动发布。
 
-### 4. 为什么「完全自动化」
+### 4. 为什么「生产变更自动化」
 
-- 不需要手动开启 GitHub Pages（GitHub 自动识别 `.github/workflows/`）
+- 首次需要在仓库 Pages 设置中选择 GitHub Actions；之后由 Workflow 自动构建和发布
 - 不需要手动建 Token（用默认的 `secrets.GITHUB_TOKEN` + Pages 专用权限）
 - 推送代码即部署——`git push` 完看 Actions 面板，部署进度实时滚动
 
-## 自动化与免运维发布
+## 自动化与托管式执行
 
 GitHub Actions + GitHub Pages 一起用，达成**两层自动化**：
+
+- **流水线引擎**：解析 Workflow，响应 Event，按 `needs` 调度 Jobs 和 Steps，记录执行状态；
+- **托管执行环境**：GitHub 提供 Runner，负责实际运行构建、测试和部署命令。开发者不需要维护 CI Server，但仍需维护 Workflow、权限、依赖和发布配置。
 
 | 维度 | 自动化效果 |
 | --- | --- |
 | **构建** | 推送代码 → 自动装依赖 + 构建 |
 | **部署** | 构建完 → 自动上传制品 → 自动部署到 Pages |
-| **域名 / HTTPS** | GitHub 自动配 |
-| **CDN** | GitHub Pages 内置 |
-| **运维** | **零运维**——Serverless 架构 |
+| **默认域名 / HTTPS** | 由 GitHub Pages 提供；自定义域名需要单独配置 |
+| **静态资源分发** | 由 GitHub Pages 提供 |
+| **执行环境** | 使用 GitHub 托管 Runner，按任务提供执行环境 |
 
-对比手动部署的 7 个步骤（构建 → 推仓库 → 拉镜像 → 创建网络 → 逐个启动容器），**`git push` 一行**搞定全部。
+对比手动部署通常需要依次完成的 7 类动作，**`git push` 一行**即可触发后续流程：
 
-```mermaid
-flowchart TD
-    A[开发与代码迭代]:::dev --> B[代码提交至 GitHub 仓库]:::dev
-    B --> C[触发 GitHub Actions 流水线]:::ci
-    C --> D[执行静态资源构建]:::ci
-    D --> E[上传 Pages 制品]:::ci
-    E --> F[部署制品至 Pages]:::cd
-    F --> G[站点验证与正式发布]:::pub
-```
+| 手动部署 | GitHub Actions |
+| --- | --- |
+| 1. 本地构建 | 1. `git push` 触发 Workflow |
+| 2. 推送仓库 | 2. Workflow 编排 Jobs |
+| 3. 登录服务器 | 3. 托管 Runner 执行构建与部署 |
+| 4. 拉取镜像 | 4. 自动上传 Pages 制品 |
+| 5. 创建网络 | 5. 自动发布到 Pages |
+| 6. 启动容器 | 6. 查看运行日志和状态 |
+| 7. 健康检查 |  |
 
-开发人员只需关注**开发阶段**——后续 CI / CD / 发布全部自动化。
+左侧是人按顺序执行的 7 类动作，右侧是一次 `git push` 之后由 Workflow、Runner 和 Pages 服务协同完成的生产变更自动化。用表格表达步骤，更适合复制、阅读和微信公众号等不完整支持 Mermaid 的场景。
+
+开发人员把生产变更写进 Workflow；构建、部署和结果记录交给 GitHub Actions 执行，但权限、依赖和失败处理仍需要持续维护。
 
 ## 实战经验
 
@@ -217,9 +228,64 @@ flowchart TD
 - **凭据管理**：用 `secrets.GITHUB_TOKEN` + `permissions:` 显式声明权限，不要给过多权限
 - **失败调试**：Actions 面板 → 点击失败任务 → 看 stdout 日志
 
+## 用 `gh` 和 AI Agent 管理流水线
+
+GitHub Actions 不只可以在网页中操作，也可以通过 GitHub CLI（`gh`）管理。AI Agent 可以根据需求创建或修改 `.github/workflows/*.yml`，再使用 `gh` 触发运行、观察结果，并根据日志修复问题。`gh` 主要负责 Workflow 和运行记录管理，不替代 YAML 静态检查工具。推荐保留人工确认环节：Agent 负责读代码、改 YAML 和分析日志，真正推送或部署前由人审查权限、触发条件和目标环境。
+
+### 查看与触发 Workflow
+
+```bash
+# 查看仓库中的 Workflow
+gh workflow list
+
+# 查看某个 Workflow 的配置和状态
+gh workflow view page.yml
+
+# 手动触发 Workflow
+gh workflow run page.yml --ref main
+
+# 查看最近的运行记录
+gh run list --workflow page.yml --limit 10
+```
+
+拿到运行编号后，可以继续查看实时状态和失败日志：
+
+```bash
+gh run watch RUN_ID
+gh run view RUN_ID --log-failed
+```
+
+修改 Workflow 后，先做本地检查，再触发远程运行：
+
+```bash
+# 检查 GitHub Actions Workflow 语法（需要提前安装 actionlint）
+actionlint .github/workflows/page.yml
+
+# 检查项目构建
+pnpm run docs:build
+```
+
+### Agent 修复 Workflow 的典型闭环
+
+```text
+需求：构建失败 / 部署失败
+  → Agent 读取 .github/workflows/page.yml
+  → gh run list / gh run view 定位失败 Job
+  → Agent 修改 YAML 或脚本
+  → actionlint 检查 Workflow，pnpm run docs:build 检查项目构建
+  → 人工审查权限、Secrets、环境和目标分支
+  → 提交并推送修复
+  → gh workflow run 重新触发
+  → gh run watch / gh run view --log-failed 验证结果
+```
+
+除了运行 Workflow，`gh workflow enable page.yml` 和 `gh workflow disable page.yml` 还可以切换 Workflow 状态。涉及生产部署时，应重点复核 `permissions`、`environment`、Secrets、分支限制和 `pull_request_target` 等安全边界。
+
+Agent 可以生成补丁、运行检查和整理失败日志，但不应默认拥有生产推送权限。提交、推送、修改 Secrets、调整部署环境保护规则等动作，应由具备相应权限的人确认后执行。
+
 ## 小结
 
-GitHub Actions 是托管式流水线代表：YAML 配置、零运维、模板即开即用，跟 06 篇 Jenkinsfile 在「声明式动作链」思想上完全一致。
+GitHub Actions 是托管式流水线代表：YAML 配置、无需自建执行服务器、模板即开即用，跟 06 篇 Jenkinsfile 在「声明式动作链」思想上完全一致。
 
 两个实战覆盖了**两类典型场景**：
 
