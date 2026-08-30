@@ -177,7 +177,7 @@ wait
 
 `wait` 不知道谁依赖谁、谁等谁；每加一台机器都要再敲一行 `&` 和一行 `wait`——维护项随机器数量线性增加，拓扑关系变复杂后，整体管理复杂度会快速上升。
 
-![shell 命令流与 DAG 依赖图对比](/images/img-pipeline-basics/infographic-shell-flow-vs-dag.png)
+![shell 命令流与 DAG 依赖图对比](https://media.xiaolin.fun/docs/img-pipeline-basics/infographic-shell-flow-vs-dag.png)
 
 ::: details 📐 静态信息图 Prompt 与路径参考（左侧：shell 命令流 / 右侧：DAG 依赖图）
 
@@ -196,7 +196,7 @@ wait
 ```
 
 - 产物路径：`docs/public/images/img-pipeline-basics/infographic-shell-flow-vs-dag.png`
-- 站点引用：`/images/img-pipeline-basics/infographic-shell-flow-vs-dag.png`
+- 站点引用：`https://media.xiaolin.fun/docs/img-pipeline-basics/infographic-shell-flow-vs-dag.png`
 
 :::
 
@@ -503,7 +503,7 @@ pipeline {
 2. 没有特别添加的内容，**生产变更由运维重复执行**——读文档、手动 ssh、敲命令、记笔记；
 3. 如果有添加的内容，**更新运维文档**，再交付给运维。
 
-![传统运维交接与运维左移对比](/images/img-pipeline-basics/infographic-traditional-ops.png)
+![传统运维交接与运维左移对比](https://media.xiaolin.fun/docs/img-pipeline-basics/infographic-traditional-ops.png)
 
 ::: details 📐 静态信息图 Prompt 与路径参考
 
@@ -525,7 +525,7 @@ pipeline {
 ```
 
 - 产物路径：`docs/public/images/img-pipeline-basics/infographic-traditional-ops.png`
-- 站点引用：`/images/img-pipeline-basics/infographic-traditional-ops.png`
+- 站点引用：`https://media.xiaolin.fun/docs/img-pipeline-basics/infographic-traditional-ops.png`
 
 :::
 
