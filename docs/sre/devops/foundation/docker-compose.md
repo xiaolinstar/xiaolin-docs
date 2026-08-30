@@ -1,6 +1,6 @@
 ---
 title: 08 ｜ 多服务容器编排：Docker Compose
-description: 把 05 的单容器命令式用法升级为多服务声明式编排；一份 YAML 描述期望状态，与 Jenkinsfile 同属 IaC 思想，作为 DevOps 基础篇收口。
+description: 微服务进入生产后，使用 Docker Compose 把多服务拓扑、网络、存储和配置随源码提交管理；它是单机多容器应用的声明式部署终点，也让流水线回归版本交付与结果验证。
 date: 2026-03-06
 updated: 2026-07-17
 category: SRE 运维
@@ -11,20 +11,22 @@ tags:
   - IaC
 ---
 
-05 篇用五条命令把**一个**容器跑起来了；06 / 07 篇把操作写成了声明式流水线（Jenkinsfile / GitHub Actions YAML）。这一篇把两件事合在一起：
+05 篇解决了“一个容器怎么运行”，06 / 07 篇解决了“版本怎么构建、推送和触发”。但开发侧引入微服务后，一个应用往往会拆成网关、前端、API、数据库、缓存和消息队列，运维对象从 1 个变成多个。
 
-> **当服务从 1 个变成 3 个、5 个时，逐条 `docker run` 也会变成另一套「靠记忆的运维琐事」——需要一份声明式文件，把多容器的期望状态写进仓库。**
+逐条 `docker run` 仍然可以把它们启动起来，却会重新变成一套靠记忆维护的运维琐事：网络、端口、卷、环境变量、依赖顺序和重启策略散落在命令参数里。真正需要管理的不是“多敲几条命令”，而是**多个服务如何组成一个应用**。
 
-这就是 Docker Compose。它和 Jenkinsfile 是同一思想的两种落点：
+这就是 Docker Compose：把应用的服务拓扑和期望状态写进 `compose.yaml`，随源码一起提交、Review 和版本管理。它和 Jenkinsfile / GitHub Actions 是同一套基础设施即代码思想的不同落点：
 
-| | Jenkinsfile / Actions YAML | `docker-compose.yml` |
+| | Jenkinsfile / Actions YAML | `compose.yaml` |
 | --- | --- | --- |
 | 声明的是 | **怎么构建与部署**（动作链） | **跑哪些服务、如何互联**（期望状态） |
 | 写在哪 | 代码仓库 | 代码仓库 |
 | 谁执行 | 流水线引擎 | `docker compose` CLI |
 | 思想 | 运维左移 / IaC | 运维左移 / IaC |
 
-## 从「一条 docker run」到「八条 docker run」
+对绝大多数开源项目来说，Compose 也是默认的自部署入口之一：项目把 `compose.yaml`、环境变量模板和启动说明随源码发布，用户只需准备 Docker，再按文档执行 `docker compose up -d`。因此 Compose 文件不是临时脚本，而是项目交付物的一部分。
+
+## 从「一个容器」到「一个应用」
 
 回顾 05 的最小闭环：
 
@@ -70,11 +72,21 @@ docker run -d --name gateway --network app-net \
 
 这和 02 篇「手动备份像错题本」、05 篇「服务器变脏」是同一类运维痛点——**动作靠记忆，状态不可声明**。
 
-## 声明式：描述「要什么」，而不是「怎么做」
+## Compose 的本质：声明应用拓扑与期望状态
 
 `docker run` 是**命令式**：你告诉系统每一步怎么做。
 
 `docker-compose.yml` 是**声明式**：你描述期望状态，由 Compose 把实际状态收敛过去。
+
+可以把几种工具的职责分开理解：
+
+| 层次 | 解决的问题 |
+| --- | --- |
+| Docker Image | 服务运行什么 |
+| Container | 服务运行实例 |
+| Docker Compose | 多个服务如何组成一个应用 |
+| Jenkinsfile / GitHub Actions | 什么时候构建、推送和部署 |
+| Kubernetes | 多机调度、弹性扩缩和故障自愈 |
 
 ```yaml
 services:
@@ -114,6 +126,8 @@ docker compose logs -f    # 看日志
 docker compose down       # 停掉并清理容器与网络（卷默认保留）
 ```
 
+`depends_on` 默认只保证启动顺序，不保证数据库已经可以接受连接。生产配置应为依赖服务增加 `healthcheck`，并让应用自身具备连接重试能力；容器显示 `Up`，不代表应用已经真正就绪。
+
 对比：
 
 | 维度 | 手动 `docker run` | Docker Compose |
@@ -123,6 +137,8 @@ docker compose down       # 停掉并清理容器与网络（卷默认保留）
 | 环境一致性 | 每次手敲易错 | 同一份 YAML 本地 / 测试 / 生产同构 |
 | 停止清理 | 逐个 `stop` + `rm` | `docker compose down` |
 | 团队协作 | 靠文档或口口相传 | `clone` + `compose up` 即可复现 |
+
+Compose 文件通常命名为 `compose.yaml`；`docker-compose.yml` 是历史命名，现代 Docker Compose 仍兼容它。
 
 ## 本站级示例：多服务可观测性栈
 
@@ -139,9 +155,9 @@ docker compose down       # 停掉并清理容器与网络（卷默认保留）
 
 > 生产密钥不要写进 YAML 明文。用 `.env`（加入 `.gitignore`）或密钥管理注入；YAML 里只写 `${POSTGRES_PASSWORD}` 这类引用。
 
-## 与流水线怎么配合
+## Compose 如何把流水线打薄
 
-Compose **不替代**流水线，而是流水线的**部署动作载体**：
+Compose **不替代**流水线，而是把“容器应用如何部署”从流水线脚本中抽离出来，成为流水线调用的**部署动作载体**：
 
 ```text
 git push
@@ -149,17 +165,31 @@ git push
   → CD 在服务器上：git pull（拿到最新 compose）→ docker compose pull → docker compose up -d
 ```
 
-服务器仍然**只装 Docker**——不装 `mvn` / `pip`，不在生产机构建（除非你明确用 `compose up --build`，那会把 03 的「脏 / 资源」痛点请回来）。推荐路径是：**CI 出镜像，服务器只 pull + up**。
+服务器仍然可以**只装 Docker**——不装 `mvn` / `pip`，由 Dockerfile 和 Compose 在服务器上完成构建。这就是 **Build in Server**：适合个人项目、开源项目和单机小规模部署，源码到服务器后执行 `docker compose up --build -d` 即可。规模扩大后，再切换为 CI 构建镜像、服务器只执行 `pull + up`，以减少生产机资源消耗并提高构建可追溯性。
 
-## 边界：Compose 够用到哪一步
+因此，流水线有两种合理形态：Build in Server 模式下，流水线主要负责更新源码、触发 `docker compose up --build` 和验证结果；CI Build 模式下，流水线负责构建并推送镜像，服务器只执行 `docker compose pull` 和 `docker compose up -d`。两种模式都由 Compose 负责服务拓扑和生命周期，差别在于镜像在哪里构建。
+
+Build in Server 的代价也需要明确：构建会消耗生产机的 CPU、内存和磁盘，构建结果还可能受服务器环境影响；当需要多环境复用、构建审计、快速回滚或减少生产资源争抢时，应切换到 CI Build。
+
+部署前建议先检查最终配置，再执行变更：
+
+```bash
+docker compose config
+docker compose pull
+docker compose up -d
+docker compose ps
+docker compose logs --tail=100
+```
+
+## 单机多服务部署的终点与边界
 
 | 场景 | 建议 |
 | --- | --- |
-| 个人 / 中小项目，单机或少数机器 | **Compose 足够**——基础篇终点 |
+| 个人 / 中小项目，单机部署或多台机器分别独立部署 | **Compose 足够**——单机多服务部署的终点 |
 | 数十服务、多节点、弹性扩缩 | 再考虑 K3s / Kubernetes |
 | 多区域容灾、灰度发布 | Service Mesh / GitOps（进阶篇） |
 
-**掌握 Compose + 前面 01–07，已经能覆盖绝大多数中小型项目的运维工作。** 这就是基础篇把 Compose 放在最后一篇的原因——不是因为它最难，而是因为它把「可移植性 + 声明式 + 多服务」收成一个可落地的闭环。
+**掌握 Compose + 前面 01–07，已经能覆盖绝大多数中小型项目的单机部署工作。** 这也是基础篇把 Compose 放在最后一篇的原因：它把“可移植性 + 声明式 + 多服务”收成一个可落地的闭环。Compose 是单机、多容器应用的部署终点，但不是多机集群的调度方案。
 
 ## 小结
 
@@ -171,7 +201,7 @@ Docker Compose 把 05 的单容器能力扩展为**多服务期望状态**：一
 
 1. `docker-compose.yml` 应该提交到 Git 吗？里面有数据库密码时怎么处理？
 2. `depends_on` 能保证依赖服务「已就绪」吗？MySQL 容器 `Up` 了但还在初始化，应用连库会怎样？
-3. 为什么推荐「CI 构建镜像 + 服务器 `compose pull && up`」，而不是在生产机 `compose up --build`？
+3. 单机小项目为什么可以选择在生产机执行 `docker compose up --build`？当构建耗时、服务器资源或团队规模上升后，什么时候应该切换到「CI 构建镜像 + 服务器 `compose pull && up`」？
 
 ## 参考
 
