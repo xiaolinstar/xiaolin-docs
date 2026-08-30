@@ -133,6 +133,7 @@ export default withMermaid({
                         },
                         {
                             text: 'DevOps 基础篇',
+                            link: `/sre/devops/foundation/`,
                             collapsed: true,
                             items: [
                                 { text: '01. Nginx 静态资源代理', link: `/sre/devops/foundation/delivery-start` },
