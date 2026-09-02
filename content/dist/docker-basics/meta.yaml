@@ -5,7 +5,7 @@ title: DevOps 基础 05 ｜ 容器 Docker：让服务器回归本职
 pillar: 云原生
 series_ref: devops-basics
 created: 2026-08-29
-updated: 2026-08-29
+updated: 2026-08-30
 summary: 04 篇用 Git 锁定了代码版本，但源码回到服务器后，仍然要面对运行时、依赖和环境差异。本文从服务器构建与本地编译两条路线的困境出发，讲清 Docker 容器、镜像、容器运行时和 Dockerfile，并用一组实战命令说明如何让应用与运行环境一起交付。
 platforms:
   wechat:

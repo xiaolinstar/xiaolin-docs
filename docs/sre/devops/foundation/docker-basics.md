@@ -187,7 +187,7 @@ docker rmi nginx:1.27-alpine
 
 Docker 镜像需要在 `Registry`（仓库）存储与分发，类比 npm / pip 的中心包版本库。
 
-- **公共仓库 Docker Hub**（hub.docker.com）：nginx、mysql、postgres 等官方镜像的标准来源，与 GitHub 同一集团，生态最大。
+- **公共仓库 Docker Hub**（`hub.docker.com`）：nginx、mysql、postgres 等官方镜像的标准来源，与 GitHub 同一集团，生态最大。
 - **私有仓库**：生产镜像一般托管在阿里云 ACR、华为云 SWR、腾讯云 TCR，或自建 Harbor——网络可达性、可控性、私密性都更好。
 - **镜像命名约定**：`<registry>/<repo>:<tag>`。公共仓库常省略 `<registry>` 直接写 `nginx:1.27-alpine`；私有仓库完整路径如 `registry.cn-hangzhou.aliyuncs.com/xiaolin-docs/spring-app:1.0.0`。
 - **tag 是镜像的精确指纹**：生产环境必须显式锁版本（`1.0.0` 而不是 `latest`），否则上游 push 一次新镜像，所有拉取者就被动升级。
@@ -272,7 +272,7 @@ $$
 
 ---
 
-Docker 化的关键不是把所有 step 替换成"等价 step"，而是**把每个 job 内部的多 step 折叠到最少**——以镜像为单位的「build once, run anywhere」让 job 内部不再需要服务器上的工具链。映射形式化为 Y → Y'，Y = {J_1, J_2, J_3, J_4} 与 Y' = {J'_1, J'_2, J'_3, J'_4}：
+Docker 化的关键不是把所有 step 替换成"等价 step"，而是**把每个 job 内部的多 step 折叠到最少**——以镜像为单位的「build once, run anywhere」让 job 内部不再需要服务器上的工具链。映射形式化为 $Y \to Y'$，$Y = \{J_1, J_2, J_3, J_4\}$ 与 $Y' = \{J'_1, J'_2, J'_3, J'_4\}$：
 
 | $J_k$ | 03 篇 job 内部 step 数 | 05 篇折叠为 | 承载物 |
 | :--- | :--- | :--- | :--- |
@@ -376,7 +376,7 @@ docker run -d --name spring-app -e DB_HOST=mysql -p 8080:8080 \
 
 ### 尚未解决——仍待优化的运维步骤
 
-视角 3 / 视角 4 的命令虽然把「环境异构」解决了，但**「运维人员的操作步骤」仍然有优化空间**。当业务代码需要一次新版发布时，仍然面临两条路径：
+视角 3 / 视角 4 的命令虽然把「环境异构」解决了，但 **「运维人员的操作步骤」仍然有优化空间**。当业务代码需要一次新版发布时，仍然面临两条路径：
 
 | 模式 | 步骤 | 适用 |
 | :--- | :--- | :--- |

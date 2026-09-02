@@ -105,3 +105,20 @@ polish: []
 - 不在 `docs/` 下写加工文
 - 无 Origin 不生成 `wechat.md`
 - 严格审计并过滤 AI/营销八股词（如：`为业务赋能` → `解决业务问题`、`拥抱AI时代` → `应用AI`，以及闭环、抓手、降本增效等），保持真诚的技术人格。
+
+### 数学公式产物约束（必读）
+
+公众号编辑器对 SVG / 复杂 HTML 标签的兼容极差，任何数学公式都必须遵循下述产物形态规则：
+
+1. **inline 公式必须 PNG-base64**：`$Y \to Y'$` 编译后产出 `<img src="data:image/png;base64,iVBOR…">`，**禁止内联 `<svg>` 标签**、**禁止用 `data:image/png` 包 SVG 内容**（MIME 必须为 `image/png`）。
+2. **block 公式必须走同一形态**：与 inline 一致使用 `<img src="data:image/png;base64,…">` 居中显示，**禁止用 `<div>` 嵌 `<svg>` 内联**（与 markdown-it 段落解析冲突）。
+3. **反斜杠转义必杀**：`\{`、`\to`、`\;`、`\quad` 这种单反斜杠在 `.md` 文件里直接写就行，但**禁止出现 `\\to`、`\\{` 这种叠写**——`\\` 在 LaTeX 是行终止符，绝对不会出预期渲染。
+4. **统一字号策略**：渲染器走 KaTeX + Playwright，与 origin 站 markdown-it-katex 完全一致——避免 LaTeX 的 cmsy10/cmmi10/cmr10 多字体栈切换导致的 `v` `Y` `J` 字号漂移；KaTeX 输出 HTML 通过 Playwright `deviceScaleFactor=4` 截图成 PNG-base64（4x DPI 锐利）；wrapper 上下文用 16px / PingFang SC 与正文一致，block 公式额外 CSS `transform: scale(0.6)` 与 inline 行高对齐（~80px）。inline `<img>` 用 `height:1em; vertical-align:text-bottom` 强制与正文 1em 等高、同基线（不用 `-0.16em` 避免向上偏移）。
+5. **CI 必跑**：
+   ```bash
+   node scripts/check-wechat-render.mjs                       # 扫全量
+   node scripts/render-wechat-copy.mjs <wechat.md> <...html>   # 单文件重渲
+   ```
+   校验脚本会扫 `&lt;img src=`、`<p>…<?xml`、`<span …Georgia>` 三类破结构信号，发现即 `exit 1`。
+
+详细反模式与历史踩坑见 [.agents/skills/katex-math/SKILL.md](../../katex-math/SKILL.md)；渲染管线本身见 [`scripts/render-wechat-copy.mjs`](../../../../scripts/render-wechat-copy.mjs) 与 [`scripts/check-wechat-render.mjs`](../../../../scripts/check-wechat-render.mjs)。

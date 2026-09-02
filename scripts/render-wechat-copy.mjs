@@ -1,8 +1,89 @@
 import fs from 'node:fs';
 import path from 'node:path';
 import os from 'node:os';
-import { execFileSync } from 'node:child_process';
 import MarkdownIt from 'markdown-it';
+import { createRequire } from 'node:module';
+const requireGlobal = createRequire(import.meta.url);
+const playwright = requireGlobal('/opt/homebrew/lib/node_modules/playwright');
+const katex = requireGlobal('katex');
+const katexCss = fs.readFileSync(requireGlobal.resolve('katex/dist/katex.min.css'), 'utf8');
+
+const formulaCompileCache = new Map();
+let pwBrowser = null;
+let pwContext = null;
+let pwPage = null;
+const origStderrWrite = process.stderr.write.bind(process.stderr);
+process.stderr.write = (chunk, encoding, cb) => {
+  if (typeof chunk === 'string' && /--playwright--set--content--|GpuControl\.CreateCommandBuffer/.test(chunk)) {
+    if (typeof cb === 'function') cb();
+    return true;
+  }
+  return origStderrWrite(chunk, encoding, cb);
+};
+async function katexToPng(formula, { display, scale = 1, fontSize = 16 } = {}) {
+  if (!pwBrowser) {
+    pwBrowser = await playwright.chromium.launch({
+      args: ['--disable-gpu', '--disable-software-rasterizer', '--disable-dev-shm-usage'],
+    });
+    pwContext = await pwBrowser.newContext({ deviceScaleFactor: 4 });
+    pwPage = await pwContext.newPage();
+  }
+  const rendered = katex.renderToString(formula, {
+    displayMode: !!display,
+    throwOnError: false,
+    output: 'html',
+    strict: false,
+  });
+  const wrapper = display
+    ? `<div class="wx-fx-wrap" style="display:inline-block;font-size:${fontSize}px;">${rendered}</div>`
+    : `<span class="wx-fx-wrap" style="display:inline-block;line-height:1;font-size:${fontSize}px;">${rendered}</span>`;
+  const scaleCss = scale !== 1 ? `.wx-fx-wrap{transform:scale(${scale});transform-origin:0 0;}` : '';
+  await pwPage.setViewportSize({ width: 1200, height: 800 });
+  await pwPage.setContent(`<!DOCTYPE html><html><head><style>${katexCss}${scaleCss}html,body{margin:0;padding:0;background:transparent;font-family:-apple-system,BlinkMacSystemFont,"PingFang SC","Microsoft YaHei",sans-serif;font-size:${fontSize}px;line-height:1.95;letter-spacing:.01em;color:#000000;-webkit-font-smoothing:antialiased;text-rendering:geometricPrecision;}body{display:inline-block;}span.wx-fx-wrap{display:inline-block;vertical-align:baseline;line-height:1;color:#000000;}div.wx-fx-wrap{display:inline-block;text-align:left;color:#000000;}</style></head><body>${wrapper}</body></html>`);
+  const element = pwPage.locator('.wx-fx-wrap').first();
+  await element.waitFor();
+  const png = await element.screenshot({ omitBackground: true });
+  const buf = Buffer.from(png);
+  const rawWidth = buf.readUInt32BE(16);
+  const rawHeight = buf.readUInt32BE(20);
+  const width = Math.max(1, Math.round(rawWidth / 4));
+  const height = Math.max(1, Math.round(rawHeight / 4));
+  return {
+    base64: png.toString('base64'),
+    width,
+    height,
+  };
+}
+async function precompileFormula(formula, { display = false, scale = 1, fontSize = 16 } = {}) {
+  if (formulaCompileCache.has(formula)) return;
+  let res = null;
+  try {
+    res = await katexToPng(formula, { display, scale, fontSize });
+  } catch { /* fall through */ }
+  if (!res || !res.base64) {
+    formulaCompileCache.set(formula, { error: true });
+    return;
+  }
+  formulaCompileCache.set(formula, { kind: 'png', base64: res.base64, width: res.width, height: res.height });
+}
+const compileFormula = (formula) => formulaCompileCache.get(formula) ?? { error: true };
+
+async function precompileAll(sourceBody) {
+  const inlineSet = new Set();
+  const blockSet = new Set();
+  for (const m of sourceBody.matchAll(/\$([^$\n]+?)\$/g)) inlineSet.add(m[1]);
+  for (const m of sourceBody.matchAll(/\$\$([\s\S]*?)\$\$/g)) blockSet.add(m[1]);
+  if (!inlineSet.size && !blockSet.size) return;
+  console.error(`[wechat-formula] 预编译 inline ${inlineSet.size} + block ${blockSet.size} 个公式`);
+  for (const f of inlineSet) await precompileFormula(f, { display: false, scale: 1, fontSize: 16 });
+  for (const f of blockSet) await precompileFormula(f, { display: true, scale: 1, fontSize: 15 });
+  if (pwBrowser) {
+    await pwPage.close();
+    await pwContext.close();
+    await pwBrowser.close();
+    pwBrowser = null;
+  }
+}
 
 const input = process.argv[2] ?? 'content/dist/delivery-start/wechat.md';
 const output = process.argv[3] ?? input.replace(/\.md$/, '-copy.html');
@@ -73,6 +154,8 @@ Git 解决了代码版本锚定与源码免 scp 传输，但服务器拿到源�
   .replace(/^# .*\n\n?/, '')
   .trim();
 
+await precompileAll(body);
+
 const escapeHtml = (value) => value.replace(/[&<>"']/g, (char) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[char]));
 const normalizeFormula = (formula) => formula
   .replace(/\\begin\{aligned\}|\\end\{aligned\}/g, '')
@@ -87,26 +170,34 @@ const normalizeFormula = (formula) => formula
   .replace(/\\tau/g, 'τ')
   .replace(/\\q?quad/g, ' ')
   .replace(/\\text\{([^}]*)\}/g, '$1')
+  .replace(/&=/g, ' = ')
   .replace(/\\ldots/g, '…')
   .replace(/\\begin\{cases\}|\\end\{cases\}/g, '')
   .replace(/\\[;, :]/g, ' ')
   .replace(/\\([{}])/g, '$1')
   .replace(/\\&/g, '&')
-  .replace(/\\\\/g, ' ')
-  .replace(/\s+/g, ' ')
+  .replace(/\\\\/g, '\n')
+  .replace(/[ \t]+/g, ' ')
+  .replace(/\n+/g, '\n')
   .trim();
+const unicodeSubscript = (value) => {
+  const map = { '0':'₀','1':'₁','2':'₂','3':'₃','4':'₄','5':'₅','6':'₆','7':'₇','8':'₈','9':'₉', i:'ᵢ', n:'ₙ', j:'ⱼ', k:'ₖ', m:'ₘ', r:'ᵣ', s:'ₛ', x:'ₓ', a:'ₐ', e:'ₑ', o:'ₒ', p:'ₚ', t:'ₜ', u:'ᵤ', v:'ᵥ' };
+  if (value.length <= 1) return map[value] ?? value;
+  const first = map[value[0]] ?? value[0];
+  return `${first}(${value.slice(1)})`;
+};
 const toWechatFormulaText = (formula) => normalizeFormula(formula)
   .replace(/\\longrightarrow/g, '→')
-  .replace(/([A-Za-z])_([0-9A-Za-z]+)/g, (_, letter, subscript) => `${letter}${[...subscript].map((character) => ({ '0':'₀','1':'₁','2':'₂','3':'₃','4':'₄','5':'₅','6':'₆','7':'₇','8':'₈','9':'₉', i:'ᵢ', n:'ₙ', j:'ⱼ', k:'ₖ', m:'ₘ', r:'ᵣ', s:'ₛ', x:'ₓ' }[character] ?? character)).join('')}`)
+  .replace(/([A-Za-z]')_\{([^{}]+)\}/g, (_, letter, subscript) => `${letter}${unicodeSubscript(subscript)}`)
+  .replace(/([A-Za-z])_\{([^{}]+)\}/g, (_, letter, subscript) => `${letter}${unicodeSubscript(subscript)}`)
+  .replace(/([A-Za-z]')_([0-9A-Za-z]+)/g, (_, letter, subscript) => `${letter}${unicodeSubscript(subscript)}`)
+  .replace(/([A-Za-z])_([0-9A-Za-z]+)/g, (_, letter, subscript) => `${letter}${unicodeSubscript(subscript)}`)
   .replace(/\\/g, '')
-  .replace(/\s+/g, ' ')
+  .replace(/[ \t]+/g, ' ')
+  .replace(/\n+/g, '\n')
   .trim();
-const formulaHtmlText = (formula) => escapeHtml(normalizeFormula(formula)
-  .replace(/\\longrightarrow/g, '→')
-  .replace(/\\implies/g, '⇒')
-  .replace(/\\/g, ''))
-  .replace(/([A-Za-z])_\{?([A-Za-z0-9]+)\}?/g, (_, letter, subscript) => `${letter}<sub style="font-size:0.76em;line-height:0;vertical-align:-0.32em;">${subscript}</sub>`)
-  .replace(/([A-Za-z])([₀₁₂₃₄₅₆₇₈₉ᵢₙⱼₖₘᵣₛₓ]+)/g, (_, letter, subscript) => `${letter}<sub style="font-size:0.76em;line-height:0;vertical-align:-0.32em;">${subscript}</sub>`);
+const formulaHtmlText = (formula) => escapeHtml(toWechatFormulaText(formula))
+  .replace(/\n/g, '<br>');
 const formulaParts = (formula) => {
   const notes = [];
   const math = formula.trim()
@@ -123,36 +214,52 @@ const formulaParts = (formula) => {
     .trim();
   return { math, note: notes.join('') };
 };
-const compileFormula = (formula) => {
-  try {
-    const dir = fs.mkdtempSync(path.join(os.tmpdir(), 'wechat-formula-'));
-    const tex = `\\documentclass[preview,border=8pt]{standalone}\n\\usepackage{amsmath,amssymb}\n\\begin{document}\n\\[${formula}\\]\n\\end{document}\n`;
-    const texPath = path.join(dir, 'formula.tex');
-    fs.writeFileSync(texPath, tex);
-    execFileSync('latex', ['-interaction=nonstopmode', '-halt-on-error', '-output-directory', dir, texPath], { stdio: 'ignore' });
-    const pngPath = path.join(dir, 'formula.png');
-    execFileSync('dvipng', ['-D', '180', '-bg', 'Transparent', '-T', 'tight', '-o', pngPath, path.join(dir, 'formula.dvi')], { stdio: 'ignore' });
-    return fs.readFileSync(pngPath).toString('base64');
-  } catch {
-    return '';
+const flattenSvg = (source) => {
+  const paths = new Map();
+  for (const match of source.matchAll(/<path\s+id=['"]([^'"]+)['"]([^>]*)\/>/g)) {
+    paths.set(match[1], match[2]);
   }
+  source = source.replace(/<defs>[\s\S]*?<\/defs>/g, '');
+  source = source.replace(/<use\s+([^>]*?)(?:xlink:href|href)=['"]#([^'"]+)['"]([^>]*)\/>/g, (_, before, id, after) => {
+    const attrs = `${before}${after}`.replace(/\s+/g, ' ').trim();
+    const pathAttrs = paths.get(id);
+    return pathAttrs ? `<path ${pathAttrs} ${attrs}/>` : '';
+  });
+  return source
+    .replace(/<g\s+id=['"]page1['"]>/g, '<g>')
+    .replace(/\s+xmlns:xlink=['"][^'"]+['"]/g, '')
+    .replace(/\s+id=['"][^'"]+['"]/g, '')
+    .replace(/\s+xlink:href=['"][^'"]+['"]/g, '');
+};
+const svgAttr = (svg, name) => svg.match(new RegExp(`<svg[^>]*\\s${name}=['"]([^'"]+)['"]`))?.[1];
+const renderBlockFormulaImg = (compiled, note) => {
+  if (compiled.kind === 'png') {
+    const w = compiled.width;
+    const h = compiled.height;
+    return `<section style="margin:10px 0;padding:6px 10px;text-align:center;background:#f8fafc;border:1px solid #e2e8f0;border-radius:6px;overflow-x:auto;line-height:1.4;"><img class="formula-image formula-block" alt="公式" src="data:image/png;base64,${compiled.base64}" width="${w}" height="${h}" style="display:inline-block;max-width:100%!important;width:${w}px;height:${h}px;vertical-align:middle;filter:drop-shadow(0 0 0.6px rgba(255,255,255,0.85));">${note ? `<span style="display:block;margin-top:6px;font-size:13px;color:#64748b;">${escapeHtml(note)}</span>` : ''}</section>`;
+  }
+  const flattened = flattenSvg(compiled.svg).replace('<svg ', '<svg style="max-width:100%;height:auto;vertical-align:middle;" ');
+  return `<section style="margin:10px 0;padding:6px 10px;text-align:center;background:#f8fafc;border:1px solid #e2e8f0;border-radius:6px;overflow-x:auto;line-height:1.4;"><span class="formula-image formula-block" style="display:inline-block;max-width:100%;vertical-align:middle;">${flattened}</span>${note ? `<span style="margin-left:6px;font-size:0.92em;color:#243447;vertical-align:middle;">${escapeHtml(note)}</span>` : ''}</section>`;
 };
 const renderFormula = (formula) => {
-  const text = toWechatFormulaText(formula);
-  return `<p class="formula-block" style="margin:16px 0;padding:0;overflow-x:auto;background:transparent;border:0;color:#0a152f;font-family:'STIX Two Math','Cambria Math',Georgia,'Times New Roman',serif;font-size:1em;line-height:1.6;white-space:nowrap;"><span style="display:inline-block;box-sizing:border-box;min-width:100%;margin:0;padding:9px 12px;text-align:center;background:#f7f9fc;border:1px solid #d9e2ec;border-radius:6px;color:#0a152f;font-family:'STIX Two Math','Cambria Math',Georgia,'Times New Roman',serif;font-size:1.05em;line-height:1.6;white-space:nowrap;">${formulaHtmlText(formula)}</span></p>`;
-  /* LaTeX 图片保留在代码中供后续网页预览实验使用，公众号复制稿不使用图片公式。 */
   const { math, note } = formulaParts(formula);
   if (formula.includes('\\begin{cases}')) {
     const rows = [...formula.matchAll(/([A-Za-z]+_?\d*)\s*&?\s*:\s*\\text\{([^}]*)\}/g)]
-      .map(([, variable, text]) => `<div style="display:flex;gap:14px;margin:4px 0;"><span style="min-width:42px;font-family:Georgia,serif;font-size:24px;font-style:italic;color:#0a152f;">${escapeHtml(variable.replace(/_([0-9]+)/g, (_, n) => String.fromCharCode(0x2080 + Number(n))))}</span><span>${escapeHtml(text)}</span></div>`).join('');
-    if (rows) return `<div style="margin:22px 0;padding:12px 20px;text-align:center;background:#f7f9fc;border:1px solid #d9e2ec;border-radius:6px;font-size:18px;line-height:1.7;">${rows}</div>`;
+      .map(([, variable, text]) => `<div style="display:flex;gap:14px;margin:4px 0;"><span style="min-width:42px;font-family:Georgia,serif;font-size:22px;font-style:italic;color:#0a152f;">${escapeHtml(variable.replace(/_([0-9]+)/g, (_, n) => String.fromCharCode(0x2080 + Number(n))))}</span><span>${escapeHtml(text)}</span></div>`).join('');
+    if (rows) return `<div style="margin:10px 0;padding:8px 14px;text-align:center;background:#f8fafc;border:1px solid #e2e8f0;border-radius:6px;font-size:16px;line-height:1.6;">${rows}</div>`;
   }
-  const svg = compileFormula(math);
-  if (svg) return `<div style="margin:14px 0;padding:3px 6px;text-align:center;overflow-x:auto;line-height:1.45;"><img class="formula-image formula-block" src="data:image/png;base64,${svg}" alt="公式" style="display:inline-block;max-width:100%;height:1.15em;width:auto;vertical-align:-0.08em;">${note ? `<span style="margin-left:5px;font-size:0.92em;color:#243447;vertical-align:middle;">${escapeHtml(note)}</span>` : ''}</div>`;
-  return `<div style="margin:22px 0;padding:12px 16px;text-align:center;background:#f7f9fc;border:1px solid #d9e2ec;border-radius:6px;color:#0a152f;font-size:18px;font-weight:600;line-height:1.8;">${escapeHtml(normalizeFormula(formula))}</div>`;
+  const compiled = compileFormula(formula);
+  if (!compiled.error) return renderBlockFormulaImg(compiled, note);
+  return `<section style="margin:10px 0;padding:8px 12px;text-align:center;background:#f8fafc;border:1px solid #e2e8f0;border-radius:6px;color:#0a152f;font-size:16px;font-weight:600;line-height:1.6;">${escapeHtml(normalizeFormula(formula))}</section>`;
 };
 const renderInlineFormula = (formula) => {
-  return `<span style="display:inline;font-family:'STIX Two Math','Cambria Math',Georgia,'Times New Roman',serif;font-size:1em;color:inherit;white-space:normal;">${formulaHtmlText(formula)}</span>`;
+  const compiled = compileFormula(formula);
+  if (!compiled.error) {
+    const w = compiled.width;
+    const h = compiled.height;
+    return `<img src="data:image/png;base64,${compiled.base64}" width="${w}" height="${h}" alt="公式" style="display:inline-block;width:${w}px!important;height:${h}px!important;max-width:none!important;vertical-align:-0.28em;margin:0 1px;filter:drop-shadow(0 0 0.6px rgba(255,255,255,0.85));">`;
+  }
+  return '<span style="display:inline;font-family:Georgia,\'Times New Roman\',serif;font-size:1em;color:inherit;white-space:normal;">' + formulaHtmlText(formula) + '</span>';
 };
 const inlineCodeTokens = [];
 const bodyWithProtectedInlineCode = body.replace(/`([^`\n]+)`/g, (_, code) => {
@@ -163,14 +270,17 @@ const bodyWithProtectedInlineCode = body.replace(/`([^`\n]+)`/g, (_, code) => {
 const normalizedBody = bodyWithProtectedInlineCode
   .replace(/!\[([^\]]*)\]\(((?:https:\/\/media\.xiaolin\.fun\/docs\/|\/images\/)[^)]+)\)/g, (_, alt, imageUrl) => `![${alt}](${imageDataUri(imageUrl)})`)
   .replace(/!\[([^\]]*)\]\(([^)]+)\)/g, (_, alt, imagePath) => `![${alt}](${imagePath})`)
-  .replace(/(?<!\!)\[([^\]]+)\]\((?:https?:\/\/|\.\.?\/)[^)]+\)/g, '$1')
+  .replace(/(?<!\!)\[([^\]]+)\]\([^)]+\)/g, '$1')
+  .replace(/([^\s\n])\*\*([「“（\[])/g, '$1 **$2')
+  .replace(/([」”）\]])\*\*([^\s\n])/g, '$1** $2')
+  .replace(/([A-Za-z]')?([A-Za-z])\\_([0-9A-Za-z]+)/g, (_, prefix = '', letter, subscript) => `${prefix}${letter}${unicodeSubscript(subscript)}`)
   .replace(/X\s*\\xrightarrow\{\\text\{突破\}\}\s*X'/g, 'X → X\'')
   .replace(/\$\$([\s\S]*?)\$\$/g, (_, formula) => renderFormula(formula) + '\n\n')
   .replace(/\$([^$\n]+)\$/g, (_, formula) => renderInlineFormula(formula))
   .replace(/@@WECHAT_INLINE_CODE_(\d+)@@/g, (_, index) => `\`${inlineCodeTokens[Number(index)]}\``);
 const highlightCode = (source, language) => {
   source = source.replace(/[ \t]+(?=#)/g, '  ');
-  const keywords = new Set((language === 'nginx' ? 'server listen root index location proxy_pass include server_name return' : 'sudo apt systemctl nginx npm npx pnpm mkdir cd cp curl export const let function if then fi').split(' '));
+  const keywords = new Set((language === 'nginx' ? 'server listen root index location proxy_pass include server_name return' : 'sudo apt systemctl nginx npm npx pnpm mkdir cd cp curl export const let function if then fi docker').split(' '));
   const tokenPattern = /(#[^\n]*|<!--[\s\S]*?-->|"(?:\\.|[^"\\])*"|'(?:\\.|[^'\\])*'|`[^`]*`|<\/?[A-Za-z][^>]*>|\b\d+(?:\.\d+)?\b|[A-Za-z_][\w.-]*|\s+|.)/g;
   return [...source.matchAll(tokenPattern)].map(([token]) => {
     const safe = escapeHtml(token);
@@ -188,24 +298,28 @@ const md = new MarkdownIt({
   linkify: false,
   breaks: false,
   highlight: (source, language) => language === 'text'
-    ? `<pre class="text-diagram" style="margin:16px 0;padding:12px 14px;overflow-x:auto;background:#f6f8fa;border:1px solid #e5e6eb;border-radius:5px;line-height:1.45;white-space:pre;"><code style="font-family:Menlo,Consolas,monospace;font-size:12px;white-space:pre;">${escapeHtml(source)}</code></pre>`
-    : `<pre style="margin:16px 0;padding:12px 14px;overflow-x:auto;background:#f6f8fa;border:1px solid #e5e6eb;border-radius:5px;line-height:1.45;white-space:pre;"><code style="font-family:Menlo,Consolas,monospace;font-size:12px;white-space:pre;">${highlightCode(source, language)}</code></pre>`
+    ? `<pre class="text-diagram" style="margin:18px 0;padding:14px 16px;overflow-x:auto;background:#f8fafc;border:1px solid #e2e8f0;border-radius:6px;line-height:1.5;white-space:pre;"><code style="font-family:Menlo,Monaco,Consolas,monospace;font-size:13px;white-space:pre;color:#1e293b;">${escapeHtml(source)}</code></pre>`
+    : `<pre style="margin:18px 0;padding:14px 16px;overflow-x:auto;background:#f8fafc;border:1px solid #e2e8f0;border-radius:6px;line-height:1.5;white-space:pre;"><code style="font-family:Menlo,Monaco,Consolas,monospace;font-size:13px;white-space:pre;">${highlightCode(source, language)}</code></pre>`
 });
 md.renderer.rules.code_inline = (tokens, index) => {
   const content = tokens[index].content;
-  const isLong = content.length > 34;
+  const isLong = content.length > 40;
   const style = isLong
-    ? 'font-family:inherit;font-size:inherit;line-height:inherit;white-space:normal;color:inherit;'
-    : 'font-family:inherit;font-size:inherit;line-height:inherit;white-space:normal;color:inherit;';
+    ? 'display:inline-block;padding:2px 6px;margin:2px 2px;background:#f1f5f9;color:#0f4c81;border:1px solid #e2e8f0;border-radius:4px;font-family:Menlo,Monaco,Consolas,monospace;font-size:13px;word-break:break-all;'
+    : 'display:inline;padding:2px 5px;margin:0 2px;background:#f1f5f9;color:#0f4c81;border:1px solid #e2e8f0;border-radius:4px;font-family:Menlo,Monaco,Consolas,monospace;font-size:13px;';
   const renderedContent = isLong ? escapeHtml(content) : escapeHtml(content).replace(/ /g, '&nbsp;');
   return `<code style="${style}">${renderedContent}</code>`;
 };
-const renderedArticle = md.render(normalizedBody.replace(/^# [^\n]+\n+/, ''));
-const tableRows = (table) => [...table.matchAll(/<tr>([\s\S]*?)<\/tr>/g)].map(([, row]) => [...row.matchAll(/<(?:th|td)>([\s\S]*?)<\/(?:th|td)>/g)].map(([, cell]) => cell.trim()));
-const compactTable = (table) => table
-  .replace('<table>', '<table style="width:100%;border-collapse:collapse;margin:16px 0;font-size:13px;line-height:1.55;color:#344054;">')
-  .replace(/<th>/g, '<th style="border:1px solid #d9d9d9;padding:7px 6px;background:#f6f7f9;color:#172033;font-weight:700;text-align:left;vertical-align:top;word-break:break-word;overflow-wrap:anywhere;">')
-  .replace(/<td>/g, '<td style="border:1px solid #d9d9d9;padding:7px 6px;color:#344054;text-align:left;vertical-align:top;word-break:break-word;overflow-wrap:anywhere;">');
+const renderedArticle = md.render(normalizedBody.replace(/^# [^\n]+\n+/, '')).replace(/\*\*([^\n*]+?)\*\*/g, '<strong>$1</strong>');
+const tableRows = (table) => [...table.matchAll(/<tr(?:\s+[^>]*)?>([\s\S]*?)<\/tr>/gi)].map(([, row]) => [...row.matchAll(/<(?:th|td)(?:\s+[^>]*)?>([\s\S]*?)<\/(?:th|td)>/gi)].map(([, cell]) => cell.trim()));
+const compactTable = (table) => {
+  const styled = table
+    .replace(/<table(?:\s+[^>]*)?>/gi, '<table style="width:100%;border-collapse:collapse;margin:0;font-size:13.5px;line-height:1.6;color:#334155;background:#ffffff;">')
+    .replace(/<thead(?:\s+[^>]*)?>/gi, '<thead style="background:#f1f5f9;">')
+    .replace(/<th(?:\s+[^>]*)?>/gi, '<th style="border:1px solid #d9e2ec;padding:9px 12px;background:#f1f5f9;color:#0f172a;font-weight:700;text-align:left;vertical-align:middle;white-space:nowrap;">')
+    .replace(/<td(?:\s+[^>]*)?>/gi, '<td style="border:1px solid #e2e8f0;padding:8px 12px;color:#334155;text-align:left;vertical-align:middle;line-height:1.6;word-break:normal;">');
+  return `<section style="width:100%;margin:16px 0;overflow-x:auto;-webkit-overflow-scrolling:touch;border-radius:6px;box-shadow:0 0 0 1px #e2e8f0;">${styled}</section>`;
+};
 const cardShell = (title, content, accent = '#1890ff', background = '#f7f9fc') => `<section style="margin:8px 0;padding:9px 11px;border-left:4px solid ${accent};background:${background};border-radius:0 6px 6px 0;"><p style="margin:0 0 4px;font-size:15px;line-height:1.4;font-weight:700;color:#172033;">${title}</p>${content}</section>`;
 const cardCell = (cell) => cell.replace(/white-space:nowrap/g, 'white-space:normal;overflow-wrap:anywhere');
 const cardsByColumn = (table) => {
@@ -286,26 +400,8 @@ const renderWechatTableProse = (table) => {
   return section('这组信息可以这样理解：', rows.map((row) => item(`${keepShortTablePhrases(cardCell(row[0]))}：`, row.slice(1).map((cell, index) => `${headers[index + 1]} 为“${keepShortTablePhrases(cardCell(cell))}”`).join('；') + '。')).join(''));
 };
 let tableIndex = 0;
-const preserveNativeTables = /docker-basics/.test(input);
 const tableOptimizedArticle = renderedArticle.replace(/<table>[\s\S]*?<\/table>/g, (table) => {
   tableIndex += 1;
-  if (preserveNativeTables) return compactTable(table);
-  const [, ...rows] = tableRows(table);
-  if (input.includes('content/dist/git-github/')) {
-    return compactTable(table);
-  }
-  if (hasHeaders(table, ['断点', '手动备份', 'Git'])) return renderMobileThreeColumnTable(['断点', '手动备份', 'Git'], ['22%', '32%', '46%'], rows.map((row) => row.map((cell) => keepShortTablePhrases(cardCell(cell)))));
-  if (hasHeaders(table, ['运维场景', '命令', '说明'])) return renderMobileThreeColumnTable(['运维场景', '命令', '说明'], ['28%', '28%', '44%'], rows.map((row) => row.map((cell) => keepShortTablePhrases(cardCell(cell)))));
-  if (hasHeaders(table, ['前缀', '用途', '典型示例'])) return renderMobileThreeColumnTable(['前缀', '用途', '典型示例'], ['17%', '24%', '59%'], rows.map((row) => row.map((cell) => keepShortTablePhrases(cardCell(cell)))));
-  if (hasHeaders(table, ['命令', '方向', '作用'])) return renderMobileThreeColumnTable(['命令', '方向', '作用'], ['20%', '31%', '49%'], rows.map((row) => row.map((cell) => keepShortTablePhrases(cardCell(cell)))));
-  if (hasHeaders(table, ['内容类型', '是否适合 Git', '原因 / 替代方案'])) return renderMobileThreeColumnTable(['内容类型', '是否适合 Git', '原因 / 替代方案'], ['34%', '21%', '45%'], rows.map((row) => row.map((cell) => keepShortTablePhrases(cardCell(cell)))));
-  if (hasHeaders(table, ['平台', '特点', '推荐场景'])) return renderMobileThreeColumnTable(['平台', '特点', '推荐场景'], ['18%', '47%', '35%'], rows.map((row) => row.map((cell) => keepShortTablePhrases(cardCell(cell)))));
-  if (tableIndex === 3) return cardsByColumn(table);
-  if (tableIndex === 5) return cardsByRow(table, '#8c8c8c');
-  if (tableIndex === 6) return cardsByRow(table, '#fa8c16');
-  if (tableIndex === 1 || tableIndex === 2) return cardsByRow(table, '#1890ff');
-  if (tableIndex === 4) return cardsByRow(table, '#fa8c16');
-  if (tableIndex === 7) return cardsByRow(table, '#8c8c8c');
   return compactTable(table);
 });
 const articleHtml = tableOptimizedArticle.replace(/<span class="wechat-subitem">↳<\/span>/g, '<span style="display:inline-block;margin:4px 0 0 0;padding-left:0.2em;color:#667085;font-size:0.93em;">↳</span>').replace(/<td([^>]*)>([\s\S]*?)<\/td>/gi, (_, attrs, cell) => `<td${attrs}>${cell.replace(/<code[^>]*>([\s\S]*?)<\/code>/gi, '$1')}</td>`).replace(/<ul>\s*([\s\S]*?)\s*<\/ul>/g, (_, items) => {
@@ -320,24 +416,43 @@ const articleHtml = tableOptimizedArticle.replace(/<span class="wechat-subitem">
     .map(([__, item], index) => `<p style="margin:0 0 ${index === listItems.length - 1 ? 0 : 6}px;padding-left:1.6em;text-indent:-1.6em;font-size:16px;line-height:1.75;letter-spacing:0;color:#343a40;">${index + 1}.&nbsp;${item.trim().replace(/^<p>|<\/p>$/g, '')}</p>`)
     .join('');
   return `<section style="margin:0 0 10px;">${numberedItems}</section>`;
-}).replace(/<h2(?:\s[^>]*)?>([\s\S]*?)<\/h2>/gi, '<h2 style="width:72%;margin:32px auto 16px;padding:0 0 7px;border-left:0;border-right:0;border-top:0;border-bottom:2px solid #e27842;background:transparent;color:#343a40;font-size:19px;line-height:1.5;text-align:center;font-weight:700;">$1</h2>')
+}).replace(/<h2(?:\s[^>]*)?>([\s\S]*?)<\/h2>/gi, '<h2 style="display:table;width:auto;max-width:96%;margin:28px auto 14px;padding:0 6px 6px;border-left:0;border-right:0;border-top:0;border-bottom:2px solid #e27842;background:transparent;color:#1e293b;font-size:18px;line-height:1.45;text-align:center;font-weight:700;">$1</h2>')
   .replace(/<h3(?:\s[^>]*)?>([\s\S]*?)<\/h3>/gi, '<h3 style="margin:22px 0 10px;padding:0 0 0 9px;border-left:3px solid #e27842;color:#343a40;font-size:17px;line-height:1.55;font-weight:700;">$1</h3>')
   .replace(/<h4(?:\s[^>]*)?>([\s\S]*?)<\/h4>/gi, '<p style="margin:18px 0 10px;color:#175da4;font-size:16px;line-height:1.55;font-weight:700;">$1</p>')
-  .replace(/<blockquote(?:\s[^>]*)?>([\s\S]*?)<\/blockquote>/gi, (_, content) => `<section style="margin:12px 0;padding:6px 10px;border-left:2px solid #e6a06a;color:#8a6a52;font-size:14px;line-height:1.6;">${content.replace(/font-size:16px/g, 'font-size:14px').replace(/line-height:1.75/g, 'line-height:1.6').replace(/margin:0 0 6px/g, 'margin:0 0 3px')}</section>`);
+  .replace(/<blockquote(?:\s[^>]*)?>([\s\S]*?)<\/blockquote>/gi, (_, content) => `<section style="margin:16px 0;padding:12px 16px;border-left:4px solid #e27842;background:#fff9f5;border-radius:0 6px 6px 0;color:#475569;font-size:14.5px;line-height:1.75;">${content.replace(/font-size:16px/g, 'font-size:14.5px').replace(/line-height:1.75/g, 'line-height:1.7').replace(/margin:0 0 6px/g, 'margin:0 0 4px')}</section>`);
 const title = source.match(/^title:\s*(.+)$/m)?.[1]?.trim()
   ?? source.match(/^1\.\s+(.+?)(?:（系列化）)?$/m)?.[1]?.trim()
   ?? 'AI持续运维';
 const signatureImage = `data:image/png;base64,${fs.readFileSync('docs/public/images/wechat-theme/ai-ops-mascot.png').toString('base64')}`;
-const brandHeader = `<img src="${signatureImage}" alt="AI持续运维品牌插图" style="display:block;width:100%;height:auto;margin:0 0 24px;">`;
+const brandHeader = `<img src="${signatureImage}" alt="AI持续运维品牌插图" style="display:block;width:100%;height:auto;margin:0 0 24px;border-radius:6px;">`;
 const brandFooter = '<div style="margin-top:30px;padding:12px 0;border-top:1px solid #d9e2ec;color:#718096;font-size:13px;line-height:1.8;text-align:center;">这里可以插入你的公众号名片</div>';
 const articleTitle = `<h1>${escapeHtml(title)}</h1>`;
 const html = `<!doctype html>
 <html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
 <title>${title}</title><style>
-body{margin:0;background:#f3f6f9;color:#243447;font-family:-apple-system,BlinkMacSystemFont,"PingFang SC","Microsoft YaHei",sans-serif}.toolbar{position:sticky;top:0;z-index:2;padding:14px;text-align:center;background:#fff;border-bottom:1px solid #e8e8e8}.copy{border:0;border-radius:6px;padding:10px 22px;background:#175da4;color:#fff;font-size:15px;cursor:pointer}.hint{margin-left:12px;color:#888;font-size:13px}.article{box-sizing:border-box;max-width:760px;margin:24px auto;padding:38px 46px;background:#fff;line-height:1.95;font-size:16px;letter-spacing:.01em}.brand-header{display:flex;align-items:center;gap:12px;margin-bottom:18px;color:#0a152f}.brand-mark{display:grid;place-items:center;width:38px;height:38px;border-radius:12px 12px 12px 3px;background:#175da4;color:#fff;font-weight:800;letter-spacing:-1px}.brand-header strong{display:block;font-size:16px;letter-spacing:1px}.brand-header span{display:block;margin-top:2px;color:#718096;font-size:12px}.brand-rule{height:4px;margin-bottom:28px;background:#175da4}.brand-footer{margin-top:36px;padding:18px 0 0;border-top:1px solid #d9e2ec;color:#718096;font-size:13px;line-height:1.8}.brand-footer-mark{color:#175da4;font-size:16px;font-weight:700}.brand-slogan{margin-top:10px;color:#e27842}.article h1{font-size:28px;line-height:1.4;margin:0 0 28px;color:#0a152f}.article h2{margin:36px 0 16px;font-size:21px;line-height:1.5;border-left:4px solid #175da4;padding:7px 0 7px 12px;background:#f7f9fc;color:#0a152f}.article h3{font-size:17px;line-height:1.55;color:#175da4}.article p{margin:0 0 16px}.article blockquote{margin:20px 0;padding:12px 16px;border-left:4px solid #e27842;background:#fff8ed;color:#4b5563;line-height:1.8}.article pre{margin:18px 0;padding:14px 16px;overflow-x:auto;background:#f6f8fa;border:1px solid #e5e6eb;border-radius:5px;line-height:1.5;white-space:pre;font-size:12px}.article pre code{font-family:Menlo,Consolas,monospace;font-size:12px;white-space:pre}.article code{font-family:Menlo,Consolas,monospace;font-size:12px}.article img{max-width:100%;height:auto}.article table{border-collapse:collapse;width:100%;margin:18px 0;font-size:14px}.article th,.article td{border:1px solid #d9d9d9;padding:8px 10px;line-height:1.6}.article th{background:#f3f6f9;color:#0a152f}@media(max-width:600px){.article{margin:0;padding:26px 18px;font-size:16px}.article h1{font-size:25px}.article h2{font-size:20px}.hint{display:block;margin:8px 0 0}}
-</style></head><body><div class="toolbar"><button class="copy" id="copy">原生复制正文</button><span class="hint" id="status">使用与 Cmd + C 相同的复制方式；图片请单独插入</span></div><main class="article" id="article">${brandHeader}${articleHtml}${brandFooter}</main>
+body{margin:0;background:#f3f6f9;color:#243447;font-family:-apple-system,BlinkMacSystemFont,"PingFang SC","Microsoft YaHei",sans-serif}.toolbar{position:sticky;top:0;z-index:2;padding:14px;text-align:center;background:#fff;border-bottom:1px solid #e8e8e8}.copy{border:0;border-radius:6px;padding:10px 22px;background:#175da4;color:#fff;font-size:15px;cursor:pointer}.toggle-theme{margin-left:10px;border:1px solid #d9d9d9;border-radius:6px;padding:9px 16px;background:#fff;color:#333;font-size:14px;cursor:pointer}.hint{margin-left:12px;color:#888;font-size:13px}.article{box-sizing:border-box;max-width:760px;margin:24px auto;padding:38px 46px;background:#fff;line-height:1.95;font-size:16px;letter-spacing:.01em}.brand-header{display:flex;align-items:center;gap:12px;margin-bottom:18px;color:#0a152f}.brand-mark{display:grid;place-items:center;width:38px;height:38px;border-radius:12px 12px 12px 3px;background:#175da4;color:#fff;font-weight:800;letter-spacing:-1px}.brand-header strong{display:block;font-size:16px;letter-spacing:1px}.brand-header span{display:block;margin-top:2px;color:#718096;font-size:12px}.brand-rule{height:4px;margin-bottom:28px;background:#175da4}.brand-footer{margin-top:36px;padding:18px 0 0;border-top:1px solid #d9e2ec;color:#718096;font-size:13px;line-height:1.8}.brand-footer-mark{color:#175da4;font-size:16px;font-weight:700}.brand-slogan{margin-top:10px;color:#e27842}.article h1{font-size:28px;line-height:1.4;margin:0 0 28px;color:#0a152f}.article h2{margin:36px 0 16px;font-size:21px;line-height:1.5;border-left:4px solid #175da4;padding:7px 0 7px 12px;background:#f7f9fc;color:#0a152f}.article h3{font-size:17px;line-height:1.55;color:#175da4}.article p{margin:0 0 16px}.article blockquote{margin:20px 0;padding:12px 16px;border-left:4px solid #e27842;background:#fff8ed;color:#4b5563;line-height:1.8}.article pre{margin:18px 0;padding:14px 16px;overflow-x:auto;background:#f6f8fa;border:1px solid #e5e6eb;border-radius:5px;line-height:1.5;white-space:pre;font-size:12px}.article pre code{font-family:Menlo,Consolas,monospace;font-size:12px;white-space:pre}.article code{font-family:Menlo,Consolas,monospace;font-size:12px}.article img{max-width:100%;height:auto}.article table{border-collapse:collapse;width:100%;margin:18px 0;font-size:14px}.article th,.article td{border:1px solid #d9d9d9;padding:8px 10px;line-height:1.6}.article th{background:#f3f6f9;color:#0a152f}
+body.dark-mode{background:#111;color:#c9d1d9}body.dark-mode .toolbar{background:#1e1e1e;border-color:#333}body.dark-mode .toggle-theme{background:#2a2a2a;color:#fff;border-color:#444}body.dark-mode .article{background:#191919;color:#c9d1d9}body.dark-mode .article h1,body.dark-mode .article h2,body.dark-mode .article h3{color:#f0f6fc}body.dark-mode .article pre,body.dark-mode .article code{background:#161b22;border-color:#30363d;color:#f0f6fc}
+@media(max-width:600px){.article{margin:0;padding:26px 18px;font-size:16px}.article h1{font-size:25px}.article h2{font-size:20px}.hint{display:block;margin:8px 0 0}}
+</style></head><body><div class="toolbar"><button class="copy" id="copy">原生复制正文</button><button class="toggle-theme" id="toggleTheme">🌓 预览微信暗色模式</button><span class="hint" id="status">使用与 Cmd + C 相同的复制方式；图片请单独插入</span></div><main class="article" id="article">${brandHeader}${articleHtml}${brandFooter}</main>
 <script>function copyNativeRichText(){const source=document.getElementById('article');const range=document.createRange();range.selectNodeContents(source);const selection=getSelection();selection.removeAllRanges();selection.addRange(range);let ok=false;try{ok=document.execCommand('copy')}catch(e){}selection.removeAllRanges();return ok}
-document.getElementById('copy').addEventListener('click',()=>{const status=document.getElementById('status');if(copyNativeRichText()){status.textContent='已按浏览器原生方式复制；图片请在公众号后台单独插入';}else{status.textContent='复制失败，请使用 Cmd + A（正文区域）后按 Cmd + C';}});</script></body></html>`;
+document.getElementById('copy').addEventListener('click',()=>{const status=document.getElementById('status');if(copyNativeRichText()){status.textContent='已按浏览器原生方式复制；图片请在公众号后台单独插入';}else{status.textContent='复制失败，请使用 Cmd + A（正文区域）后按 Cmd + C';}});
+document.getElementById('toggleTheme').addEventListener('click',()=>{document.body.classList.toggle('dark-mode');const isDark=document.body.classList.contains('dark-mode');document.getElementById('toggleTheme').textContent=isDark?'☀️ 切换浅色模式':'🌓 预览微信暗色模式';});</script></body></html>`;
+const detectBrokenStructure = (html) => {
+  const issues = [];
+  const escapedImgInBody = (html.match(/&lt;img\s+src=/g) ?? []).length;
+  if (escapedImgInBody) issues.push(`检测到 ${escapedImgInBody} 处 <img> 被 markdown-it 错误转义（&lt;img src=...>），表示公式产物形态有破结构`);
+  const rawXmlInParagraph = (html.match(/<p>[^<]*<\?xml/g) ?? []).length;
+  if (rawXmlInParagraph) issues.push(`检测到 ${rawXmlInParagraph} 处 <p> 段落内出现 <?xml…>（SVG XML 字符串泄露到段落文本里）`);
+  const inlineFormulaFallbackCount = (html.match(/<span\s+style="display:inline;font-family:Georgia/g) ?? []).length;
+  if (inlineFormulaFallbackCount > 5) issues.push(`检测到 ${inlineFormulaFallbackCount} 处 inline 公式走了 fallback <span> 渲染（多半为非法 LaTeX 源）`);
+  return issues;
+};
 fs.mkdirSync(path.dirname(output), { recursive: true });
+const renderIssues = detectBrokenStructure(html);
 fs.writeFileSync(output, html);
 console.log(output);
+if (renderIssues.length) {
+  console.error(`\n⚠️  渲染产物校验未通过:`);
+  for (const issue of renderIssues) console.error(`  - ${issue}`);
+  process.exitCode = 1;
+}
