@@ -73,11 +73,8 @@ graph TD
 | **10** | [10 ｜ 环境变量配置管理](./intermediate/environment.md) | 12-Factor 配置与代码分离：环境变量深度实践 |
 | **11** | [11 ｜ CI/CD 权责分离](./intermediate/cicd-separation.md) | DevOps 权责边界设计：持续集成与发布的分离 |
 | **12** | [12 ｜ 持续集成流水线](./intermediate/ci-pipeline.md) | 不可变基础设施落地：持续集成实战流水线 |
-| **13** | [13 ｜ 私有镜像仓库治理](./intermediate/harbor-source-control.md) | 容器制品源治理：私有 Harbor 搭建与版本晋级 |
 | **14** | [14 ｜ 轻量 K3s 集群](./intermediate/k3s.md) | 轻量级云原生集群：K3s 容器服务低成本落地 |
 | **15** | [15 ｜ 持续发布流水线](./intermediate/cd-pipeline.md) | 自愈集群部署：持续发布 (CD) 流水线生产落地 |
-| **16** | [16 ｜ 交付边界与灰度](./intermediate/what-is-cd.md) | 交付边界探索：持续发布与部署交付的灰度策略 |
-| **17** | [17 ｜ GitOps 发布实践](./intermediate/gitops.md) | 声明式状态自愈：云原生 GitOps 架构设计与落地 |
 
 ### 4. 高级篇
 构筑发布防御红线，通过质量门禁、存证、AI 防错确保系统极高可用性。
@@ -90,6 +87,8 @@ graph TD
 | **21** | [21 ｜ 变更防错与 AI 价值](./advanced/change-control.md) | 发布准入防线：AI 在变更安全阻断中的价值 |
 | **22** | [22 ｜ 一站式平台反思](./advanced/devops-platform.md) | 一站式 DevOps 平台的心智反思与架构演进 |
 | **23** | [23 ｜ 全局自动化发布](./advanced/cloud-native-cicd.md) | 搞定无状态应用、数据库及静态文件的全自动化发布 |
+| **16** | [16 ｜ 交付边界与灰度](./advanced/what-is-cd.md) | 交付边界探索：持续发布与部署交付的灰度策略 |
+| **17** | [17 ｜ GitOps 发布实践](./advanced/gitops.md) | 声明式状态自愈：云原生 GitOps 架构设计与落地 |
 
 ### 5. 加餐篇
 典型场景的部署案例与核心运维基础。

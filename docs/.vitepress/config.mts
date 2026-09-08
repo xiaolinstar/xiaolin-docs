@@ -153,11 +153,8 @@ export default withMermaid({
                                 { text: '10. 环境变量配置管理', link: `/sre/devops/intermediate/environment` },
                                 { text: '11. CI/CD 权责分离', link: `/sre/devops/intermediate/cicd-separation` },
                                 { text: '12. 持续集成流水线', link: `/sre/devops/intermediate/ci-pipeline` },
-                                { text: '13. 私有镜像仓库治理', link: `/sre/devops/intermediate/harbor-source-control` },
                                 { text: '14. 轻量 K3s 集群', link: `/sre/devops/intermediate/k3s` },
                                 { text: '15. 持续发布流水线', link: `/sre/devops/intermediate/cd-pipeline` },
-                                { text: '16. 交付边界与灰度', link: `/sre/devops/intermediate/what-is-cd` },
-                                { text: '17. GitOps 发布实践', link: `/sre/devops/intermediate/gitops` },
                             ]
                         },
                         {
@@ -170,6 +167,8 @@ export default withMermaid({
                                 { text: '21. 变更防错与 AI 价值', link: `/sre/devops/advanced/change-control` },
                                 { text: '22. 一站式平台反思', link: `/sre/devops/advanced/devops-platform` },
                                 { text: '23. 全局自动化发布', link: `/sre/devops/advanced/cloud-native-cicd` },
+                                { text: '交付边界与灰度', link: `/sre/devops/advanced/what-is-cd` },
+                                { text: 'GitOps 发布实践', link: `/sre/devops/advanced/gitops` },
                             ]
                         },
                         {
