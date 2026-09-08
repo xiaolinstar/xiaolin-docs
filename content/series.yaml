@@ -18,7 +18,7 @@ series:
     name: DevOps 中级
     pillar: 云原生
     number_range: "10-17"
-    origin_dir: docs/sre/devops/cicd/
+    origin_dir: docs/sre/devops/intermediate/
     index: docs/sre/devops/index.md
     status: planned
     started:
@@ -27,7 +27,7 @@ series:
     name: DevOps 高级
     pillar: 云原生
     number_range: "18-23"
-    origin_dir: docs/sre/devops/cicd/
+    origin_dir: docs/sre/devops/advanced/
     index: docs/sre/devops/index.md
     status: planned
     started:

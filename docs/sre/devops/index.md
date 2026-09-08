@@ -48,7 +48,7 @@ graph TD
 ## 专栏文章目录
 
 ### 1. 开篇词
-*   [00 ｜ 渐进式运维导读](./cicd/progressive-devops-intro.md) — 探寻中小团队与个人开发者的渐进式 DevOps 演进路径。
+*   [00 ｜ 渐进式运维导读](./intermediate/progressive-devops-intro.md) — 探寻中小团队与个人开发者的渐进式 DevOps 演进路径。
 
 ### 2. 基础篇：从静态资源代理到自动化流水线
 从本地 Nginx 代理静态资源开始，在具体问题中引入生产环境、Git、服务端部署、Docker、Docker Compose 与 GitHub Actions。
@@ -70,36 +70,36 @@ graph TD
 
 | 序号 | 核心文章 | 说明 |
 | :--- | :--- | :--- |
-| **10** | [10 ｜ 环境变量配置管理](./cicd/environment.md) | 12-Factor 配置与代码分离：环境变量深度实践 |
-| **11** | [11 ｜ CI/CD 权责分离](./cicd/cicd-separation.md) | DevOps 权责边界设计：持续集成与发布的分离 |
-| **12** | [12 ｜ 持续集成流水线](./cicd/ci-pipeline.md) | 不可变基础设施落地：持续集成实战流水线 |
-| **13** | [13 ｜ 私有镜像仓库治理](./cicd/harbor-source-control.md) | 容器制品源治理：私有 Harbor 搭建与版本晋级 |
-| **14** | [14 ｜ 轻量 K3s 集群](./cicd/k3s.md) | 轻量级云原生集群：K3s 容器服务低成本落地 |
-| **15** | [15 ｜ 持续发布流水线](./cicd/cd-pipeline.md) | 自愈集群部署：持续发布 (CD) 流水线生产落地 |
-| **16** | [16 ｜ 交付边界与灰度](./cicd/what-is-cd.md) | 交付边界探索：持续发布与部署交付的灰度策略 |
-| **17** | [17 ｜ GitOps 发布实践](./cicd/gitops.md) | 声明式状态自愈：云原生 GitOps 架构设计与落地 |
+| **10** | [10 ｜ 环境变量配置管理](./intermediate/environment.md) | 12-Factor 配置与代码分离：环境变量深度实践 |
+| **11** | [11 ｜ CI/CD 权责分离](./intermediate/cicd-separation.md) | DevOps 权责边界设计：持续集成与发布的分离 |
+| **12** | [12 ｜ 持续集成流水线](./intermediate/ci-pipeline.md) | 不可变基础设施落地：持续集成实战流水线 |
+| **13** | [13 ｜ 私有镜像仓库治理](./intermediate/harbor-source-control.md) | 容器制品源治理：私有 Harbor 搭建与版本晋级 |
+| **14** | [14 ｜ 轻量 K3s 集群](./intermediate/k3s.md) | 轻量级云原生集群：K3s 容器服务低成本落地 |
+| **15** | [15 ｜ 持续发布流水线](./intermediate/cd-pipeline.md) | 自愈集群部署：持续发布 (CD) 流水线生产落地 |
+| **16** | [16 ｜ 交付边界与灰度](./intermediate/what-is-cd.md) | 交付边界探索：持续发布与部署交付的灰度策略 |
+| **17** | [17 ｜ GitOps 发布实践](./intermediate/gitops.md) | 声明式状态自愈：云原生 GitOps 架构设计与落地 |
 
 ### 4. 高级篇
 构筑发布防御红线，通过质量门禁、存证、AI 防错确保系统极高可用性。
 
 | 序号 | 核心文章 | 说明 |
 | :--- | :--- | :--- |
-| **18** | [18 ｜ 质量门禁卡点设计](./cicd/quality-gate.md) | 流水线质量门禁 (Quality Gate) 防御机制设计 |
-| **19** | [19 ｜ 制品防篡改与 SBOM](./cicd/sha-SBOM.md) | 制品哈希防篡改与软件物料清单 (SBOM) 存证 |
-| **20** | [20 ｜ 变更管控就绪清单](./cicd/change-management.md) | 发布防御红线：变更管理与就绪条件审查清单 |
-| **21** | [21 ｜ 变更防错与 AI 价值](./cicd/change-control.md) | 发布准入防线：AI 在变更安全阻断中的价值 |
-| **22** | [22 ｜ 一站式平台反思](./cicd/devops-platform.md) | 一站式 DevOps 平台的心智反思与架构演进 |
-| **23** | [23 ｜ 全局自动化发布](./cicd/cloud-native-cicd.md) | 搞定无状态应用、数据库及静态文件的全自动化发布 |
+| **18** | [18 ｜ 质量门禁卡点设计](./advanced/quality-gate.md) | 流水线质量门禁 (Quality Gate) 防御机制设计 |
+| **19** | [19 ｜ 制品防篡改与 SBOM](./advanced/sha-SBOM.md) | 制品哈希防篡改与软件物料清单 (SBOM) 存证 |
+| **20** | [20 ｜ 变更管控就绪清单](./advanced/change-management.md) | 发布防御红线：变更管理与就绪条件审查清单 |
+| **21** | [21 ｜ 变更防错与 AI 价值](./advanced/change-control.md) | 发布准入防线：AI 在变更安全阻断中的价值 |
+| **22** | [22 ｜ 一站式平台反思](./advanced/devops-platform.md) | 一站式 DevOps 平台的心智反思与架构演进 |
+| **23** | [23 ｜ 全局自动化发布](./advanced/cloud-native-cicd.md) | 搞定无状态应用、数据库及静态文件的全自动化发布 |
 
 ### 5. 加餐篇
 典型场景的部署案例与核心运维基础。
 
 | 序号 | 核心文章 | 说明 |
 | :--- | :--- | :--- |
-| **24** | [24 ｜ 静态网页发布](./cicd/front-dist.md) | Web 静态站点发布实战与 CDN 部署 |
-| **25** | [25 ｜ Spring 应用部署](./cicd/spring.md) | Spring Boot 服务端开发部署与 JVM 优化 |
-| **26** | [26 ｜ 多模块 Git 协作](./cicd/git-submodule.md) | Git Submodule 父子项目协作与依赖同步 |
-| **27** | [27 ｜ SRE 核心能力](./cicd/devops-core.md) | SRE 运维能力建设与系统性容灾图谱 |
+| **24** | [24 ｜ 静态网页发布](./extra/front-dist.md) | Web 静态站点发布实战与 CDN 部署 |
+| **25** | [25 ｜ Spring 应用部署](./extra/spring.md) | Spring Boot 服务端开发部署与 JVM 优化 |
+| **26** | [26 ｜ 多模块 Git 协作](./extra/git-submodule.md) | Git Submodule 父子项目协作与依赖同步 |
+| **27** | [27 ｜ SRE 核心能力](./extra/devops-core.md) | SRE 运维能力建设与系统性容灾图谱 |
 
 ---
 

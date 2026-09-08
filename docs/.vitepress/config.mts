@@ -148,28 +148,40 @@ export default withMermaid({
                             ]
                         },
                         {
-                            text: 'DevOps 进阶篇',
+                            text: 'DevOps 中级篇',
                             collapsed: true,
                             items: [
-                                { text: '00. 渐进式运维导读', link: `/sre/devops/cicd/progressive-devops-intro` },
-                                { text: '10. 环境变量配置管理', link: `/sre/devops/cicd/environment` },
-                                { text: '11. CI/CD 权责分离', link: `/sre/devops/cicd/cicd-separation` },
-                                { text: '12. 持续集成流水线', link: `/sre/devops/cicd/ci-pipeline` },
-                                { text: '13. 私有镜像仓库治理', link: `/sre/devops/cicd/harbor-source-control` },
-                                { text: '14. 轻量 K3s 集群', link: `/sre/devops/cicd/k3s` },
-                                { text: '15. 持续发布流水线', link: `/sre/devops/cicd/cd-pipeline` },
-                                { text: '16. 交付边界与灰度', link: `/sre/devops/cicd/what-is-cd` },
-                                { text: '17. GitOps 发布实践', link: `/sre/devops/cicd/gitops` },
-                                { text: '18. 质量门禁卡点设计', link: `/sre/devops/cicd/quality-gate` },
-                                { text: '19. 制品防篡改与 SBOM', link: `/sre/devops/cicd/sha-SBOM` },
-                                { text: '20. 变更管控就绪清单', link: `/sre/devops/cicd/change-management` },
-                                { text: '21. 变更防错与 AI 价值', link: `/sre/devops/cicd/change-control` },
-                                { text: '22. 一站式平台反思', link: `/sre/devops/cicd/devops-platform` },
-                                { text: '23. 全局自动化发布', link: `/sre/devops/cicd/cloud-native-cicd` },
-                                { text: '24. 静态网页发布', link: `/sre/devops/cicd/front-dist` },
-                                { text: '25. Spring 应用部署', link: `/sre/devops/cicd/spring` },
-                                { text: '26. 多模块 Git 协作', link: `/sre/devops/cicd/git-submodule` },
-                                { text: '27. SRE 核心能力', link: `/sre/devops/cicd/devops-core` },
+                                { text: '00. 渐进式运维导读', link: `/sre/devops/intermediate/progressive-devops-intro` },
+                                { text: '10. 环境变量配置管理', link: `/sre/devops/intermediate/environment` },
+                                { text: '11. CI/CD 权责分离', link: `/sre/devops/intermediate/cicd-separation` },
+                                { text: '12. 持续集成流水线', link: `/sre/devops/intermediate/ci-pipeline` },
+                                { text: '13. 私有镜像仓库治理', link: `/sre/devops/intermediate/harbor-source-control` },
+                                { text: '14. 轻量 K3s 集群', link: `/sre/devops/intermediate/k3s` },
+                                { text: '15. 持续发布流水线', link: `/sre/devops/intermediate/cd-pipeline` },
+                                { text: '16. 交付边界与灰度', link: `/sre/devops/intermediate/what-is-cd` },
+                                { text: '17. GitOps 发布实践', link: `/sre/devops/intermediate/gitops` },
+                            ]
+                        },
+                        {
+                            text: 'DevOps 高级篇',
+                            collapsed: true,
+                            items: [
+                                { text: '18. 质量门禁卡点设计', link: `/sre/devops/advanced/quality-gate` },
+                                { text: '19. 制品防篡改与 SBOM', link: `/sre/devops/advanced/sha-SBOM` },
+                                { text: '20. 变更管控就绪清单', link: `/sre/devops/advanced/change-management` },
+                                { text: '21. 变更防错与 AI 价值', link: `/sre/devops/advanced/change-control` },
+                                { text: '22. 一站式平台反思', link: `/sre/devops/advanced/devops-platform` },
+                                { text: '23. 全局自动化发布', link: `/sre/devops/advanced/cloud-native-cicd` },
+                            ]
+                        },
+                        {
+                            text: 'DevOps 加餐篇',
+                            collapsed: true,
+                            items: [
+                                { text: '24. 静态网页发布', link: `/sre/devops/extra/front-dist` },
+                                { text: '25. Spring 应用部署', link: `/sre/devops/extra/spring` },
+                                { text: '26. 多模块 Git 协作', link: `/sre/devops/extra/git-submodule` },
+                                { text: '27. SRE 核心能力', link: `/sre/devops/extra/devops-core` },
                             ]
                         },
                         {
