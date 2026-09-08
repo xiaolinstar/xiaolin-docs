@@ -73,8 +73,13 @@ graph TD
 | **10** | [10 ｜ 环境变量配置管理](./intermediate/environment.md) | 12-Factor 配置与代码分离：环境变量深度实践 |
 | **11** | [11 ｜ CI/CD 权责分离](./intermediate/cicd-separation.md) | DevOps 权责边界设计：持续集成与发布的分离 |
 | **12** | [12 ｜ 持续集成流水线](./intermediate/ci-pipeline.md) | 不可变基础设施落地：持续集成实战流水线 |
+| **13** | [13 ｜ 镜像仓库治理（本系列）](./intermediate/13-image-registry.md) | CI 与 CD 之间的可信交接点：制品仓库最小可行治理 |
 | **14** | [14 ｜ 轻量 K3s 集群](./intermediate/k3s.md) | 轻量级云原生集群：K3s 容器服务低成本落地 |
 | **15** | [15 ｜ 持续发布流水线](./intermediate/cd-pipeline.md) | 自愈集群部署：持续发布 (CD) 流水线生产落地 |
+| **16** | [16 ｜ K8s 应用部署](./intermediate/16-k8s-app-deploy.md) | 从镜像到 Pod：deployment / service / ingress 最小链路 |
+| **17** | [17 ｜ 配置与密钥分离](./intermediate/17-configmap-secret.md) | ConfigMap / Secret 实践，10 篇的 K8s 原生延伸 |
+| **18** | [18 ｜ 环境分离与多环境发布](./intermediate/18-env-separation.md) | 单集群多 namespace：dev / staging / prod 最小骨架 |
+| **19** | [19 ｜ 数据库版本迁移](./intermediate/19-db-migration.md) | Flyway / Liquibase 最小实践，让数据层跟上应用发布 |
 
 ### 4. 高级篇
 构筑发布防御红线，通过质量门禁、存证、AI 防错确保系统极高可用性。

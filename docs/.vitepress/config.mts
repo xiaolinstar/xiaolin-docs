@@ -153,8 +153,13 @@ export default withMermaid({
                                 { text: '10. 环境变量配置管理', link: `/sre/devops/intermediate/environment` },
                                 { text: '11. CI/CD 权责分离', link: `/sre/devops/intermediate/cicd-separation` },
                                 { text: '12. 持续集成流水线', link: `/sre/devops/intermediate/ci-pipeline` },
+                                { text: '13. 镜像仓库治理（本系列）', link: `/sre/devops/intermediate/13-image-registry` },
                                 { text: '14. 轻量 K3s 集群', link: `/sre/devops/intermediate/k3s` },
                                 { text: '15. 持续发布流水线', link: `/sre/devops/intermediate/cd-pipeline` },
+                                { text: '16. K8s 应用部署', link: `/sre/devops/intermediate/16-k8s-app-deploy` },
+                                { text: '17. 配置与密钥分离', link: `/sre/devops/intermediate/17-configmap-secret` },
+                                { text: '18. 环境分离与多环境发布', link: `/sre/devops/intermediate/18-env-separation` },
+                                { text: '19. 数据库版本迁移', link: `/sre/devops/intermediate/19-db-migration` },
                             ]
                         },
                         {
