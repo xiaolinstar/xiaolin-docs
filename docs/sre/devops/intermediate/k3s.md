@@ -1,5 +1,5 @@
 ---
-title: 11 ｜ 轻量 K3s 集群
+title: 14 ｜ 轻量 K3s 集群
 description: 本文面向DevOps工程师和云原生开发者，介绍如何选择和使用轻量级Kubernetes方案来搭建预生产环境。
 date: 2026-03-28
 updated: 2026-03-28

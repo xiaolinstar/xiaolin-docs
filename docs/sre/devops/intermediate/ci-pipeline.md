@@ -1,5 +1,5 @@
 ---
-title: 09 ｜ 持续集成流水线
+title: 12 ｜ 持续集成流水线
 description: 既然 CI 与 CD 在流程上分离具有必要性，因此分别构建 CI Pipeline 和 CD Pipeline。
 date: 2026-03-28
 updated: 2026-03-28

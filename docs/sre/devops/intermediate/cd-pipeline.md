@@ -1,5 +1,5 @@
 ---
-title: 12 ｜ 持续发布流水线
+title: 15 ｜ 持续发布流水线
 description: CI Pipeline 从源代码到镜像仓库，CD Pipeline 从镜像仓库到生产环境，流水线在项目建设初期定义，可重复执行。
 date: 2026-03-28
 updated: 2026-03-28

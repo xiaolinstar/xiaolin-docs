@@ -1,5 +1,5 @@
 ---
-title: 13 ｜ 交付边界与灰度
+title: 16 ｜ 交付边界与灰度
 description: 持续部署（Continuous Deployment）与持续交付（Continuous Delivery）的缩写都是 CD，它们的联系和区别是什么？
 date: 2026-03-28
 updated: 2026-03-28
