@@ -147,9 +147,9 @@ export default withMermaid({
                         },
                         {
                             text: 'DevOps 中级篇',
+                            link: `/sre/devops/intermediate/progressive-devops-intro`,
                             collapsed: true,
                             items: [
-                                { text: '00. 渐进式运维导读', link: `/sre/devops/intermediate/progressive-devops-intro` },
                                 { text: '10. 环境变量配置管理', link: `/sre/devops/intermediate/environment` },
                                 { text: '11. CI/CD 权责分离', link: `/sre/devops/intermediate/cicd-separation` },
                                 { text: '12. 持续集成流水线', link: `/sre/devops/intermediate/ci-pipeline` },
