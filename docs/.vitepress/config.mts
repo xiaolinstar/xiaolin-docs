@@ -87,8 +87,6 @@ export default withMermaid({
                     { text: '奶茶仙人', link: `/products/drinkzen/` }
                 ]
             },
-            { text: '效率工具', link: `/easy-office/` },
-            { text: '流程工作流', link: `/process-workflow/` },
             { text: '关于本站', link: `/about/` },
             {
                 text: '优惠推荐',
@@ -206,6 +204,11 @@ export default withMermaid({
                                 { text: 'WSL Ubuntu 开发', link: `/sre/tools/wsl-ubuntu-dev` },
                                 { text: 'Linux 起手式优化', link: `/sre/tools/linux-guide-optimization` },
                                 { text: '项目管理思考', link: `/sre/tools/project-management` },
+                                { text: 'Linux 学习有无必要双系统？', link: `/sre/tools/linux-learn` },
+                                { text: 'Mac 办公体验', link: `/sre/tools/mac` },
+                                { text: 'Markdown 文本编辑', link: `/sre/tools/markdown` },
+                                { text: 'Thunderbird 解放收件箱', link: `/sre/tools/email-thunderbird` },
+                                { text: 'email-cli：智能体办公', link: `/sre/tools/email-cli` },
                             ]
                         },
                         {
@@ -220,6 +223,10 @@ export default withMermaid({
                                 { text: '2026 运营规划', link: `/sre/planning/2026-plan` },
                                 { text: '自动生成 Skill 的价值', link: `/sre/planning/skill-value` },
                                 { text: 'AI 时代 SRE 的价值重塑', link: `/sre/planning/sre-ai-era` },
+                                { text: '流程驱动工作：从纸质审批到智能门闩', link: `/sre/planning/workflow-design-philosophy` },
+                                { text: '流程即镜像（上）：审批流程与 CI 流水线', link: `/sre/planning/pipeline-mirror` },
+                                { text: '流程即镜像（下）：流水线该怎么设计', link: `/sre/planning/pipeline-design` },
+                                { text: '变更管控体系设计与实践', link: `/sre/planning/publish-change` },
                             ]
                         },
                         {
@@ -319,6 +326,14 @@ export default withMermaid({
                                 { text: '半小时启动 OpenClaw', link: `/ai/llm/openclaw` },
                                 { text: 'AI 记忆系统', link: `/ai/llm/dotai` },
                                 { text: 'OpenClaw 用不下去', link: `/ai/llm/openclaw-pain` },
+                            ]
+                        },
+                        {
+                            text: 'AI 工具', link: `/ai/tools`,
+                            items: [
+                                { text: 'AI 工具形态演变', link: `/ai/tools/ai-tool-evolution` },
+                                { text: 'OpenClaw 个人助手搭建', link: `/ai/tools/openclaw-personal-assistant` },
+                                { text: '腾讯 QClaw 与 WorkBuddy', link: `/ai/tools/tencent-qclaw-workbuddy` },
                             ]
                         },
                     ],

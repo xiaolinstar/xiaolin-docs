@@ -46,8 +46,7 @@ xiaolin-docs/
 │   ├── sre/                       # SRE、DevOps、可观测性
 │   ├── ai/                        # AI 理论与 LLM 实践
 │   ├── software-development/      # 架构与安全
-│   ├── products/                  # 自研产品文档
-│   └── easy-office/               # 效率工具
+│   └── products/                  # 自研产品文档
 │
 ├── content/dist/{slug}/           # Output：多平台分发稿（不上站）
 │   ├── meta.yaml                  # 溯源 origin、发布状态

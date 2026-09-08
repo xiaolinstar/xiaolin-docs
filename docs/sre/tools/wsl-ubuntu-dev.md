@@ -69,5 +69,5 @@ Windows 可以作为日常开发系统，但不建议直接使用 `cmd` 或 Powe
 
 ## 关联阅读
 
-- [Linux 学习有无必要双系统？](../../easy-office/linux-learn.md)
+- [Linux 学习有无必要双系统？](linux-learn.md)
 - [生产环境入门：部署到云服务器](../devops/foundation/production-env.md)
