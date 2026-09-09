@@ -6,6 +6,14 @@ const docsDir = path.join(root, 'docs')
 const publicDir = path.join(docsDir, 'public')
 const configFile = path.join(docsDir, '.vitepress', 'config.mts')
 
+const configContent = fs.readFileSync(configFile, 'utf8')
+  .split('\n')
+  .filter((line) => !line.trimStart().startsWith('//'))
+  .join('\n')
+// 与站点 srcExclude 保持一致，历史审计快照不属于发布页面。
+const excludeBlock = configContent.match(/srcExclude:\s*\[([\s\S]*?)\]/)?.[1] ?? ''
+const excludedPatterns = [...excludeBlock.matchAll(/['"]([^'"]+)['"]/g)].map(match => match[1])
+
 const ignoreSchemes = /^(https?:|mailto:|tel:|javascript:|data:)/
 const assetExts = new Set([
   '.avif', '.gif', '.ico', '.jpeg', '.jpg', '.md', '.pdf', '.png', '.svg', '.txt', '.webp'
@@ -14,6 +22,8 @@ const assetExts = new Set([
 function walk(dir) {
   return fs.readdirSync(dir, { withFileTypes: true }).flatMap((entry) => {
     const fullPath = path.join(dir, entry.name)
+    const relative = path.relative(docsDir, fullPath)
+    if (excludedPatterns.some(pattern => path.matchesGlob(relative, pattern) || (entry.isDirectory() && path.matchesGlob(`${relative}/index.md`, pattern)))) return []
     if (entry.isDirectory()) {
       if (fullPath.includes(`${path.sep}.vitepress${path.sep}`) || fullPath === publicDir) return []
       return walk(fullPath)
@@ -63,10 +73,6 @@ for (const file of walk(docsDir)) {
   }
 }
 
-const configContent = fs.readFileSync(configFile, 'utf8')
-  .split('\n')
-  .filter((line) => !line.trimStart().startsWith('//'))
-  .join('\n')
 const configLinkPattern = /link:\s*[`'"]([^`'"]+)[`'"]/g
 for (const match of configContent.matchAll(configLinkPattern)) {
   const target = match[1].trim()

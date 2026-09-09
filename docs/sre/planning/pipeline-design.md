@@ -354,5 +354,5 @@ pipeline {
 ## 参考
 
 - [流程驱动工作：从纸质审批到智能门闩](./workflow-design-philosophy.md) —— 上篇四个坑里"流程侧的糟心例"的源头
-- [基础篇总结：从手动部署到声明式流水线](../sre/devops/foundation/foundation-summary.md) —— 上篇四个坑里"流水线侧的糟心例"的源头
+- [基础篇总结：从手动部署到声明式流水线](../devops/foundation/foundation-summary.md) —— 上篇四个坑里"流水线侧的糟心例"的源头
 - [流程即镜像：审批流程和 CI 流水线撞上的同一组坑（上）](./pipeline-mirror.md) —— 本文上篇

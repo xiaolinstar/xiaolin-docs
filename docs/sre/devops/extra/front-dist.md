@@ -1,8 +1,8 @@
 ---
-title: 21 ｜ 静态网页发布
+title: 28 ｜ 静态网页发布
 description: Vite、VitePress 和 Vue3 均为 Vue 生态系统的重要组成部分，它们在前端开发中扮演不同角色并紧密协作。
 date: 2025-08-27
-updated: 2025-08-27
+updated: 2026-09-08
 category: SRE 运维
 tags:
   - DevOps

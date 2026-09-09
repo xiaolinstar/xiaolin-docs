@@ -199,5 +199,5 @@ pipeline 该做的是"构建产物 + 推到目标环境"。但它偷偷干了"�
 ## 参考
 
 - [流程驱动工作：从纸质审批到智能门闩](./workflow-design-philosophy.md) —— 上篇四个坑里"流程侧的糟心例"的源头
-- [基础篇总结：从手动部署到声明式流水线](../sre/devops/foundation/foundation-summary.md) —— 上篇四个坑里"流水线侧的糟心例"的源头
+- [基础篇总结：从手动部署到声明式流水线](../devops/foundation/foundation-summary.md) —— 上篇四个坑里"流水线侧的糟心例"的源头
 - [流程即镜像：数智化语境下流水线该怎么设计（下）](./pipeline-design.md) —— 本文下篇

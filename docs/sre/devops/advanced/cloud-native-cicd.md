@@ -1,294 +1,176 @@
 ---
-title: 20 ｜ 全局自动化发布
-description: 现在很多系统都声称达到了所谓的CI/CD，实际上仅仅使用了K8s的原生能力，来实现自动化部署。
+title: 26 ｜ 全局自动化发布：结课项目
+description: 将固定制品验证、数据库迁移、版本化文件和 K8s 发布串成可验收的实验流程。
 date: 2026-04-19
-updated: 2026-04-19
+updated: 2026-09-08
 category: SRE 运维
 tags:
   - DevOps
   - CI/CD
 ---
 
+## 结课目标与执行边界
 
-现在很多系统都声称达到了所谓的CI/CD，实际上仅仅使用了K8s的原生能力，来实现自动化部署。这恰恰说明K8s的原生能力太强大了，使用声明式的YAML文件，可以将部署动作完整编排，实现一键执行：`kubectl apply -k k8s/prod`
+本课将 `delivery-demo` 的镜像、数据库 SQL 和静态文件纳入同一次发布。它不是跨系统事务：某阶段失败时，前面已经完成的动作可能保留，必须按兼容性决定恢复方法。
 
-这是一种部署前移的思想，将Ops的工作交给Dev提前来声明编排。然而，K8s搞定了应用部署的复杂性，但是部署不只是无状态的Pod应用。数据库执行脚本、文件存储以及流量切换没有事实标准，仍然由人工来完成，这是云原生时代下的手动模式，完全没有达到Continues，伪CI/CD。
+使用独立的 `release-lab` namespace、实验 PostgreSQL 和实验 S3 / MinIO bucket。本例选择显式 Push CD，以展示跨系统执行与退出码；不要同时让 Argo CD 管理 `release-lab`。生产若选择 GitOps，应把发布准入放在配置合并前，用控制器调和替代脚本中的 apply，并保留相同的验收契约。
 
-真正的CI/CD，是完全自动化，从代码提交到版本交付，完全流水线驱动，中间按需插入审批门限即可。Continues要做的就是打破跨系统的串联调度，而不是指的是原来运维需手动执行100条命名式语句，进化成一键执行了。
+准备已审核的 Linux x86_64 专用 runner，安装 Bash、Docker、kubectl、Cosign、AWS CLI、jq、psql 和 Python 3。runner 必须能访问集群、数据库和对象存储；不接收不可信 PR。kubeconfig 仅允许操作实验 namespace，数据库账号仅用于实验库，bucket 凭据限制在实验前缀。
 
-相比于无状态的K8s应用，数据库DDL和DML语句的有状态变更会变得更加复杂，因为执行过程是非原子性的，中间状态是非常可怕的。比如在100万行数据库中插入2万条数据，执行一半报错中断了，处于可怕的中间状态。因此在设计数据库这类有状态变更时，需要特别考虑幂等性和可回滚性，这使用传统的SQL执行方式是难以实现的（补偿语句、数据库备份），因此才有Liquibase这类面向有计划变更的声明式数据执行引擎。
+## 固定一次发布的输入
 
-总之，CI/CD的目标是完全自动化，本文是在云原生系统CI/CD在架构设计上的宏观思考。
+练习仓库包含：第 12 篇的 `site/`、第 18 篇的 `k8s/`、第 19 篇的 `db/sql/`，以及下面的 `scripts/release.sh`。删除故障实验 SQL，只保留已验证的 V1/V2。将第 21 篇已签名的 `image.txt` 放在仓库根目录，连同 SQL 和配置通过 PR 审核。
 
-## 一、发布流程：五个关键步骤搞定全自动化
+工作流 checkout 触发时的确定 commit；审批人核对该 commit、镜像来源、SQL 校验结果和 staging 证据。所有文件来自这次 checkout，不在运行中 `git pull`。前端文件既留在应用镜像中，也作为版本化发布附件上传对象存储，用于演示独立文件发布；本例不宣称已经接入 CDN。
 
-要实现应用、数据库、文件存储的全自动化发布，其实就五个关键步骤：
+首次创建 `release-lab`，预置 `delivery-secret` 和必要的 `ghcr-read`，准备实验数据库及 bucket。`FLYWAY_IMAGE` 使用已审核的 Flyway 镜像 digest，`SIGNING_IDENTITY` 使用第 21 篇的完整签名身份。
 
-1. **准备**：检查代码、构建镜像、验证环境
-2. **执行**：按顺序更新数据库、文件存储、应用
-3. **验证**：跑测试、看指标、确认没问题
-4. **回滚**：出问题了快速回到老版本
-5. **收尾**：发通知、清垃圾、记录日志
+## 发布脚本
 
-下面我来详细说说每一步怎么搞。
+保存为 `scripts/release.sh`。变量由下一节工作流提供，脚本不打印凭据。
 
-### 1.1 准备工作：发布前的必备检查
+```bash
+#!/usr/bin/env bash
+set -euo pipefail
+: "${GITHUB_SHA:?}" "${FLYWAY_IMAGE:?}" "${SIGNING_IDENTITY:?}"
+: "${FLYWAY_URL:?}" "${FLYWAY_USER:?}" "${FLYWAY_PASSWORD:?}"
+: "${S3_ENDPOINT:?}" "${S3_BUCKET:?}" "${ENTRY_URL:?}"
+: "${PGHOST:?}" "${PGDATABASE:?}" "${PGUSER:?}" "${PGPASSWORD:?}"
+[[ "$GITHUB_SHA" =~ ^[a-f0-9]{40}$ ]]
+[[ "$FLYWAY_IMAGE" =~ @sha256:[a-f0-9]{64}$ ]]
+IMAGE_REF=$(cat image.txt)
+[[ "$IMAGE_REF" =~ ^ghcr\.io/[a-z0-9._/-]+@sha256:[a-f0-9]{64}$ ]]
+export IMAGE_REF
+mkdir -p evidence
+# 所有副作用发生前，先验证制品身份与 SBOM。
+cosign verify --certificate-identity "$SIGNING_IDENTITY" \
+  --certificate-oidc-issuer https://token.actions.githubusercontent.com \
+  "$IMAGE_REF" > evidence/signature.json
+cosign verify-attestation --type cyclonedx \
+  --certificate-identity "$SIGNING_IDENTITY" \
+  --certificate-oidc-issuer https://token.actions.githubusercontent.com \
+  "$IMAGE_REF" > evidence/sbom.json
+sha256sum db/sql/*.sql site/* > evidence/files.sha256
+kubectl get namespace release-lab >/dev/null
 
-发布前的准备工作就像赛跑前的热身，一定要充分，不然很容易在半路上"拉伤"。
+# 渲染隔离的结课环境，不改动 prod overlay。
+cp -R k8s/overlays/prod k8s/overlays/release-lab
+python3 - <<'CODE'
+import os, pathlib
+name, digest = os.environ['IMAGE_REF'].split('@')
+p = pathlib.Path('k8s/overlays/release-lab/kustomization.yaml')
+s = p.read_text().replace('namespace: prod', 'namespace: release-lab')
+s = s.replace('value: prod.demo.local', 'value: release.demo.local')
+s = s.replace('value: prod\n', 'value: release-lab\n')
+# 更新结构化字段，不对渲染后的所有 image 行做无差别 sed。
+lines = s.splitlines()
+for i, line in enumerate(lines):
+    if line.strip().startswith('newName:'): lines[i] = '    newName: ' + name
+    if line.strip().startswith('digest:'): lines[i] = '    digest: ' + digest
+p.write_text('\n'.join(lines) + '\n')
+CODE
+kubectl kustomize k8s/overlays/release-lab > evidence/rendered.yaml
+kubectl apply --dry-run=server -f evidence/rendered.yaml >/dev/null
 
-**四个关键检查点：**
+# 只对兼容性扩展执行此顺序：迁移、文件、应用、验收。
+docker run --rm --network host \
+  -e FLYWAY_URL -e FLYWAY_USER -e FLYWAY_PASSWORD \
+  -v "$PWD/db/sql:/flyway/sql:ro" "$FLYWAY_IMAGE" validate
+docker run --rm --network host \
+  -e FLYWAY_URL -e FLYWAY_USER -e FLYWAY_PASSWORD \
+  -v "$PWD/db/sql:/flyway/sql:ro" "$FLYWAY_IMAGE" migrate
+psql -v ON_ERROR_STOP=1 -Atc \
+  "SELECT count(*) FROM information_schema.columns WHERE table_schema='public' AND table_name='release_notes' AND column_name='description';" \
+  | grep -qx 1
 
-1. **代码检查**：看看代码有没有冲突，是否通过评审，有没有敏感信息泄露
-2. **构建打标**：自动构建应用镜像，给数据库脚本和文件包打上版本号
-3. **质量门禁**：跑单元测试、代码扫描、镜像安全检查，确保没问题
-4. **环境检查**：确认K8s集群、数据库、文件存储都连得上，空间够用
+# commit + run id 隔离重试的对象前缀，不覆盖旧版文件。
+prefix="releases/$GITHUB_SHA/${GITHUB_RUN_ID:?}-${GITHUB_RUN_ATTEMPT:?}"
+aws --endpoint-url "$S3_ENDPOINT" s3 cp site/ "s3://$S3_BUCKET/$prefix/" --recursive
+aws --endpoint-url "$S3_ENDPOINT" s3 cp "s3://$S3_BUCKET/$prefix/index.html" evidence/index.html
+cmp site/index.html evidence/index.html
+printf '%s\n' "$prefix" > evidence/asset-prefix.txt
 
-### 1.2 执行发布：按序更新，避免踩坑
-
-这是最关键的环节，顺序不能错，不然就容易出问题。正确的顺序是：
-
-**数据库 → 文件存储 → 应用 → 流量**
-
-为什么要这么安排？你想啊，如果应用先更新了，但数据库结构还是老的，那不是一堆报错吗？所以必须先让"数据"就位，再更新"应用"。
-
-**具体怎么做：**
-
-1. **数据库变更**：先校验脚本，再执行变更，同时准备好回滚脚本
-   - **实践工具**：使用Liquibase或Flyway管理数据库变更
-   - **关键考虑**：确保幂等性，支持自动回滚，避免出现中间状态
-   - **示例**：Liquibase通过changelog记录变更历史，确保每次执行都是幂等的
-
-2. **文件存储更新**：上传新的静态资源，验证能正常访问
-   - **实践工具**：MinIO、AWS S3、[阿里云OSS](https://www.aliyun.com/minisite/goods?userCode=d1pmxxar)等对象存储
-   - **实现方式**：通过API批量上传，版本化管理
-
-3. **应用部署**：用灰度发布，逐步替换旧版本Pod
-   - **实践工具**：K8s + ArgoCD/GitOps
-   - **实现方式**：声明式配置，自动同步Git仓库到K8s集群
-
-**示例代码**：
-
-```yaml
-# argocd-application.yaml
-apiVersion: argoproj.io/v1alpha1
-kind: Application
-metadata:
-     name: my-app
-     namespace: argocd
-spec:
-     project: default
-     source:
-     repoURL: https://github.com/myorg/myapp
-     targetRevision: HEAD
-     path: k8s/overlays/prod
-     destination:
-     server: https://kubernetes.default.svc
-     namespace: production
-     syncPolicy:
-     automated:
-          prune: true
-          selfHeal: true
+kubectl apply -f evidence/rendered.yaml
+kubectl -n release-lab rollout status deployment/delivery-demo --timeout=180s
+curl --fail --silent --show-error -H 'Host: release.demo.local' "$ENTRY_URL/healthz" | grep -qx ok
+curl --fail --silent --show-error -H 'Host: release.demo.local' "$ENTRY_URL/" > evidence/served.html
+cmp site/index.html evidence/served.html
+kubectl -n release-lab get deployment delivery-demo \
+  -o jsonpath='{.spec.template.spec.containers[0].image}' > evidence/running-image.txt
+[ "$(cat evidence/running-image.txt)" = "$IMAGE_REF" ]
+printf '发布验收通过：%s\n' "$GITHUB_SHA"
 ```
 
-4. **流量切换**：慢慢把用户流量切到新版本
-   - **实践工具**：Istio服务网格、Nginx Ingress
-   - **实现方式**：基于权重的灰度发布
+数据库 URL 和 PG 连接变量必须指向同一数据库；Flyway 迁移成功后，psql 独立验证 schema。对象前缀每次运行不同，因此失败重试不会覆盖旧附件；清理失败运行的附件属于后续维护，不在失败处理时删除历史版本。
 
-### 1.3 验证结果：确保一切正常
+## 用 Environment 串起审批与执行
 
-发布完千万别以为就完了，一定要验证一下，确保新版本工作正常。
-
-**主要验证三件事：**
-
-1. **功能测试**：跑一遍自动化测试，看看核心功能有没有问题
-2. **指标监控**：看QPS、延迟、错误率等关键指标是否正常
-3. **版本一致性**：确认应用、数据库、文件存储都是同一版本
-
-### 1.4 应急回滚：出问题快速恢复
-
-万一发布过程中出问题了怎么办？这时候就需要快速回滚到之前的稳定版本。
-
-**回滚顺序正好相反：**
-
-流量 → 应用 → 文件存储 → 数据库
-
-**实践示例**：
-
-- **应用回滚**：`kubectl rollout undo deployment/my-app`
-- **数据库回滚**：Liquibase自动执行回滚脚本
-- **流量回滚**：Istio权重调整回100%旧版本
-
-这样可以确保回滚后各个组件还能正常协作。
-
-### 1.5 收尾工作：善后处理
-
-发布成功或回滚完成后，记得做一些收尾工作：
-
-1. **发送通知**：告诉相关人员发布结果
-2. **归档日志**：把这次发布的过程记录下来，方便以后排查问题
-3. **清理资源**：删除旧的Pod、镜像等，节省服务器资源
-
-## 二、真正理解"持续"：打破系统隔阂的自动化
-
-这里有个重要的概念需要澄清：不是所有的集成和部署都叫CI/CD。真正的"持续"(Continuous)意味着：
-
-- **持续集成**：代码提交后自动构建、测试
-- **持续交付**：代码随时可以发布到生产环境
-- **持续部署**：代码提交后自动部署到生产环境
-
-**"持续"的核心是打破各系统的隔阂，实现端到端的自动化**，而不是简单的自动化脚本串联。
-
-**实践示例：完整的CI/CD流水线**
+保存 `.github/workflows/release.yml`。管理员配置 `release-lab` Environment 的 reviewer、仅允许受保护的 `main`，以及对应变量和密钥。自托管 runner 使用 `delivery-lab` 专用标签，限制可用仓库并使用临时 runner 或清理机制。
 
 ```yaml
-# .github/workflows/ci-cd.yaml
-name: CI/CD Pipeline
-
+name: Release Lab
 on:
-  push:
-    branches: [main]
-
+  workflow_dispatch:
+permissions:
+  contents: read
+concurrency:
+  group: release-lab
+  cancel-in-progress: false
 jobs:
-  build-and-test:
-    runs-on: ubuntu-latest
+  release:
+    if: github.ref == 'refs/heads/main'
+    runs-on: [self-hosted, linux, x64, delivery-lab]
+    environment: release-lab
     steps:
-      - uses: actions/checkout@v3
-      
-      - name: Build Application
-        run: ./mvnw clean package
-        
-      - name: Run Tests
-        run: ./mvnw test
-        
-      - name: Build Docker Image
-        run: docker build -t myapp:${{ github.sha }} .
-        
-      - name: Push to Registry
-        run: |
-          docker tag myapp:${{ github.sha }} registry/myapp:${{ github.sha }}
-          docker push registry/myapp:${{ github.sha }}
-
-  deploy-to-dev:
-    needs: build-and-test
-    runs-on: ubuntu-latest
-    steps:
-      - name: Deploy to Dev
-        run: |
-          # 更新K8s配置中的镜像版本
-          sed -i "s/image:.*/image: registry\/myapp:${{ github.sha }}/g" k8s/deployment-dev.yaml
-          
-  db-migration:
-    needs: deploy-to-dev
-    runs-on: ubuntu-latest
-    steps:
-      - name: Run Database Migration
-        run: |
-          # 使用Liquibase执行数据库变更
-          liquibase --changeLogFile=changelog.xml --url=jdbc:mysql://dev-db:3306/myapp update
-
-  integration-test:
-    needs: db-migration
-    runs-on: ubuntu-latest
-    steps:
-      - name: Run Integration Tests
-        run: |
-          # 验证数据库、应用、文件存储的协同工作
-          curl -f http://dev.myapp.com/api/health
-
-  promote-to-prod:
-    needs: integration-test
-    runs-on: ubuntu-latest
-    environment: production
-    steps:
-      - name: Promote to Production
-        run: |
-          # 将相同的构建产物部署到生产环境
-          sed -i "s/image:.*/image: registry\/myapp:${{ github.sha }}/g" k8s/deployment-prod.yaml
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.sha }}
+          persist-credentials: false
+      - name: Release reviewed revision
+        env:
+          FLYWAY_IMAGE: ${{ vars.FLYWAY_IMAGE }}
+          SIGNING_IDENTITY: ${{ vars.SIGNING_IDENTITY }}
+          FLYWAY_URL: ${{ secrets.FLYWAY_URL }}
+          FLYWAY_USER: ${{ secrets.FLYWAY_USER }}
+          FLYWAY_PASSWORD: ${{ secrets.FLYWAY_PASSWORD }}
+          PGHOST: ${{ secrets.PGHOST }}
+          PGPORT: ${{ secrets.PGPORT }}
+          PGDATABASE: ${{ secrets.PGDATABASE }}
+          PGUSER: ${{ secrets.PGUSER }}
+          PGPASSWORD: ${{ secrets.PGPASSWORD }}
+          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          AWS_DEFAULT_REGION: ${{ vars.AWS_DEFAULT_REGION }}
+          S3_ENDPOINT: ${{ vars.S3_ENDPOINT }}
+          S3_BUCKET: ${{ vars.S3_BUCKET }}
+          ENTRY_URL: ${{ vars.ENTRY_URL }}
+        run: bash scripts/release.sh
+      - name: Save release evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: release-evidence
+          path: evidence/
+          if-no-files-found: warn
 ```
 
-## 三、流水线设计：分阶段执行更安全
+`ENTRY_URL` 是 runner 可达的 K3s HTTP 入口，如 `http://实验节点IP`；数据库和对象存储连接按所在环境提供 TLS 配置。这里所有机密只授予实验环境，不直接替换成生产凭据运行。
 
-很多同学可能会想：能不能把所有发布步骤都放在一条流水线上？理论上可以，但实际上不太靠谱。
+并发组只串行化这条 GitHub 发布流程；团队若允许其他发布入口，还需统一目标环境的锁和授权。失败时工作流保持失败，附件归档不改变发布结果。
 
-**为什么这么说？**
+## 按失败阶段恢复
 
-如果把所有步骤放在一起，一旦数据库变更失败了，后面的应用发布、文件更新就都卡住了。而且一旦出问题，整个发布流程都得停掉，排查起来也麻烦。
+| 失败位置 | 已发生的动作 | 应对 |
+| --- | --- | --- |
+| 验签 / 渲染 | 尚未改动目标业务资源 | 修复输入和权限，重新审批 |
+| 迁移 | 可能已执行部分数据库操作 | 查历史和真实 schema，按数据库事务行为恢复，不盲目 repair |
+| 文件上传 | 兼容 schema 已扩展，附件可能上传部分 | 保留旧版入口，修复上传后重试 |
+| 应用 / 验收 | 新版可能部分运行 | 查看 rollout、日志与入口；确认兼容后发布上一镜像 |
 
-**所以，更好的做法是把流水线分成四个阶段：**
+恢复应用时通过新的受审发布记录指定上一镜像，并保持与其匹配的 `site/` 文件；保留已成功的兼容 schema 扩展。若需要旧文件，读取旧记录中的对象前缀。删除列、重写数据等不兼容操作不走本例自动流程。
 
-1. **构建准入**：代码检查、构建镜像
-2. **预发布验证**：在测试环境验证
-3. **生产发布**：正式环境部署
-4. **收尾回滚**：完成发布或紧急回滚
+## 结课验收
 
-这样做的好处很明显：风险分散，出了问题只影响当前阶段，不会波及其他部分。
+完成一次 v1 到 v2 发布，归档源码 commit、镜像 digest、签名、SQL 摘要、对象前缀、实际镜像和首页比较结果。再在独立实验环境分别制造身份不匹配、失败 SQL 和缺失健康端点，检查后续步骤被阻断并完成恢复。
 
-**关键规则：**
-
-- 大部分步骤自动执行，只有在生产发布这种高风险环节才需要人工确认
-- 每个阶段都要验证成功后才能进入下一阶段
-- 任何一个环节出问题，立即停止并回滚
-- 所有组件使用同一个版本号，避免版本混乱
-
-## 四、自动化程度：99%可以自动搞定
-
-告诉你一个好消息：现在的技术完全可以实现99%的自动化发布！只需要在几个关键节点让人确认一下就行。
-
-**为什么能做到这么高的自动化？**
-
-主要有三个原因：
-
-1. **操作都标准化了**：应用发布、数据库变更、文件更新这些操作，都可以用脚本自动完成
-2. **异常处理很完善**：出了问题能自动检测、自动回滚，不用人操心
-3. **云原生工具给力**：K8s、Liquibase、MinIO这些工具都支持API调用，可以轻松集成
-
-**哪些情况还需要人来确认？**
-
-- 首次在生产环境发布
-- 大版本更新，比如数据库结构大调整
-- 删除重要数据或字段这种高风险操作
-
-除此之外，日常的小更新、热修复都可以全自动完成。
-
-## 五、技术架构：用这些工具就够了
-
-要实现全自动化发布，主要用到这几类技术：
-
-**底层基础**：K8s跑应用，Docker/Containerd管镜像，Harbor存制品，数据库用MySQL/PostgreSQL，文件存储用MinIO
-
-**流水线引擎**：Jenkins（功能最全）、GitLab CI（集成度高）、或者云厂商的服务（开箱即用）
-
-**核心组件**：
-- 代码扫描用SonarQube
-- **数据库变更用Liquibase/Flyway**：确保幂等性和自动回滚能力
-- **应用发布用ArgoCD**：实现GitOps，声明式部署
-- 流量切换用Istio/Nginx
-- 监控用Prometheus+Grafana
-
-这些工具都支持API调用，可以很好地集成到自动化流程里。
-
-> **💡 云服务推荐**：如果您正在搭建云原生架构，推荐使用 [阿里云 ECS](https://www.aliyun.com/minisite/goods?userCode=d1pmxxar)（新用户注册可获 ¥100 代金券）或 [腾讯云轻量应用服务器](https://curl.qcloud.com/mQu7e5Fu)（1核2G仅需 ¥99/年），助您低成本构建极速、稳定的流水线。
-
-## 六、设计原则：确保发布稳定可靠
-
-要让自动化发布稳定运行，记住这几个原则：
-
-1. **顺序很重要**：先更新数据库和文件存储，再更新应用，避免版本不匹配
-2. **渐进式发布**：别一次性全量发布，先小范围验证没问题再全面铺开
-3. **记录要完整**：所有操作都要留痕，方便出问题时追溯
-4. **回滚要快速**：出问题时能快速回到之前稳定的状态
-5. **用数据说话**：以监控指标为准，而不是靠感觉判断发布是否成功
-
-## 七、总结
-
-搞定多组件自动化发布，关键在于：
-
-1. **补齐短板**：不只是应用，数据库和文件存储也要纳入自动化流程
-2. **分步实施**：先从应用开始，再逐步加入数据库和文件存储
-3. **重视监控**：用数据衡量发布效果，持续优化流程
-
-**特别强调**：真正的CI/CD不仅仅是自动化脚本，而是要实现"持续"的概念——打破系统隔阂，让代码从提交到生产环境的整个流程都自动化、可视化、可追溯。
-
-这样做完后，你会发现发布效率大幅提升，从原来几小时缩短到几分钟，出错率也大大降低。团队可以更专注于业务开发，而不是繁琐的发布操作。
-
-**建议从非核心业务开始试点，逐步应用到核心业务，安全第一！**
+本例验证的是三个组件的编排和证据关联。静态页面没有数据库业务请求，不能把 SQL 检查写成端到端业务验证；生产还需真实接口测试、灰度指标、备份恢复演练和受限身份配置。

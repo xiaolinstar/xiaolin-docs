@@ -153,9 +153,9 @@ export default withMermaid({
                                 { text: '10. 环境变量配置管理', link: `/sre/devops/intermediate/environment` },
                                 { text: '11. CI/CD 权责分离', link: `/sre/devops/intermediate/cicd-separation` },
                                 { text: '12. 持续集成流水线', link: `/sre/devops/intermediate/ci-pipeline` },
-                                { text: '13. 镜像仓库治理（本系列）', link: `/sre/devops/intermediate/13-image-registry` },
-                                { text: '14. 轻量 K3s 集群', link: `/sre/devops/intermediate/k3s` },
-                                { text: '15. 持续发布流水线', link: `/sre/devops/intermediate/cd-pipeline` },
+                                { text: '13. 镜像仓库治理', link: `/sre/devops/intermediate/13-image-registry` },
+                                { text: '14. 持续发布流水线', link: `/sre/devops/intermediate/cd-pipeline` },
+                                { text: '15. 轻量 K3s 集群', link: `/sre/devops/intermediate/k3s` },
                                 { text: '16. K8s 应用部署', link: `/sre/devops/intermediate/16-k8s-app-deploy` },
                                 { text: '17. 配置与密钥分离', link: `/sre/devops/intermediate/17-configmap-secret` },
                                 { text: '18. 环境分离与多环境发布', link: `/sre/devops/intermediate/18-env-separation` },
@@ -166,24 +166,24 @@ export default withMermaid({
                             text: 'DevOps 高级篇',
                             collapsed: true,
                             items: [
-                                { text: '18. 质量门禁卡点设计', link: `/sre/devops/advanced/quality-gate` },
-                                { text: '19. 制品防篡改与 SBOM', link: `/sre/devops/advanced/sha-SBOM` },
-                                { text: '20. 变更管控就绪清单', link: `/sre/devops/advanced/change-management` },
-                                { text: '21. 变更防错与 AI 价值', link: `/sre/devops/advanced/change-control` },
-                                { text: '22. 一站式平台反思', link: `/sre/devops/advanced/devops-platform` },
-                                { text: '23. 全局自动化发布', link: `/sre/devops/advanced/cloud-native-cicd` },
-                                { text: '交付边界与灰度', link: `/sre/devops/advanced/what-is-cd` },
-                                { text: 'GitOps 发布实践', link: `/sre/devops/advanced/gitops` },
+                                { text: '20. 质量门禁卡点设计', link: `/sre/devops/advanced/quality-gate` },
+                                { text: '21. 制品防篡改与 SBOM', link: `/sre/devops/advanced/sha-SBOM` },
+                                { text: '22. GitOps 发布实践', link: `/sre/devops/advanced/gitops` },
+                                { text: '23. 交付边界与灰度', link: `/sre/devops/advanced/what-is-cd` },
+                                { text: '24. 变更管控就绪清单', link: `/sre/devops/advanced/change-management` },
+                                { text: '25. 变更防错与 AI 价值', link: `/sre/devops/advanced/change-control` },
+                                { text: '26. 全局自动化发布：结课项目', link: `/sre/devops/advanced/cloud-native-cicd` },
+                                { text: '27. 一站式平台反思（选读）', link: `/sre/devops/advanced/devops-platform` },
                             ]
                         },
                         {
                             text: 'DevOps 加餐篇',
                             collapsed: true,
                             items: [
-                                { text: '24. 静态网页发布', link: `/sre/devops/extra/front-dist` },
-                                { text: '25. Spring 应用部署', link: `/sre/devops/extra/spring` },
-                                { text: '26. 多模块 Git 协作', link: `/sre/devops/extra/git-submodule` },
-                                { text: '27. SRE 核心能力', link: `/sre/devops/extra/devops-core` },
+                                { text: '28. 静态网页发布', link: `/sre/devops/extra/front-dist` },
+                                { text: '29. Spring 应用部署', link: `/sre/devops/extra/spring` },
+                                { text: '30. 多模块 Git 协作', link: `/sre/devops/extra/git-submodule` },
+                                { text: '31. SRE 核心能力', link: `/sre/devops/extra/devops-core` },
                             ]
                         },
                         {
@@ -333,7 +333,7 @@ export default withMermaid({
                             ]
                         },
                         {
-                            text: 'AI 工具', link: `/ai/tools`,
+                            text: 'AI 工具', link: `/ai/`,
                             items: [
                                 { text: 'AI 工具形态演变', link: `/ai/tools/ai-tool-evolution` },
                                 { text: 'OpenClaw 个人助手搭建', link: `/ai/tools/openclaw-personal-assistant` },
@@ -394,27 +394,27 @@ export default withMermaid({
                 }
             ],
 
-            '/easy-office/': [
+            '/sre/tools/': [
                 {
-                    text: '效率工具', link: `/easy-office/`,
+                    text: '效率工具', link: `/sre/tools/`,
                     items: [
-                        { text: 'Thunderbird 邮件管理', link: `/easy-office/email-thunderbird` },
-                        { text: 'Markdown 语法', link: `/easy-office/markdown` },
-                        { text: 'Linux 学习', link: `/easy-office/linux-learn` },
-                        { text: 'Mac 办公体验', link: `/easy-office/mac` },
-                        { text: 'OpenClaw 个人助手', link: `/easy-office/openclaw-personal-assistant` },
-                        { text: '腾讯 QClaw 与 WorkBuddy', link: `/easy-office/tencent-qclaw-workbuddy` }
+                        { text: 'Thunderbird 邮件管理', link: `/sre/tools/email-thunderbird` },
+                        { text: 'Markdown 语法', link: `/sre/tools/markdown` },
+                        { text: 'Linux 学习', link: `/sre/tools/linux-learn` },
+                        { text: 'Mac 办公体验', link: `/sre/tools/mac` },
+                        { text: 'OpenClaw 个人助手', link: `/ai/tools/openclaw-personal-assistant` },
+                        { text: '腾讯 QClaw 与 WorkBuddy', link: `/ai/tools/tencent-qclaw-workbuddy` }
                     ]
                 }
             ],
-            '/process-workflow/': [
+            '/sre/planning/': [
                 {
-                    text: '流程与工作流', link: `/process-workflow/`,
+                    text: '流程与工作流', link: `/sre/planning/`,
                     items: [
-                        { text: '流程驱动工作：从纸质审批到智能门闩', link: `/process-workflow/workflow-design-philosophy` },
-                        { text: '流程即镜像（上）：审批流程和 CI 流水线撞上的同一组坑', link: `/process-workflow/pipeline-mirror` },
-                        { text: '流程即镜像（下）：流水线该怎么设计', link: `/process-workflow/pipeline-design` },
-                        { text: '变更管控体系设计与实践', link: `/process-workflow/publish-change` },
+                        { text: '流程驱动工作：从纸质审批到智能门闩', link: `/sre/planning/workflow-design-philosophy` },
+                        { text: '流程即镜像（上）：审批流程和 CI 流水线撞上的同一组坑', link: `/sre/planning/pipeline-mirror` },
+                        { text: '流程即镜像（下）：流水线该怎么设计', link: `/sre/planning/pipeline-design` },
+                        { text: '变更管控体系设计与实践', link: `/sre/planning/publish-change` },
                     ]
                 }
             ],

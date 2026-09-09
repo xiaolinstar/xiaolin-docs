@@ -2,7 +2,7 @@
 title: 10 ｜ 环境变量配置管理
 description: 随着项目越来越大、依赖越来越多，配置管理将显得越来越重要。本文深度解析云原生配置管理的核心原则、环境变量优先级以及 Python Pydantic 编程实践。
 date: 2026-03-30
-updated: 2026-07-07
+updated: 2026-09-08
 category: SRE 运维
 tags:
   - DevOps
@@ -44,7 +44,7 @@ tags:
 | 维度 | 配置文件（YAML / JSON 等） | 环境变量（Environment Variables） |
 | :--- | :--- | :--- |
 | **可读性** | 极佳，支持嵌套层级结构 | 较差，多为扁平的 `KEY=VALUE` 结构 |
-| **敏感信息安全性** | 差，容易随代码被误提交至 Git | 较好，可通过容器编排工具（K8s Secrets）在运行时动态注入 |
+| **敏感信息安全性** | 依赖文件权限、分发和存储方式 | 依赖注入权限，也可能经日志、诊断和进程信息泄露 |
 | **容器友好度** | 一般，需要将文件挂载到容器内部 | 极高，原生被 Docker / Docker Compose 完美支持 |
 | **动态修改** | 较容易，可通过热重载（Hot-reload）监听文件改动 | 难，通常需要重启容器/进程以读取新值 |
 
@@ -54,17 +54,19 @@ tags:
 
 ---
 
-## 环境变量加载优先级
+## 区分注入与读取的优先级
 
-在实际开发和生产中，配置的来源很多。为了兼顾**本地开发的便利性**与**生产环境的安全性**，我们应遵循以下**由低到高**的覆盖优先级（高优先级将覆盖低优先级的值）：
+配置分为宿主机插值、容器注入、应用读取三个阶段，不能将 Shell、Compose、K8s 和 Pydantic 排成一个通用覆盖顺序。
 
-```mermaid
-graph TD
-    A["1. 代码硬编码默认值 (低)"] --> B["2. 本地 .env 配置文件"]
-    B --> C["3. 系统的 Shell 环境变量 (如 export)"]
-    C --> D["4. 容器引擎配置 (如 Docker Compose environment)"]
-    D --> E["5. 容器编排/集群配置 (如 K8s ConfigMap/Secret) (高)"]
-```
+| 层次 | 需要回答的问题 | 本课约定 |
+| --- | --- | --- |
+| Compose 插值 | `${PORT}` 从哪里取值？ | `.env` 可用于插值，但不自动成为所有容器的环境变量 |
+| 容器注入 | 哪些键进入容器？ | Compose `environment` / `env_file`，或 K8s `env` / `envFrom`，分别遵循各自规则 |
+| 应用读取 | 环境变量与 `.env` 谁覆盖谁？ | 本例 Pydantic Settings 默认环境变量优先于 dotenv，再到字段默认值 |
+
+下面的 Pydantic 示例不启用 CLI 或自定义 source。一般默认来源中，初始化参数优先于环境变量；配置来源可自定义，因此应在项目中写清采用的规则。
+
+参考：[Compose 环境变量优先级](https://docs.docker.com/compose/how-tos/environment-variables/envvars-precedence/)、[Pydantic Settings](https://docs.pydantic.dev/latest/concepts/pydantic_settings/)。
 
 ### 安全规范：严禁提交 `.env`
 *   **开发便利性**：本地开发时，可以在项目根目录编写一个 `.env` 文件存储本地配置。
@@ -77,11 +79,13 @@ graph TD
 
 在动态语言（如 Python）中，如果只使用 `os.environ.get("DB_PORT")`，往往会因为类型转换错误（获取到的是字符串，而需要整型）或环境变量缺失而导致运行时崩塌。
 
-目前 Python 生态中，**Pydantic Settings** 已经成为管理环境变量与配置验证的行业标准。它具备**Fail-Fast（快速失败）**的机制——如果配置不合规，程序会在启动时立即崩溃退出，而不是在运行到特定业务逻辑时才爆出隐蔽错误。
+本例使用 **Pydantic Settings** 管理环境变量与配置验证。它具备**Fail-Fast（快速失败）**的机制——如果配置不合规，程序会在启动时立即崩溃退出，而不是在运行到特定业务逻辑时才爆出隐蔽错误。
 
 ### 1. 安装依赖
 ```bash
-pip install pydantic-settings
+python3 -m venv .venv
+source .venv/bin/activate
+python -m pip install 'pydantic-settings>=2,<3'
 ```
 
 ### 2. 编写配置模型
@@ -90,13 +94,13 @@ pip install pydantic-settings
 ```python
 import os
 from typing import Optional
-from pydantic import Field, PostgresDsn
+from pydantic import PostgresDsn, SecretStr
 from pydantic_settings import BaseSettings, SettingsConfigDict
 
 class Settings(BaseSettings):
     # 自动加载本地配置，但高优先级环境变量可直接覆盖它
     model_config = SettingsConfigDict(
-        env_file=".env", 
+        env_file=".env",
         env_file_encoding="utf-8",
         extra="ignore"  # 忽略多余的环境变量
     )
@@ -108,7 +112,7 @@ class Settings(BaseSettings):
 
     # 2. 敏感配置（不设默认值，启动时若环境变量缺失，Pydantic 将直接抛异常 Fail-Fast）
     DATABASE_URL: PostgresDsn
-    SECRET_KEY: str
+    SECRET_KEY: SecretStr
 
     # 3. 嵌套或可选配置
     REDIS_HOST: Optional[str] = None
@@ -124,9 +128,9 @@ settings = Settings()
 from config import settings
 
 def connect_db():
-    print(f"Connecting to database: {settings.DATABASE_URL.hosts()}")
+    print("Database configuration validated")
     print(f"App is running on port: {settings.PORT}")
-    
+
     if settings.DEBUG:
         print("Debug mode is enabled.")
 ```
@@ -138,3 +142,18 @@ def connect_db():
 1. **核心要义**：代码与配置完全分离，确保「一个镜像，多处运行」。
 2. **安全准则**：密钥绝对不入库，`.env` 不提交，生产环境通过基础设施层（K8s Secret 等）注入。
 3. **编程规范**：利用强类型配置框架（如 Pydantic-Settings）做配置校验，做到 **Fail-Fast**，在程序启动阶段就把配置隐患扼杀在摇篮里。
+
+## 最小验证
+
+在 Bash 终端中设置仅用于实验的值：
+
+```bash
+export DATABASE_URL='postgresql://demo:example@localhost:5432/demo'
+export SECRET_KEY='local-example-only'
+PORT=9000 python -c 'from config import settings; print(settings.PORT)'
+PORT=invalid python -c 'from config import settings'
+```
+
+第一次应输出 `9000`，第二次应报类型校验错误。移除 `.env` 中的必填项并清除对应环境变量后，程序应启动失败。`SecretStr` 减少常规打印泄露，不替代密钥存储、访问控制与轮换。
+
+后续 [ConfigMap / Secret](17-configmap-secret.md)验证容器注入和配置更新行为。不要打印数据库 URL 的完整结构，其中可能包含账号与密码。

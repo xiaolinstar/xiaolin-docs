@@ -1,8 +1,8 @@
 ---
-title: 15 ｜ 质量门禁卡点设计
-description: 探讨如何在 CI/CD 流水线中引入自动化代码质量与安全扫描，设置合理的质量门限指标，确保问题不流入生产环境。
+title: 20 ｜ 质量门禁卡点设计
+description: 在镜像推送前执行测试和漏洞检查，并通过失败实验验证门禁确实阻断发布。
 date: 2026-03-28
-updated: 2026-07-08
+updated: 2026-09-08
 category: SRE 运维
 tags:
   - DevOps
@@ -10,114 +10,60 @@ tags:
   - 质量门禁
   - 容器安全
 ---
-自动化流水线的好处在于「快」，而其坏处也在于「快」——如果缺乏有效的安全防护，带漏洞或低质量的代码将被以极高的速度部署到生产环境中。
 
-为了在研发交付效率与系统稳定性之间取得平衡，我们必须引入 **质量门禁（Quality Gate）**。
+## 从生成报告到阻断发布
 
-质量门禁是流水线中的「自动化法官」。它是一组预先定义好的代码质量与安全标准阈值（Thresholds）。当流水线运行到特定环节时，会自动触发扫描；若未达到阈值，则流水线立即熔断并向开发者发出警告，阻止有缺陷的制品包继续向下游环境传递。
+中级篇已经能部署 `delivery-demo`。本课把质量检查加入[第 12 篇 CI](../intermediate/ci-pipeline.md)，验收目标是：检查失败时，镜像不能进入发布步骤。
 
----
+门禁是可执行规则，不是扫描工具列表。每条规则都要有输入、退出码、责任人和例外期限。
 
-## 质量门禁的三个防御象限
+## 分阶段选择检查
 
-一个健全的质量门禁体系应该在软件交付生命周期的不同阶段，层层设防：
+| 位置 | 规则 | 失败后的动作 |
+| --- | --- | --- |
+| 本地 | 格式、语法、快速单测 | 提交前修复；CI 重复关键检查，防止本地跳过 |
+| PR / CI | 单测、接口测试、变更质量 | 必需检查不通过则禁止合并 |
+| 镜像构建后 | 容器冒烟、漏洞扫描 | 禁止推送候选镜像 |
+| 部署前 | 制品身份、环境就绪 | 禁止进入目标环境 |
 
-```mermaid
-graph LR
-    Dev["1. 开发者本地<br/>(IDE / Git Hooks)"] --> CI["2. 持续集成阶段<br/>(SonarQube / 单元测试)"]
-    CI --> Artifact["3. 制品封版阶段<br/>(Trivy 容器扫描)"]
-```
+Python 静态检查可选 Ruff、mypy 等；Pydantic 用于运行时数据验证，不能替代静态分析。覆盖率只能作为辅助指标，应优先覆盖关键业务路径；本课程不把任意一个百分比宣称为通用行业门槛。
 
-### 1. 提交前哨：Git Hooks 与 Linter
-*   **扫描时机**：代码尚未离开开发者本地机器。
-*   **实施手段**：利用 Husky + Lint-staged。在执行 `git commit` 时，自动运行 ESLint / Pydantic 等静态检查，并要求格式化（Prettier）。
-*   **原则**：本地阶段只做“极速”检查，不拖慢提交速度，把低级的拼写、语法和格式问题在本地解决。
+## 给现有 CI 增加镜像门禁
 
-### 2. 持续集成：代码合规与单元测试
-*   **扫描时机**：代码推送到 Git 远程分支并触发 CI 流水线。
-*   **实施手段**：
-    *   **单元测试与覆盖率**：要求单元测试通过率必须是 $100\%$，且覆盖率必须达到设定阈值。
-    *   **代码质量静态扫描（SonarQube）**：对代码重复率、圈复杂度、潜在漏洞（Code Smells）进行综合评估。
-*   **门限基线推荐**：
-    *   新代码的单元测试覆盖率 $\ge 75\%$
-    *   新代码的重复率 $<3\%$
-    *   阻塞性问题（Blocker）/ 严重性问题（Critical）的发生数为 $0$
-
-### 3. 制品封版：容器镜像漏洞扫描
-*   **扫描时机**：镜像构建完毕，推送到制品库（如 Harbor / Container Registry）之前。
-*   **实施手段**：使用 Trivy 或 Clair 对容器镜像进行 CVE（Common Vulnerabilities and Exposures）系统漏洞和应用依赖扫描。
-*   **门限基线推荐**：不允许包含 `HIGH` 或 `CRITICAL` 级别的已知 CVE 漏洞。
-
----
-
-## 实践：在 GitHub Actions 中配置质量门禁
-
-以下是一个在 GitHub Actions 中集成 **SonarQube 静态扫描** 与 **Trivy 镜像安全扫描** 的完整工作流片段：
+在第 12 篇工作流的 `Test image` 之后、登录和推送之前插入：
 
 ```yaml
-name: CI with Quality Gate
-
-on:
-  push:
-    branches: [ main ]
-
-jobs:
-  sonar-scan:
-    name: SonarQube Analysis
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v3
-        with:
-          fetch-depth: 0  # SonarQube 需要完整 Git 历史以生成高精度报告
-
-      - name: Set up JDK 17
-        uses: actions/setup-java@v3
-        with:
-          java-version: '17'
-          distribution: 'temurin'
-
-      - name: SonarQube Scan
-        uses: sonarsource/sonarqube-scan-action@master
-        env:
-          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
-          SONAR_HOST_URL: ${{ secrets.SONAR_HOST_URL }}
-        with:
-          args: >
-            -Dsonar.projectKey=my-web-app
-            -Dsonar.sources=src
-            -Dsonar.qualitygate.wait=true # [关键] 阻断流水线直至 SonarQube 计算完 Quality Gate 状态
-
-  image-scan:
-    name: Container Vulnerability Scan
-    needs: sonar-scan
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v3
-
-      - name: Build Local Image
-        run: docker build -t my-app:${{ github.sha }} .
-
-      - name: Run Trivy Vulnerability Scanner
-        uses: aquasecurity/trivy-action@master
-        with:
-          image-ref: 'my-app:${{ github.sha }}'
-          format: 'table'
-          exit-code: '1' # [关键] 如果发现匹配漏洞，将以退出码 1 熔断流水线
-          ignore-unfixed: true
-          vuln-type: 'os,library'
-          severity: 'CRITICAL,HIGH'
+- name: Scan candidate image
+  uses: aquasecurity/trivy-action@v0.36.0
+  with:
+    image-ref: ${{ env.IMAGE }}:${{ github.sha }}
+    format: table
+    exit-code: '1'
+    ignore-unfixed: false
+    vuln-type: os,library
+    severity: HIGH,CRITICAL
 ```
 
----
+这是课程示例策略：阻断全部 HIGH/CRITICAL，包括尚无修复版本的问题。扫描依赖漏洞库更新和网络可用性；工具错误也按失败处理，不默认为安全。生产工作流固定经审核的 Action SHA，并保存工具版本、漏洞库时间与报告，便于解释同一镜像为何今天通过、明天失败。
 
-## 质量门禁落地的“软着陆”策略
+如果团队决定暂时接受某个无修复漏洞，应为具体 CVE 创建有期限的例外，记录可利用性分析、补偿措施、责任人和复查日期，不直接把所有未修复漏洞一概忽略。
 
-直接在团队中引入严苛的质量门禁可能会遇到阻力，甚至导致研发效率暂时性崩溃。建议采用以下渐进式推进策略：
+## SonarQube 何时接入
 
-1. **第一阶段：只报警不阻断（Warning Mode）**
-   *   配置质量扫描，但把扫描任务的 `exit-code` 设为 `0`。生成报告并展示给开发者，提供整改宽限期。
-2. **第二阶段：仅对新代码生效（New Code Only）**
-   *   利用 SonarQube 的 "Clean as You Go" 理念，只对本次合并入的新增代码进行拦截，不追究历史代码的陈年旧账。
-3. **第三阶段：红线卡口（Hard Gate）**
-   *   将关键指标设为强硬卡口，无一例外。对于因特殊情况需紧急发布而无法满足门禁的代码，必须由技术委员会或 SRE 部门手动审批授予 Bypass（免检）权限。
+当项目已有代码质量平台时，将扫描接入 CI。Java 项目先编译并生成测试、覆盖率报告，再提供正确的源码、字节码和报告路径。启用 `sonar.qualitygate.wait=true` 后，还要将对应 GitHub check 配置为分支必需检查；扫描成功不等于所有门禁已通过。
 
+本系列的静态页面不为了凑工具而部署 SonarQube。对真实业务，应在同一 CI 中先完成业务测试再构建镜像，避免门禁只检查外壳。
+
+## 验证门禁会阻断
+
+先用正常版本建立成功基线，再在实验 PR 删除 `site/healthz`：容器检查应失败，推送步骤应跳过。另在实验分支于推送前加入 `run: exit 1`，验证该失败不会被 `continue-on-error` 或 `if: always()` 绕过；验证后删除该故障步骤。
+
+漏洞门禁用团队准备的、仅供扫描的已知漏洞测试镜像验证，不部署到生产；记录被命中的 CVE、非零退出码和未发生推送的证据。
+
+## 渐进落地与最小验收
+
+初次引入可以先观察报告，再针对新代码或高风险问题阻断。例外审批应与特定镜像 digest 绑定，镜像变化即重新检查，不能给仓库永久免检。
+
+验收材料包括正常 run、失败 run、分支保护设置及例外样例。下一课把“检查过的镜像”进一步绑定到可验证的构建身份。
+
+参考：[Trivy Action](https://github.com/aquasecurity/trivy-action)、[SonarQube GitHub Actions 集成](https://docs.sonarsource.com/sonarqube-server/latest/devops-platform-integration/github-integration/adding-analysis-to-github-actions-workflow/)。

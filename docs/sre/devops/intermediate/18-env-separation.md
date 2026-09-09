@@ -1,6 +1,6 @@
 ---
 title: 18 ｜ 环境分离与多环境发布
-description: 17 篇解决了 K8s 层的配置分离。但"开发 / 测试 / 预发 / 生产"四套环境如何组织？namespace 够不够？本文给出多环境发布在 K8s 上的最小可行模式。
+description: 用 Kustomize 组织 dev、staging、prod，并让同一镜像 digest 逐步晋级。
 date: 2026-09-08
 updated: 2026-09-08
 category: SRE 运维
@@ -11,32 +11,145 @@ tags:
   - 多环境发布
 ---
 
-## 前言
+## 环境隔离与发布顺序
 
-承接 [17 篇](17-configmap-secret.md) 的"配置与环境的解耦模式"——一个 deployment YAML 配不同 ConfigMap——这是环境分离的**配置层**答案。本篇问的是更上游的问题：
+本课沿用上一课的 `k8s/base`，使用 kubectl 内置 Kustomize。练习采用单集群三个 namespace；生产是否独立集群，要根据故障影响范围、权限与合规需求选择。namespace 提供资源作用域，不等于完整网络或节点隔离。
 
-*   dev / staging / prod 应该用 K8s **集群**隔离，还是 **namespace** 隔离？
-*   一个应用多环境是用"多个 deployment"还是"多套 namespace"？
-*   灰度发布（高级篇 16）是不是环境分离的高级形态？
+“多个 Deployment”和“多个 namespace”也不是二选一：本例每个 namespace 内各有一个 Deployment，由同一个 base 生成。
 
-本篇给出**单集群 + 多 namespace** 的最小可行模式，以及为什么个人/中小团队不需要多集群。
+## 建立目录与 overlay
 
-## 一、namespace 而非集群：单集群多环境
+在 `k8s/base/kustomization.yaml` 写入：
 
-个人项目为什么不要"每个环境一个集群"？运维成本、镜像同步、网络配置都会指数级上升。本节论证单集群 + namespace 是中小团队的正确默认。
+```yaml
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+resources:
+  - deployment.yaml
+  - service.yaml
+  - ingress.yaml
+  - configmap.yaml
+```
 
-## 二、namespace 的最小骨架
+用以下脚本生成环境目录，并将 CI 输出的相同 digest 写入每个 overlay。首次初始化可以相同；后续晋级时逐环境修改、验证，不一次更新生产。
 
-一个应用多环境，至少需要哪些 namespace？`dev` / `staging` / `prod` 三套足够；`prod` 加 RBAC 限制谁可以操作。本节给出 namespace YAML 与最小 RBAC。
+```bash
+export IMAGE_REF="$(cat image.txt)"
+python3 - <<'CODE'
+import os, pathlib, re
+ref = os.environ['IMAGE_REF']
+assert re.fullmatch(r'ghcr.io/[a-z0-9._/-]+@sha256:[a-f0-9]{64}', ref)
+name, digest = ref.split('@')
+for env in ('dev', 'staging', 'prod'):
+    p = pathlib.Path('k8s/overlays') / env
+    p.mkdir(parents=True, exist_ok=True)
+    (p / 'kustomization.yaml').write_text(f"""apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+namespace: {env}
+resources:
+  - ../../base
+images:
+  - name: ghcr.io/replace-me/delivery-demo
+    newName: {name}
+    newTag: ""
+    digest: {digest}
+patches:
+  - target:
+      kind: ConfigMap
+      name: delivery-config
+    patch: |-
+      - op: replace
+        path: /data/APP_ENV
+        value: {env}
+  - target:
+      kind: Ingress
+      name: delivery-demo
+    patch: |-
+      - op: replace
+        path: /spec/rules/0/host
+        value: {env}.demo.local
+""")
+CODE
+kubectl kustomize k8s/overlays/dev
+```
 
-## 三、跨环境镜像晋级路径
+检查渲染结果：namespace、域名、APP_ENV 应对应环境，镜像必须是 digest 引用。base 的容器名、selector 保持一致，避免复制三套 YAML 后各自漂移。
 
-dev 跑通的镜像如何晋级到 staging、再到 prod？本节给出"tag 命名约定（如 `app-{env}-{sha}`）+ 流水线参数化"的最小模式，避免"同一镜像到处改"。
+## 预置环境与权限
 
-## 四、与灰度发布（高级篇 16）的边界
+```bash
+for env in dev staging prod; do
+  kubectl create namespace "$env" --dry-run=client -o yaml | kubectl apply -f -
+done
+```
 
-环境分离是"硬边界"，灰度发布是"软边界"。本节澄清两者解决不同问题，避免概念混淆。
+按第 17 篇方式为每个 namespace 创建各自的 `delivery-secret`，私有镜像还需 `ghcr-read`。不要跨环境复用生产凭据。
 
-## 五、与数据库迁移（19 篇）的衔接
+生产发布身份的最小 Role 示例（由管理员安装，并按工作流实际资源收敛）：
 
-环境分离后，数据库如何配套？本节给出"每个环境独立数据库 + 通过 migration 脚本同步 schema"的最小实践，作为 19 篇的引子。
+```yaml
+apiVersion: rbac.authorization.k8s.io/v1
+kind: Role
+metadata:
+  name: delivery-deployer
+  namespace: prod
+rules:
+  - apiGroups: [apps]
+    resources: [deployments]
+    verbs: [get, list, watch, create, update, patch]
+  - apiGroups: [""]
+    resources: [services, configmaps]
+    verbs: [get, list, watch, create, update, patch]
+  - apiGroups: [networking.k8s.io]
+    resources: [ingresses]
+    verbs: [get, list, watch, create, update, patch]
+---
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: delivery-deployer
+  namespace: prod
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: RoleBinding
+metadata:
+  name: delivery-deployer
+  namespace: prod
+subjects:
+  - kind: ServiceAccount
+    name: delivery-deployer
+    namespace: prod
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: Role
+  name: delivery-deployer
+```
+
+该身份不直接读取 Secret，但能修改 Pod 模板的身份仍可能间接使用该 namespace 的凭据，因此不能把这个 Role 当作不可信租户隔离。还应限制运行身份、镜像来源和 Pod 权限。生产还需独立的 NetworkPolicy、ResourceQuota 和 LimitRange；未配置 NetworkPolicy 时，不能宣称跨 namespace 网络已隔离。
+
+## 先验证再晋级
+
+```bash
+kubectl apply -k k8s/overlays/dev
+kubectl -n dev rollout status deployment/delivery-demo --timeout=120s
+curl --fail -H 'Host: dev.demo.local' http://127.0.0.1/healthz
+```
+
+dev 通过后再执行 staging 的相同命令。prod 由受保护的发布流程执行，不能因为目录已经生成就自动发布。检查实际版本：
+
+```bash
+for env in dev staging prod; do
+  kubectl -n "$env" get deployment delivery-demo \
+    -o jsonpath='{.metadata.namespace}{" "}{.spec.template.spec.containers[0].image}{"\n"}'
+done
+```
+
+晋级完成时三个 digest 应相同。环境标签便于检索，但不能替代 digest 比较；生产阶段不重新构建镜像。各环境允许保留不同的配置与资源规格。
+
+## 最小验收与边界
+
+用集群管理员身份检查 `kubectl auth can-i get secrets --as=system:serviceaccount:prod:delivery-deployer -n prod`，预期为 `no`；核对三个 Host 不串环境。每次发布保留目标环境和 digest 的记录。
+
+环境分离处理配置、权限和故障范围；[灰度发布](../advanced/what-is-cd.md)处理同一环境内哪些请求使用新版本，两者不能互相替代。下一课给每个环境配独立数据库并验证迁移顺序。
+
+参考：[Kustomize](https://kubernetes.io/docs/tasks/manage-kubernetes-objects/kustomization/)、[namespace](https://kubernetes.io/docs/concepts/overview/working-with-objects/namespaces/)。

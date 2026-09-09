@@ -1,8 +1,8 @@
 ---
-title: 16 ｜ 制品防篡改与 SBOM
-description: 探讨在软件构建阶段，如何使用文件摘要（SHA-256）进行制品防篡改校验，并自动生成软件物料清单（SBOM）以应对软件供应链安全风险。
+title: 21 ｜ 制品防篡改与 SBOM
+description: 区分内容摘要、签名身份和依赖清单，并在 CD 前验证预期构建来源。
 date: 2026-03-28
-updated: 2026-07-08
+updated: 2026-09-08
 category: SRE 运维
 tags:
   - DevOps
@@ -10,101 +10,86 @@ tags:
   - 供应链安全
   - SBOM
 ---
-在云原生和现代微服务架构中，一个看似简单的应用往往依赖了成百上千个第三方开源类库。根据行业统计，现代软件中 **80% 以上的代码实际上来自开源组件**。这意味着，应用的安全边界已经延伸到了外部软件供应链。
 
-近年来，软件供应链攻击（如开源包投毒、Log4j 漏洞）频发。作为 SRE 和 DevOps 工程师，我们在编译和分发制品包时，必须提供「**物料确权**」与「**配料存证**」。这主要依靠两个核心支柱来实现：
+## 三种证据分别解决什么
 
-1. **唯一性与防篡改证明**：使用文件摘要算法（如 SHA-256）对制品进行哈希校验。
-2. **成分透明性**：生成**软件物料清单（SBOM, Software Bill of Materials）**。
+上一课验证镜像质量，本课验证交接过程。课程仍使用 CI 的 `image.txt`，所有证据绑定同一个镜像 digest。
 
----
+| 证据 | 可以说明 | 不能单独说明 |
+| --- | --- | --- |
+| SHA-256 / 镜像 digest | 内容是否与预期一致 | 预期摘要是谁提供的、来源是否可信 |
+| 签名与构建证明 | 制品与可信身份或构建过程的关联 | 软件没有漏洞 |
+| SBOM | 被工具识别的组件、版本等信息 | 已完成漏洞扫描、所有动态依赖都被覆盖 |
 
-## 第一支柱：制品哈希防篡改（SHA-256）
+制品与摘要一起被替换时，简单比对无法识别恶意来源。不可变存储策略、可信签名身份和仓库权限必须配合使用。SBOM 的覆盖度取决于扫描对象与工具能力，不能承诺自动发现所有依赖。
 
-在持续集成（CI）阶段，源代码经编译生成了最终的二进制包（如 `.jar`、`.tar.gz` 或容器镜像）。为了确保这个包在经过传输、制品库存储，最终部署到生产环境（CD）的过程中没有被第三方恶意掉包或篡改，必须为制品生成哈希指纹。
+## 在 CI 中保存 SBOM 并签名
 
-### 落地规范
-*   **计算哈希**：在 CI 构建成功后，立即使用强哈希算法（通常为 SHA-256）计算文件的 Hash，并将其与制品一同打包归档。例如：
-    ```bash
-    sha256sum my-app.jar > my-app.jar.sha256
-    ```
-*   **拉取校验**：在 CD 部署脚本中，拉取包后第一步就是重新计算哈希值，并与 CI 阶段存储的哈希进行强匹配验证。若校验不一致，立即中止发布。
-*   **签名机制（进阶）**：在云原生领域，可以通过 **Cosign / Sigstore** 工具对构建出的 Docker 镜像进行非对称加密签名，使得 Kubernetes 集群在拉取镜像时能自动验签（通过 OPA 准入控制器），天然防御未授权镜像在集群中运行。
-
----
-
-## 第二支柱：软件物料清单 SBOM（Software Bill of Materials）
-
-如果说哈希校验是为了证明「这个包还是当初那个包」，那么 **SBOM** 就是为了说清楚「这个包里到底装了哪些配料」。
-
-SBOM 是一份机器可读的、包含该软件所依赖的全部第三方依赖、开源库、模块版本以及许可证（Licenses）的清单列表。当突发「零日漏洞」（如 Log4j 漏洞）时，SBOM 能让安全运维团队在几秒钟内全局检索出哪些运行中的服务包含了受漏洞影响的特定版本组件，实现精准阻断。
-
-### SBOM 核心标准格式
-目前业界公认的标准格式主要有两种：
-*   **SPDX (Software Package Data Exchange)**：Linux 基金会主导的国际标准，结构严谨，适合合规性与审计。
-*   **CycloneDX**：OWASP 基金会主导，专为安全上下文和漏洞分析设计，格式轻量，对自动化流水线极度友好。
-
----
-
-## 实践：在流水线中自动生成 SBOM
-
-我们可以使用目前行业最流行的开源工具 **Syft**（由 Anchore 开源），在 CI 构建时自动扫描镜像并输出 CycloneDX 格式的 SBOM，然后将其推送到制品库或与版本 release 绑定。
-
-### 1. 本地生成 SBOM 示例
-在本地安装 Syft 后，只需一行命令即可对本地 Docker 镜像进行扫描并输出 JSON：
-```bash
-syft my-app:v1.0.0 -o cyclonedx-json > sbom.json
-```
-
-### 2. 在 GitHub Actions 中自动生成 SBOM 并归档
-下面展示如何在构建镜像时自动生成 SBOM，并将其作为制品附件归档到 Actions 构建页中：
+在第 12 篇工作流的镜像测试后加入 SBOM 生成。给 `build` job 的 permissions 增加 `id-token: write`，用于后面的无密钥签名。
 
 ```yaml
-name: Generate Artifact and SBOM
-
-on:
-  push:
-    tags:
-      - 'v*'
-
-jobs:
-  build-and-sbom:
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout Code
-        uses: actions/checkout@v3
-
-      - name: Build Application Jar
-        run: |
-          ./gradlew build -x test
-
-      - name: Build Docker Image
-        run: |
-          docker build -t myorg/myapp:${{ github.ref_name }} .
-
-      - name: Generate SBOM (CycloneDX format)
-        uses: anchore/sbom-action@v0
-        with:
-          image: "myorg/myapp:${{ github.ref_name }}"
-          format: "cyclonedx-json"
-          output-file: "sbom.json"
-
-      - name: Archive SBOM Artifact
-        uses: actions/upload-artifact@v3
-        with:
-          name: sbom-report
-          path: sbom.json
+- name: Generate SBOM
+  if: github.event_name == 'push'
+  uses: anchore/sbom-action@v0
+  with:
+    image: ${{ env.IMAGE }}:${{ github.sha }}
+    format: cyclonedx-json
+    output-file: sbom.json
+    upload-artifact: false
 ```
 
----
+在 `Push and record digest` 后、同一个 job 中加入：
 
-## 总结：构建可信交付链
+```yaml
+- uses: sigstore/cosign-installer@v3
+  if: github.event_name == 'push'
+- name: Sign exact image and attest SBOM
+  if: github.event_name == 'push'
+  run: |
+    set -euo pipefail
+    IMAGE_REF=$(cat image.txt)
+    cosign sign --yes "$IMAGE_REF"
+    cosign attest --yes --type cyclonedx --predicate sbom.json "$IMAGE_REF"
+- uses: actions/upload-artifact@v4
+  if: github.event_name == 'push'
+  with:
+    name: release-evidence
+    path: |
+      image.txt
+      sbom.json
+```
 
-在渐进式运维演进中，物料安全是实现自动化发布的重要保障。通过为每个制品包生成 SHA-256 哈希确保**不可变性**，以及生成 SBOM 确保**透明性**，团队成功将「安全」左移到了流水线的构建环节，为 L5 阶段变更安全治理打下了坚实的技术基础。
+版本标签用于展示，生产应审核并固定 Action SHA。此流程需要 GHCR 写权限、OIDC 和 Sigstore 服务网络连通；签名透明日志会记录相关身份信息。私有环境按组织的信任体系选择托管或自建签名服务。
 
-## 参考
+SBOM 与签名应随镜像共同保留，不能只依赖短期 Actions 附件。制品清理必须同时考虑签名与 attestation 的存储方式。
 
-1. CycloneDX Schema Reference: https://cyclonedx.org
-2. Sigstore / Cosign Image Signing: https://github.com/sigstore/cosign
+## CD 验证签名与 SBOM
 
+在可信管理终端或 CD runner 安装与团队基线一致的 Cosign。将下面的 `OWNER/REPO` 替换为练习仓库；工作流路径必须对应真实 `.github/workflows/ci.yml`，不能用任意身份通配符。
 
+```bash
+IMAGE_REF=$(cat image.txt)
+IDENTITY='https://github.com/OWNER/REPO/.github/workflows/ci.yml@refs/heads/main'
+cosign verify \
+  --certificate-identity "$IDENTITY" \
+  --certificate-oidc-issuer https://token.actions.githubusercontent.com \
+  "$IMAGE_REF" > verified-signature.json
+cosign verify-attestation \
+  --type cyclonedx \
+  --certificate-identity "$IDENTITY" \
+  --certificate-oidc-issuer https://token.actions.githubusercontent.com \
+  "$IMAGE_REF" > verified-sbom.json
+```
+
+两个命令都成功后才能执行部署。签名身份允许的是该工作流及分支，分支保护、workflow 文件评审和账号安全仍属于信任边界。签名不会替代前一课的漏洞门禁。
+
+集群不会因为镜像有签名就自动拒绝未签名镜像。本课在 CD 检查；若要防止旁路部署，还需安装并配置准入验证组件与具体策略，另做拒绝实验。
+
+## 最小验收
+
+- 正常镜像：验签及 attestation 验证成功，内容与 `image.txt` 一致。
+- 把身份中的仓库改成另一个仓库：验证失败，部署步骤不得运行。
+- 使用没有签名的实验镜像：验证失败。
+- 保留失败退出码与跳过部署的日志，不以“生成了 sbom.json”作为可信发布完成的依据。
+
+参考：[Cosign 验证](https://docs.sigstore.dev/cosign/verifying/verify/)、[SBOM Action](https://github.com/anchore/sbom-action)、[Artifact v3 停用公告](https://github.blog/changelog/2024-04-16-deprecation-notice-v3-of-the-artifact-actions/)。

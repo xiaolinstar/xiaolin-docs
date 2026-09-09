@@ -1,8 +1,8 @@
 ---
-title: 24 ｜ SRE 核心能力
+title: 31 ｜ SRE 核心能力
 description: SRE 运维能力建设与系统性容灾图谱，涵盖可观测性、故障应急、变更安全与消灭脏活。
 date: 2026-03-30
-updated: 2026-07-08
+updated: 2026-09-08
 category: SRE 运维
 tags:
   - DevOps

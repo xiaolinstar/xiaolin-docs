@@ -21,6 +21,7 @@
     "docs:build": "vitepress build docs",
     "docs:preview": "vitepress preview docs",
     "docs:check-links": "node scripts/check-docs-links.mjs",
+    "docs:check-devops": "node scripts/check-devops-examples.mjs",
     "media:check": "bash scripts/cos-check.sh",
     "media:upload": "bash scripts/upload-media-cos.sh docs/public/images",
     "media:rewrite": "python3 scripts/rewrite-media-urls.py",

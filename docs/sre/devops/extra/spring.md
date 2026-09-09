@@ -1,8 +1,8 @@
 ---
-title: 22 ｜ Spring 应用部署
+title: 29 ｜ Spring 应用部署
 description: 开发环境：Jetbrains IDEA
 date: 2026-03-28
-updated: 2026-03-28
+updated: 2026-09-08
 category: SRE 运维
 tags:
   - DevOps

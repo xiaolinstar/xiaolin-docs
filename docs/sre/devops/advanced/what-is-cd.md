@@ -1,87 +1,104 @@
 ---
-title: 16 ｜ 交付边界与灰度
-description: 持续部署（Continuous Deployment）与持续交付（Continuous Delivery）的缩写都是 CD，它们的联系和区别是什么？
+title: 23 ｜ 交付边界与灰度
+description: 区分持续交付、持续部署与功能发布，用蓝绿切换验证放量和回退。
 date: 2026-03-28
-updated: 2026-03-28
+updated: 2026-09-08
 category: SRE 运维
 tags:
   - DevOps
   - CI/CD
 ---
 
+## 部署成功以后，用户是否已经看到
 
-持续部署（Continuous Deployment）与持续交付（Continuous Delivery）的缩写都是 CD，它们的联系和区别是什么？我的理解：
+持续交付强调软件保持可发布状态；持续部署把通过流水线的变更自动部署到生产。功能发布（Release）讨论用户何时能使用功能，可通过功能开关与部署解耦。不要把 Release 改称为持续交付的“现代定义”。
 
-- 集成 Integration，将源代码构建为制品或容器镜像，推送到制品/镜像仓库。
-- 部署 Deployment，将制品/镜像仓库分发到服务器上，并成功启动为服务进程。
-- 交付 Delivery，产品功能对用户开放使用。
+灰度是逐步扩大验证范围的策略；蓝绿是保留两套运行版本并切换入口的方式。两套环境存在，并不自动意味着完成按比例流量灰度。
 
-## 经典定义
+## 本课实验范围
 
-马丁·福勒（Martin Fowler）和《持续交付》作者 Jez Humble 最初定义的：
+在 K3s 创建专用 `gray-lab` namespace，准备第 12 篇的 v1、v2 digest。为避免与 GitOps selfHeal 竞争，本实验不在上一课由 Argo CD 管理的 prod 内操作。
 
-- 持续交付 (CDel)： 代码始终是可发布的，但去往生产环境需要点一下按钮（手动）。
-- 持续部署 (CDep)： 代码通过测试后直接上线（自动）。
+先复制第 16 篇 Deployment，生成两份：名称分别改为 `delivery-blue`、`delivery-green`，selector 和 Pod label 分别使用 `app: delivery-blue`、`app: delivery-green`，镜像分别固定为 v1、v2。保存到 `/tmp/gray-lab/blue.yaml` 和 `green.yaml`。Pod 的 readiness 与资源限制保留，创建前检查占位符已替换。
 
-区别点： 自动化程度（手动 vs 自动）。
+```bash
+kubectl create namespace gray-lab
+kubectl -n gray-lab apply -f /tmp/gray-lab/blue.yaml -f /tmp/gray-lab/green.yaml
+kubectl -n gray-lab rollout status deployment/delivery-blue --timeout=120s
+kubectl -n gray-lab rollout status deployment/delivery-green --timeout=120s
+```
 
+私有镜像需为该 namespace 配置 `ghcr-read`。本实验使用第 16 篇未加入配置依赖的模板；若沿用第 17 篇版本，还要预置对应 ConfigMap 和 Secret。
 
-| **维度**     | **持续交付 (Continuous Delivery)**  | **持续部署 (Continuous Deployment)** |
-| ------------ | ----------------------------------- | ------------------------------------ |
-| **最后一步** | 人工干预（Manual）                  | 全自动化（Automated）                |
-| **核心目标** | 确保代码「随时待命」                | 确保代码「即刻上线」                 |
-| **风险控制** | 靠人的最后把关                      | 靠极其严苛的自动化测试套件           |
-| **适用场景** | 传统企业、受监管行业、复杂 B 端产品 | 互联网产品、SaaS 应用、微服务架构    |
-| **部署频率** | 按需发布（周、月或天）              | 高频发布（每小时甚至每分钟）         |
+## 切换前先检查候选版本
 
-Jetbrains 的 CI/CD 产品 TeamCity 文档描述：持续交付和持续部署之间的区别在于发布到生产的最后阶段。采用持续交付，将构建工件发布到生产时需要手动输入。发布流程通常完全自动化，但必须有人决定是否以及何时发布具体版本。 采用持续部署，每次完成流程的先前阶段时，构建都会自动发布到生产中。
+在一个终端将 green 临时映射到本机端口：
 
-![Integration Delivery Deployment](https://media.xiaolin.fun/docs/img-what-is-cd/continuous-integration-delivery-deployment.webp)
+```bash
+kubectl -n gray-lab port-forward deployment/delivery-green 18081:80
+```
 
-我在《从0到1实现微服务架构（第2版）》中，发现持续交付与持续部署的概念刚好相反😅。
+另一个终端访问：
 
-**持续部署**
+```bash
+curl --fail http://127.0.0.1:18081/healthz
+curl --fail http://127.0.0.1:18081/
+```
 
-![Continuous Deployment](https://media.xiaolin.fun/docs/img-what-is-cd/continuous-deployment.png)
+应分别返回 `ok` 和 v2 页面。候选版本不健康时不切换正式入口。
 
-**持续交付**
+## 蓝绿入口与显式回退
 
-![Continuous Delivery](https://media.xiaolin.fun/docs/img-what-is-cd/continuous-delivery.png)
+保存 `/tmp/gray-lab/service.yaml`：
 
-## 现代演进定义
+```yaml
+apiVersion: v1
+kind: Service
+metadata:
+  name: delivery-entry
+spec:
+  selector:
+    app: delivery-blue
+  ports:
+    - port: 80
+      targetPort: 80
+```
 
-交付（Delivery）是面向用户或业务的，而部署（Deployment）是面向技术的。
+```bash
+kubectl -n gray-lab apply -f /tmp/gray-lab/service.yaml
+kubectl -n gray-lab patch service delivery-entry --type merge \
+  -p '{"spec":{"selector":{"app":"delivery-green"}}}'
+kubectl -n gray-lab get endpointslices -l kubernetes.io/service-name=delivery-entry
+```
 
-- 对于技术侧，代码频繁地往生产服务器上「搬运」。即使功能没写完，只要代码不报错，就合入并部署。
-- 对于业务侧，当功能闭环、UI 准备好、产品经理点头后，通过开关让用户看到。
+从集群内临时诊断 Pod 连续请求 `http://delivery-entry.gray-lab.svc.cluster.local/`，确认版本已切换。例如使用已获准的 Nginx Alpine 镜像运行 `wget`。不要用已有的 `port-forward service/...` 判断 Service 后端切换，它会选定一个 Pod，不能代表持续的 Service 路由。
 
-部署是交付的前提，从部署到交付的过程依赖于功能开关、灰度用户测试、少量用户试用等，确保在生产环境中无风险后，再交付给终端用户。
+发现业务问题时执行：
 
-例如某需求实现包含10个子模块，分3次部署到生产环境，但是只有功能模块完整实现且验证通过后才对用户交付。相反，如果所有功能开发完成后再部署到生产环境，相比之下会带来更大的风险和不确定性。持续交付中持续并非连续性，而仅代表一个频率，因为需要用户决策，而持续集成和持续部署，持续则代表频繁地、连续的执行。
+```bash
+kubectl -n gray-lab patch service delivery-entry --type merge \
+  -p '{"spec":{"selector":{"app":"delivery-blue"}}}'
+```
 
-另外，部署也与目标环境无关，将制品或镜像推送到测试环境（TEST）、预发布环境（STAGING）或生产环境（PRODUCTION）并启动都可以称为部署。
+可在已配置镜像读取权限的诊断 Pod 中发起集群内请求。以下用第 12 篇构建的镜像，私有镜像通过 overrides 指定同 namespace 的 `ghcr-read`；公共镜像可省略该字段：
 
-![CI,CD,CD](https://media.xiaolin.fun/docs/img-what-is-cd/ci-cd-cd.png)
+```bash
+kubectl -n gray-lab run request-check --rm -i --restart=Never \
+  --image="$(cat image.txt)" \
+  --overrides='{"spec":{"imagePullSecrets":[{"name":"ghcr-read"}]}}' \
+  --command -- sh -c 'for i in 1 2 3 4 5; do wget -q -O - http://delivery-entry.gray-lab.svc.cluster.local/ || exit 1; sleep 1; done'
+```
 
-持续交付是面向终端用户的，如果没有**交付门限**，那么部署到生产环境意味着交付给终端用户。交付门限是值得研究的一项复杂的工程，典型的技术包括：蓝绿部署、流量切换、特性开关、测试用户。因此，我认为更贴切的领域术语是：**持续集成、持续部署、渐进式交付**。
+再次检查请求返回 v1。Service 更新存在传播和连接存续时间，已有长连接不保证立即迁移。此实验是整组切换，没有实现 10% 权重路由。
 
-顺便一提，在 CI/CD 的能力构建中，增量开发下的里程碑计划：
+## 从蓝绿到按比例放量
 
-阶段一：流水线能力支持，实现持续集成、持续部署的自动化。
+生产金丝雀需要具备权重路由能力的入口或渐进发布控制器。可选 Argo Rollouts 配合受支持的流量路由器，但必须按所选控制器配置，不能假设普通 Deployment 和 Service 原生提供准确权重。
 
-阶段二：多环境支持，测试环境、预发布环境、生产环境，构建集成和部署的质量门限，如自动化测试、代码质量审查、安全漏洞扫描、功能验收。
+示例放量策略：先限定内部测试用户，通过后按 10%、50%、100% 扩大。每阶段观察 5 分钟且至少获得 200 次有效请求；错误率增加超过 1 个百分点或 p95 延迟高于基线 20% 时暂停并回退。以上是实验阈值，真实值需结合业务 SLO、流量规模和噪声校准；无流量或指标缺失不能当作通过。
 
-阶段三：用户交付安全保障，蓝绿部署、流量切换、特性开关等。
+## 最小验收
 
-## 总结
+保留切换前后版本、EndpointSlice、失败暂停和回退证据。确认旧版仍兼容当前数据库，再决定是否回退应用。正式 GitOps 环境中应通过配置变更管理入口，不能照搬本课的手工 patch。
 
-从现代演进视角看，持续部署与持续交付的核心区别在于面向对象和目标不同。部署是技术层面的操作，关注如何将代码频繁、安全地部署到服务器；而交付是业务层面的决策，关注功能何时对终端用户可见。
-
-允许开发团队将代码分阶段部署到生产环境，即使功能未完全完成也可先行部署，待验证无误后再全面开放给用户。这种解耦带来了显著优势：技术团队可以保持高频部署节奏，降低单次变更风险；业务团队则可以灵活控制功能发布时机，确保用户体验。交付门限（如蓝绿部署、流量切换、特性开关等）是实现安全交付的关键技术保障。
-
-因此，我认为更准确的领域术语应该是：**持续集成、持续部署、渐进式交付**。这一组合更精准地描述了现代软件从代码提交到用户使用的完整流程，体现了技术与业务的协同演进。
-
-## 参考
-
-1. 《从0到1实现微服务架构（第2版）》持续集成，持续部署，持续交付，https://coder4.com/homs_online/ch01-architecture/continuous-x.html#%E6%8C%81%E7%BB%AD%E9%83%A8%E7%BD%B2
-2. JetBrains TeamCity 文档，CI CD 指南，https://www.jetbrains.com/help/teamcity/continuous-delivery-and-deployment.html
+参考：[持续交付](https://martinfowler.com/bliki/ContinuousDelivery.html)、[Argo Rollouts](https://argo-rollouts.readthedocs.io/en/stable/)。
