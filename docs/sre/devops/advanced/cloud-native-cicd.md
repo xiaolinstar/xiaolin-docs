@@ -1,8 +1,8 @@
 ---
-title: 26 ｜ 全局自动化发布：结课项目
+title: 29 ｜ 全局自动化发布：结课项目
 description: 将固定制品验证、数据库迁移、版本化文件和 K8s 发布串成可验收的实验流程。
 date: 2026-04-19
-updated: 2026-09-08
+updated: 2026-09-09
 category: SRE 运维
 tags:
   - DevOps
@@ -19,11 +19,11 @@ tags:
 
 ## 固定一次发布的输入
 
-练习仓库包含：第 12 篇的 `site/`、第 18 篇的 `k8s/`、第 19 篇的 `db/sql/`，以及下面的 `scripts/release.sh`。删除故障实验 SQL，只保留已验证的 V1/V2。将第 21 篇已签名的 `image.txt` 放在仓库根目录，连同 SQL 和配置通过 PR 审核。
+练习仓库包含：第 16 篇的 `site/`、第 21 篇的 `k8s/`、第 22 篇的 `db/sql/`，以及下面的 `scripts/release.sh`。删除故障实验 SQL，只保留已验证的 V1/V2。将第 24 篇已签名的 `image.txt` 放在仓库根目录，连同 SQL 和配置通过 PR 审核。
 
 工作流 checkout 触发时的确定 commit；审批人核对该 commit、镜像来源、SQL 校验结果和 staging 证据。所有文件来自这次 checkout，不在运行中 `git pull`。前端文件既留在应用镜像中，也作为版本化发布附件上传对象存储，用于演示独立文件发布；本例不宣称已经接入 CDN。
 
-首次创建 `release-lab`，预置 `delivery-secret` 和必要的 `ghcr-read`，准备实验数据库及 bucket。`FLYWAY_IMAGE` 使用已审核的 Flyway 镜像 digest，`SIGNING_IDENTITY` 使用第 21 篇的完整签名身份。
+首次创建 `release-lab`，预置 `delivery-secret` 和必要的 `ghcr-read`，准备实验数据库及 bucket。`FLYWAY_IMAGE` 使用已审核的 Flyway 镜像 digest，`SIGNING_IDENTITY` 使用第 24 篇的完整签名身份。
 
 ## 发布脚本
 

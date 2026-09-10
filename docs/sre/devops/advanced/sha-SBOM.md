@@ -1,8 +1,8 @@
 ---
-title: 21 ｜ 制品防篡改与 SBOM
+title: 24 ｜ 制品防篡改与 SBOM
 description: 区分内容摘要、签名身份和依赖清单，并在 CD 前验证预期构建来源。
 date: 2026-03-28
-updated: 2026-09-08
+updated: 2026-09-09
 category: SRE 运维
 tags:
   - DevOps
@@ -25,7 +25,7 @@ tags:
 
 ## 在 CI 中保存 SBOM 并签名
 
-在第 12 篇工作流的镜像测试后加入 SBOM 生成。给 `build` job 的 permissions 增加 `id-token: write`，用于后面的无密钥签名。
+在第 16 篇工作流的镜像测试后加入 SBOM 生成。给 `build` job 的 permissions 增加 `id-token: write`，用于后面的无密钥签名。
 
 ```yaml
 - name: Generate SBOM

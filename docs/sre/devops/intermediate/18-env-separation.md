@@ -1,8 +1,8 @@
 ---
-title: 18 ｜ 环境分离与多环境发布
+title: 21 ｜ 多环境隔离与制品晋级
 description: 用 Kustomize 组织 dev、staging、prod，并让同一镜像 digest 逐步晋级。
 date: 2026-09-08
-updated: 2026-09-08
+updated: 2026-09-09
 category: SRE 运维
 tags:
   - DevOps
@@ -83,7 +83,7 @@ for env in dev staging prod; do
 done
 ```
 
-按第 17 篇方式为每个 namespace 创建各自的 `delivery-secret`，私有镜像还需 `ghcr-read`。不要跨环境复用生产凭据。
+按第 20 篇方式为每个 namespace 创建各自的 `delivery-secret`，私有镜像还需 `ghcr-read`。不要跨环境复用生产凭据。
 
 生产发布身份的最小 Role 示例（由管理员安装，并按工作流实际资源收敛）：
 
@@ -133,9 +133,10 @@ roleRef:
 kubectl apply -k k8s/overlays/dev
 kubectl -n dev rollout status deployment/delivery-demo --timeout=120s
 curl --fail -H 'Host: dev.demo.local' http://127.0.0.1/healthz
+curl --fail -H 'Host: dev.demo.local' http://127.0.0.1/environment
 ```
 
-dev 通过后再执行 staging 的相同命令。prod 由受保护的发布流程执行，不能因为目录已经生成就自动发布。检查实际版本：
+两个端点应分别返回 `ok` 和 `dev`，证明配置已改变应用行为。dev 通过后再执行 staging 的相同命令，环境端点应返回 `staging`。prod 由受保护的发布流程执行，不能因为目录已经生成就自动发布。检查实际版本：
 
 ```bash
 for env in dev staging prod; do

@@ -1,8 +1,8 @@
 ---
-title: 14 ｜ 持续发布流水线
+title: 17 ｜ Compose 持续发布
 description: 基于 Compose 完成固定镜像、审批、健康验收和显式回退。
 date: 2026-03-28
-updated: 2026-09-08
+updated: 2026-09-09
 category: SRE 运维
 tags:
   - DevOps
@@ -11,7 +11,9 @@ tags:
 
 ## 发布的输入必须先确定
 
-本课在单台练习服务器部署前两课的 `delivery-demo`。需要 Docker Compose v2（支持 `up --wait`）、Bash、curl，以及上一课的镜像拉取权限。先完成 Compose 发布，再进入[轻量 K3s 集群](k3s.md)。
+本课在单台练习服务器部署前面课程的 `delivery-demo`。需要 Docker Compose v2（支持 `up --wait`）、Bash、curl，以及仓库课配置的镜像拉取权限。先完成 Compose 发布，再进入[轻量 K3s 集群](k3s.md)。
+
+前面的本地 web + db 用于验证网络与存储，本课在独立目标目录先发布 web，数据库生命周期独立管理。不要把前面练习目录直接替换成本课文件，或通过 down -v 清除数据；数据库版本演进在后续迁移课处理。
 
 发布记录至少包含镜像 digest、配置版本、目标环境、发起人和审批结果。`git pull` 获取分支最新状态会改变发布输入，所以本例不在服务器拉取浮动分支。
 
@@ -25,6 +27,8 @@ services:
     image: ${IMAGE_REF:?必须提供镜像 digest 引用}
     ports:
       - "127.0.0.1:8080:80"
+    environment:
+      APP_ENV: ${APP_ENV:-production}
     restart: unless-stopped
     healthcheck:
       test: ["CMD-SHELL", "wget -q -O - http://127.0.0.1/healthz | grep -qx ok"]

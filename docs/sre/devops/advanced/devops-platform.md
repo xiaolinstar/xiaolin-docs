@@ -1,8 +1,8 @@
 ---
-title: 27 ｜ 一站式平台反思（选读）
+title: 30 ｜ 一站式平台反思（选读）
 description: 以维护成本、权限边界和迁移验证评估平台选择，作为高级篇选读。
 date: 2026-03-30
-updated: 2026-09-08
+updated: 2026-09-09
 category: SRE 运维
 tags:
   - DevOps

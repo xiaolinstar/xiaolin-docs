@@ -1,8 +1,8 @@
 ---
-title: 17 ｜ 配置与密钥分离
+title: 20 ｜ K8s 配置与密钥
 description: 验证 ConfigMap、Secret 的注入方式和更新边界，避免密钥进入镜像与 Git。
 date: 2026-09-08
-updated: 2026-09-08
+updated: 2026-09-09
 category: SRE 运维
 tags:
   - DevOps
@@ -13,7 +13,7 @@ tags:
 
 ## 同一镜像使用不同配置
 
-承接[进程配置](environment.md)和[应用部署](16-k8s-app-deploy.md)。本课给 `delivery-demo` 注入实验配置，观察 Kubernetes 的传播行为。Nginx 不会因为增加一个 `APP_ENV` 变量就改变网页；应用必须主动读取配置，平台注入与业务生效是两件事。
+承接[进程配置](environment.md)和[应用部署](16-k8s-app-deploy.md)。本课给 `delivery-demo` 注入实验配置，观察 Kubernetes 的传播行为。镜像沿用构建配置课的 Nginx 启动模板，读取 `APP_ENV` 并通过 `/environment` 返回非敏感环境名。我们既检查变量进入容器，也检查应用响应确实改变。
 
 ## 创建非敏感配置
 
@@ -70,6 +70,7 @@ kubectl -n demo apply -f k8s/base/configmap.yaml
 kubectl -n demo apply -f /tmp/delivery-manifests/deployment.yaml
 kubectl -n demo rollout status deployment/delivery-demo --timeout=120s
 kubectl -n demo exec deployment/delivery-demo -- printenv APP_ENV
+kubectl -n demo exec deployment/delivery-demo -- wget -q -O - http://127.0.0.1/environment
 ```
 
 预期输出为 `dev`。若 Pod 处于 `CreateContainerConfigError`，检查同一 namespace 内的资源名和 key 是否存在。
@@ -79,9 +80,11 @@ kubectl -n demo exec deployment/delivery-demo -- printenv APP_ENV
 ```bash
 kubectl -n demo patch configmap delivery-config --type merge -p '{"data":{"APP_ENV":"staging"}}'
 kubectl -n demo exec deployment/delivery-demo -- printenv APP_ENV
+kubectl -n demo exec deployment/delivery-demo -- wget -q -O - http://127.0.0.1/environment
 kubectl -n demo rollout restart deployment/delivery-demo
 kubectl -n demo rollout status deployment/delivery-demo --timeout=120s
 kubectl -n demo exec deployment/delivery-demo -- printenv APP_ENV
+kubectl -n demo exec deployment/delivery-demo -- wget -q -O - http://127.0.0.1/environment
 ```
 
 重启前旧进程仍为 `dev`，重启后新 Pod 才读取 `staging`。同样，Secret 作为环境变量注入时，轮换资源不会自动替换既有进程变量。

@@ -1,8 +1,8 @@
 ---
-title: 16 ｜ K8s 应用部署
+title: 19 ｜ K8s 应用部署
 description: 将 delivery-demo 部署到 K3s，完成入口访问、探针、滚动更新和回退实验。
 date: 2026-09-08
-updated: 2026-09-08
+updated: 2026-09-09
 category: SRE 运维
 tags:
   - DevOps
@@ -13,9 +13,9 @@ tags:
 
 ## 把镜像放进集群
 
-前置条件：[K3s](k3s.md)节点 Ready、Traefik 就绪，且已取得第 12 篇的 `image.txt`。本课先用占位镜像生成配置，再用脚本替换为自己的 digest；不要直接 apply 占位值。
+前置条件：[K3s](k3s.md)节点 Ready、Traefik 就绪，且已取得第 16 篇的 `image.txt`。本课先用占位镜像生成配置，再用脚本替换为自己的 digest；不要直接 apply 占位值。
 
-在练习仓库创建 `k8s/base`。后续课程沿用这些文件，并在第 18 篇通过 Kustomize 组织环境。
+在练习仓库创建 `k8s/base`。后续课程沿用这些文件，并在第 21 篇通过 Kustomize 组织环境。
 
 ## Deployment 与 Service
 
@@ -145,7 +145,7 @@ imagePullSecrets:
 
 ## 更新与回退
 
-用第 12 篇构建 v2，保存其引用为 `image-v2.txt`。记录旧版后更新：
+用第 16 篇构建 v2，保存其引用为 `image-v2.txt`。记录旧版后更新：
 
 ```bash
 kubectl -n demo get deployment delivery-demo -o jsonpath='{.spec.template.spec.containers[0].image}' > old-image.txt

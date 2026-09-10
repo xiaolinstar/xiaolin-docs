@@ -1,8 +1,8 @@
 ---
-title: 30 ｜ 多模块 Git 协作
+title: 33 ｜ 多模块 Git 协作
 description: 我在微信公众号上已经实现了桌游「谁是卧底」发牌器，独立于此项目，又开发了桌游「阿瓦隆」。
 date: 2026-03-30
-updated: 2026-09-08
+updated: 2026-09-09
 category: SRE 运维
 tags:
   - DevOps

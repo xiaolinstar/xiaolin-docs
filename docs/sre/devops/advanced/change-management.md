@@ -1,8 +1,8 @@
 ---
-title: 24 ｜ 变更管控就绪清单
+title: 27 ｜ 变更管控就绪清单
 description: 把变更审批绑定到制品、兼容性和恢复证据，提供可填写的发布记录。
 date: 2026-01-31
-updated: 2026-09-08
+updated: 2026-09-09
 category: SRE 运维
 tags:
   - DevOps

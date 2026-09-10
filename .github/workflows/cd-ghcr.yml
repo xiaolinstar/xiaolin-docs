@@ -9,6 +9,10 @@ on:
     types:
       - completed
 
+concurrency:
+  group: production-deploy
+  cancel-in-progress: false
+
 # 定义环境变量
 env:
   REGISTRY: ghcr.io # GitHub Container Registry
@@ -31,27 +35,25 @@ jobs:
           password: ${{ secrets.SERVER_PASSWORD }}
           command_timeout: 30m
           script: |
-            # 进入项目目录
+            set -eu
             cd ${{ env.SERVER_DIR }}
-            
-            # 拉取最新代码，确保是最新版本的 compose.yaml
-            git pull
-            
-            # 拉取最新镜像（重要：docker compose 不会自动拉取更新的镜像）
-            docker compose pull
-            
-            # 停止并移除旧的容器
-            docker compose down
-            
-            # 启动新的容器（使用最新镜像）
-            docker compose up -d
+            git pull --ff-only
 
-            # 容器内健康检查，避免部署后返回 4xx/5xx 但流水线仍显示成功
-            docker compose exec -T xiaolin-website wget -qO- http://127.0.0.1:8080/healthz >/dev/null
-            
-            # 清理未使用的镜像
-            docker image prune -f
-            
+            # 每个源最多等待 5 分钟；下载成功前保持现有容器运行。
+            export DEPLOY_IMAGE=ghcr.io/xiaolinstar/xiaolin-docs:main
+            if ! timeout 300 docker pull "$DEPLOY_IMAGE"; then
+              export DEPLOY_IMAGE=ghcr.nju.edu.cn/xiaolinstar/xiaolin-docs:main
+              timeout 300 docker pull "$DEPLOY_IMAGE"
+            fi
+
+            # 代理可能缓存旧标签，拒绝将旧镜像当作本次发布。
+            expected_revision="${{ github.event.workflow_run.head_sha || github.sha }}"
+            actual_revision=$(docker image inspect "$DEPLOY_IMAGE" --format '{{ index .Config.Labels "org.opencontainers.image.revision" }}')
+            test "$actual_revision" = "$expected_revision"
+
+            # 原地更新，并等待健康检查通过后才报告成功。
+            docker compose -f compose.yaml up -d --wait --wait-timeout 120
+            docker compose -f compose.yaml exec -T xiaolin-website wget -qO- http://127.0.0.1:8080/healthz >/dev/null
             echo "Deployment completed successfully!"
 
       - name: Probe production website

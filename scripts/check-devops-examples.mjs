@@ -8,7 +8,7 @@ const yaml = require('js-yaml')
 const matter = require('gray-matter')
 const base = path.resolve('docs/sre/devops')
 const temp = fs.mkdtempSync(path.join(os.tmpdir(), 'devops-check-'))
-const counts = { articles: 0, yaml: 0, shell: 0, workflows: 0, overlays: 0 }
+const counts = { articles: 0, yaml: 0, shell: 0, workflows: 0, overlays: 0, compose: 0 }
 const failures = []
 function run(command, args, label, input) {
   const result = spawnSync(command, args, { encoding: 'utf8', input })
@@ -74,6 +74,22 @@ try {
   // 实际执行文档内的纯文件生成器，并用 kubectl 做离线 Kustomize 渲染。
   const blocks = (file, lang) => [...fs.readFileSync(path.join(base, file), 'utf8')
     .matchAll(new RegExp('^```' + lang + '\\n([\\s\\S]*?)^```', 'gm'))].map(m => m[1])
+  // 检查 Compose 课程的完整基础配置与合并后的构建/健康配置。
+  const composeDir = path.join(temp, 'compose')
+  fs.mkdirSync(composeDir)
+  fs.writeFileSync(path.join(composeDir, '.env'), blocks('intermediate/environment.md', 'dotenv')[0])
+  fs.writeFileSync(path.join(composeDir, 'runtime.env'), blocks('intermediate/environment.md', 'dotenv')[1])
+  const network = yaml.load(blocks('intermediate/compose-network.md', 'yaml')[0])
+  const configured = structuredClone(network)
+  configured.services.web = yaml.load(blocks('intermediate/environment.md', 'yaml')[0]).web
+  const additions = yaml.load(blocks('intermediate/compose-health.md', 'yaml')[0])
+  for (const name of ['web', 'db']) Object.assign(configured.services[name], additions.services[name])
+  for (const [name, doc] of [['network', network], ['configured', configured]]) {
+    const file = path.join(composeDir, `${name}.yaml`)
+    fs.writeFileSync(file, yaml.dump(doc))
+    run('docker', ['compose', '--project-directory', composeDir, '--env-file', path.join(composeDir, '.env'), '-f', file, 'config', '--quiet'], `Compose ${name}`)
+    counts.compose++
+  }
   if (haveActionlint) {
     const workflow = yaml.load(blocks('intermediate/ci-pipeline.md', 'yaml')[0])
     const steps = workflow.jobs.build.steps

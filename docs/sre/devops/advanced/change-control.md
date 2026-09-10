@@ -1,8 +1,8 @@
 ---
-title: 25 ｜ 变更防错与 AI 价值
+title: 28 ｜ 变更防错与 AI 价值
 description: 在 SRE 运维实践中，变更管控流程中包含很多字段信息和附件，作为变更就绪条件，由变更经理和相关责任人审核审批。
 date: 2026-04-06
-updated: 2026-09-08
+updated: 2026-09-09
 category: SRE 运维
 tags:
   - DevOps

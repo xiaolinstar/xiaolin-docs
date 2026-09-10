@@ -1,8 +1,8 @@
 ---
-title: 12 ｜ 持续集成流水线
+title: 16 ｜ 持续集成流水线
 description: 用同一个示例完成测试、镜像构建和 GHCR 推送，输出可追溯的镜像 digest。
 date: 2026-03-28
-updated: 2026-09-08
+updated: 2026-09-09
 category: SRE 运维
 tags:
   - DevOps
@@ -11,37 +11,13 @@ tags:
 
 ## 从一次提交得到一个可发布版本
 
-承接 [CI/CD 权责分离](cicd-separation.md)，本篇只负责构建与验证，不持有生产权限。后续课程一直使用 `delivery-demo`：一个提供首页和健康端点的 Nginx 服务。数据库迁移在第 19 篇作为独立组件加入，不假装静态站点已经具备数据库业务。
+承接 [CI/CD 权责分离](cicd-separation.md)，本篇只负责构建与验证，不持有生产权限。继续使用 `delivery-demo`：提供首页、环境配置响应和健康端点的 Nginx 服务。数据库迁移在第 22 篇作为独立组件加入，不假装静态站点已经具备数据库业务。
 
 环境约定：Linux runner、Docker Buildx、GitHub Actions；本地可用 Docker Desktop。示例构建 `linux/amd64`，目标服务器也应为该架构；ARM 服务器需统一修改构建平台。以下文件放在你自己的练习仓库。
 
-## 建立最小应用与检查
+## 沿用镜像，增加自动检查
 
-创建 `site/index.html`：
-
-```html
-<!doctype html>
-<html lang="zh-CN">
-<meta charset="utf-8">
-<title>Delivery Demo</title>
-<h1>delivery-demo v1</h1>
-</html>
-```
-
-创建 `site/healthz`，内容单独一行：
-
-```text
-ok
-```
-
-创建 `Dockerfile`：
-
-```dockerfile
-FROM nginx:1.28-alpine
-COPY site/ /usr/share/nginx/html/
-```
-
-基础镜像版本用于教学复现，正式项目应锁定已审核的基础镜像 digest，并定期更新。创建 `scripts/test.sh`：
+保留[构建与运行时配置](environment.md)的 `site/`、`nginx/default.conf.template`、Dockerfile 和 `.dockerignore`，不重新建立另一份示例。此时 `/environment` 已能反映 APP_ENV，首页与健康端点分别用于版本和健康验收。创建 `scripts` 目录，保存 `scripts/test.sh`：
 
 ```bash
 #!/usr/bin/env bash
@@ -54,6 +30,7 @@ docker run -d --name "$name" "$IMAGE" >/dev/null
 for attempt in $(seq 1 30); do
   if docker exec "$name" wget -q -O - http://127.0.0.1/healthz | grep -qx ok; then
     docker exec "$name" wget -q -O - http://127.0.0.1/ | grep -q delivery-demo
+    docker exec "$name" wget -q -O - http://127.0.0.1/environment | grep -qx local
     exit 0
   fi
   sleep 1
@@ -95,7 +72,7 @@ jobs:
       - name: Set image name
         run: echo "IMAGE=ghcr.io/${GITHUB_REPOSITORY,,}" >> "$GITHUB_ENV"
       - name: Build local image
-        run: docker build --platform linux/amd64 -t "$IMAGE:$GITHUB_SHA" .
+        run: docker build --platform linux/amd64 --build-arg BUILD_LABEL="$GITHUB_SHA" -t "$IMAGE:$GITHUB_SHA" .
       - name: Test image
         run: bash scripts/test.sh "$IMAGE:$GITHUB_SHA"
       - uses: docker/login-action@v3
@@ -129,7 +106,7 @@ jobs:
 - 删除 `site/healthz` 后提交测试 PR：检查失败，不能进入推送步骤。
 - `denied`：检查 Packages 写权限及仓库与 package 的关联；不要直接扩大为账户管理员权限。
 - `exec format error`：检查目标架构与构建平台是否一致。
-- 推送成功但不能拉取：检查 package 可见性和拉取方凭据，按[镜像仓库治理](13-image-registry.md)排查。
+- 推送成功但不能拉取：检查 package 可见性和拉取方凭据，按前面的[制品库与镜像仓库](13-image-registry.md)排查。
 
 ## 小结与思考
 

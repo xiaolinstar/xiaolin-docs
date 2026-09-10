@@ -1,8 +1,8 @@
 ---
-title: 15 ｜ 轻量 K3s 集群
+title: 18 ｜ 轻量 K3s 集群
 description: 建立隔离的 K3s 练习环境，验证节点、网络和默认入口。
 date: 2026-03-28
-updated: 2026-09-08
+updated: 2026-09-09
 category: SRE 运维
 tags:
   - DevOps

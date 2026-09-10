@@ -1,8 +1,8 @@
 ---
-title: 22 ｜ GitOps 发布实践
+title: 25 ｜ GitOps 发布实践
 description: 用 Argo CD 拉取环境清单，验证同步、配置漂移修复与 Git 回退。
 date: 2026-04-09
-updated: 2026-09-08
+updated: 2026-09-09
 category: SRE 运维
 tags:
   - DevOps
@@ -12,7 +12,7 @@ tags:
 
 ## 从发布命令到期望状态
 
-中级篇由操作人执行 `kubectl apply`。本课让集群内的 Argo CD 持续读取配置仓库，由 Git 中审核后的清单表达期望状态。前置条件是第 18 篇的 Kustomize 文件、环境 Secret，以及第 21 篇已经通过验证的镜像。
+中级篇由操作人执行 `kubectl apply`。本课让集群内的 Argo CD 持续读取配置仓库，由 Git 中审核后的清单表达期望状态。前置条件是第 21 篇的 Kustomize 文件、环境 Secret，以及第 24 篇已经通过验证的镜像。
 
 OpenGitOps 的四项原则是声明式、版本化且不可变、自动拉取、持续调和。将 YAML 存 Git 后由 CI 经 SSH 执行一次 Compose，是版本化的 Push CD；如果缺少自动拉取和持续调和，不能仅凭“配置在 Git”就称为完整 GitOps。
 
@@ -24,11 +24,11 @@ OpenGitOps 的四项原则是声明式、版本化且不可变、自动拉取、
 | 配置修改者 | 创建配置 PR | 生产分支必须评审，镜像验证后才允许合并 |
 | Argo CD | 读取配置仓库、调和授权目标 | 集群管理员限制可部署仓库、namespace 与资源类型 |
 
-Git 历史记录期望状态的变更，不等于完整运行审计；仍要保留控制器操作记录、集群审计和部署结果。Secret 沿用第 17 篇的预置方式，不提交明文。
+Git 历史记录期望状态的变更，不等于完整运行审计；仍要保留控制器操作记录、集群审计和部署结果。Secret 沿用第 20 篇的预置方式，不提交明文。
 
 ## 准备配置仓库与控制器
 
-将第 18 篇 `k8s` 目录放进练习配置仓库，确认 `prod` overlay 已替换为真实 digest。仓库不得包含账号密码。私有仓库给 Argo CD 配只读凭据，不借用 CI 写权限。
+将第 21 篇 `k8s` 目录放进练习配置仓库，确认 `prod` overlay 已替换为真实 digest。仓库不得包含账号密码。私有仓库给 Argo CD 配只读凭据，不借用 CI 写权限。
 
 按 [Argo CD Getting Started](https://argo-cd.readthedocs.io/en/stable/getting_started/)安装控制器。下载团队选定发布版本的安装清单、审核后执行；不要把浮动 `stable` URL 当作长期版本锁。安装后确认 CRD 和控制器就绪，再应用下一段 Application。
 
