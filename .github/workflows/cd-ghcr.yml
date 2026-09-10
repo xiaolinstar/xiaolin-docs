@@ -25,8 +25,39 @@ jobs:
     # 仅在 CI 成功完成时运行
     if: ${{ github.event.workflow_run.conclusion == 'success' || github.event_name == 'workflow_dispatch' }}
     runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      packages: read
 
     steps:
+      - name: Login to GitHub Container Registry
+        uses: docker/login-action@v4
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Download and package release image
+        env:
+          EXPECTED_REVISION: ${{ github.event.workflow_run.head_sha || github.sha }}
+        run: |
+          set -euo pipefail
+          image="ghcr.io/${IMAGE_NAME}:main"
+          timeout 300 docker pull "$image"
+          actual_revision=$(docker image inspect "$image" --format '{{ index .Config.Labels "org.opencontainers.image.revision" }}')
+          test "$actual_revision" = "$EXPECTED_REVISION"
+          docker save "$image" | gzip > release-image.tar.gz
+
+      - name: Transfer release image to server
+        uses: appleboy/scp-action@v1
+        with:
+          host: ${{ secrets.SERVER_HOST }}
+          username: ${{ secrets.SERVER_USER }}
+          password: ${{ secrets.SERVER_PASSWORD }}
+          source: release-image.tar.gz
+          target: /tmp/xiaolin-deploy-${{ github.run_id }}
+          command_timeout: 10m
+
       - name: Deploy to target server via SSH
         uses: appleboy/ssh-action@v1.0.0
         with:
@@ -39,14 +70,13 @@ jobs:
             cd ${{ env.SERVER_DIR }}
             git pull --ff-only
 
-            # 每个源最多等待 5 分钟；下载成功前保持现有容器运行。
+            # Runner 已完成下载，经 SSH 传输后本地加载，绕开服务器的仓库下载链路。
+            archive_dir="/tmp/xiaolin-deploy-${{ github.run_id }}"
+            trap 'rm -f "$archive_dir/release-image.tar.gz"; rmdir "$archive_dir"' EXIT
+            docker load -i "$archive_dir/release-image.tar.gz"
             export DEPLOY_IMAGE=ghcr.io/xiaolinstar/xiaolin-docs:main
-            if ! timeout 300 docker pull "$DEPLOY_IMAGE"; then
-              export DEPLOY_IMAGE=ghcr.nju.edu.cn/xiaolinstar/xiaolin-docs:main
-              timeout 300 docker pull "$DEPLOY_IMAGE"
-            fi
 
-            # 代理可能缓存旧标签，拒绝将旧镜像当作本次发布。
+            # 再次验证服务器实际加载的镜像版本。
             expected_revision="${{ github.event.workflow_run.head_sha || github.sha }}"
             actual_revision=$(docker image inspect "$DEPLOY_IMAGE" --format '{{ index .Config.Labels "org.opencontainers.image.revision" }}')
             test "$actual_revision" = "$expected_revision"
