@@ -38,3 +38,9 @@ docs/public/images/**
 # tools/md-wechat: 嵌入工具目录，跟踪源码但排除 node_modules 与内部 .git
 tools/md-wechat/node_modules/
 tools/md-wechat/.git/
+
+# 公众号公式 PNG：本地源文件已推 CDN，仓库仅作产物指针参考
+content/dist/**/formulas/
+
+# 一次性调试脚本，不入仓
+/scripts/extract-b64.mjs

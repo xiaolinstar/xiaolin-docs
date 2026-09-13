@@ -85,13 +85,13 @@ ssh ubuntu@server "VERSION=1.2.0 ./deploy.sh"
 
 所以 05 篇的「4 个 Job」不是说每次上线都要全打一遍——而是**根据 $x$ 的范围按需挑选**。
 
-**复杂度降级：Job 内的串行步骤从 $n$ 收编到 $1$**——对**单个 Job** $J_i$ 来说，05 篇里还是「ssh 上去手敲」的一条条命令——一个 Job 内部有 $n$ 个串行步骤（ssh → pull → rm → run → sleep → curl……），**每一步都是一次独立的执行单元**：漏一步、记错顺序、心慌。
+**复杂度降级**：Job 内的串行步骤从 $n$ 收编到 1。05 篇在单个 Job 内部留下 $n$ 个串行步骤（ssh → pull → rm → run → sleep → curl……），每一步都是一次独立的执行单元：漏一步、记错顺序、心慌；本篇就是要把这 $n$ 步收编到一个 shell 脚本里。
 
-这一篇做的事：**对每个 Job 用 1 个 shell 脚本实现**——把 $n$ 个步骤**收编**到一个文件里。从外部看，整个 Job 就是一次脚本调用：
+从外部看，整个 Job 就是一次脚本调用：
 
 ```bash
 #!/usr/bin/env bash
-# app.sh —— 一个 Job 内的 $n$ 步被收编到一个脚本里
+# app.sh —— 一个 Job 内的 n 个步骤被收编到一个脚本里
 set -euo pipefail
 
 docker pull your-registry/app:${VERSION:-latest}
@@ -111,9 +111,9 @@ echo "app ${VERSION:-latest} ok"
 VERSION=1.2.0 ./app.sh
 ```
 
-$n$ 个步骤**数量没变**，但**对外的复杂度从 $n$ 降到了 $1$**——所有步骤被收编到一个 `.sh` 文件里，对外只是一次「调用」：**人能记错的地方，脚本不会**；`set -euo pipefail` 让脚本自带失败兜底。
+所有 $n$ 步都被收编到一个 `.sh` 文件里，对外只剩一次调用——人能记错的地方，脚本不会；`set -euo pipefail` 让脚本自带失败兜底。
 
-> 这就是命令式脚本带来的核心复杂度降级：**Job 内的串行步骤，对外的复杂度从 $n$ 收编到 $1$**。
+> 这就是命令式脚本的核心收益：把 $n$ 步的实现细节封装到 1 次调用背后。
 
 多个 Job 之间用 `&&` 串联（前者失败则后者不启动）：
 
@@ -424,14 +424,14 @@ pipeline {
         stage('DB') {
             steps {
                 withCredentials([sshUserPrivateKey(credentialsId: 'db-key', keyFileVariable: 'SSH_KEY')]) {
-                    sh 'ssh -i $SSH_KEY ubuntu@db "docker pull mysql:8 && docker rm -f db || true && docker run -d --name db mysql:8"'
+                    sh 'ssh -i <key-path> <target-host> "docker pull mysql:8 && docker rm -f db || true && docker run -d --name db mysql:8"'
                 }
             }
         }
         stage('App') {
             steps {
                 withCredentials([sshUserPrivateKey(credentialsId: 'app-key', keyFileVariable: 'SSH_KEY')]) {
-                    sh 'ssh -i $SSH_KEY ubuntu@app "docker pull your-registry/app:${VERSION} && docker rm -f app || true && docker run -d --name app -e DB_URL=jdbc:mysql://db:3306/app your-registry/app:${VERSION}"'
+                    sh 'ssh -i <key-path> <target-host> "docker pull your-registry/app:<version> && docker rm -f app || true && docker run -d --name app -e DB_URL=jdbc:mysql://db:3306/app your-registry/app:<version>"'
                 }
             }
         }
@@ -456,6 +456,8 @@ pipeline {
 **可审计性**：shell 方案 UI 改动无痕迹、谁改了什么无记录；Jenkinsfile 在 Git 仓库里，`git log` + PR review + commit author 全留痕，事故可追溯。
 
 **核心收益**：**编码位置 + 可迁移性 + 部署动作 + 可审计性**，这四点把 Jenkinsfile 从「shell 脚本的另一种写法」变成「**运维动作的代码化**」。
+
+> **演进提示**：本示例把 `<target-host>`（即 user + hostname）硬编码在 Jenkinsfile，是为了与「shell 散落方案」做最小对比；真实工程里这是反模式——不同环境的 user / IP 不一致，硬编码会让仓库历史充满「换 IP」类低价值 commit，也会让多副本、多环境的扩展变得笨拙。密钥通过 `withCredentials` 已经外置（good），但**目标主机本身没有外置**，是同类反模式的延续。06 篇基础阶段不展开，下一篇（GitHub Actions）会用 `secrets` + 环境变量注入；中级篇会用 `parameters` / Ansible / K8s 把目标主机彻底外置。
 
 ![Blue Ocean UI 创建流水线](https://media.xiaolin.fun/docs/img-cicd-taste/blue-ocean-pipeline.png)
 
