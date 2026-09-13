@@ -66,8 +66,10 @@ const errors = []
 
 for (const file of walk(docsDir)) {
   const content = fs.readFileSync(file, 'utf8')
+  // 剥离反引号包裹的 inline code,避免 `[文字](url)` 这样的写法被误判为真链接
+  const stripped = content.replace(/`[^`\n]*`/g, '')
   const linkPattern = /!?\[[^\]]*\]\(([^)\s]+)(?:\s+["'][^)]*["'])?\)/g
-  for (const match of content.matchAll(linkPattern)) {
+  for (const match of stripped.matchAll(linkPattern)) {
     const target = match[1].trim()
     if (!localTargetExists(file, target)) errors.push(`${path.relative(root, file)} -> ${target}`)
   }
