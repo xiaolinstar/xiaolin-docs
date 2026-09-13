@@ -214,6 +214,7 @@ export default withMermaid({
                                 { text: 'Linux 学习有无必要双系统？', link: `/sre/tools/linux-learn` },
                                 { text: 'Mac 办公体验', link: `/sre/tools/mac` },
                                 { text: 'Markdown 文本编辑', link: `/sre/tools/markdown` },
+                                { text: 'Markdown 转微信公众号：问题分析与方案设计', link: `/sre/tools/md-wechat` },
                                 { text: 'Thunderbird 解放收件箱', link: `/sre/tools/email-thunderbird` },
                                 { text: 'email-cli：智能体办公', link: `/sre/tools/email-cli` },
                             ]
@@ -403,6 +404,7 @@ export default withMermaid({
                     items: [
                         { text: 'Thunderbird 邮件管理', link: `/sre/tools/email-thunderbird` },
                         { text: 'Markdown 语法', link: `/sre/tools/markdown` },
+                        { text: 'Markdown 转微信公众号：问题分析与方案设计', link: `/sre/tools/md-wechat` },
                         { text: 'Linux 学习', link: `/sre/tools/linux-learn` },
                         { text: 'Mac 办公体验', link: `/sre/tools/mac` },
                         { text: 'OpenClaw 个人助手', link: `/ai/tools/openclaw-personal-assistant` },
