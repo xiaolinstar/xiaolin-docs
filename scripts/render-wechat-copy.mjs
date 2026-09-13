@@ -25,7 +25,7 @@ async function katexToPng(formula, { display, scale = 1, fontSize = 16 } = {}) {
     pwBrowser = await playwright.chromium.launch({
       args: ['--disable-gpu', '--disable-software-rasterizer', '--disable-dev-shm-usage'],
     });
-    pwContext = await pwBrowser.newContext({ deviceScaleFactor: 4 });
+    pwContext = await pwBrowser.newContext({ deviceScaleFactor: 2 });
     pwPage = await pwContext.newPage();
   }
   const rendered = katex.renderToString(formula, {

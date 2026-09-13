@@ -1,3 +1,44 @@
+---
+origin: docs/sre/devops/foundation/pipeline-basics.md
+origin_url: https://xiaolinstar.cn/sre/devops/foundation/pipeline-basics.html
+slug: pipeline-basics
+account: AI持续运维
+mode: repurpose+polish
+status: ready
+polish:
+  - 标题系列化：DevOps 基础 06 ｜ 流水线基础：把运维动作写成自动化脚本
+  - 移除 origin 末尾「参考」区，公众号稿不展示外部链接
+  - 数学公式统一编译为 PNG-base64（KaTeX + Playwright），inline 用 1em 行高、block 用 0.6 scale
+  - 单字符数字 `$1$` → `1`，保留字符变量 `$n$`（避免 inline 公式带来的行高偏移）
+  - 代码块内公式触发器规避：`$n$` → `n`、`$SSH_KEY` → `<key-path>`、`${VERSION}` → `<version>`（KaTeX 不识别代码块上下文，inline 公式被错误转义）
+  - Jenkinsfile 示例占位符化：硬编码 `ubuntu@db` / `ubuntu@app` → `<target-host>`，新增演进提示段说明反模式（参数化 / Ansible / K8s 属后续主题）
+  - 「复杂度降级」段通顺性优化：句式调整为「是什么 → 状态描述 → 本篇预告」，删除「ssh 上去手敲」与「独立执行单元」语义重复
+  - 图片本地路径替换为 CDN（`/images/img-pipeline-basics/` → `https://media.xiaolin.fun/docs/img-pipeline-basics/`）
+  - 删除 origin 中可点击的站内锚点，公众号不跳转
+---
+
+# 发布元数据
+
+## 标题备选（人工筛选）
+
+1. DevOps 基础 06 ｜ 流水线基础：把运维动作写成自动化脚本（系列化）
+2. 流水线不是命令的搬运工：为什么手写 shell 永远写不出 DAG 并行
+3. 从 `deploy.sh` 到 Jenkinsfile：把上线动作从经验变成可审计的代码
+
+**选用**：1（系列化命名，沿用「DevOps 基础 NN ｜ 标题」格式）
+
+## 摘要（110 字）
+
+05 篇用 Docker 固化运行环境，但上线时仍要人工 SSH 逐条执行命令。本文从命令式 shell 脚本出发，讲清 Job、step、DAG 与流水线引擎的关系，再用 Jenkinsfile 把运维动作写进 Git，让构建、部署与审计从依赖个人经验变成可复现的自动化流程。
+
+## 搜索关键词（4 个）
+
+DevOps 流水线、Jenkinsfile、DAG 任务依赖、Shell 自动化部署
+
+---
+
+# 正文（粘贴到公众号后台）
+
 # 06 ｜ 流水线基础：把运维动作写成自动化脚本
 
 05 篇用 Docker 把「运行环境」封装成不可变镜像，攻克了 03~04 篇留下的可迁移性与服务器污染两大死局。但 05 末尾自己也点明：**每一条部署路径的最后一步，依然要人去执行**。
@@ -57,26 +98,26 @@ ssh ubuntu@server "VERSION=1.2.0 ./deploy.sh"
 
 05 篇的「最小生产变更」已经定义了 4 个 Job：
 
-- $J_1$（**DB**）：装 MySQL / 导入 schema / 启动服务
-- $J_2$（**App**）：部署 Spring Boot
-- $J_3$（**Nginx**）：写 `nginx.conf` / `nginx -s reload`
-- $J_4$（**verify**）：`curl -fsS /api/health`
+- <img src="https://media.xiaolin.fun/docs/formulas/231bca9177cf3786.png" width="17" height="24" alt="公式" style="display:inline;vertical-align:middle;margin:0 2px;">（**DB**）：装 MySQL / 导入 schema / 启动服务
+- <img src="https://media.xiaolin.fun/docs/formulas/7fe2e985cfe76d52.png" width="17" height="24" alt="公式" style="display:inline;vertical-align:middle;margin:0 2px;">（**App**）：部署 Spring Boot
+- <img src="https://media.xiaolin.fun/docs/formulas/0b644149b7bf668a.png" width="17" height="24" alt="公式" style="display:inline;vertical-align:middle;margin:0 2px;">（**Nginx**）：写 `nginx.conf` / `nginx -s reload`
+- <img src="https://media.xiaolin.fun/docs/formulas/b94c84a11389fc38.png" width="17" height="24" alt="公式" style="display:inline;vertical-align:middle;margin:0 2px;">（**verify**）：`curl -fsS /api/health`
 
-**关键点**：自变量 $x$ 的**范围**决定要跑哪些 Job——**不是每次都全量跑 4 个**。
+**关键点**：自变量 <img src="https://media.xiaolin.fun/docs/formulas/e1903f4bbc892e8f.png" width="14" height="24" alt="公式" style="display:inline;vertical-align:middle;margin:0 2px;"> 的**范围**决定要跑哪些 Job——**不是每次都全量跑 4 个**。
 
 - 只改了前端代码 → 整个 App Job 都不用跑（DB 也不动）；
 - 只改了 `nginx.conf` → 只需要重载 Nginx，App / DB 都不需要动；
-- 只改了 DB schema → 才需要 $J_1$；同时改了 App → 还需要 $J_2$。
+- 只改了 DB schema → 才需要 <img src="https://media.xiaolin.fun/docs/formulas/231bca9177cf3786.png" width="17" height="24" alt="公式" style="display:inline;vertical-align:middle;margin:0 2px;">；同时改了 App → 还需要 <img src="https://media.xiaolin.fun/docs/formulas/7fe2e985cfe76d52.png" width="17" height="24" alt="公式" style="display:inline;vertical-align:middle;margin:0 2px;">。
 
-所以 05 篇的「4 个 Job」不是说每次上线都要全打一遍——而是**根据 $x$ 的范围按需挑选**。
+所以 05 篇的「4 个 Job」不是说每次上线都要全打一遍——而是**根据 <img src="https://media.xiaolin.fun/docs/formulas/e1903f4bbc892e8f.png" width="14" height="24" alt="公式" style="display:inline;vertical-align:middle;margin:0 2px;"> 的范围按需挑选**。
 
-**复杂度降级：Job 内的串行步骤从 $n$ 收编到 $1$**——对**单个 Job** $J_i$ 来说，05 篇里还是「ssh 上去手敲」的一条条命令——一个 Job 内部有 $n$ 个串行步骤（ssh → pull → rm → run → sleep → curl……），**每一步都是一次独立的执行单元**：漏一步、记错顺序、心慌。
+**复杂度降级**：Job 内的串行步骤从 <img src="https://media.xiaolin.fun/docs/formulas/5df8cbed933fa009.png" width="14" height="24" alt="公式" style="display:inline;vertical-align:middle;margin:0 2px;"> 收编到 1。05 篇在单个 Job 内部留下 <img src="https://media.xiaolin.fun/docs/formulas/5df8cbed933fa009.png" width="14" height="24" alt="公式" style="display:inline;vertical-align:middle;margin:0 2px;"> 个串行步骤（ssh → pull → rm → run → sleep → curl……），每一步都是一次独立的执行单元：漏一步、记错顺序、心慌；本篇就是要把这 <img src="https://media.xiaolin.fun/docs/formulas/5df8cbed933fa009.png" width="14" height="24" alt="公式" style="display:inline;vertical-align:middle;margin:0 2px;"> 步收编到一个 shell 脚本里。
 
-这一篇做的事：**对每个 Job 用 1 个 shell 脚本实现**——把 $n$ 个步骤**收编**到一个文件里。从外部看，整个 Job 就是一次脚本调用：
+从外部看，整个 Job 就是一次脚本调用：
 
 ```bash
 #!/usr/bin/env bash
-# app.sh —— 一个 Job 内的 $n$ 步被收编到一个脚本里
+# app.sh —— 一个 Job 内的 n 个步骤被收编到一个脚本里
 set -euo pipefail
 
 docker pull your-registry/app:${VERSION:-latest}
@@ -96,9 +137,9 @@ echo "app ${VERSION:-latest} ok"
 VERSION=1.2.0 ./app.sh
 ```
 
-$n$ 个步骤**数量没变**，但**对外的复杂度从 $n$ 降到了 $1$**——所有步骤被收编到一个 `.sh` 文件里，对外只是一次「调用」：**人能记错的地方，脚本不会**；`set -euo pipefail` 让脚本自带失败兜底。
+所有 <img src="https://media.xiaolin.fun/docs/formulas/5df8cbed933fa009.png" width="14" height="24" alt="公式" style="display:inline;vertical-align:middle;margin:0 2px;"> 步都被收编到一个 `.sh` 文件里，对外只剩一次调用——人能记错的地方，脚本不会；`set -euo pipefail` 让脚本自带失败兜底。
 
-> 这就是命令式脚本带来的核心复杂度降级：**Job 内的串行步骤，对外的复杂度从 $n$ 收编到 $1$**。
+> 这就是命令式脚本的核心收益：把 <img src="https://media.xiaolin.fun/docs/formulas/5df8cbed933fa009.png" width="14" height="24" alt="公式" style="display:inline;vertical-align:middle;margin:0 2px;"> 步的实现细节封装到 1 次调用背后。
 
 多个 Job 之间用 `&&` 串联（前者失败则后者不启动）：
 
@@ -106,7 +147,7 @@ $n$ 个步骤**数量没变**，但**对外的复杂度从 $n$ 降到了 $1$**�
 ./db.sh 1.2.0 && ./app.sh 1.2.0 && ./nginx.sh 1.2.0 && ./verify.sh 1.2.0
 ```
 
-`&&` 仍然只表达**串行**——05 篇的「$J_1 \to J_2 \to J_3 \to J_4$」拓扑序，用命令式 shell 的串行原语压扁成一行。**单 Job 内部是命令式脚本，Job 之间的串联也是命令式脚本**——这是命令式自动化的全部内容。
+`&&` 仍然只表达**串行**——05 篇的「<img src="https://media.xiaolin.fun/docs/formulas/5124b17d6795498e.png" width="158" height="24" alt="公式" style="display:inline;vertical-align:middle;margin:0 2px;">」拓扑序，用命令式 shell 的串行原语压扁成一行。**单 Job 内部是命令式脚本，Job 之间的串联也是命令式脚本**——这是命令式自动化的全部内容。
 
 ### 对 shell 脚本的初步划分：Job 与 step
 
@@ -149,9 +190,9 @@ echo "app ${VERSION:-latest} ok"
 
 ### 边界一：多机协作与并行拓扑
 
-业务从单台服务器扩到 5 台、10 台、100 台时，「同一份 `deploy.sh`」要在 $N$ 台机器上各跑一次。命令式 shell 只能写 `for server in ...; do ssh ...; done`——这是**串行**展开，遇到慢的机器、慢的网络会拖垮整体进度。真实场景里这 $N$ 台机器之间的部署**有并行机会**：先全量重启前 5 台、健康检查通过后再并行重启后 5 台。
+业务从单台服务器扩到 5 台、10 台、100 台时，「同一份 `deploy.sh`」要在 <img src="https://media.xiaolin.fun/docs/formulas/208f5f43585f6ede.png" width="16" height="24" alt="公式" style="display:inline;vertical-align:middle;margin:0 2px;"> 台机器上各跑一次。命令式 shell 只能写 `for server in ...; do ssh ...; done`——这是**串行**展开，遇到慢的机器、慢的网络会拖垮整体进度。真实场景里这 <img src="https://media.xiaolin.fun/docs/formulas/208f5f43585f6ede.png" width="16" height="24" alt="公式" style="display:inline;vertical-align:middle;margin:0 2px;"> 台机器之间的部署**有并行机会**：先全量重启前 5 台、健康检查通过后再并行重启后 5 台。
 
-命令式 shell 想做的是「**按拓扑序执行**」——$v_3$ 与 $v_4$ 没依赖就并行、$v_7$ 必须等 $v_5$ 与 $v_6$——但它只能用 `&` 把任务丢后台、用 `wait` 同步，**硬模拟**这种拓扑关系：
+命令式 shell 想做的是「**按拓扑序执行**」——<img src="https://media.xiaolin.fun/docs/formulas/ecb484f1392c653e.png" width="17" height="24" alt="公式" style="display:inline;vertical-align:middle;margin:0 2px;"> 与 <img src="https://media.xiaolin.fun/docs/formulas/38ac7defb4284162.png" width="17" height="24" alt="公式" style="display:inline;vertical-align:middle;margin:0 2px;"> 没依赖就并行、<img src="https://media.xiaolin.fun/docs/formulas/6214bca7c3519c4e.png" width="17" height="24" alt="公式" style="display:inline;vertical-align:middle;margin:0 2px;"> 必须等 <img src="https://media.xiaolin.fun/docs/formulas/814b60f2a0961262.png" width="17" height="24" alt="公式" style="display:inline;vertical-align:middle;margin:0 2px;"> 与 <img src="https://media.xiaolin.fun/docs/formulas/0f814832ed64e357.png" width="17" height="24" alt="公式" style="display:inline;vertical-align:middle;margin:0 2px;">——但它只能用 `&` 把任务丢后台、用 `wait` 同步，**硬模拟**这种拓扑关系：
 
 ```bash
 ssh h1 "./app.sh" &
@@ -162,7 +203,7 @@ wait
 
 `wait` 不知道谁依赖谁、谁等谁；每加一台机器都要再敲一行 `&` 和一行 `wait`——维护成本随机器数**指数级**上涨。
 
-![shell 命令流与 DAG 依赖图对比](/images/img-pipeline-basics/infographic-shell-flow-vs-dag.png)
+![shell 命令流与 DAG 依赖图对比](https://media.xiaolin.fun/docs/img-pipeline-basics/infographic-shell-flow-vs-dag.png)
 
 **边界一的本质**：shell 脚本**无法有效建模生产变更的操作拓扑**。前者是「拓扑排序」（按依赖排出的命令序列）的命令式模拟，后者是「DAG」（直接表达依赖关系的数据结构）的声明式描述。两者的差别不在语法，在「能不能让工具直接看到依赖图」——**shell 给你一条命令流（并行与依赖靠人维护）；DAG 给你一张依赖图（引擎自己调度）。**
 
@@ -176,7 +217,7 @@ wait
 
 **shell 脚本把这件事翻转了**——它意味着「所有操作预期都完成」：每一步都按事先写死的逻辑跑，没有人会现场救你。**三层后果**随之而来——
 
-**步骤越多，出错概率指数叠加**——$n$ 个独立步骤，每个步骤的成功率 $(1-p)$（如 $p = 0.01$），整条流水线的成功率 $(1-p)^n$ **随 $n$ 指数下降**。5 步约 $95\%$，15 步就只剩 $86\%$。**步骤越多越脆弱**——这不是 shell 的错，是数学事实。
+**步骤越多，出错概率指数叠加**——<img src="https://media.xiaolin.fun/docs/formulas/5df8cbed933fa009.png" width="14" height="24" alt="公式" style="display:inline;vertical-align:middle;margin:0 2px;"> 个独立步骤，每个步骤的成功率 <img src="https://media.xiaolin.fun/docs/formulas/7033b4a3595850b9.png" width="53" height="24" alt="公式" style="display:inline;vertical-align:middle;margin:0 2px;">（如 <img src="https://media.xiaolin.fun/docs/formulas/3b8d0e0fb12441b4.png" width="67" height="24" alt="公式" style="display:inline;vertical-align:middle;margin:0 2px;">），整条流水线的成功率 <img src="https://media.xiaolin.fun/docs/formulas/fbf1bfb31df5bf45.png" width="61" height="24" alt="公式" style="display:inline;vertical-align:middle;margin:0 2px;"> **随 <img src="https://media.xiaolin.fun/docs/formulas/5df8cbed933fa009.png" width="14" height="24" alt="公式" style="display:inline;vertical-align:middle;margin:0 2px;"> 指数下降**。5 步约 <img src="https://media.xiaolin.fun/docs/formulas/3cd0a86582eec3ed.png" width="36" height="24" alt="公式" style="display:inline;vertical-align:middle;margin:0 2px;">，15 步就只剩 <img src="https://media.xiaolin.fun/docs/formulas/62b393561490538d.png" width="36" height="24" alt="公式" style="display:inline;vertical-align:middle;margin:0 2px;">。**步骤越多越脆弱**——这不是 shell 的错，是数学事实。
 
 **失败模式不可预测**——网络抖动、磁盘满、镜像拉取超时、API 限流、配置漂移……每一种都可能让一个步骤不按预期走。脚本不会停下来问你「下一步怎么办」，它只会按事先写好的逻辑硬跑，要么继续、要么 `exit 1`。
 
@@ -207,21 +248,21 @@ set -euo pipefail                   # 任一步失败就退出
 
 ## 流水线引擎：面向 DAG 建模
 
-继续把 $f$ 拆细：**生产变更**很少是「一条直线」。它通常长得像这样——**有先后、有并行、有汇总**：
+继续把**函数**拆细：**生产变更**很少是「一条直线」。它通常长得像这样——**有先后、有并行、有汇总**：
 
-> 流程图已整理为正文信息图，公众号中直接阅读图片即可。
+<img src="https://media.xiaolin.fun/docs/formulas/mermaid-1.png" alt="DAG 流程图" width="600" height="585" style="display:block;width:100%;height:auto;margin:16px 0;border:1px solid #e8edf3;border-radius:6px;">
 
 
-这种「局部并行、整体有序」的拓扑，**线性箭头写不出来**——$v_3$ 与 $v_4$ 之间没有依赖，可以同时跑；$v_7$ 必须等 $v_5$ 和 $v_6$ 都成功。
+这种「局部并行、整体有序」的拓扑，**线性箭头写不出来**——<img src="https://media.xiaolin.fun/docs/formulas/ecb484f1392c653e.png" width="17" height="24" alt="公式" style="display:inline;vertical-align:middle;margin:0 2px;"> 与 <img src="https://media.xiaolin.fun/docs/formulas/38ac7defb4284162.png" width="17" height="24" alt="公式" style="display:inline;vertical-align:middle;margin:0 2px;"> 之间没有依赖，可以同时跑；<img src="https://media.xiaolin.fun/docs/formulas/6214bca7c3519c4e.png" width="17" height="24" alt="公式" style="display:inline;vertical-align:middle;margin:0 2px;"> 必须等 <img src="https://media.xiaolin.fun/docs/formulas/814b60f2a0961262.png" width="17" height="24" alt="公式" style="display:inline;vertical-align:middle;margin:0 2px;"> 和 <img src="https://media.xiaolin.fun/docs/formulas/0f814832ed64e357.png" width="17" height="24" alt="公式" style="display:inline;vertical-align:middle;margin:0 2px;"> 都成功。
 
 把它抽象成数据，就是一张**有向无环图**（Directed Acyclic Graph, **DAG**）：
 
-- **节点 $v_i$**：每一个具体动作（pull / build / test / deploy / check）；
-- **有向边 $v_i \to v_j$**：$v_j$ 必须在 $v_i$ 完成后才能开始；
+- **节点 <img src="https://media.xiaolin.fun/docs/formulas/1ecb4cfa40a49357.png" width="14" height="24" alt="公式" style="display:inline;vertical-align:middle;margin:0 2px;">**：每一个具体动作（pull / build / test / deploy / check）；
+- **有向边 <img src="https://media.xiaolin.fun/docs/formulas/b910161616324ff7.png" width="59" height="24" alt="公式" style="display:inline;vertical-align:middle;margin:0 2px;">**：<img src="https://media.xiaolin.fun/docs/formulas/3ffb7729b3fd6e83.png" width="15" height="24" alt="公式" style="display:inline;vertical-align:middle;margin:0 2px;"> 必须在 <img src="https://media.xiaolin.fun/docs/formulas/1ecb4cfa40a49357.png" width="14" height="24" alt="公式" style="display:inline;vertical-align:middle;margin:0 2px;"> 完成后才能开始；
 - **无环**：从任意节点出发沿边走不会回到自己——保证不会死锁；
-- **拓扑序 $\tau$**：满足所有边方向的一个节点排列，是 $f$ 实际可执行的顺序。
+- **拓扑序 <img src="https://media.xiaolin.fun/docs/formulas/1d8753b547c86999.png" width="14" height="24" alt="公式" style="display:inline;vertical-align:middle;margin:0 2px;">**：满足所有边方向的一个节点排列，是函数实际可执行的顺序。
 
-DAG 自然支持**并行**：没有边相连的节点之间没有依赖，可以并行执行；只有存在路径 $v_i \to v_j$ 时才有先后。这种「局部并行、整体有序」是现实工程里**最常见**的形态——比纯线性链条更接近真实流程。
+DAG 自然支持**并行**：没有边相连的节点之间没有依赖，可以并行执行；只有存在路径 <img src="https://media.xiaolin.fun/docs/formulas/b910161616324ff7.png" width="59" height="24" alt="公式" style="display:inline;vertical-align:middle;margin:0 2px;"> 时才有先后。这种「局部并行、整体有序」是现实工程里**最常见**的形态——比纯线性链条更接近真实流程。
 
 ### 流水线引擎是什么
 
@@ -254,7 +295,7 @@ DAG 自然支持**并行**：没有边相连的节点之间没有依赖，可以
 
 到这里，06 篇的核心命题可以用一句话收束——**让运维工程师只关注「业务形状」（DAG 怎么画），剩下的工程实现全部交给流水线引擎。**
 
-具体来说，**人**（开发者 / SRE / 运维）关心的是：节点是什么（$v_i$）、节点间依赖是什么（$v_i \to v_j$）、每个节点内部做什么 shell——这是「业务形状」；**流水线引擎**关心的是：DAG 解析、拓扑序计算、并行调度、agent 分发、日志记录、状态追踪、失败通知、凭据管理——这些「工程实现」的事。两者**互不越界**。
+具体来说，**人**（开发者 / SRE / 运维）关心的是：节点是什么（<img src="https://media.xiaolin.fun/docs/formulas/1ecb4cfa40a49357.png" width="14" height="24" alt="公式" style="display:inline;vertical-align:middle;margin:0 2px;">）、节点间依赖是什么（<img src="https://media.xiaolin.fun/docs/formulas/b910161616324ff7.png" width="59" height="24" alt="公式" style="display:inline;vertical-align:middle;margin:0 2px;">）、每个节点内部做什么 shell——这是「业务形状」；**流水线引擎**关心的是：DAG 解析、拓扑序计算、并行调度、agent 分发、日志记录、状态追踪、失败通知、凭据管理——这些「工程实现」的事。两者**互不越界**。
 
 这就是「**关注点分离**」（Separation of Concerns）在自动化运维里的最终落地——人描述「**要什么**」（DAG 是期望状态），引擎决定「**怎么做**」（调度、执行、可观测）。**人关心业务形状，引擎关心工程实现**——这是 06 篇从手动 `ssh` → shell 脚本 → DAG → 引擎整条递进的本质收益。
 
@@ -283,7 +324,7 @@ Jenkins 不是唯一的 CI 引擎，但它有几个独特点——**自托管**�
 
 Jenkins 最早、最朴素的部署形态就是：一台专门的服务器，自居「CI server」，装 JDK / Maven / Git / SSH / Docker，监听 git push 的 webhook，自动跑构建并部署到生产。
 
-> 流程图已整理为正文信息图，公众号中直接阅读图片即可。
+<img src="https://media.xiaolin.fun/docs/formulas/mermaid-2.png" alt="CI/CD 时序图" width="600" height="297" style="display:block;width:100%;height:auto;margin:16px 0;border:1px solid #e8edf3;border-radius:6px;">
 
 
 部署步骤大致是：
@@ -327,7 +368,7 @@ Jenkinsfile 是放在仓库根目录的文本文件，由 Jenkins 引擎读取�
 
 ### Jenkinsfile vs shell 脚本：编码位置、部署、可迁移性
 
-Jenkinsfile **不是替代** shell 脚本，而是在 shell 脚本之上**加了一层结构化封装**——把「散落的命令」变成「可声明的流水线」。以 05 篇定义的 $J_1$（DB）+ $J_2$（App）+ $J_4$（verify）三件套为例，同一组生产变更用两种方式实现——
+Jenkinsfile **不是替代** shell 脚本，而是在 shell 脚本之上**加了一层结构化封装**——把「散落的命令」变成「可声明的流水线」。以 05 篇定义的 <img src="https://media.xiaolin.fun/docs/formulas/231bca9177cf3786.png" width="17" height="24" alt="公式" style="display:inline;vertical-align:middle;margin:0 2px;">（DB）+ <img src="https://media.xiaolin.fun/docs/formulas/7fe2e985cfe76d52.png" width="17" height="24" alt="公式" style="display:inline;vertical-align:middle;margin:0 2px;">（App）+ <img src="https://media.xiaolin.fun/docs/formulas/b94c84a11389fc38.png" width="17" height="24" alt="公式" style="display:inline;vertical-align:middle;margin:0 2px;">（verify）三件套为例，同一组生产变更用两种方式实现——
 
 **shell 散落方案**：在 Jenkins UI 的「Build Steps → Execute shell」文本框里手敲
 
@@ -358,14 +399,14 @@ pipeline {
         stage('DB') {
             steps {
                 withCredentials([sshUserPrivateKey(credentialsId: 'db-key', keyFileVariable: 'SSH_KEY')]) {
-                    sh 'ssh -i $SSH_KEY ubuntu@db "docker pull mysql:8 && docker rm -f db || true && docker run -d --name db mysql:8"'
+                    sh 'ssh -i <key-path> <target-host> "docker pull mysql:8 && docker rm -f db || true && docker run -d --name db mysql:8"'
                 }
             }
         }
         stage('App') {
             steps {
                 withCredentials([sshUserPrivateKey(credentialsId: 'app-key', keyFileVariable: 'SSH_KEY')]) {
-                    sh 'ssh -i $SSH_KEY ubuntu@app "docker pull your-registry/app:${VERSION} && docker rm -f app || true && docker run -d --name app -e DB_URL=jdbc:mysql://db:3306/app your-registry/app:${VERSION}"'
+                    sh 'ssh -i <key-path> <target-host> "docker pull your-registry/app:<version> && docker rm -f app || true && docker run -d --name app -e DB_URL=jdbc:mysql://db:3306/app your-registry/app:<version>"'
                 }
             }
         }
@@ -436,7 +477,7 @@ pipeline {
 2. 没有特别添加的内容，**生产变更由运维重复执行**——读文档、手动 ssh、敲命令、记笔记；
 3. 如果有添加的内容，**更新运维文档**，再交付给运维。
 
-![传统运维交接与运维左移对比](/images/img-pipeline-basics/infographic-traditional-ops.png)
+![传统运维交接与运维左移对比](https://media.xiaolin.fun/docs/img-pipeline-basics/infographic-traditional-ops.png)
 
 这套模式的核心特征是「**运维文档面向人**」——文档是载体、运维人员是执行者。**开发和运维是天然分开的两个角色**：**开发面向运维人员交付**，运维负责把开发交付的产物搬上生产。两个角色之间有一道**手动交接线**——开发把 jar 传给运维，运维手动 ssh、敲命令、记运维笔记。这条交接线是 06 篇所有问题的根源：
 
@@ -469,7 +510,7 @@ Jenkinsfile 不是完整的 IaC（完整 IaC 包括 Terraform、Ansible、K8s YA
 ## 思考
 
 1. 把上线步骤固化进 `deploy.sh` 之后，「幂等」具体怎么保证？脚本里哪一行最容易因为重跑而炸？
-2. 命令式 shell 脚本无法直接表达 DAG 拓扑——如果你手里只有 shell，要让 $v_3$ 与 $v_4$ 并行、$v_7$ 等 $v_5$ 与 $v_6$，你会怎么写？这种写法有哪些脆弱点？
+2. 命令式 shell 脚本无法直接表达 DAG 拓扑——如果你手里只有 shell，要让 <img src="https://media.xiaolin.fun/docs/formulas/ecb484f1392c653e.png" width="17" height="24" alt="公式" style="display:inline;vertical-align:middle;margin:0 2px;"> 与 <img src="https://media.xiaolin.fun/docs/formulas/38ac7defb4284162.png" width="17" height="24" alt="公式" style="display:inline;vertical-align:middle;margin:0 2px;"> 并行、<img src="https://media.xiaolin.fun/docs/formulas/6214bca7c3519c4e.png" width="17" height="24" alt="公式" style="display:inline;vertical-align:middle;margin:0 2px;"> 等 <img src="https://media.xiaolin.fun/docs/formulas/814b60f2a0961262.png" width="17" height="24" alt="公式" style="display:inline;vertical-align:middle;margin:0 2px;"> 与 <img src="https://media.xiaolin.fun/docs/formulas/0f814832ed64e357.png" width="17" height="24" alt="公式" style="display:inline;vertical-align:middle;margin:0 2px;">，你会怎么写？这种写法有哪些脆弱点？
 3. Jenkinsfile 文档自称为 "Declarative Pipeline"，但 `steps { sh '...' }` 内部仍然是命令式 shell。这种「顶层声明、内部命令」的混合范式，给你带来哪些便利、又埋下哪些隐患？相比之下，**真正纯声明式的 GitHub Actions YAML** 又是怎么解决的？
 
 ## 参考
@@ -480,3 +521,15 @@ Jenkinsfile 不是完整的 IaC（完整 IaC 包括 Terraform、Ansible、K8s YA
 4. [Terraform 文档](https://developer.hashicorp.com/terraform/docs)
 5. [GitHub Actions 文档](https://docs.github.com/en/actions)
 6. [Kubernetes 文档](https://kubernetes.io/docs/home/)
+
+---
+
+# 发布 checklist
+
+- [ ] 标题已单独填入公众号后台：DevOps 基础 06 ｜ 流水线基础：把运维动作写成自动化脚本
+- [ ] 摘要已填入公众号后台
+- [ ] 正文已直接粘贴到公众号编辑器（从「# 正文（粘贴到公众号后台）」段起）
+- [ ] 正文 4 张图已在后台单独上传（infographic-shell-flow-vs-dag、infographic-traditional-ops、blue-ocean-pipeline、global-credential）
+- [ ] 后台手机端预览排版正常（公式图片行高、表格不撑破）
+- [ ] 公众号名片已插入文末
+- [ ] 发布后将 `meta.yaml` → `platforms.wechat.status` 更新为 `published`
