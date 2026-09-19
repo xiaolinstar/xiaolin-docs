@@ -85,7 +85,7 @@ for env in dev staging prod; do
 done
 ```
 
-按第 20 篇方式为每个 namespace 创建各自的 `delivery-secret`，私有镜像还需 `ghcr-read`。不要跨环境复用生产凭据。
+按第 21 篇方式为每个 namespace 创建各自的 `delivery-secret`，私有镜像还需 `ghcr-read`。不要跨环境复用生产凭据。
 
 生产发布身份的最小 Role 示例（由管理员安装，并按工作流实际资源收敛）：
 

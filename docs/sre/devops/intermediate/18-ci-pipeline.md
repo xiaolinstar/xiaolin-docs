@@ -11,7 +11,7 @@ tags:
 
 ## 从一次提交得到一个可发布版本
 
-承接 [CI/CD 权责分离](17-cicd-separation.md)，本篇只负责构建与验证，不持有生产权限。继续使用 `delivery-demo`：提供首页、环境配置响应和健康端点的 Nginx 服务。数据库迁移在第 22 篇作为独立组件加入，不假装静态站点已经具备数据库业务。
+承接 [CI/CD 权责分离](17-cicd-separation.md)，本篇只负责构建与验证，不持有生产权限。继续使用 `delivery-demo`：提供首页、环境配置响应和健康端点的 Nginx 服务。数据库迁移在第 23 篇作为独立组件加入，不假装静态站点已经具备数据库业务。
 
 环境约定：Linux runner、Docker Buildx、GitHub Actions；本地可用 Docker Desktop。示例构建 `linux/amd64`，目标服务器也应为该架构；ARM 服务器需统一修改构建平台。以下文件放在你自己的练习仓库。
 

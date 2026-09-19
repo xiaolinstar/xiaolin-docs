@@ -17,9 +17,9 @@ tags:
 
 ## 本课实验范围
 
-在 K3s 创建专用 `gray-lab` namespace，准备第 16 篇的 v1、v2 digest。为避免与 GitOps selfHeal 竞争，本实验不在上一课由 Argo CD 管理的 prod 内操作。
+在 K3s 创建专用 `gray-lab` namespace，准备第 18 篇的 v1、v2 digest。为避免与 GitOps selfHeal 竞争，本实验不在上一课由 Argo CD 管理的 prod 内操作。
 
-先复制第 19 篇 Deployment，生成两份：名称分别改为 `delivery-blue`、`delivery-green`，selector 和 Pod label 分别使用 `app: delivery-blue`、`app: delivery-green`，镜像分别固定为 v1、v2。保存到 `/tmp/gray-lab/blue.yaml` 和 `green.yaml`。Pod 的 readiness 与资源限制保留，创建前检查占位符已替换。
+先复制第 20 篇 Deployment，生成两份：名称分别改为 `delivery-blue`、`delivery-green`，selector 和 Pod label 分别使用 `app: delivery-blue`、`app: delivery-green`，镜像分别固定为 v1、v2。保存到 `/tmp/gray-lab/blue.yaml` 和 `green.yaml`。Pod 的 readiness 与资源限制保留，创建前检查占位符已替换。
 
 ```bash
 kubectl create namespace gray-lab
@@ -28,7 +28,7 @@ kubectl -n gray-lab rollout status deployment/delivery-blue --timeout=120s
 kubectl -n gray-lab rollout status deployment/delivery-green --timeout=120s
 ```
 
-私有镜像需为该 namespace 配置 `ghcr-read`。本实验使用第 19 篇未加入配置依赖的模板；若沿用第 20 篇版本，还要预置对应 ConfigMap 和 Secret。
+私有镜像需为该 namespace 配置 `ghcr-read`。本实验使用第 20 篇未加入配置依赖的模板；若沿用第 21 篇版本，还要预置对应 ConfigMap 和 Secret。
 
 ## 切换前先检查候选版本
 
@@ -80,7 +80,7 @@ kubectl -n gray-lab patch service delivery-entry --type merge \
   -p '{"spec":{"selector":{"app":"delivery-blue"}}}'
 ```
 
-可在已配置镜像读取权限的诊断 Pod 中发起集群内请求。以下用第 16 篇构建的镜像，私有镜像通过 overrides 指定同 namespace 的 `ghcr-read`；公共镜像可省略该字段：
+可在已配置镜像读取权限的诊断 Pod 中发起集群内请求。以下用第 18 篇构建的镜像，私有镜像通过 overrides 指定同 namespace 的 `ghcr-read`；公共镜像可省略该字段：
 
 ```bash
 kubectl -n gray-lab run request-check --rm -i --restart=Never \

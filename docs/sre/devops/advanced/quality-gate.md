@@ -13,7 +13,7 @@ tags:
 
 ## 从生成报告到阻断发布
 
-中级篇已经能部署 `delivery-demo`。本课把质量检查加入[第 16 篇 CI](../intermediate/ci-pipeline.md)，验收目标是：检查失败时，镜像不能进入发布步骤。
+中级篇已经能部署 `delivery-demo`。本课把质量检查加入[第 18 篇 CI](../intermediate/ci-pipeline.md)，验收目标是：检查失败时，镜像不能进入发布步骤。
 
 门禁是可执行规则，不是扫描工具列表。每条规则都要有输入、退出码、责任人和例外期限。
 
@@ -30,7 +30,7 @@ Python 静态检查可选 Ruff、mypy 等；Pydantic 用于运行时数据验证
 
 ## 给现有 CI 增加镜像门禁
 
-在第 16 篇工作流的 `Test image` 之后、登录和推送之前插入：
+在第 18 篇工作流的 `Test image` 之后、登录和推送之前插入：
 
 ```yaml
 - name: Scan candidate image

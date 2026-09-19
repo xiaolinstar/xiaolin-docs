@@ -25,7 +25,7 @@ tags:
 
 ## 在 CI 中保存 SBOM 并签名
 
-在第 16 篇工作流的镜像测试后加入 SBOM 生成。给 `build` job 的 permissions 增加 `id-token: write`，用于后面的无密钥签名。
+在第 18 篇工作流的镜像测试后加入 SBOM 生成。给 `build` job 的 permissions 增加 `id-token: write`，用于后面的无密钥签名。
 
 ```yaml
 - name: Generate SBOM
