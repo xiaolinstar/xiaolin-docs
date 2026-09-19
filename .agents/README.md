@@ -35,6 +35,7 @@ for d in .claude/skills/*; do [ -L "$d" ] && echo "OK $(basename "$d")" || echo 
 | `wechat-publisher` | `skills/creator-suite/wechat-publisher/` | 公众号生成 / 润色 |
 | `markdown-formatter` | `skills/markdown-formatter/` | Markdown 排版修复 |
 | `notion-infographic-v2` | `skills/notion-infographic-v2/` | 信息图生成 |
+| `sre-article-style` | `skills/sre-article-style/` | DevOps / SRE 系列文章写作风格(标题不带序号、场景化引言) |
 
 共享配置：`skills/creator-suite/shared/brand-voice.md`、`platform-specs.md`
 
