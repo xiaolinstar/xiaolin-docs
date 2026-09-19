@@ -1,5 +1,5 @@
 ---
-title: 14 ｜ 健康检查与启动依赖
+title: 16 ｜ 健康检查与启动依赖
 description: 验证启动、就绪、健康状态和重启策略，建立自动发布前的验收标准。
 date: 2026-09-09
 updated: 2026-09-09
@@ -103,6 +103,6 @@ docker inspect "$(docker compose ps -q web)" --format '{{.RestartCount}} {{.Stat
 
 让一次健康检查失败产生非零退出码，同时保留日志；恢复正确配置后再次验证成功。后续流水线只需调用这些可检查的步骤，而不靠固定 `sleep 30` 或“命令已经执行完”判断发布成功。
 
-下一课从[制品仓库](13-image-registry.md)的交接关系出发解释 [CI/CD 分离](cicd-separation.md)，再分别实现构建与发布流水线。
+下一课从[制品仓库](15-image-registry.md)的交接关系出发解释 [CI/CD 分离](17-cicd-separation.md)，再分别实现构建与发布流水线。
 
 参考：[Compose 启动依赖](https://docs.docker.com/compose/how-tos/startup-order/)、[重启策略](https://docs.docker.com/engine/containers/start-containers-automatically/)。

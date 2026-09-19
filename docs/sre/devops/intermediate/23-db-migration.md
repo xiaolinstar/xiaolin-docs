@@ -1,5 +1,5 @@
 ---
-title: 22 ｜ 数据库迁移与发布兼容性
+title: 23 ｜ 数据库迁移与发布兼容性
 description: 用 PostgreSQL 与 Flyway 验证迁移历史、兼容性扩展和失败恢复。
 date: 2026-09-08
 updated: 2026-09-09

@@ -1,6 +1,6 @@
 ---
-title: 20 ｜ K8s 配置与密钥
-description: 验证 ConfigMap、Secret 的注入方式和更新边界，避免密钥进入镜像与 Git。
+title: 21 ｜ K8s 配置与密钥
+description: 单环境下的 ConfigMap / Secret 注入方式与更新边界，避免密钥进入镜像与 Git。
 date: 2026-09-08
 updated: 2026-09-09
 category: SRE 运维
@@ -13,7 +13,9 @@ tags:
 
 ## 同一镜像使用不同配置
 
-承接[进程配置](environment.md)和[应用部署](16-k8s-app-deploy.md)。本课给 `delivery-demo` 注入实验配置，观察 Kubernetes 的传播行为。镜像沿用构建配置课的 Nginx 启动模板，读取 `APP_ENV` 并通过 `/environment` 返回非敏感环境名。我们既检查变量进入容器，也检查应用响应确实改变。
+本文讲**单环境**下的 ConfigMap 与 Secret 注入方式。多套环境（dev / staging / prod）同时运行、配置差异管理、镜像 digest 晋级等内容见 [22 篇 多环境隔离与制品晋级](22-env-separation.md)。
+
+承接[进程配置](13-environment-runtime.md)和[应用部署](20-k8s-app-deploy.md)。本课给 `delivery-demo` 注入实验配置，观察 Kubernetes 的传播行为。镜像沿用构建配置课的 Nginx 启动模板，读取 `APP_ENV` 并通过 `/environment` 返回非敏感环境名。我们既检查变量进入容器，也检查应用响应确实改变。
 
 ## 创建非敏感配置
 
@@ -105,6 +107,6 @@ ConfigMap 可进入配置仓库。Secret 本课由运维预置；高级篇沿用
 
 ## 最小验收
 
-能解释环境变量为何没有立即改变；删除实验 Secret 时能定位配置错误；轮换后完成 Pod 健康检查；Git diff 和日志中没有 token。将 `APP_ENV` 恢复为 dev，再进入[多环境发布](18-env-separation.md)。
+能解释环境变量为何没有立即改变；删除实验 Secret 时能定位配置错误；轮换后完成 Pod 健康检查；Git diff 和日志中没有 token。将 `APP_ENV` 恢复为 dev，再进入[多环境发布](22-env-separation.md)。
 
 参考：[ConfigMap](https://kubernetes.io/docs/concepts/configuration/configmap/)、[Secret 良好实践](https://kubernetes.io/docs/concepts/security/secrets-good-practices/)。

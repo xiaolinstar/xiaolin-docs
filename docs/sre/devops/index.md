@@ -45,19 +45,20 @@ DevOps 方法论与实践经验。本站 DevOps 板块按基础、中级和高�
 
 | 序号 | 核心文章 | 说明 |
 | --- | --- | --- |
-| **10** | [10 ｜ Compose 多服务与网络](./intermediate/compose-network.md) | 服务名、端口映射与网络边界 |
-| **11** | [11 ｜ 数据持久化与挂载](./intermediate/compose-storage.md) | 数据卷、文件挂载与备份恢复 |
-| **12** | [12 ｜ Dockerfile 构建与运行时配置](./intermediate/environment.md) | 构建位置、ARG / ENV 与 .env 插值 |
-| **13** | [13 ｜ 制品库与镜像仓库](./intermediate/13-image-registry.md) | 普通制品、镜像与可信交接 |
-| **14** | [14 ｜ 健康检查与启动依赖](./intermediate/compose-health.md) | 就绪判断、依赖等待与失败诊断 |
-| **15** | [15 ｜ CI/CD 权责分离](./intermediate/cicd-separation.md) | 从构建、仓库和运行验收推导职责边界 |
-| **16** | [16 ｜ 持续集成流水线](./intermediate/ci-pipeline.md) | 自动测试、构建与 digest 输出 |
-| **17** | [17 ｜ Compose 持续发布](./intermediate/cd-pipeline.md) | 固定制品、健康验收与恢复 |
-| **18** | [18 ｜ 轻量 K3s 集群](./intermediate/k3s.md) | 从单机编排进入集群承载 |
-| **19** | [19 ｜ K8s 应用部署](./intermediate/16-k8s-app-deploy.md) | Deployment、入口与滚动更新 |
-| **20** | [20 ｜ K8s 配置与密钥](./intermediate/17-configmap-secret.md) | 延续运行时配置，验证注入与轮换 |
-| **21** | [21 ｜ 多环境隔离与制品晋级](./intermediate/18-env-separation.md) | 同一镜像与不同环境配置 |
-| **22** | [22 ｜ 数据库迁移与发布兼容性](./intermediate/19-db-migration.md) | 版本迁移、兼容性与失败恢复 |
+| **10** | [10 ｜ Compose 多服务与网络](./intermediate/10-compose-network.md) | 服务名、端口映射与网络边界 |
+| **11** | [11 ｜ 数据持久化与挂载](./intermediate/11-compose-storage.md) | 数据卷、文件挂载与备份恢复 |
+| **12** | [12 ｜ Dockerfile 与构建期配置](./intermediate/12-environment-build.md) | 构建位置、ARG / ENV 与 .dockerignore |
+| **13** | [13 ｜ Compose 运行期配置与环境区分](./intermediate/13-environment-runtime.md) | .env / env_file / watch 启动模式 |
+| **14** | [14 ｜ 单机 Compose 多项目共存](./intermediate/14-compose-coexist.md) | 隔离、共享中间件、反代、监控采集 |
+| **15** | [15 ｜ 制品库与镜像仓库](./intermediate/14-image-registry.md) | 普通制品、镜像与可信交接 |
+| **16** | [16 ｜ 健康检查与启动依赖](./intermediate/16-compose-health.md) | 就绪判断、依赖等待与失败诊断 |
+| **17** | [17 ｜ CI/CD 权责分离](./intermediate/17-cicd-separation.md) | 从构建、仓库和运行验收推导职责边界 |
+| **18** | [18 ｜ 持续集成流水线](./intermediate/18-ci-pipeline.md) | 自动测试、构建与 digest 输出 |
+| **19** | [19 ｜ Compose 持续发布](./intermediate/19-cd-pipeline.md) | 固定制品、健康验收与恢复 |
+| **20** | [20 ｜ K8s 应用部署](./intermediate/19-k8s-app-deploy.md) | K3s 集群建立、Deployment 与滚动更新 |
+| **21** | [21 ｜ K8s 配置与密钥](./intermediate/20-configmap-secret.md) | 单环境下的 ConfigMap / Secret 注入 |
+| **22** | [22 ｜ 多环境隔离与制品晋级](./intermediate/21-env-separation.md) | 多套环境同时运行与镜像 digest 晋级 |
+| **23** | [23 ｜ 数据库迁移与发布兼容性](./intermediate/22-db-migration.md) | 版本迁移、兼容性与失败恢复 |
 
 ### 4. 高级篇：发布验证与恢复
 

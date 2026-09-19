@@ -12,7 +12,7 @@ tags:
 
 ## 容器可以替换，数据怎么办
 
-沿用[多服务与网络](compose-network.md)的 `delivery-demo`。同样是 volumes，`./site:/usr/share/nginx/html:ro` 和 `db-data:/var/lib/postgresql/data` 的用途不同。
+沿用[多服务与网络](10-compose-network.md)的 `delivery-demo`。同样是 volumes，`./site:/usr/share/nginx/html:ro` 和 `db-data:/var/lib/postgresql/data` 的用途不同。
 
 | 存储位置 | 生命周期与用途 | 本例 |
 | --- | --- | --- |
