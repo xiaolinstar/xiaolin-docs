@@ -1,5 +1,5 @@
 ---
-title: 20 ｜ K8s 应用部署
+title: 19 ｜ K8s 应用部署
 description: 先建立 K3s 练习环境，再将 delivery-demo 部署到 K3s，完成入口访问、探针、滚动更新和回退实验。
 date: 2026-09-08
 updated: 2026-09-19
@@ -75,9 +75,9 @@ ServiceLB 并不意味着自动购买云负载均衡器，也不保证分配新�
 
 # 把镜像放进集群
 
-前置条件：本节前置的 K3s 节点 Ready、Traefik 就绪，且已取得 [18 篇 CI 流水线](18-ci-pipeline.md) 的 `image.txt`。本课先用占位镜像生成配置，再用脚本替换为自己的 digest；不要直接 apply 占位值。
+前置条件：本节前置的 K3s 节点 Ready、Traefik 就绪，且已取得 [17 篇 CI 流水线](17-ci-pipeline.md) 的 `image.txt`。本课先用占位镜像生成配置，再用脚本替换为自己的 digest；不要直接 apply 占位值。
 
-在练习仓库创建 `k8s/base`。后续课程沿用这些文件，并在 [22 篇 多环境隔离与制品晋级](22-env-separation.md) 通过 Kustomize 组织环境。
+在练习仓库创建 `k8s/base`。后续课程沿用这些文件，并在 [21 篇 多环境隔离与制品晋级](21-env-separation.md) 通过 Kustomize 组织环境。
 
 ## Deployment 与 Service
 
@@ -207,7 +207,7 @@ imagePullSecrets:
 
 ## 更新与回退
 
-用 18 篇构建 v2，保存其引用为 `image-v2.txt`。记录旧版后更新：
+用 17 篇构建 v2，保存其引用为 `image-v2.txt`。记录旧版后更新：
 
 ```bash
 kubectl -n demo get deployment delivery-demo -o jsonpath='{.spec.template.spec.containers[0].image}' > old-image.txt

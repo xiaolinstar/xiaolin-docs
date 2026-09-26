@@ -306,9 +306,9 @@ docker network inspect delivery-demo_backend | grep IPv4Address
 
 - **`db-data` 是个 named volume**——容器删了数据还在吗？`docker compose down -v` 会发生什么？这是 [11 篇 数据持久化](11-compose-storage.md) 要拆的：**有状态应用和无状态应用在运维上是两个物种**，数据库不能像 API 一样随便重启。
 - **数据库密码 `POSTGRES_PASSWORD: local-lab-only` 是写死在 `compose.yaml` 里的**——这只是实验值，真实密钥要外置。这是 [12 篇 Dockerfile 与构建期配置](12-environment-build.md) + [13 篇 Compose 运行期配置与环境区分](13-environment-runtime.md) 要拆的：`ARG` / `ENV` / `.env` / `secrets:` 的边界。
-- **`docker compose up -d` 不能证明服务已经可用**——只证明进程启动了。数据库要初始化、API 要加载配置、依赖服务要等先后就绪。这是 [14 篇 健康检查与启动依赖](16-compose-health.md) 要拆的：**就绪 ≠ 启动**。
+- **`docker compose up -d` 不能证明服务已经可用**——只证明进程启动了。数据库要初始化、API 要加载配置、依赖服务要等先后就绪。这是 [15 篇 健康检查与启动依赖](15-compose-health.md) 要拆的：**就绪 ≠ 启动**。
 
-读完 10-14 篇，你应该能**解释当前环境跑的镜像、配置来源、数据库 schema 版本**，而不是只看到「进程在跑」。
+读完 10-15 篇，你应该能**解释当前环境跑的镜像、配置来源、数据库 schema 版本**，而不是只看到「进程在跑」。
 
 ## 参考
 

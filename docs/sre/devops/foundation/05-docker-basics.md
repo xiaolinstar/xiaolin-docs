@@ -11,7 +11,7 @@ tags:
   - SRE
 ---
 
-[04 篇（Git 与 GitHub）](./git-github.md) 用 Commit 锁定了代码的每一次变更版本——但当 `git pull` 拉下来的源码回到服务器，依然要 `mvn package`，依然要装 JDK，依然要面对[03 篇](./server-side-deploy.md) 已暴露的「服务器变脏」与「环境强耦合」。
+[04 篇（Git 与 GitHub）](./04-git-github.md) 用 Commit 锁定了代码的每一次变更版本——但当 `git pull` 拉下来的源码回到服务器，依然要 `mvn package`，依然要装 JDK，依然要面对[03 篇](./03-server-side-deploy.md) 已暴露的「服务器变脏」与「环境强耦合」。
 
 更准确地说，04 篇末尾已经点出本篇的登场使命：**如何把"编译好的产物 + 运行环境本身"一起打包？** 这一篇的回答是把它们封装成一张不可变的自包含镜像——**{{term:容器}}** 由抽象理念第一次具象为可被 `docker pull` 的实体。
 
@@ -223,20 +223,20 @@ docker push registry.cn-hangzhou.aliyuncs.com/xiaolin-docs/spring-app:1.0.0
 
 ### 8. Docker 网络与卷（预告 08 篇）
 
-单容器场景下，本篇的命令已经够用。一旦进入"Spring Boot + MySQL + Nginx"这样的多容器组合，会立刻碰到两类新的工程诉求——本节只点一下名字，详细展开留给 [08 篇 Docker Compose](./docker-compose.md)：
+单容器场景下，本篇的命令已经够用。一旦进入"Spring Boot + MySQL + Nginx"这样的多容器组合，会立刻碰到两类新的工程诉求——本节只点一下名字，详细展开留给 [08 篇 Docker Compose](./08-docker-compose.md)：
 
 - **Docker Network**：让多个容器在同一台服务器上**互相通信**——MySQL 容器不需要对外暴露，Spring Boot 容器只需通过内部网络访问 `mysql:3306`。`docker network create` 创建网络，`--network` 参数加入。
 - **Docker Volume**：让容器的数据**不被 `docker rm` 销毁**。MySQL 容器一旦 `rm`，所有数据丢失；通过 `-v mysql_data:/var/lib/mysql` 把数据写入命名卷，重启 / 重建容器数据仍在。
 
 ### 范式视角：在操作清单 $Y$ 中剥离了什么
 
-回看 [02 篇建立的形式化锚点](./production-env.md)，发布流程是一份操作清单 $Y=\{v_1,\ldots,v_n\}$。05 篇把"构建动作 $v_1$"从生产服务器的 $Y$ 中剥离，**前置到镜像阶段**——
+回看 [02 篇建立的形式化锚点](./02-production-env.md)，发布流程是一份操作清单 $Y=\{v_1,\ldots,v_n\}$。05 篇把"构建动作 $v_1$"从生产服务器的 $Y$ 中剥离，**前置到镜像阶段**——
 
 - 原 $v_1$（构建）：服务器上即时执行 `mvn package` / `pip install`，脏服务器、环境强耦合；
 - 新 $v_1'$（镜像构建）：在离线构建机或 CI 上执行，产物是不可变的自包含镜像；
 - 转移到服务器侧：$v_1''$（pull）→ $v_2$（run）→ $v_3$（verify），三个轻动作闭环。
 
-这一剥离正是 04 篇末尾留给本篇的根本问题——"如何把编译好的产物 + 运行环境打包"——的完整回答。下一步进入 [06 篇（流水线基础）](./pipeline-basics.md)：把这三个轻动作写进 pipeline 配置文件，让"手动 ssh"彻底退出部署流程。
+这一剥离正是 04 篇末尾留给本篇的根本问题——"如何把编译好的产物 + 运行环境打包"——的完整回答。下一步进入 [06 篇（流水线基础）](./06-pipeline-basics.md)：把这三个轻动作写进 pipeline 配置文件，让"手动 ssh"彻底退出部署流程。
 
 ## 实战贯穿：从 03 篇的命令链到三件套编排
 
@@ -283,7 +283,7 @@ Docker 化的关键不是把所有 step 替换成"等价 step"，而是**把每�
 
 > **核心洞察**：映射 $g$ 让每个 $J'_k$ 内部 step 数从 3-4 折叠到 2——「装环境 + 拷产物 + 写配置 + 起服务」被「pull 镜像 + run 容器」两动作取代。**$Y$ 的 job 集合不变，每个 job 内部 step 数大幅减少，job 之间拓扑序保持稳定**——这就是「容器化让运维精简」的形式化证据。
 
-这两层粒度也为 [06 篇（流水线基础）](./pipeline-basics.md) 埋下伏笔：**流水线就是把 $Y$ 写成代码、由引擎按拓扑序自动执行**——CI 与 CD 分离后，「构建镜像」与「部署镜像」就是 2 个独立 job。
+这两层粒度也为 [06 篇（流水线基础）](./06-pipeline-basics.md) 埋下伏笔：**流水线就是把 $Y$ 写成代码、由引擎按拓扑序自动执行**——CI 与 CD 分离后，「构建镜像」与「部署镜像」就是 2 个独立 job。
 
 ### 视角 2：三件套编排的完整 docker run
 
@@ -387,8 +387,8 @@ docker run -d --name spring-app -e DB_HOST=mysql -p 8080:8080 \
 
 要真正进入「push → pull」的工业级流水线，还需要：
 
-- **业务镜像从代码自动构建并 push 到 Registry** → [07 篇（GitHub Actions）](./actions.md) 解决
-- **多容器编排（MySQL 未就绪就启动 App、`docker run` 参数散落多处）** → [08 篇 Docker Compose](./docker-compose.md) 解决
+- **业务镜像从代码自动构建并 push 到 Registry** → [07 篇（GitHub Actions）](./07-actions.md) 解决
+- **多容器编排（MySQL 未就绪就启动 App、`docker run` 参数散落多处）** → [08 篇 Docker Compose](./08-docker-compose.md) 解决
 - **国内网络镜像加速**（阿里云 ACR、中科大镜像站）→ Docker 工具集配置范畴
 
 **一句话总结**：**05 篇解决的是「可迁移性」，但「运维步骤繁琐」与「网络瓶颈」这两类现实问题，留给 07 / 08 篇以及工程实践一起打**——本篇的任务是把容器化这个「起点」立稳，让后续工具链有清晰的接力棒。

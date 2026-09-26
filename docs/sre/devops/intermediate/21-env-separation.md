@@ -1,5 +1,5 @@
 ---
-title: 22 ｜ 多环境隔离与制品晋级
+title: 21 ｜ 多环境隔离与制品晋级
 description: 用 Kustomize 组织 dev、staging、prod，并让同一镜像 digest 逐步晋级。
 date: 2026-09-08
 updated: 2026-09-09
@@ -13,7 +13,7 @@ tags:
 
 ## 环境隔离与发布顺序
 
-本文承接 [21 篇 K8s 配置与密钥](21-configmap-secret.md)，从「单环境内的配置注入」扩展到「多套环境同时运行」，使用 Kustomize overlay + 镜像 digest 晋级。
+本文承接 [20 篇 K8s 配置与密钥](20-configmap-secret.md)，从「单环境内的配置注入」扩展到「多套环境同时运行」，使用 Kustomize overlay + 镜像 digest 晋级。
 
 本课沿用上一课的 `k8s/base`，使用 kubectl 内置 Kustomize。练习采用单集群三个 namespace；生产是否独立集群，要根据故障影响范围、权限与合规需求选择。namespace 提供资源作用域，不等于完整网络或节点隔离。
 
@@ -85,7 +85,7 @@ for env in dev staging prod; do
 done
 ```
 
-按第 21 篇方式为每个 namespace 创建各自的 `delivery-secret`，私有镜像还需 `ghcr-read`。不要跨环境复用生产凭据。
+按第 20 篇方式为每个 namespace 创建各自的 `delivery-secret`，私有镜像还需 `ghcr-read`。不要跨环境复用生产凭据。
 
 生产发布身份的最小 Role 示例（由管理员安装，并按工作流实际资源收敛）：
 

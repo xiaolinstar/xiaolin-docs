@@ -155,6 +155,6 @@ cAdvisor 通过 `docker.sock` 看到**宿主机上所有容器**，不论它们�
 
 ## 这条线以后怎么走
 
-本课解决了单机多套 Compose 的共存边界。下一步要把这套实践推到 CI/CD 流水线里——镜像怎么进仓库、CI 怎么产出可发布的 digest、CD 怎么把它部署到目标环境。镜像分发与制品晋级见 [15 篇 制品库与镜像仓库](15-image-registry.md)，CI/CD 边界划分见 [17 篇 CI/CD 权责分离](17-cicd-separation.md)。
+本课解决了单机多套 Compose 的共存边界。下一步要把这套实践推到 CI/CD 流水线里——镜像怎么进仓库、CI 怎么产出可发布的 digest、CD 怎么把它部署到目标环境。镜像分发与制品晋级见 [23 篇 制品库与镜像仓库](../advanced/image-registry.md)，CI/CD 边界划分见 [17 篇 CI/CD 权责分离](16-cicd-separation.md)。
 
 参考：[Compose networks](https://docs.docker.com/compose/how-tos/networking/)、[external network](https://docs.docker.com/compose/how-tos/networking/#use-a-pre-existing-network)。

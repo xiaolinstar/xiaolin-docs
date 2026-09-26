@@ -15,29 +15,30 @@ DevOps 方法论与实践经验。本站 DevOps 板块按基础、中级和高�
 
 ## 学习顺序
 
-按基础篇、中级篇、高级篇顺序学习。中级先完成 Compose 单机发布，再按需要进入 K3s；高级围绕发布验证与恢复展开，以第 29 篇结课项目验收。第 30 篇为选读，加餐篇按实际需求查阅。
+按基础篇、中级篇、高级篇顺序学习。中级先完成 Compose 单机发布，再按需要进入 K3s；高级围绕发布验证与恢复展开，以第 30 篇结课项目验收。第 31 篇为选读，加餐篇按实际需求查阅。
 
 ---
 
 ## 专栏文章目录
 
 ### 1. 开篇词
-*   [00 ｜ 渐进式运维导读](./intermediate/progressive-devops-intro.md) — 探寻中小团队与个人开发者的渐进式 DevOps 演进路径。
+*   [00 ｜ 渐进式运维导读](./intermediate/00-progressive-devops-intro.md) — 探寻中小团队与个人开发者的渐进式 DevOps 演进路径。
 
 ### 2. 基础篇：从静态资源代理到自动化流水线
 从本地 Nginx 代理静态资源开始，在具体问题中引入生产环境、Git、服务端部署、Docker、Docker Compose 与 GitHub Actions。
 
 | 序号 | 核心文章 | 说明 |
 | :--- | :--- | :--- |
-| **01** | [01 ｜ Nginx 静态资源代理](./foundation/delivery-start.md) | 从本地 `index.html` 到 VitePress `dist` 目录的静态资源代理 |
-| **02** | [02 ｜ 生产环境入门：部署到云服务器](./foundation/production-env.md) | 理解 7×24 与公网 IP，通过 SSH + scp 完成第一次手动部署 |
-| **03** | [03 ｜ 服务端应用部署：依赖、运行时与进程保活](./foundation/server-side-deploy.md) | 从静态站点升级到后端进程：双栈对比 + 运维视角三类痛点（脏 / 资源 / 网络） |
-| **04** | [04 ｜ Git 与 GitHub：版本管理与云端仓库](./foundation/git-github.md) | 版本管理核心价值，GitHub 云端备份，为后续流水线奠定代码版本基础 |
-| **05** | [05 ｜ 容器 Docker](./foundation/docker-basics.md) | 服务器回归本职：Docker 命令式用法（pull / run / stop / rm / rmi） |
-| **06** | [06 ｜ 流水线基础](./foundation/pipeline-basics.md) | 流水线化运维动作：Jenkinsfile 把手动命令变成声明式代码，运维左移到开发 |
-| **07** | [07 ｜ GitHub Actions](./foundation/actions.md) | 托管式流水线：核心概念 + Greetings / VitePress Pages 两个实战 |
-| **08** | [08 ｜ 多服务容器编排](./foundation/docker-compose.md) | 声明式多服务 + IaC：Compose 收口基础篇，CI 出镜像、服务器 pull + up |
-| **09** | [09 ｜ 基础篇总结](./foundation/foundation-summary.md) | DevOps 基础篇收尾：演进全景 / 能力清单 / 选型建议 |
+| **01** | [01 ｜ Nginx 静态资源代理](./foundation/01-delivery-start.md) | 从本地 `index.html` 到 VitePress `dist` 目录的静态资源代理 |
+| **02** | [02 ｜ 生产环境入门：部署到云服务器](./foundation/02-production-env.md) | 理解 7×24 与公网 IP，通过 SSH + scp 完成第一次手动部署 |
+| **03** | [03 ｜ 服务端应用部署：依赖、运行时与进程保活](./foundation/03-server-side-deploy.md) | 从静态站点升级到后端进程：双栈对比 + 运维视角三类痛点（脏 / 资源 / 网络） |
+| **04** | [04 ｜ Git 与 GitHub：版本管理与云端仓库](./foundation/04-git-github.md) | 版本管理核心价值，GitHub 云端备份，为后续流水线奠定代码版本基础 |
+| **05** | [05 ｜ 容器 Docker](./foundation/05-docker-basics.md) | 服务器回归本职：Docker 命令式用法（pull / run / stop / rm / rmi） |
+| **06** | [06 ｜ 流水线基础](./foundation/06-pipeline-basics.md) | 流水线化运维动作：Jenkinsfile 把手动命令变成声明式代码，运维左移到开发 |
+| **07** | [07 ｜ GitHub Actions](./foundation/07-actions.md) | 托管式流水线：核心概念 + Greetings / VitePress Pages 两个实战 |
+| **08** | [08 ｜ 多服务容器编排](./foundation/08-docker-compose.md) | 声明式多服务 + IaC：Compose 收口基础篇，CI 出镜像、服务器 pull + up |
+| **09** | [09 ｜ 基础篇总结](./foundation/09-foundation-summary.md) | DevOps 基础篇收尾：演进全景 / 能力清单 / 选型建议 |
+| **10** | [10 ｜ 多模块 Git 协作](./foundation/10-git-submodule.md) | 父子项目协作与 git submodule |
 
 ### 3. 中级篇：Compose 实践、制品分发与 CI/CD
 
@@ -50,36 +51,35 @@ DevOps 方法论与实践经验。本站 DevOps 板块按基础、中级和高�
 | **12** | [12 ｜ Dockerfile 与构建期配置](./intermediate/12-environment-build.md) | 构建位置、ARG / ENV 与 .dockerignore |
 | **13** | [13 ｜ Compose 运行期配置与环境区分](./intermediate/13-environment-runtime.md) | .env / env_file / watch 启动模式 |
 | **14** | [14 ｜ 单机 Compose 多项目共存](./intermediate/14-compose-coexist.md) | 隔离、共享中间件、反代、监控采集 |
-| **15** | [15 ｜ 制品库与镜像仓库](./intermediate/14-image-registry.md) | 普通制品、镜像与可信交接 |
-| **16** | [16 ｜ 健康检查与启动依赖](./intermediate/16-compose-health.md) | 就绪判断、依赖等待与失败诊断 |
-| **17** | [17 ｜ CI/CD 权责分离](./intermediate/17-cicd-separation.md) | 从构建、仓库和运行验收推导职责边界 |
-| **18** | [18 ｜ 持续集成流水线](./intermediate/18-ci-pipeline.md) | 自动测试、构建与 digest 输出 |
-| **19** | [19 ｜ Compose 持续发布](./intermediate/19-cd-pipeline.md) | 固定制品、健康验收与恢复 |
-| **20** | [20 ｜ K8s 应用部署](./intermediate/19-k8s-app-deploy.md) | K3s 集群建立、Deployment 与滚动更新 |
-| **21** | [21 ｜ K8s 配置与密钥](./intermediate/20-configmap-secret.md) | 单环境下的 ConfigMap / Secret 注入 |
-| **22** | [22 ｜ 多环境隔离与制品晋级](./intermediate/21-env-separation.md) | 多套环境同时运行与镜像 digest 晋级 |
-| **23** | [23 ｜ 数据库迁移与发布兼容性](./intermediate/22-db-migration.md) | 版本迁移、兼容性与失败恢复 |
+| **15** | [15 ｜ 健康检查与启动依赖](./intermediate/15-compose-health.md) | 就绪判断、依赖等待与失败诊断 |
+| **16** | [16 ｜ CI/CD 权责分离](./intermediate/16-cicd-separation.md) | 从构建、仓库和运行验收推导职责边界 |
+| **17** | [17 ｜ 持续集成流水线](./intermediate/17-ci-pipeline.md) | 自动测试、构建与 digest 输出 |
+| **18** | [18 ｜ Compose 持续发布](./intermediate/18-cd-pipeline.md) | 固定制品、健康验收与恢复 |
+| **19** | [19 ｜ K8s 应用部署](./intermediate/19-k8s-app-deploy.md) | K3s 集群建立、Deployment 与滚动更新 |
+| **20** | [20 ｜ K8s 配置与密钥](./intermediate/20-configmap-secret.md) | 单环境下的 ConfigMap / Secret 注入 |
+| **21** | [21 ｜ 多环境隔离与制品晋级](./intermediate/21-env-separation.md) | 多套环境同时运行与镜像 digest 晋级 |
+| **22** | [22 ｜ 数据库迁移与发布兼容性](./intermediate/22-db-migration.md) | 版本迁移、兼容性与失败恢复 |
 
 ### 4. 高级篇：发布验证与恢复
 
 | 序号 | 核心文章 | 说明 |
 | --- | --- | --- |
-| **23** | [23 ｜ 质量门禁卡点设计](./advanced/quality-gate.md) | 测试与漏洞门禁阻断实验 |
-| **24** | [24 ｜ 制品防篡改与 SBOM](./advanced/sha-SBOM.md) | 摘要、签名身份与 SBOM 验证 |
-| **25** | [25 ｜ GitOps 发布实践](./advanced/gitops.md) | Argo CD 调和与 Git 回退 |
-| **26** | [26 ｜ 交付边界与灰度](./advanced/what-is-cd.md) | 蓝绿切换与放量条件 |
-| **27** | [27 ｜ 变更管控就绪清单](./advanced/change-management.md) | 固定输入与恢复证据 |
-| **28** | [28 ｜ 变更防错与 AI 价值](./advanced/change-control.md) | 影子评估与指标口径 |
-| **29** | [29 ｜ 全局自动化发布：结课项目](./advanced/cloud-native-cicd.md) | 应用、数据库与文件编排 |
-| **30** | [30 ｜ 一站式平台反思（选读）](./advanced/devops-platform.md) | 维护成本与迁移决策 |
+| **23** | [23 ｜ 制品库与镜像仓库](./advanced/image-registry.md) | 普通制品、镜像与可信交接 |
+| **24** | [24 ｜ 质量门禁卡点设计](./advanced/quality-gate.md) | 测试与漏洞门禁阻断实验 |
+| **25** | [25 ｜ 制品防篡改与 SBOM](./advanced/sha-SBOM.md) | 摘要、签名身份与 SBOM 验证 |
+| **26** | [26 ｜ GitOps 发布实践](./advanced/gitops.md) | Argo CD 调和与 Git 回退 |
+| **27** | [27 ｜ 交付边界与灰度](./advanced/what-is-cd.md) | 蓝绿切换与放量条件 |
+| **28** | [28 ｜ 变更管控就绪清单](./advanced/change-management.md) | 固定输入与恢复证据 |
+| **29** | [29 ｜ 变更防错与 AI 价值](./advanced/change-control.md) | 影子评估与指标口径 |
+| **30** | [30 ｜ 全局自动化发布：结课项目](./advanced/cloud-native-cicd.md) | 应用、数据库与文件编排 |
+| **31** | [31 ｜ 一站式平台反思（选读）](./advanced/devops-platform.md) | 维护成本与迁移决策 |
 
 ### 5. 加餐篇
 
 | 序号 | 核心文章 | 说明 |
 | --- | --- | --- |
-| **31** | [31 ｜ 静态网页发布](./extra/front-dist.md) | Web 与 CDN 发布 |
-| **32** | [32 ｜ Spring 应用部署](./extra/spring.md) | Spring Boot 与 JVM |
-| **33** | [33 ｜ 多模块 Git 协作](./extra/git-submodule.md) | 父子项目协作 |
+| **32** | [32 ｜ 静态网页发布](./extra/front-dist.md) | Web 与 CDN 发布 |
+| **33** | [33 ｜ Spring 应用部署](./extra/spring.md) | Spring Boot 与 JVM |
 | **34** | [34 ｜ SRE 核心能力](./extra/devops-core.md) | 运维能力与容灾 |
 
 

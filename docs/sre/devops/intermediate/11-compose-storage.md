@@ -72,6 +72,17 @@ docker compose exec -T db psql -U demo -d demo_restore -c 'SELECT * FROM course_
 
 确认恢复库中记录与原库一致，并记录耗时。卷持久化只能应对容器替换，不能应对误删、磁盘损坏或错误 SQL；正式备份还要考虑异机保存、加密、保留周期与定期恢复演练。
 
+## 常见存储故障排查
+
+| 现象 | 原因 | 排查 |
+| --- | --- | --- |
+| 容器重启后数据消失 | 数据写入了容器可写层，未挂载卷 | `docker inspect` 检查 Mounts，确认目标路径 |
+| 新镜像部署后页面没更新 | 开发时 `./site` 挂载遮住了镜像内 COPY 的文件 | 生产部署移除 bind mount，让页面来自镜像 |
+| `down` 后数据库密码不生效 | 首次初始化的密码保存在卷状态中，改 `POSTGRES_PASSWORD` 不会覆盖 | 不要通过删卷"修复"——先确认卷内数据用途 |
+| 磁盘空间告警 | 镜像、容器可写层或日志占用 | `docker system df` 查看各类占用，`docker logs` 检查日志大小 |
+
+排查时先用 `docker inspect` 确认挂载状态，再判断数据流向。不要在不确定卷内容的情况下执行 `docker volume rm` 或 `down -v`。
+
 ## 哪些命令会影响数据
 
 | 操作 | 本例的数据卷 |

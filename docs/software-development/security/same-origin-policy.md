@@ -150,6 +150,6 @@ location /api/ {
 
 ## 关联阅读
 
-- [SRE 运维 01 ｜ Nginx 静态资源代理与托管](../../sre/devops/foundation/delivery-start.md)
-- [SRE 运维 03 ｜ 服务端应用部署：依赖、运行时与进程保活](../../sre/devops/foundation/server-side-deploy.md)
+- [SRE 运维 01 ｜ Nginx 静态资源代理与托管](../../sre/devops/foundation/01-delivery-start.md)
+- [SRE 运维 03 ｜ 服务端应用部署：依赖、运行时与进程保活](../../sre/devops/foundation/03-server-side-deploy.md)
 - [安全实践 ｜ 认证授权基础与 Cookie 安全](./basis-of-auth.md)

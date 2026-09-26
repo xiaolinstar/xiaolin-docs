@@ -64,4 +64,4 @@ tags:
 
 ## 样例
 
-[第 02 篇 · 生产环境](../devops/foundation/production-env.md) 中「多次 dev，一次 prod」使用 `diagram-dev-prod-loop.png`，作为本规范的首张样图。
+[第 02 篇 · 生产环境](../devops/foundation/02-production-env.md) 中「多次 dev，一次 prod」使用 `diagram-dev-prod-loop.png`，作为本规范的首张样图。

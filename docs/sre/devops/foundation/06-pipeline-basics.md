@@ -557,7 +557,7 @@ Jenkinsfile 不是完整的 IaC（完整 IaC 包括 Terraform、Ansible、K8s YA
 
 贯穿 5 层的核心观察：**「上线要从一次生产变更落到一个结果」这件事没变**——变化的是抽象层级（手敲 → shell → DAG → 引擎 → 文件即基础设施）。
 
-下一篇 [07 篇 · GitHub Actions](./actions.md) 是更现代的 CI/CD 流水线工具——云端托管、零运维、YAML 纯声明式，对新手入门、一人公司或中小型团队特别友好，是 Jenkins 的纯声明式替代方案。
+下一篇 [07 篇 · GitHub Actions](./07-actions.md) 是更现代的 CI/CD 流水线工具——云端托管、零运维、YAML 纯声明式，对新手入门、一人公司或中小型团队特别友好，是 Jenkins 的纯声明式替代方案。
 
 ## 思考
 

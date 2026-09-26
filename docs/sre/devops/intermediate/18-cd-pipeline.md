@@ -1,5 +1,5 @@
 ---
-title: 19 ｜ Compose 持续发布
+title: 18 ｜ Compose 持续发布
 description: 基于 Compose 完成固定镜像、审批、健康验收和显式回退。
 date: 2026-03-28
 updated: 2026-09-09
@@ -11,9 +11,9 @@ tags:
 
 ## 发布的输入必须先确定
 
-本课是 CD 段的第一篇。CI 段（[18 篇 持续集成流水线](18-ci-pipeline.md)）负责产出可发布的镜像 digest，本课把它部署到生产环境。CD 与 CI 的边界划分依据 [17 篇 CI/CD 权责分离](17-cicd-separation.md)。
+本课是 CD 段的第一篇。CI 段（[17 篇 持续集成流水线](17-ci-pipeline.md)）负责产出可发布的镜像 digest，本课把它部署到生产环境。CD 与 CI 的边界划分依据 [16 篇 CI/CD 权责分离](16-cicd-separation.md)。
 
-本课在单台练习服务器部署前面课程的 `delivery-demo`。需要 Docker Compose v2（支持 `up --wait`）、Bash、curl，以及仓库课配置的镜像拉取权限。先完成 Compose 发布，再进入 [20 篇 K8s 应用部署](20-k8s-app-deploy.md)（含 K3s 集群建立）。
+本课在单台练习服务器部署前面课程的 `delivery-demo`。需要 Docker Compose v2（支持 `up --wait`）、Bash、curl，以及仓库课配置的镜像拉取权限。先完成 Compose 发布，再进入 [19 篇 K8s 应用部署](19-k8s-app-deploy.md)（含 K3s 集群建立）。
 
 前面的本地 web + db 用于验证网络与存储，本课在独立目标目录先发布 web，数据库生命周期独立管理。不要把前面练习目录直接替换成本课文件，或通过 down -v 清除数据；数据库版本演进在后续迁移课处理。
 

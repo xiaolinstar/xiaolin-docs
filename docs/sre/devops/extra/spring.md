@@ -1,5 +1,5 @@
 ---
-title: 32 ｜ Spring 应用部署
+title: 33 ｜ Spring 应用部署
 description: 开发环境：Jetbrains IDEA
 date: 2026-03-28
 updated: 2026-09-09

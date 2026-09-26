@@ -7,7 +7,7 @@ series:
   - id: devops-basics
     name: DevOps 基础
     pillar: 云原生
-    number_range: "01-09"
+    number_range: "01-10"
     origin_dir: docs/sre/devops/foundation/
     index: docs/sre/devops/index.md
     status: writing        # planned | writing | published | archived
@@ -17,20 +17,31 @@ series:
   - id: devops-intermediate
     name: DevOps 中级
     pillar: 云原生
-    number_range: "10-17"
+    number_range: "10-22"
     origin_dir: docs/sre/devops/intermediate/
     index: docs/sre/devops/index.md
-    status: planned
-    started:
+    status: writing
+    started: 2026-09-19
+    notes: 含 00 开篇词；17 篇骨架待扩充（11/12/17）
 
   - id: devops-advanced
     name: DevOps 高级
     pillar: 云原生
-    number_range: "18-23"
+    number_range: "23-31"
     origin_dir: docs/sre/devops/advanced/
     index: docs/sre/devops/index.md
-    status: planned
-    started:
+    status: writing
+    started: 2026-09-19
+    notes: 3 篇骨架待扩充（quality-gate/change-management/devops-platform）
+
+  - id: devops-extra
+    name: DevOps 加餐
+    pillar: 云原生
+    number_range: "32-34"
+    origin_dir: docs/sre/devops/extra/
+    index: docs/sre/devops/index.md
+    status: writing
+    started: 2026-09-19
 
 # 字段说明
 # id: 系列唯一标识（kebab-case），meta.yaml 的 series_ref 引用此值

@@ -21,7 +21,7 @@ Dockerfile 描述构建过程，但不决定构建在哪台机器执行。与原
 | 目标服务器构建 | 传源码和 Dockerfile，在服务器执行 build，再启动 | 构建资源、依赖下载、源码与凭据分发、各环境分别构建的差异 |
 | 构建后分发 | 开发机或专用构建节点生成镜像，服务器只拉取运行 | 镜像存放位置、版本身份、拉取权限和旧版本保留 |
 
-先在本地完成两种配置实验，再在[下一课](15-image-registry.md)解决制品存放与分发；CI/CD 的职责边界随后从这条链路推导。
+先在本地完成两种配置实验，再在[高级篇 制品库与镜像仓库](../advanced/image-registry.md)解决制品存放与分发；CI/CD 的职责边界随后从这条链路推导。
 
 ## 用一个镜像观察构建与运行差异
 
@@ -64,6 +64,31 @@ volumes/
 ```
 
 `ARG` 用于构建阶段，不自动进入运行时环境；`ENV` 提供镜像内的运行时默认值。多阶段构建还有各自的 ARG 作用域。两者都不适合传入构建密钥，应按构建工具支持使用 secret mount 等机制。
+
+## 多阶段构建：运行镜像不带编译工具
+
+前端项目需要先 `npm run build` 生成静态文件，再把文件交给 Nginx。如果在一个阶段里完成，最终镜像会包含 Node.js、npm 和所有 `devDependencies`——体积大、攻击面宽。多阶段构建把这两个关注点拆开：
+
+```dockerfile
+FROM node:20-alpine AS build
+WORKDIR /app
+COPY package*.json ./
+RUN npm ci
+COPY . .
+RUN npm run build
+
+ARG NGINX_VERSION=1.28-alpine
+FROM nginx:${NGINX_VERSION}
+ARG BUILD_LABEL=local
+LABEL org.opencontainers.image.version=${BUILD_LABEL}
+ENV APP_ENV=local
+COPY --from=build /app/dist /usr/share/nginx/html/
+COPY nginx/default.conf.template /etc/nginx/templates/default.conf.template
+```
+
+第一阶段 `AS build` 负责编译，第二阶段只拷贝产物。最终镜像里没有 Node.js，`docker images` 对比两个阶段的体积差异通常在 10 倍以上。
+
+多阶段构建有一个容易忽略的点：**每个 `FROM` 都有自己的 ARG 作用域**。全局 ARG（第一个 `FROM` 之前声明）在每个阶段默认可用；阶段内的 ARG 只在该阶段有效。如果 Nginx 版本也需要从外部传入，要在对应阶段重新声明 `ARG NGINX_VERSION`，或使用全局 ARG。
 
 ```bash
 docker build --build-arg BUILD_LABEL=lesson12 -t delivery-demo:local .

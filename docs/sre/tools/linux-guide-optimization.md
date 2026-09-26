@@ -70,4 +70,4 @@ tags:
 ## 关联阅读
 
 - [云服务器 Linux 起手式，为什么你的 shell 这么好看？](./linux-guide.md)
-- [生产环境入门：部署到云服务器](../devops/foundation/production-env.md)
+- [生产环境入门：部署到云服务器](../devops/foundation/02-production-env.md)

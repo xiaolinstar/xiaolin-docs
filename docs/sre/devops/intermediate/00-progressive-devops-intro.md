@@ -18,14 +18,14 @@ tags:
 
 ## 先修与环境
 
-- 已完成[基础篇总结](../foundation/foundation-summary.md)的能力检查。
+- 已完成[基础篇总结](../foundation/09-foundation-summary.md)的能力检查。
 - 有独立 GitHub 练习仓库、Docker 环境，能理解 Bash 退出码与 YAML 缩进。
 - Compose 实验和 K3s 实验使用独立环境，避免入口端口和生产服务冲突。
 - 服务器架构与镜像构建平台一致；私有镜像需配置各环境的读取权限。
 
 ## 中级：先理解 Compose，再自动化交付
 
-10–14 课先用本地 Compose 解释网络、数据、构建、仓库与健康；15–19 课把已验证的动作串成 CI/CD。20–23 课按需要进入 K3s、多环境和数据库演进。
+10–14 课先用本地 Compose 解释网络、数据、构建与健康；15–18 课把已验证的动作串成 CI/CD。19–22 课按需要进入 K3s、多环境和数据库演进。
 
 | 顺序 | 课程 | 本课交付物 |
 | --- | --- | --- |
@@ -34,28 +34,28 @@ tags:
 | 12 | [Dockerfile 与构建期配置](12-environment-build.md) | 构建位置、ARG / ENV 与 .dockerignore |
 | 13 | [Compose 运行期配置与环境区分](13-environment-runtime.md) | .env / env_file / watch 启动模式 |
 | 14 | [单机 Compose 多项目共存](14-compose-coexist.md) | 隔离、共享中间件、反代、监控采集 |
-| 15 | [制品库与镜像仓库](15-image-registry.md) | 普通制品、镜像与可信交接 |
-| 16 | [健康检查与启动依赖](16-compose-health.md) | 就绪判断、依赖等待与失败诊断 |
-| 17 | [CI/CD 权责分离](17-cicd-separation.md) | 从构建、仓库和运行验收推导职责边界 |
-| 18 | [持续集成流水线](18-ci-pipeline.md) | 自动测试、构建与 digest 输出 |
-| 19 | [Compose 持续发布](19-cd-pipeline.md) | 固定制品、健康验收与恢复 |
-| 20 | [K8s 应用部署](20-k8s-app-deploy.md) | K3s 集群建立、Deployment 与滚动更新 |
-| 21 | [K8s 配置与密钥](21-configmap-secret.md) | 单环境下的 ConfigMap / Secret 注入 |
-| 22 | [多环境隔离与制品晋级](22-env-separation.md) | 多套环境同时运行与镜像 digest 晋级 |
-| 23 | [数据库迁移与发布兼容性](23-db-migration.md) | 版本迁移、兼容性与失败恢复 |
+| 15 | [健康检查与启动依赖](15-compose-health.md) | 就绪判断、依赖等待与失败诊断 |
+| 16 | [CI/CD 权责分离](16-cicd-separation.md) | 从构建、仓库和运行验收推导职责边界 |
+| 17 | [持续集成流水线](17-ci-pipeline.md) | 自动测试、构建与 digest 输出 |
+| 18 | [Compose 持续发布](18-cd-pipeline.md) | 固定制品、健康验收与恢复 |
+| 19 | [K8s 应用部署](19-k8s-app-deploy.md) | K3s 集群建立、Deployment 与滚动更新 |
+| 20 | [K8s 配置与密钥](20-configmap-secret.md) | 单环境下的 ConfigMap / Secret 注入 |
+| 21 | [多环境隔离与制品晋级](21-env-separation.md) | 多套环境同时运行与镜像 digest 晋级 |
+| 22 | [数据库迁移与发布兼容性](22-db-migration.md) | 版本迁移、兼容性与失败恢复 |
 
 ## 高级：发布验证与恢复
 
 | 顺序 | 课程 | 本课交付物 |
 | --- | --- | --- |
-| 23 | [质量门禁卡点设计](../advanced/quality-gate.md) | 测试与漏洞门禁阻断实验 |
-| 24 | [制品防篡改与 SBOM](../advanced/sha-SBOM.md) | 摘要、签名身份与 SBOM 验证 |
-| 25 | [GitOps 发布实践](../advanced/gitops.md) | Argo CD 调和与 Git 回退 |
-| 26 | [交付边界与灰度](../advanced/what-is-cd.md) | 蓝绿切换与放量条件 |
-| 27 | [变更管控就绪清单](../advanced/change-management.md) | 固定输入与恢复证据 |
-| 28 | [变更防错与 AI 价值](../advanced/change-control.md) | 影子评估与指标口径 |
-| 29 | [全局自动化发布：结课项目](../advanced/cloud-native-cicd.md) | 应用、数据库与文件编排 |
-| 30 | [一站式平台反思（选读）](../advanced/devops-platform.md) | 维护成本与迁移决策 |
+| 23 | [制品库与镜像仓库](../advanced/image-registry.md) | 普通制品、镜像与可信交接 |
+| 24 | [质量门禁卡点设计](../advanced/quality-gate.md) | 测试与漏洞门禁阻断实验 |
+| 25 | [制品防篡改与 SBOM](../advanced/sha-SBOM.md) | 摘要、签名身份与 SBOM 验证 |
+| 26 | [GitOps 发布实践](../advanced/gitops.md) | Argo CD 调和与 Git 回退 |
+| 27 | [交付边界与灰度](../advanced/what-is-cd.md) | 蓝绿切换与放量条件 |
+| 28 | [变更管控就绪清单](../advanced/change-management.md) | 固定输入与恢复证据 |
+| 29 | [变更防错与 AI 价值](../advanced/change-control.md) | 影子评估与指标口径 |
+| 30 | [全局自动化发布：结课项目](../advanced/cloud-native-cicd.md) | 应用、数据库与文件编排 |
+| 31 | [一站式平台反思（选读）](../advanced/devops-platform.md) | 维护成本与迁移决策 |
 
 ## 如何判断学会了
 

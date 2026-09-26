@@ -195,7 +195,7 @@ docker compose logs --tail=100
 
 Docker Compose 把 05 的单容器能力扩展为**多服务期望状态**：一份 YAML、一条 `up`、一键 `down`。它与 Jenkinsfile / Actions YAML 同属 IaC——区别只是声明对象不同（拓扑 vs 动作链）。
 
-下一步进入 [第 09 篇 · 基础篇总结](./foundation-summary.md)：回顾 01–08 的范式跃迁、能力清单，以及「够用」与「还差得远」的边界。
+下一步进入 [第 09 篇 · 基础篇总结](./09-foundation-summary.md)：回顾 01–08 的范式跃迁、能力清单，以及「够用」与「还差得远」的边界。
 
 ## 思考
 
