@@ -38,7 +38,6 @@ DevOps 方法论与实践经验。本站 DevOps 板块按基础、中级和高�
 | **07** | [07 ｜ GitHub Actions](./foundation/07-actions.md) | 托管式流水线：核心概念 + Greetings / VitePress Pages 两个实战 |
 | **08** | [08 ｜ 多服务容器编排](./foundation/08-docker-compose.md) | 声明式多服务 + IaC：Compose 收口基础篇，CI 出镜像、服务器 pull + up |
 | **09** | [09 ｜ 基础篇总结](./foundation/09-foundation-summary.md) | DevOps 基础篇收尾：演进全景 / 能力清单 / 选型建议 |
-| **10** | [10 ｜ 多模块 Git 协作](./foundation/10-git-submodule.md) | 父子项目协作与 git submodule |
 
 ### 3. 中级篇：Compose 实践、制品分发与 CI/CD
 
@@ -81,6 +80,7 @@ DevOps 方法论与实践经验。本站 DevOps 板块按基础、中级和高�
 | **32** | [32 ｜ 静态网页发布](./extra/front-dist.md) | Web 与 CDN 发布 |
 | **33** | [33 ｜ Spring 应用部署](./extra/spring.md) | Spring Boot 与 JVM |
 | **34** | [34 ｜ SRE 核心能力](./extra/devops-core.md) | 运维能力与容灾 |
+| **35** | [35 ｜ 多模块 Git 协作](./extra/git-submodule.md) | 父子项目协作与 git submodule |
 
 
 ---

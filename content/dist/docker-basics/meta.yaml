@@ -1,21 +1,21 @@
 slug: docker-basics
-origin: docs/sre/devops/foundation/docker-basics.md
-origin_url: https://xiaolinstar.cn/sre/devops/foundation/docker-basics.html
+origin: docs/sre/devops/foundation/05-docker-basics.md
+origin_url: https://xiaolinstar.cn/sre/devops/foundation/05-docker-basics.html
 title: DevOps 基础 05 ｜ 容器 Docker：让服务器回归本职
 pillar: 云原生
 series_ref: devops-basics
 created: 2026-08-29
-updated: 2026-08-30
-summary: 04 篇用 Git 锁定了代码版本，但源码回到服务器后，仍然要面对运行时、依赖和环境差异。本文从服务器构建与本地编译两条路线的困境出发，讲清 Docker 容器、镜像、容器运行时和 Dockerfile，并用一组实战命令说明如何让应用与运行环境一起交付。
+updated: 2026-10-01
+summary: 04 篇用 Git 锁定了代码版本，但源码回到服务器后，仍然要装 JDK、跑构建、面对环境差异。本文从服务器构建与本地编译两条路线的困境出发，讲清容器与虚拟机的本质区别、镜像与容器的命令流转，再用 Dockerfile 和三件套编排把「环境 + 产物」一起交付。
 platforms:
   wechat:
     account: AI持续运维
-    status: ready
+    status: draft
     output: wechat.md
     origin_sync: generated
     title_selected: DevOps 基础 05 ｜ 容器 Docker：让服务器回归本职
     search_keywords:
       - Docker 容器
-      - Docker 部署
       - Dockerfile 镜像构建
       - 容器化部署
+      - 不可变基础设施

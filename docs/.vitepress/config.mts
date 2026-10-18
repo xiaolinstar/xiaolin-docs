@@ -143,7 +143,6 @@ export default withMermaid({
                                 { text: '07. GitHub Actions', link: `/sre/devops/foundation/07-actions` },
                                 { text: '08. 多服务容器编排', link: `/sre/devops/foundation/08-docker-compose` },
                                 { text: '09. 基础篇总结', link: `/sre/devops/foundation/09-foundation-summary` },
-                                { text: '10. 多模块 Git 协作', link: `/sre/devops/foundation/10-git-submodule` },
                             ]
                         },
                         {
@@ -188,6 +187,7 @@ export default withMermaid({
                                 { text: '32. 静态网页发布', link: `/sre/devops/extra/front-dist` },
                                 { text: '33. Spring 应用部署', link: `/sre/devops/extra/spring` },
                                 { text: '34. SRE 核心能力', link: `/sre/devops/extra/devops-core` },
+                                { text: '35. 多模块 Git 协作', link: `/sre/devops/extra/git-submodule` },
                             ]
                         },
                         {

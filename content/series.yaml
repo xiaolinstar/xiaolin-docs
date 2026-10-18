@@ -37,7 +37,7 @@ series:
   - id: devops-extra
     name: DevOps 加餐
     pillar: 云原生
-    number_range: "32-34"
+    number_range: "32-35"
     origin_dir: docs/sre/devops/extra/
     index: docs/sre/devops/index.md
     status: writing
