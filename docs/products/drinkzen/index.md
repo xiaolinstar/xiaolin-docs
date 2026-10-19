@@ -16,27 +16,9 @@ tags:
 
 ## 文档指引
 
-<div class="recommend-container" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 16px; margin-top: 24px;">
-
-<RecommendCard 
-  title="产品介绍"
-  description="了解奶茶仙人的产品背景、面向用户的核心故事、管理端的品牌运营流以及 ABCD 营养评级标准。"
-  link="./product"
-/>
-
-<RecommendCard 
-  title="快速上手"
-  description="包含日常用户使用流程与本地开发环境（微信小程序及 Web 端）的搭建步骤、密钥扫描与 Git 提交门禁。"
-  link="./quick-start"
-/>
-
-<RecommendCard 
-  title="技术架构"
-  description="探索奶茶仙人的技术选型、Monorepo 目录职责边界、前后端数据模型定义、评级算法以及跨端代码共享策略。"
-  link="./architecture"
-/>
-
-</div>
+- **[产品介绍](./product)** — 产品背景、用户故事、品牌运营与 ABCD 营养评级标准
+- **[快速上手](./quick-start)** — 用户使用流程与本地开发环境搭建
+- **[技术架构](./architecture)** — 技术选型、Monorepo 目录结构、数据模型与评级算法
 
 > [!TIP]
 > 奶茶仙人项目采用 **规范驱动开发 (Specification-Driven Development, SDD)** 模式。所有的功能在实现前都经过了详尽的设计文档规划与用户故事验收标准界定，确保交付质量。

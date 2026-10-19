@@ -1,50 +1,51 @@
 ---
-title: 关于本站
-description: AI持续运维的联系入口、内容平台、产品矩阵与合作说明。
-tags:
-  - 关于本站
-  - 联系合作
+title: 关于我
+description: 北邮计算机硕士，SRE 工程师，专注 DevOps 体系化建设与 AI Agent 工程实践。
 ---
 
+## 教育背景
 
-**AI持续运维** 是一个面向 SRE、DevOps、AI 工程实践和个人产品探索的技术站点，长期沉淀工程实践、产品文档和内容分发素材。
+| 学校 | 专业 | 学位 | 时间 |
+|------|------|------|------|
+| 北京邮电大学 | 计算机科学与技术 | 硕士 | 2021 - 2024 |
+| 北京邮电大学 | 计算机科学与技术 | 本科 | 2017 - 2021 |
+
+## 工作经历
+
+| 公司 | 职位 | 时间 | 工作内容 |
+|------|------|------|----------|
+| 某央企 | SRE 工程师 | 2024.07 - 至今 | 运维体系化建设，编写 DevOps 技术文档 30+ 篇，推动手动部署到自动化流水线转型 |
+| 快手科技 | Java 后端（实习） | 2023.03 - 2023.09 | Spring Boot 后端服务开发 |
+
+## 技术技能
+
+| 领域 | 技能 |
+|------|------|
+| **AI 工程** | Vibe Coding（Rules / Hooks / Skills）· LangChain / OpenClaw · PyTorch · RAG 应用 · 模型评测 |
+| **SRE / DevOps** | Docker / containerd / K8s · Jenkins / GitHub Actions · 可观测性 · Terraform / Ansible |
+| **后端开发** | Java / Python（熟练）· Spring Boot / Flask · MySQL / Redis / Kafka |
+
+## 开源项目
+
+| 项目 | 描述 | Stars |
+|------|------|-------|
+| [xiaolin-docs](https://github.com/xiaolinstar/xiaolin-docs) | 技术站点源码，DevOps 体系化建设 30+ 篇原创 | 2 |
+| [llm-law](https://github.com/xiaolinstar/llm-law) | 基于 LangChain 的 RAG 法律领域垂直应用 | 17 |
+| [ArbSR-cuda11.x](https://github.com/xiaolinstar/ArbSR-cuda11.x) | 超分辨率论文复现，CUDA 11.x 重构 | 4 |
+| [himalaya-kit](https://github.com/xiaolinstar/himalaya-kit) | himalaya CLI 的 Python 配套工具包 | - |
+
+## 产品作品
+
+| 产品 | 类型 | 简介 |
+|------|------|------|
+| [奶茶仙人](/products/drinkzen/) | 微信小程序 | 奶茶点单与推荐助手 |
+| [我的日省待办（AI Todo）](/products/ai-todo/) | 微信小程序 | AI 驱动的智能待办管理 |
+| [我的聚会助手](/products/party-helper/) | 微信小程序 | 聚会游戏与互动工具 |
+| [聚会助手 H5](https://wodi.games) | H5 游戏 | 谁是卧底等派对游戏网页版 |
 
 ## 联系方式
 
-| 渠道 | 信息 |
-| --- | --- |
-| 邮箱 | [xing.xiaolin@foxmail.com](mailto:xing.xiaolin@foxmail.com) |
-| GitHub | [xiaolinstar](https://github.com/xiaolinstar) |
-| 本站源码 | [xiaolin-docs](https://github.com/xiaolinstar/xiaolin-docs) |
-| 微信公众号 | AI持续运维 |
-| 掘金 | AI持续运维 |
-
-## 内容平台
-
-| 平台 | 定位 |
-| --- | --- |
-| 本站 | 权威原文、长期沉淀、产品文档 |
-| 微信公众号 | 技术文章、运营更新、读者互动 |
-| 掘金 | 技术社区分发 |
-| GitHub | 开源项目、脚本、配置与文档源码 |
-
-## 产品矩阵
-
-| 产品 | 状态 | 入口 |
-| --- | --- | --- |
-| AI 待办 | 建设中 | [查看文档](/products/ai-todo/) |
-| 聚会助手 | 建设中 | [查看文档](/products/party-helper/) |
-| 奶茶仙人 | 建设中 | [查看文档](/products/drinkzen/) |
-
-## 合作与反馈
-
-欢迎通过邮箱联系，适合以下场景：
-
-- 技术交流、文章勘误、链接失效反馈。
-- 友情链接、内容转载、社区合作。
-- 产品试用、问题反馈、功能建议。
-- 优惠推荐、推广合作、资源置换。
-
-## 友情链接
-
-友情链接优先收录技术博客、开源项目、个人产品站和长期维护的工具站。交换链接可通过邮箱联系，请附上站点名称、链接、简介和期望展示位置。
+- 📧 [xing.xiaolin@foxmail.com](mailto:xing.xiaolin@foxmail.com)
+- 🐙 [github.com/xiaolinstar](https://github.com/xiaolinstar)
+- 🌐 [xiaolin.fun](https://xiaolin.fun)
+- 💬 公众号：AI持续运维
