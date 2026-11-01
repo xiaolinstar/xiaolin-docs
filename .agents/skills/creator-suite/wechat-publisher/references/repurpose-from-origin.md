@@ -13,7 +13,7 @@
 | Origin 正文 | `docs/{path}.md`（跳过 YAML frontmatter） |
 | Slug | 文件名去 `.md`，或用户指定 |
 | 站点 URL | `https://xiaolinstar.cn/` + 对应 html 路径 |
-| 语气 | [brand-voice.md](../shared/brand-voice.md) |
+| 语气 | [brand-voice.md](../../shared/brand-voice.md) |
 
 ### 1.2 正文转换规则
 
@@ -50,14 +50,14 @@
 
 **⑤ 文末追加（Generate / Polish 默认）**
 
-遵循 SKILL.md「尾部设计」。06 篇选定示例（实际正文不使用引用块）：
+遵循 SKILL.md「尾部设计」。以下为占位模板，生成时按文章内容填写，具体成稿写入 `content/dist/{slug}/`：
 
 ```markdown
-下一篇，我们用 GitHub Actions，把这套流程放进实际项目。
+{已确定的下一篇主题与读者收益；没有下一篇时省略}
 
-你现在的部署流程里，还有哪一步依赖某个人记住？
+{一个与本文相关、读者能结合自身情况回答的问题}
 
-本文的完整图示与示例见站点原文，点击文末“阅读原文”查看。
+{站点实际提供的补充材料说明；入口已确认后，引导阅读原文}
 ```
 
 - 预告与问题随文章内容改写；没有确定的下一篇时省略预告。
@@ -96,7 +96,7 @@ pillar: 云原生
 platforms:
   wechat:
     account: AI持续运维
-    status: ready
+    status: draft  # 完成后台验收且用户确认可发后设为 ready
     output: wechat.md
     title_selected: DevOps 基础 01 ｜ Nginx 静态资源代理
     origin_sync: generated   # generated | polished
@@ -137,7 +137,7 @@ cd docs/sre/devops && python3 convert_for_wechat.py {filename}
 mode: repurpose+polish
 polish:
   - "2026-06-25: 压缩结对编程痛点段，保留野马比喻"
-status: ready   # 用户确认可发时
+status: draft   # 完成后台验收且用户确认可发后设为 ready
 ```
 
 ### 2.3 发布 checklist（Polish 后核对）

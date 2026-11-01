@@ -41,7 +41,7 @@ docs/ Origin（权威原文，上站）
 4. 生成标题 ×3、摘要 80–120 字、文末收尾（见下方约定）
    - 生成 4 个搜索关键词：1 个主关键词 + 3 个长尾关键词，并同步写入 `meta.yaml` 的 `search_keywords`
    - **系列文章**（DevOps 基础 / 中级 / 高级等）按 [brand-voice §5.4](../shared/brand-voice.md#54-系列文章命名约定) 命名：`{系列名} {序号} ｜ {主题}`；Origin 标题已带序号时直接复用
-   - 系列清单（系列名 / 序号区间 / Origin 目录）从 [`content/series.yaml`](../../../content/series.yaml) 读取；不在 SKILL 内硬编码
+   - 系列清单（系列名 / 序号区间 / Origin 目录）从 [`content/series.yaml`](../../../../content/series.yaml) 读取；不在 SKILL 内硬编码
 5. 写入 `content/dist/{slug}/wechat.md`，更新 `meta.yaml`（含 `series_ref` 字段）
 
 **异常系列**（`exception-*.md` 站内链）：先运行脚本再补元数据：
@@ -58,7 +58,7 @@ cd docs/sre/devops && python3 convert_for_wechat.py exception-06.md
 
 用户要求「润色 / 优化 wechat.md」时，在已生成文件上修改，不默认覆盖 Origin 重生成。
 
-- 更新 frontmatter：`mode: repurpose+polish`、`polish:` 记录、`status: ready`
+- 更新 frontmatter：`mode: repurpose+polish`、`polish:` 记录；尚未完成后台验收时保持 `status: draft`，通过验收且用户确认可发后才设为 `ready`。
 - 保留 ≥3 处个人真实细节；遵守 brand-voice 禁区
 - 检查内容降级是否到位：公式图片对齐、表格是否已改写为叙述、代码块是否精简
 - 通读降级后的段落衔接，确保改写处与上下文语气一致
@@ -83,7 +83,7 @@ polish: []
 
 # 正文（粘贴到公众号后台）
 
-# 文末引流
+# 文末收尾
 
 # 发布 checklist
 ```
@@ -115,7 +115,8 @@ polish: []
 - 不重复小结，不默认追加“关注 AI持续运维，获取更多……”、品牌口号、横幅或二维码。尾部以普通正文呈现，保持轻量。
 - 原文 URL 放入发布元数据，供填写后台“原文链接”字段，默认不在正文堆放长 URL。只有配置并确认入口后，才使用“阅读原文”的引导；没有入口时改为清晰的站点地址说明。
 - 准确描述站点提供的材料，不把普通文章统称为“完整版与配置清单”。
-- 06 篇示例见 [repurpose-from-origin.md](references/repurpose-from-origin.md) 的「文末追加」。Generate 与 Polish 均遵守本约定。
+- 通用模板见 [repurpose-from-origin.md](references/repurpose-from-origin.md) 的「文末追加」。Generate 与 Polish 均遵守本约定。
+- 内容与规则分离：具体文章正文、选定尾部及发布状态放在 `content/dist/{slug}/`；Skill 仅维护通用规则与占位模板。
 
 ### 内容降级策略
 
