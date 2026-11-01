@@ -80,7 +80,7 @@ series_ref: devops-basics    # 指向 content/series.yaml 的 id
 2. **有差异才落盘**；与原文相同的掘金同步可在 `meta.yaml` 标注 `sync: origin`，不必重复存全文。
 3. **视频 mp4 等大文件** 默认不提交 Git；脚本与 meta 提交即可。
 4. 生成流程见 `.agents/skills/creator-suite/content-repurpose/SKILL.md`。
-5. **架构版本**：creator-suite 当前 **v1.0.0**（见 `.agents/skills/creator-suite/VERSION`）；大改动时递增 MAJOR 并更新 `CHANGELOG.md`。
+5. **架构版本**：creator-suite 当前版本以 `.agents/skills/creator-suite/VERSION` 为准；大改动时递增 MAJOR 并更新 `CHANGELOG.md`。
 
 ## 历史说明
 
