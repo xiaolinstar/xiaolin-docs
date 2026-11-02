@@ -1,10 +1,10 @@
 <!doctype html>
 <html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>DevOps 基础 06 ｜ 流水线基础：把运维动作写成自动化脚本</title>
 <style>body{margin:0;background:#eee;font-family:-apple-system,BlinkMacSystemFont,"PingFang SC",sans-serif;color:#333}.controls{max-width:720px;margin:20px auto;padding:20px;background:#fff}button{padding:10px 18px;cursor:pointer}textarea{display:block;box-sizing:border-box;width:100%;min-height:65px;margin:8px 0 16px;font:14px/1.6 sans-serif}.preview{box-sizing:border-box;width:100%;max-width:407px;margin:20px auto;padding:20px 16px;background:#fff}.preview section{min-width:0}#status{line-height:1.7;font-size:14px;color:#555}@media(max-width:430px){.preview{margin:0 auto}.controls{margin:0 auto}}</style></head>
-<body><aside class="controls"><h1 style="font-size:20px">06 篇发布候选稿</h1><p>当前样式：第一批格式验收完成 · 引用块最终文字颜色 #666</p><p>本轮查看“执行与边界”末尾的短引用块：3px 灰蓝左线、15px 文字，无底色。本轮已从原文补回任务下标 J₁、节点 v₃、依赖箭头 →、拓扑序 τ，以及成功率 (1 − p)ⁿ、百分号等轻量文本；重点查看“把部署拆成 job 和 step”和“从串行步骤走向依赖图”。</p><p>行内代码采用 14px 等宽字、深蓝灰文字与浅灰底，不使用语法高亮；请检查中文混排、基线和换行。代码块样式保持不变。</p><p>代码采用完整 pre/code 结构，13px 等宽字体、行高 1.6、左右内边距 10px，长行只视觉折行；关键字深蓝、字符串棕红、注释深灰绿。请检查微信保存与手机预览后复制出的缩进、换行和特殊字符。</p><p>下方预览区域只有正文。标题、摘要分别填入后台对应字段；本稿无图片，无需逐张补图。第一批已使用格式均获用户确认；发布状态与原文链接配置单独检查。</p>
+<body><aside class="controls"><h1 style="font-size:20px">06 篇发布候选稿</h1><p>当前样式：第一批格式验收完成 · 第二批格式验收完成 · LaTeX 数学排版独立第三批</p><p>查看位置：第 4 节末尾的工作流路径；第 5 节中的目录树和 job／step 列表；第 8 节小结后的参考资料。第 5 节改为“从整体结构逐层展开”：整体骨架、阶段、步骤与凭据作用域。局部片段用于讲解，不可拼接成完整文件。第二批格式已按记录范围验收。</p><p>行内代码采用 14px 等宽字、深蓝灰文字与浅灰底，不使用语法高亮；请检查中文混排、基线和换行。代码块样式保持不变。</p><p>代码采用完整 pre/code 结构，13px 等宽字体、行高 1.6、左右内边距 10px，长行只视觉折行；关键字深蓝、字符串棕红、注释深灰绿。请检查微信保存与手机预览后复制出的缩进、换行和特殊字符。</p><p>下方预览区域只有正文。标题、摘要分别填入后台对应字段；本稿包含 2 张图片与图注：第 3 节 DAG 转图、第 7 节原图。本稿使用自有 CDN 图片，Chrome 复制全文到微信的显示链路已验证，不需要上传微信素材库；保存重开及手机显示按实际结果确认。第一批已使用格式均获用户确认；发布状态与原文链接配置单独检查。</p>
 <label>标题<textarea readonly>DevOps 基础 06 ｜ 流水线基础：把运维动作写成自动化脚本</textarea></label><label>摘要<textarea readonly>这一篇，我从 Docker 之后仍需手动执行的上线步骤出发，梳理 shell 脚本、任务依赖和流水线引擎的关系，再用 Jenkinsfile 说明如何把部署流程放进 Git，减少临场操作，同时保留对运行环境、失败处理和生产审批的必要判断。</textarea></label>
 <label>后台原文链接（待配置并验证）<textarea readonly>https://xiaolinstar.cn/sre/devops/foundation/06-pipeline-basics.html</textarea></label><p>尾部已使用“阅读原文”引导，发布前请配置此链接并确认入口有效。</p>
-<button id="copy">复制正文</button><p id="status" role="status">复制后在公众号正文区普通粘贴，勿选择“粘贴为纯文本”。</p></aside>
+<p id="image-status" role="status">正在检查正文图片加载状态……</p><p><a href="https://media.xiaolin.fun/docs/img-pipeline-basics/infographic-traditional-ops.png" target="_blank" rel="noopener noreferrer">单独打开原图，检查当前环境能否访问</a></p><button id="copy">复制正文</button><p id="status" role="status">复制后在公众号正文区普通粘贴，勿选择“粘贴为纯文本”。</p></aside>
 <main class="preview"><section id="article" style="font-family:-apple-system,BlinkMacSystemFont,'PingFang SC','Microsoft YaHei',sans-serif;font-size:15px;line-height:1.8;color:#333;text-align:left;"><p style="margin:0 0 15px;font-size:15px;line-height:1.8;color:#333;text-align:left;word-wrap:break-word;">05 篇用 Docker 固化了运行环境，但上线时还有最后一步：人登录服务器，把部署命令再执行一遍。</p>
 <p style="margin:0 0 15px;font-size:15px;line-height:1.8;color:#333;text-align:left;word-wrap:break-word;">想象这样一个上线场景：周五晚上，小张把代码合进 main，通知老李上线。老李打开终端，拉取镜像、删除旧容器、启动新容器，再检查服务是否正常。一旦漏掉一步，就要回头排查、重新执行。</p>
 <p style="margin:0 0 15px;font-size:15px;line-height:1.8;color:#333;text-align:left;word-wrap:break-word;">Docker 统一了部署接口，却没有消除重复操作。Java、Python、Node.js 应用都可以装进镜像，但每周发两次版本，老李还是要敲两遍相同的命令。</p>
@@ -48,6 +48,7 @@ curl -fsS http://localhost:8080/health
 <p style="margin:0 0 15px;font-size:15px;line-height:1.8;color:#333;text-align:left;word-wrap:break-word;">假设镜像构建完成后，要分别推送到华东和华北。两地推送互不依赖，可以并行；每地推送成功后，各自部署并检查；两地检查都成功，才允许全量切流。</p>
 <p style="margin:0 0 15px;font-size:15px;line-height:1.8;color:#333;text-align:left;word-wrap:break-word;">沿用原文的节点编号：v₁ 是单元测试，v₂ 是镜像构建；v₃、v₄ 分别向华东、华北推送镜像；v₅、v₆ 分别检查两地服务；v₇ 是全量切流。</p>
 <p style="margin:0 0 15px;font-size:15px;line-height:1.8;color:#333;text-align:left;word-wrap:break-word;">依赖关系可以简写为：v₁ → v₂；v₂ → v₃、v₄；v₃ → v₅，v₄ → v₆；v₅、v₆ 都成功后，才进入 v₇。这里假定两地检查任务都包含必要的部署动作。</p>
+<p style="margin:16px 0;padding:0;text-align:center;"><img width="1025" height="1500" loading="eager" referrerpolicy="no-referrer" src="https://media.xiaolin.fun/docs/img-pipeline-basics/wechat-dag-v1.png" alt="两地并行发布的 DAG 依赖关系" style="display:block;box-sizing:border-box;width:218px;max-width:100%;height:auto;margin:0 auto 6px;"><span style="display:block;font-size:13px;line-height:1.6;color:#666;text-align:center;">两地并行发布的 DAG 依赖关系</span></p>
 <p style="margin:0 0 15px;font-size:15px;line-height:1.8;color:#333;text-align:left;word-wrap:break-word;">这个流程可以直接用文字读出来：</p>
 <ol style="margin:0 0 15px;padding-left:28px;font-size:15px;line-height:1.8;color:#333;list-style-type:decimal;list-style-position:outside;">
 <li style="margin:0 0 8px;line-height:1.8;">先完成测试和镜像构建。</li>
@@ -64,9 +65,44 @@ curl -fsS http://localhost:8080/health
 <p style="margin:0 0 15px;font-size:15px;line-height:1.8;color:#333;text-align:left;word-wrap:break-word;">流水线引擎通常承担几类工作：接收手动或 webhook 触发，解析流程定义，把任务交给执行节点，记录运行结果，并在结束时执行通知等操作。</p>
 <p style="margin:0 0 15px;font-size:15px;line-height:1.8;color:#333;text-align:left;word-wrap:break-word;">它没有让脚本消失。拉镜像、部署和健康检查仍然可以写在 shell 文件里，引擎负责决定这些脚本何时运行、在哪里运行，以及失败后如何处理。</p>
 <p style="margin:0 0 15px;font-size:15px;line-height:1.8;color:#333;text-align:left;word-wrap:break-word;">职责分开后，排查也更清楚。依赖配置错误，要检查流程定义；某个任务失败，要查看该任务的日志和脚本；执行环境缺工具，则需要检查执行节点。</p>
-<p style="margin:0 0 15px;font-size:15px;line-height:1.8;color:#333;text-align:left;word-wrap:break-word;">Jenkins、GitHub Actions、GitLab CI 等工具都可以承担流水线编排。这里以 Jenkinsfile 为例，下一篇再展开 GitHub Actions。</p>
+<p style="margin:0 0 15px;font-size:15px;line-height:1.8;color:#333;text-align:left;word-wrap:break-word;">Jenkins、GitHub Actions、GitLab CI 等工具都可以承担流水线编排。原文列举了多种工具，这里先保留三个常见例子：</p>
+<table style="box-sizing:border-box;width:100%;max-width:100%;table-layout:fixed;border-collapse:collapse;margin:16px 0;font-size:14px;line-height:1.7;color:#333;">
+<thead>
+<tr>
+<th style="box-sizing:border-box;border:1px solid #dce2e8;padding:8px;text-align:left;vertical-align:top;background:#f3f5f7;font-size:14px;line-height:1.7;font-weight:700;overflow-wrap:anywhere;width:36%;">工具</th>
+<th style="box-sizing:border-box;border:1px solid #dce2e8;padding:8px;text-align:left;vertical-align:top;background:#f3f5f7;font-size:14px;line-height:1.7;font-weight:700;overflow-wrap:anywhere;width:64%;">流程定义方式</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="box-sizing:border-box;border:1px solid #dce2e8;padding:8px;text-align:left;vertical-align:top;background:#fff;font-size:14px;line-height:1.7;overflow-wrap:anywhere;width:36%;">Jenkins</td>
+<td style="box-sizing:border-box;border:1px solid #dce2e8;padding:8px;text-align:left;vertical-align:top;background:#fff;font-size:14px;line-height:1.7;overflow-wrap:anywhere;width:64%;">在 Jenkinsfile 中用 Groovy DSL 定义流程。</td>
+</tr>
+<tr>
+<td style="box-sizing:border-box;border:1px solid #dce2e8;padding:8px;text-align:left;vertical-align:top;background:#fff;font-size:14px;line-height:1.7;overflow-wrap:anywhere;width:36%;">GitHub Actions</td>
+<td style="box-sizing:border-box;border:1px solid #dce2e8;padding:8px;text-align:left;vertical-align:top;background:#fff;font-size:14px;line-height:1.7;overflow-wrap:anywhere;width:64%;">在仓库的工作流文件中用 YAML 定义流程。</td>
+</tr>
+<tr>
+<td style="box-sizing:border-box;border:1px solid #dce2e8;padding:8px;text-align:left;vertical-align:top;background:#fff;font-size:14px;line-height:1.7;overflow-wrap:anywhere;width:36%;">GitLab CI</td>
+<td style="box-sizing:border-box;border:1px solid #dce2e8;padding:8px;text-align:left;vertical-align:top;background:#fff;font-size:14px;line-height:1.7;overflow-wrap:anywhere;width:64%;">在 .gitlab-ci.yml 中用 YAML 定义流程。</td>
+</tr>
+</tbody>
+</table>
+<p style="margin:0 0 15px;font-size:15px;line-height:1.8;color:#333;text-align:left;word-wrap:break-word;">GitHub Actions 的工作流文件放在 <code style="font-family:Menlo,Consolas,monospace;font-size:14px;line-height:inherit;color:#334e68;background:#f3f4f5;padding:0 3px;border-radius:3px;white-space:normal;word-break:normal;overflow-wrap:anywhere;">.github/workflows/*.yml</code>，GitLab CI 通常使用 <code style="font-family:Menlo,Consolas,monospace;font-size:14px;line-height:inherit;color:#334e68;background:#f3f4f5;padding:0 3px;border-radius:3px;white-space:normal;word-break:normal;overflow-wrap:anywhere;">.gitlab-ci.yml</code>。这里以 Jenkinsfile 为例，下一篇再展开 GitHub Actions。</p>
 <section style="width:100%;max-width:320px;margin:26px auto 16px;text-align:center;"><p style="margin:0;text-align:center;line-height:1.4;"><span style="display:inline-block;margin-right:8px;vertical-align:middle;font-family:Arial,Helvetica,sans-serif;font-size:20px;line-height:1.15;font-weight:700;color:#175da4;text-align:center;">05</span><span style="display:inline-block;max-width:80%;vertical-align:middle;font-family:'PingFang SC','Heiti SC','Microsoft YaHei',sans-serif;font-size:15px;line-height:1.55;font-weight:700;color:#175da4;text-align:center;word-wrap:break-word;">Jenkinsfile：把流程定义放进 Git</span></p><section style="margin:3px 0 0;border-top:3px solid #b8c6cf;height:0;font-size:0;line-height:0;"></section></section>
 <p style="margin:0 0 15px;font-size:15px;line-height:1.8;color:#333;text-align:left;word-wrap:break-word;">如果构建命令只保存在 Jenkins 页面里的文本框中，审查和迁移就需要额外安排。把流程写成仓库中的 Jenkinsfile，可以让它与业务代码一起查看差异、讨论修改和保留历史。</p>
+<p style="margin:0 0 15px;font-size:15px;line-height:1.8;color:#333;text-align:left;word-wrap:break-word;">原文中的仓库结构可以简写为：</p>
+<pre style="box-sizing:border-box;max-width:100%;margin:16px 0;padding:12px 10px;background:#f7f7f7;border:0;text-align:left;font-family:Menlo,Consolas,monospace;font-size:13px;line-height:1.6;color:#333;white-space:pre-wrap;word-break:normal;overflow-wrap:anywhere;tab-size:2;"><code style="font-family:Menlo,Consolas,monospace;font-size:13px;line-height:1.6;color:#333;white-space:pre-wrap;word-break:normal;overflow-wrap:anywhere;tab-size:2;">your-app/
+├── src/
+├── pom.xml
+├── Jenkinsfile
+└── README.md
+</code></pre>
+<p style="margin:0 0 15px;font-size:15px;line-height:1.8;color:#333;text-align:left;word-wrap:break-word;">脚本与流程定义的分工可以这样看：</p>
+<ul style="margin:0 0 15px;padding-left:24px;font-size:15px;line-height:1.8;color:#333;">
+<li style="margin:0 0 8px;line-height:1.8;">job：封装一个完整目标，例如用 <code style="font-family:Menlo,Consolas,monospace;font-size:14px;line-height:inherit;color:#334e68;background:#f3f4f5;padding:0 3px;border-radius:3px;white-space:normal;word-break:normal;overflow-wrap:anywhere;">app.sh</code> 管理应用部署。</li>
+<li style="margin:0 0 8px;line-height:1.8;">step：完成具体动作，例如 <code style="font-family:Menlo,Consolas,monospace;font-size:14px;line-height:inherit;color:#334e68;background:#f3f4f5;padding:0 3px;border-radius:3px;white-space:normal;word-break:normal;overflow-wrap:anywhere;">docker pull</code> 和 <code style="font-family:Menlo,Consolas,monospace;font-size:14px;line-height:inherit;color:#334e68;background:#f3f4f5;padding:0 3px;border-radius:3px;white-space:normal;word-break:normal;overflow-wrap:anywhere;">docker run</code>。</li>
+</ul>
 <p style="margin:0 0 15px;font-size:15px;line-height:1.8;color:#333;text-align:left;word-wrap:break-word;">下面是一个最小结构示例。<code style="font-family:Menlo,Consolas,monospace;font-size:14px;line-height:inherit;color:#334e68;background:#f3f4f5;padding:0 3px;border-radius:3px;white-space:normal;word-break:normal;overflow-wrap:anywhere;">deploy.sh</code> 与 <code style="font-family:Menlo,Consolas,monospace;font-size:14px;line-height:inherit;color:#334e68;background:#f3f4f5;padding:0 3px;border-radius:3px;white-space:normal;word-break:normal;overflow-wrap:anywhere;">verify.sh</code> 是仓库中需要实际提供的脚本；示例假定 agent 已具备所需工具、网络权限与凭据配置，不是一份可直接用于生产的部署方案。</p>
 <pre style="box-sizing:border-box;max-width:100%;margin:16px 0;padding:12px 10px;background:#f7f7f7;border:0;text-align:left;font-family:Menlo,Consolas,monospace;font-size:13px;line-height:1.6;color:#333;white-space:pre-wrap;word-break:normal;overflow-wrap:anywhere;tab-size:2;"><code style="font-family:Menlo,Consolas,monospace;font-size:13px;line-height:1.6;color:#333;white-space:pre-wrap;word-break:normal;overflow-wrap:anywhere;tab-size:2;">pipeline {
   agent any
@@ -81,6 +117,39 @@ curl -fsS http://localhost:8080/health
 }
 </code></pre>
 <p style="margin:0 0 15px;font-size:15px;line-height:1.8;color:#333;text-align:left;word-wrap:break-word;">这个例子只展示两个阶段的顺序关系。更复杂的流程可以继续声明并行分支，但不必在入门时一次引入全部语法。</p>
+<p style="margin:20px 0 10px;font-size:15px;line-height:1.6;font-weight:700;color:#334e68;text-align:left;"><strong style="font-weight:700;color:#334e68;">从整体结构逐层展开</strong></p>
+<p style="margin:0 0 15px;font-size:15px;line-height:1.8;color:#333;text-align:left;word-wrap:break-word;">先看包含关系：pipeline → stages → stage → steps → 具体步骤。pipeline 包住整条流水线，stages 组织阶段，每个 stage 中的 steps 再列出具体动作。原文里的凭据绑定位于步骤内部，不是新的阶段。</p>
+<p style="margin:0 0 15px;font-size:15px;line-height:1.8;color:#333;text-align:left;word-wrap:break-word;">下面采用“整体骨架 + 局部展开”的方式讲解。局部代码用于说明各层职责，会重复展示上下文，不能按顺序拼接成一个文件；原文完整实现仍以站点为准。</p>
+<p style="margin:0 0 15px;font-size:15px;line-height:1.8;color:#333;text-align:left;word-wrap:break-word;"><strong style="font-weight:700;color:#222;">整体：一条流水线包含多个阶段</strong></p>
+<p style="margin:0 0 15px;font-size:15px;line-height:1.8;color:#333;text-align:left;word-wrap:break-word;">先回看上面的最小示例：pipeline 定义整条流程，agent 指定执行环境，stages 中安排 Deploy 和 Verify 两个阶段。整体骨架说明先部署、再验证，暂时不展开部署细节。</p>
+<p style="margin:0 0 15px;font-size:15px;line-height:1.8;color:#333;text-align:left;word-wrap:break-word;"><strong style="font-weight:700;color:#222;">第一层：stages 中安排 stage</strong></p>
+<p style="margin:0 0 15px;font-size:15px;line-height:1.8;color:#333;text-align:left;word-wrap:break-word;">下面截取 stages 里的一个阶段。stage 的名称帮助读者理解任务目标，steps 则列出这个阶段执行的动作。</p>
+<pre style="box-sizing:border-box;max-width:100%;margin:16px 0;padding:12px 10px;background:#f7f7f7;border:0;text-align:left;font-family:Menlo,Consolas,monospace;font-size:13px;line-height:1.6;color:#333;white-space:pre-wrap;word-break:normal;overflow-wrap:anywhere;tab-size:2;"><code style="font-family:Menlo,Consolas,monospace;font-size:13px;line-height:1.6;color:#333;white-space:pre-wrap;word-break:normal;overflow-wrap:anywhere;tab-size:2;">stage(<span style="color:#a33a20;">&#x27;Deploy&#x27;</span>) {
+  steps {
+    sh <span style="color:#a33a20;">&#x27;bash ./deploy.sh&#x27;</span>
+  }
+}
+</code></pre>
+<p style="margin:0 0 15px;font-size:15px;line-height:1.8;color:#333;text-align:left;word-wrap:break-word;"><strong style="font-weight:700;color:#222;">第二层：steps 中排列具体步骤</strong></p>
+<p style="margin:0 0 15px;font-size:15px;line-height:1.8;color:#333;text-align:left;word-wrap:break-word;">再展开 steps。这里的 sh 就是一个具体步骤，用来执行 Shell 命令。多个步骤可以按顺序排列，不需要再包一层名为 step 的容器。</p>
+<pre style="box-sizing:border-box;max-width:100%;margin:16px 0;padding:12px 10px;background:#f7f7f7;border:0;text-align:left;font-family:Menlo,Consolas,monospace;font-size:13px;line-height:1.6;color:#333;white-space:pre-wrap;word-break:normal;overflow-wrap:anywhere;tab-size:2;"><code style="font-family:Menlo,Consolas,monospace;font-size:13px;line-height:1.6;color:#333;white-space:pre-wrap;word-break:normal;overflow-wrap:anywhere;tab-size:2;">steps {
+  sh <span style="color:#a33a20;">&#x27;bash ./deploy.sh&#x27;</span>
+  sh <span style="color:#a33a20;">&#x27;bash ./verify.sh&#x27;</span>
+}
+</code></pre>
+<p style="margin:0 0 15px;font-size:15px;line-height:1.8;color:#333;text-align:left;word-wrap:break-word;">这段展示的是“同一个阶段内顺序执行两个步骤”的另一种组织方式；上面的整体示例将部署与验证分成两个阶段，两种安排不应同时照搬。</p>
+<p style="margin:0 0 15px;font-size:15px;line-height:1.8;color:#333;text-align:left;word-wrap:break-word;"><strong style="font-weight:700;color:#222;">第三层：需要凭据时，再包住相关步骤</strong></p>
+<p style="margin:0 0 15px;font-size:15px;line-height:1.8;color:#333;text-align:left;word-wrap:break-word;">原文通过 withCredentials 将 SSH 凭据提供给内部步骤。下面只看它的包含位置：阶段中的 steps 包住凭据绑定，凭据绑定再包住使用密钥的 sh 步骤。</p>
+<pre style="box-sizing:border-box;max-width:100%;margin:16px 0;padding:12px 10px;background:#f7f7f7;border:0;text-align:left;font-family:Menlo,Consolas,monospace;font-size:13px;line-height:1.6;color:#333;white-space:pre-wrap;word-break:normal;overflow-wrap:anywhere;tab-size:2;"><code style="font-family:Menlo,Consolas,monospace;font-size:13px;line-height:1.6;color:#333;white-space:pre-wrap;word-break:normal;overflow-wrap:anywhere;tab-size:2;">withCredentials([sshUserPrivateKey(
+  <span style="color:#333;">credentialsId:</span> <span style="color:#a33a20;">&#x27;app-key&#x27;</span>,
+  <span style="color:#333;">keyFileVariable:</span> <span style="color:#a33a20;">&#x27;SSH_KEY&#x27;</span>
+)]) {
+  sh <span style="color:#a33a20;">&#x27;bash ./deploy.sh&#x27;</span>
+}
+</code></pre>
+<p style="margin:0 0 15px;font-size:15px;line-height:1.8;color:#333;text-align:left;word-wrap:break-word;">这段是结构片段，假定 deploy.sh 在内部读取 SSH_KEY 并完成远程部署。它不等于本文前面的本地部署脚本，也不是原文长命令的直接替代品；完整实现还需要明确目标主机、凭据与执行位置。</p>
+<p style="margin:0 0 15px;font-size:15px;line-height:1.8;color:#333;text-align:left;word-wrap:break-word;"><strong style="font-weight:700;color:#222;">最后展开：sh 调用的脚本负责具体动作</strong></p>
+<p style="margin:0 0 15px;font-size:15px;line-height:1.8;color:#333;text-align:left;word-wrap:break-word;">到这一层，才需要阅读拉镜像、启动容器等部署命令。前文的最小部署脚本已经展示这些动作；Jenkinsfile 负责组织它们的执行顺序，脚本负责实现动作。完整配置放在站点，公众号正文聚焦各层如何配合。</p>
 <p style="margin:20px 0 10px;font-size:15px;line-height:1.6;font-weight:700;color:#334e68;text-align:left;"><strong style="font-weight:700;color:#334e68;">流程进入 Git，环境仍需管理</strong></p>
 <p style="margin:0 0 15px;font-size:15px;line-height:1.8;color:#333;text-align:left;word-wrap:break-word;"><strong style="font-weight:700;color:#222;">Jenkinsfile 管流程结构，shell 管具体动作。</strong> 二者配合，能让部署逻辑留在代码仓库，而不只留在某个人的终端或页面配置里。</p>
 <p style="margin:0 0 15px;font-size:15px;line-height:1.8;color:#333;text-align:left;word-wrap:break-word;">自动触发仍需要配置 webhook 或其他触发机制；凭据、插件、执行节点和工具链也需要单独管理。把 Jenkinsfile 放进 Git，不等于换一台 Jenkins 就能零配置复现环境。</p>
@@ -89,22 +158,75 @@ curl -fsS http://localhost:8080/health
 <p style="margin:0 0 15px;font-size:15px;line-height:1.8;color:#333;text-align:left;word-wrap:break-word;">引入独立的流水线平台，还有一个收益：可以让构建任务与线上业务分开使用资源。</p>
 <p style="margin:0 0 15px;font-size:15px;line-height:1.8;color:#333;text-align:left;word-wrap:break-word;">Maven 编译、镜像构建会消耗 CPU、内存和磁盘。把这些工作直接放在生产业务服务器上，可能影响正在处理的请求。</p>
 <p style="margin:0 0 15px;font-size:15px;line-height:1.8;color:#333;text-align:left;word-wrap:break-word;">可以先把职责分成两部分：构建与发布侧准备产物、调度部署；业务侧运行应用并提供服务。规模扩大后，再进一步把 Jenkins controller 的协调职责与 agent 的执行职责分开。</p>
+<p style="margin:0 0 15px;font-size:15px;line-height:1.8;color:#333;text-align:left;word-wrap:break-word;">两侧的职责和边界，可以放在一起看：</p>
+<table style="box-sizing:border-box;width:100%;max-width:100%;table-layout:fixed;border-collapse:collapse;margin:16px 0;font-size:14px;line-height:1.7;color:#333;">
+<thead>
+<tr>
+<th style="box-sizing:border-box;border:1px solid #dce2e8;padding:8px;text-align:left;vertical-align:top;background:#f3f5f7;font-size:14px;line-height:1.7;font-weight:700;overflow-wrap:anywhere;width:36%;">分工与边界</th>
+<th style="box-sizing:border-box;border:1px solid #dce2e8;padding:8px;text-align:left;vertical-align:top;background:#f3f5f7;font-size:14px;line-height:1.7;font-weight:700;overflow-wrap:anywhere;width:64%;">具体安排</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="box-sizing:border-box;border:1px solid #dce2e8;padding:8px;text-align:left;vertical-align:top;background:#fff;font-size:14px;line-height:1.7;overflow-wrap:anywhere;width:36%;">构建与发布侧</td>
+<td style="box-sizing:border-box;border:1px solid #dce2e8;padding:8px;text-align:left;vertical-align:top;background:#fff;font-size:14px;line-height:1.7;overflow-wrap:anywhere;width:64%;">准备构建产物，调度部署任务。</td>
+</tr>
+<tr>
+<td style="box-sizing:border-box;border:1px solid #dce2e8;padding:8px;text-align:left;vertical-align:top;background:#fff;font-size:14px;line-height:1.7;overflow-wrap:anywhere;width:36%;">业务运行侧</td>
+<td style="box-sizing:border-box;border:1px solid #dce2e8;padding:8px;text-align:left;vertical-align:top;background:#fff;font-size:14px;line-height:1.7;overflow-wrap:anywhere;width:64%;">运行应用，持续处理线上请求。</td>
+</tr>
+<tr>
+<td style="box-sizing:border-box;border:1px solid #dce2e8;padding:8px;text-align:left;vertical-align:top;background:#fff;font-size:14px;line-height:1.7;overflow-wrap:anywhere;width:36%;">资源隔离</td>
+<td style="box-sizing:border-box;border:1px solid #dce2e8;padding:8px;text-align:left;vertical-align:top;background:#fff;font-size:14px;line-height:1.7;overflow-wrap:anywhere;width:64%;">避免编译与镜像构建争抢线上 CPU、内存和磁盘。</td>
+</tr>
+<tr>
+<td style="box-sizing:border-box;border:1px solid #dce2e8;padding:8px;text-align:left;vertical-align:top;background:#fff;font-size:14px;line-height:1.7;overflow-wrap:anywhere;width:36%;">故障影响</td>
+<td style="box-sizing:border-box;border:1px solid #dce2e8;padding:8px;text-align:left;vertical-align:top;background:#fff;font-size:14px;line-height:1.7;overflow-wrap:anywhere;width:64%;">流水线平台故障会影响新版本发布，已运行的业务应尽量独立。</td>
+</tr>
+<tr>
+<td style="box-sizing:border-box;border:1px solid #dce2e8;padding:8px;text-align:left;vertical-align:top;background:#fff;font-size:14px;line-height:1.7;overflow-wrap:anywhere;width:36%;">权限与凭据</td>
+<td style="box-sizing:border-box;border:1px solid #dce2e8;padding:8px;text-align:left;vertical-align:top;background:#fff;font-size:14px;line-height:1.7;overflow-wrap:anywhere;width:64%;">两侧分别按需授权；业务侧仍可能需要拉取镜像的凭据。</td>
+</tr>
+</tbody>
+</table>
 <p style="margin:0 0 15px;font-size:15px;line-height:1.8;color:#333;text-align:left;word-wrap:break-word;">这种分离需要靠部署和权限配置落实。业务服务器仍可能需要拉取镜像的凭据，不能仅因拆开了服务器，就认为安全边界已经自动建立。</p>
 <section style="width:100%;max-width:320px;margin:26px auto 16px;text-align:center;"><p style="margin:0;text-align:center;line-height:1.4;"><span style="display:inline-block;margin-right:8px;vertical-align:middle;font-family:Arial,Helvetica,sans-serif;font-size:20px;line-height:1.15;font-weight:700;color:#175da4;text-align:center;">07</span><span style="display:inline-block;max-width:80%;vertical-align:middle;font-family:'PingFang SC','Heiti SC','Microsoft YaHei',sans-serif;font-size:15px;line-height:1.55;font-weight:700;color:#175da4;text-align:center;word-wrap:break-word;">运维左移：把交接内容变成可执行定义</span></p><section style="margin:3px 0 0;border-top:3px solid #b8c6cf;height:0;font-size:0;line-height:0;"></section></section>
 <p style="margin:0 0 15px;font-size:15px;line-height:1.8;color:#333;text-align:left;word-wrap:break-word;">传统的交接方式，是开发提交应用和部署文档，运维读文档后执行。上线结果很大程度上依赖执行者有没有理解并记住每个细节。</p>
+<p style="margin:16px 0;padding:0;text-align:center;"><img width="1672" height="941" loading="eager" referrerpolicy="no-referrer" src="https://media.xiaolin.fun/docs/img-pipeline-basics/infographic-traditional-ops.png" alt="传统运维交接与运维左移对比" style="display:block;box-sizing:border-box;width:100%;max-width:100%;height:auto;margin:0 auto 6px;"><span style="display:block;font-size:13px;line-height:1.6;color:#666;text-align:center;">传统运维交接与运维左移对比</span></p>
 <p style="margin:0 0 15px;font-size:15px;line-height:1.8;color:#333;text-align:left;word-wrap:break-word;">当部署脚本和 Jenkinsfile 与业务代码一起进入仓库，交接内容就多了一层可执行定义：代码告诉工具该做什么，人通过 review 检查目标环境、版本、凭据引用和验证条件。</p>
 <p style="margin:0 0 15px;font-size:15px;line-height:1.8;color:#333;text-align:left;word-wrap:break-word;">开发与运维仍然需要协作。开发可以维护应用相关的构建和检查逻辑；运维或平台人员审核生产权限、发布条件与回滚安排。职责可以调整，但不会因为有了流水线就自然消失。</p>
 <p style="margin:0 0 15px;font-size:15px;line-height:1.8;color:#333;text-align:left;word-wrap:break-word;">Jenkinsfile 是流水线即代码的一种形式，与基础设施即代码共享版本管理和代码审查的思路，但不能替代 Terraform 等工具对基础设施资源的管理。</p>
 <p style="margin:0 0 15px;font-size:15px;line-height:1.8;color:#333;text-align:left;word-wrap:break-word;">回到开头的上线场景：老李需要做的，可以从逐条输入命令，变成检查变更、确认发布条件，再由引擎执行经过审查的流程。是否自动进入生产，则由团队明确的触发与审批规则决定。</p>
 <section style="width:100%;max-width:320px;margin:26px auto 16px;text-align:center;"><p style="margin:0;text-align:center;line-height:1.4;"><span style="display:inline-block;margin-right:8px;vertical-align:middle;font-family:Arial,Helvetica,sans-serif;font-size:20px;line-height:1.15;font-weight:700;color:#175da4;text-align:center;">08</span><span style="display:inline-block;max-width:80%;vertical-align:middle;font-family:'PingFang SC','Heiti SC','Microsoft YaHei',sans-serif;font-size:15px;line-height:1.55;font-weight:700;color:#175da4;text-align:center;word-wrap:break-word;">小结</span></p><section style="margin:3px 0 0;border-top:3px solid #b8c6cf;height:0;font-size:0;line-height:0;"></section></section>
 <p style="margin:0 0 15px;font-size:15px;line-height:1.8;color:#333;text-align:left;word-wrap:break-word;">06 篇从一组重复的上线命令出发：先用 shell 固化单个任务，再用依赖关系组织多个任务，最后交给流水线引擎调度。Jenkinsfile 让流程定义进入 Git，便于审查与追溯。自动化减少了临场操作，但可靠发布仍依赖脚本、环境、凭据、健康检查和回滚设计。</p>
+<p style="margin:20px 0 10px;font-size:15px;line-height:1.6;font-weight:700;color:#334e68;text-align:left;"><strong style="font-weight:700;color:#334e68;">参考资料</strong></p>
+<p style="margin:0 0 8px;font-size:13px;line-height:1.6;color:#555;text-align:left;word-wrap:break-word;"><span style="font-size:13px;font-weight:400;color:#555;">[1] Jenkinsfile 语法参考</span><br><span style="font-size:13px;font-weight:400;color:#666;word-break:normal;overflow-wrap:anywhere;">https://www.jenkins.io/doc/book/pipeline/syntax/</span></p>
+<p style="margin:0 0 8px;font-size:13px;line-height:1.6;color:#555;text-align:left;word-wrap:break-word;"><span style="font-size:13px;font-weight:400;color:#555;">[2] 基础设施即代码（IaC）概览</span><br><span style="font-size:13px;font-weight:400;color:#666;word-break:normal;overflow-wrap:anywhere;">https://en.wikipedia.org/wiki/Infrastructure_as_code</span></p>
+<p style="margin:0 0 8px;font-size:13px;line-height:1.6;color:#555;text-align:left;word-wrap:break-word;"><span style="font-size:13px;font-weight:400;color:#555;">[3] Terraform 文档</span><br><span style="font-size:13px;font-weight:400;color:#666;word-break:normal;overflow-wrap:anywhere;">https://developer.hashicorp.com/terraform/docs</span></p>
+<p style="margin:0 0 8px;font-size:13px;line-height:1.6;color:#555;text-align:left;word-wrap:break-word;"><span style="font-size:13px;font-weight:400;color:#555;">[4] GitHub Actions 文档</span><br><span style="font-size:13px;font-weight:400;color:#666;word-break:normal;overflow-wrap:anywhere;">https://docs.github.com/en/actions</span></p>
+<p style="margin:0 0 8px;font-size:13px;line-height:1.6;color:#555;text-align:left;word-wrap:break-word;"><span style="font-size:13px;font-weight:400;color:#555;">[5] Kubernetes 文档</span><br><span style="font-size:13px;font-weight:400;color:#666;word-break:normal;overflow-wrap:anywhere;">https://kubernetes.io/docs/home/</span></p>
+<section style="box-sizing:border-box;width:100%;height:0;margin:16px 0;border:0;border-top:1px solid #dce2e8;font-size:0;line-height:0;"></section>
 <p style="margin:0 0 15px;font-size:15px;line-height:1.8;color:#333;text-align:left;word-wrap:break-word;">下一篇，我们用 GitHub Actions，把这套流程放进实际项目。</p>
 <p style="margin:0 0 15px;font-size:15px;line-height:1.8;color:#333;text-align:left;word-wrap:break-word;">你现在的部署流程里，还有哪一步依赖某个人记住？</p>
 <p style="margin:0 0 15px;font-size:15px;line-height:1.8;color:#333;text-align:left;word-wrap:break-word;">本文的完整图示与示例见站点原文，点击文末“阅读原文”查看。</p>
 </section></main>
 <script>
+const pictureStatus=document.getElementById('image-status');
+const articlePictures=[...document.querySelectorAll('#article img')];
+const refreshPictureStatus=()=>{
+ if(!articlePictures.length){pictureStatus.textContent='未找到正文图片，请确认打开的是图片加载排查版 2。';return}
+ if(articlePictures.some(img=>!img.complete)){pictureStatus.textContent='正文图片正在加载。';return}
+ pictureStatus.textContent=articlePictures.every(img=>img.naturalWidth>0)
+ ? '正文图片已加载：'+articlePictures.map(img=>img.naturalWidth+' × '+img.naturalHeight).join('，')
+ : '正文图片加载失败。请单独打开原图，并告知当前使用的预览环境。';
+};
+for(const img of articlePictures){img.addEventListener('load',refreshPictureStatus);img.addEventListener('error',refreshPictureStatus);img.title='点击查看原图';img.addEventListener('click',()=>window.open(img.src,'_blank','noopener,noreferrer'))}
+refreshPictureStatus();
 document.getElementById('copy').onclick=async()=>{
  const a=document.getElementById('article'),s=document.getElementById('status');
+ const pictures=[...a.querySelectorAll('img')];
+ if(pictures.some(img=>!img.complete)){s.textContent='正文图片尚未加载完成，请稍后再次复制。';return}
+ if(pictures.some(img=>img.naturalWidth===0)){s.textContent='正文图片加载失败，请确认图片显示正常后再复制。';return}
  const nativeCopy=()=>{const selection=getSelection(),r=document.createRange();r.selectNode(a);selection.removeAllRanges();selection.addRange(r);let ok=false;try{ok=document.execCommand('copy')}catch(e){}if(ok)selection.removeAllRanges();return ok};
  try{if(!navigator.clipboard||!window.ClipboardItem)throw Error('fallback');await navigator.clipboard.write([new ClipboardItem({'text/html':new Blob([a.outerHTML],{type:'text/html'}),'text/plain':new Blob([a.innerText],{type:'text/plain'})})]);s.textContent='正文已复制。请到微信粘贴、保存重开，再发送手机预览。'}
  catch(e){s.textContent=nativeCopy()?'正文已按原生方式复制，请到微信粘贴并检查。':'自动复制未成功，正文已选中，请按 Cmd/Ctrl+C 复制。'}

@@ -414,73 +414,75 @@ Jenkinsfile 是放在仓库根目录的文本文件，由 Jenkins 引擎读取�
 
 > 早期 UI 配置的真实样子：Blue Ocean 是 Jenkins 现代化的流水线编辑入口，下面是从 GitHub 仓库导入流水线的 UI——所有配置、shell 命令、密钥都手动点点填填。
 
-### Jenkinsfile vs shell 脚本：编码位置、部署、可迁移性
+### Jenkinsfile 与 shell：先看整体，再展开步骤
 
-Jenkinsfile **不是替代** shell 脚本，而是在 shell 脚本之上**加了一层结构化封装**——把「散落的命令」变成「可声明的流水线」。以 05 篇定义的 $J_1$（DB）+ $J_2$（App）+ $J_4$（verify）三件套为例，同一组生产变更用两种方式实现——
+前文用 shell 固化了单个任务。接下来要解决的是：把数据库、应用部署和验证三个任务组织起来，并将流程定义放进 Git。这里先看整体，再按语法包含关系展开，避免把凭据、SSH 和 Docker 命令挤进同一段代码。
 
-**shell 散落方案**：在 Jenkins UI 的「Build Steps → Execute shell」文本框里手敲
-
-```bash
-ssh ubuntu@app << 'EOF'
-docker pull your-registry/app:${VERSION:-latest}
-docker rm -f app || true
-docker run -d --name app -p 8080:8080 \
-  -e DB_URL=jdbc:mysql://db:3306/app \
-  your-registry/app:${VERSION:-latest}
-EOF
-
-ssh ubuntu@db << 'EOF'
-docker pull mysql:8
-docker rm -f db || true
-docker run -d --name db -e MYSQL_ROOT_PASSWORD=xxx mysql:8
-EOF
-
-ssh ubuntu@app "curl -fsS http://localhost:8080/health"
-```
-
-**Jenkinsfile 方案**：放在仓库根目录 `your-app/Jenkinsfile`，与应用代码一起 review
+**先看整体骨架。** 以下 Jenkinsfile 用三个阶段表达任务顺序。示例假定仓库提供 `db-job.sh`、`app-job.sh` 和 `verify.sh`；它们是任务接口，不是 Jenkins 自带命令。脚本实现、执行节点工具及环境配置仍需实际准备，本例不是可直接用于生产的部署方案。
 
 ```groovy
 pipeline {
-    agent any
-    stages {
-        stage('DB') {
-            steps {
-                withCredentials([sshUserPrivateKey(credentialsId: 'db-key', keyFileVariable: 'SSH_KEY')]) {
-                    sh 'ssh -i <key-path> <target-host> "docker pull mysql:8 && docker rm -f db || true && docker run -d --name db mysql:8"'
-                }
-            }
-        }
-        stage('App') {
-            steps {
-                withCredentials([sshUserPrivateKey(credentialsId: 'app-key', keyFileVariable: 'SSH_KEY')]) {
-                    sh 'ssh -i <key-path> <target-host> "docker pull your-registry/app:<version> && docker rm -f app || true && docker run -d --name app -e DB_URL=jdbc:mysql://db:3306/app your-registry/app:<version>"'
-                }
-            }
-        }
-        stage('Verify') {
-            steps {
-                // 将 APP_HEALTHCHECK_URL 配置为 Jenkins Agent 可访问的实际地址
-                sh 'curl -fsS "${APP_HEALTHCHECK_URL}"'
-            }
-        }
+  agent any
+  stages {
+    stage('DB') {
+      steps { sh 'bash ./db-job.sh' }
     }
+    stage('App') {
+      steps { sh 'bash ./app-job.sh' }
+    }
+    stage('Verify') {
+      steps { sh 'bash ./verify.sh' }
+    }
+  }
 }
 ```
 
-两套实现**完成同样的事**，但 4 个维度上有本质区别：
+先记住包含关系：`pipeline → stages → stage → steps → 具体步骤`。`agent` 与 `stages` 同属于流水线配置，用来声明执行环境；它不是执行阶段。下面的局部片段逐层展开职责，包含重复上下文，不能顺序拼接成另一个完整文件。
 
-**编码位置**：shell 在 Jenkins UI 的「Execute shell」文本框里，看不见、审不了、改动无历史；Jenkinsfile 在 `your-app/Jenkinsfile`，与应用代码同仓库，PR review 一并被审视。
+**展开阶段：stage 表达一个目标。** 以应用部署为例，阶段名是 App，内部的 steps 声明要执行的动作。
 
-**可迁移性**：shell 方案换一台 Jenkins 就丢失（需要重新敲命令、配密钥、配环境变量）；Jenkinsfile 跟着 Git 走，Jenkins 进程崩溃，重装一台，`git clone` 拉回流水线，agent 镜像统一声明（`agent { docker { image 'maven:3.9' } }`），环境零差异。
+```groovy
+stage('App') {
+  steps {
+    sh 'bash ./app-job.sh'
+  }
+}
+```
 
-**部署动作**：shell 方案依赖「人记得点 Build Now」；Jenkinsfile 配合 webhook 自动触发，`git push` → Jenkins 自动跑完。
+**展开步骤：steps 中排列具体动作。** `sh` 是执行 Shell 命令的具体步骤，不需要再套一个名为 `step` 的容器。下面展示同一阶段内先部署、再验证的另一种组织方式；若采用这种安排，就需要相应调整整体骨架，避免重复执行验证。
 
-**可审计性**：shell 方案 UI 改动无痕迹、谁改了什么无记录；Jenkinsfile 在 Git 仓库里，`git log` + PR review + commit author 全留痕，事故可追溯。
+```groovy
+steps {
+  sh 'bash ./app-job.sh'
+  sh 'bash ./verify.sh'
+}
+```
 
-**核心收益**：**编码位置 + 可迁移性 + 部署动作 + 可审计性**，这四点把 Jenkinsfile 从「shell 脚本的另一种写法」变成「**运维动作的代码化**」。
+**展开凭据：只包住需要凭据的步骤。** 如果应用任务需要通过 SSH 连接目标主机，可以在该阶段的 steps 内使用凭据绑定。下面是替换该阶段 steps 内容的局部结构，不是独立 Jenkinsfile。
 
-> **演进提示**：本示例把 `<target-host>`（即 user + hostname）硬编码在 Jenkinsfile，是为了与「shell 散落方案」做最小对比；真实工程里这是反模式——不同环境的 user / IP 不一致，硬编码会让仓库历史充满「换 IP」类低价值 commit，也会让多副本、多环境的扩展变得笨拙。密钥通过 `withCredentials` 已经外置（good），但**目标主机本身没有外置**，是同类反模式的延续。06 篇基础阶段不展开，下一篇（GitHub Actions）会用 `secrets` + 环境变量注入；中级篇会用 `parameters` / Ansible / K8s 把目标主机彻底外置。
+```groovy
+withCredentials([sshUserPrivateKey(
+  credentialsId: 'app-key',
+  keyFileVariable: 'SSH_KEY'
+)]) {
+  sh 'bash ./app-job.sh'
+}
+```
+
+`app-key` 是需要预先配置的 SSH 私钥凭据 ID。绑定把密钥文件路径通过 `SSH_KEY` 提供给内部步骤；不会自动登录服务器，也不会自动让脚本使用该密钥。脚本必须显式读取变量并配置目标主机与主机身份校验。
+
+**最后展开脚本：具体命令在明确的环境中执行。** `db-job.sh` 负责数据库变更，`app-job.sh` 负责应用部署，`verify.sh` 负责检查约定结果。Jenkins 的 `sh` 先在所选 agent 上执行；需要远程部署时，由任务脚本负责 SSH 调用。前文的本地 Docker 部署脚本只能作为动作示例，不能未经调整就当成远程任务脚本。
+
+这套拆分把两个问题分开：Jenkinsfile 表达任务顺序与凭据作用域，shell 文件实现动作。完整代码可以分文件维护，不必为了把所有内容塞进一个代码块而写出多层嵌套的长命令。
+
+流程进入仓库后，主要改善的是以下几件事：
+
+- **编码位置**：从 Jenkins 页面中的命令文本框，转向与业务代码同仓库的流程文件，便于一起 review。
+- **可迁移性**：Git 能带走流程和脚本；凭据、插件、执行节点及工具链仍需单独配置，不是零配置迁移。
+- **部署触发**：Jenkinsfile 定义如何执行；自动执行还需要 webhook 或其他触发配置，也可以保留手动触发。
+- **可追溯性**：流程变更可通过 Git 历史与 PR 审查追踪；Jenkins 运行记录及管理操作审计还取决于平台配置。
+
+目标主机、环境变量、凭据与健康检查地址应作为明确的配置管理，不混进不可读的命令长串。下一篇再结合 GitHub Actions 展开这些配置如何注入。
 
 ![Blue Ocean UI 创建流水线](https://media.xiaolin.fun/docs/img-cicd-taste/blue-ocean-pipeline.png)
 

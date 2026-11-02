@@ -1,0 +1,20 @@
+{
+  "theme": "base",
+  "themeVariables": {
+    "fontFamily": "PingFang SC, Microsoft YaHei, sans-serif",
+    "fontSize": "22px",
+    "primaryColor": "#f3f6fa",
+    "primaryTextColor": "#23384d",
+    "primaryBorderColor": "#6b8bab",
+    "lineColor": "#6b8bab",
+    "background": "#ffffff"
+  },
+  "flowchart": {
+    "htmlLabels": false,
+    "nodeSpacing": 30,
+    "rankSpacing": 32,
+    "curve": "linear",
+    "padding": 14
+  },
+  "themeCSS": ".node, .node rect, .node polygon, .node path { filter: none !important; }"
+}

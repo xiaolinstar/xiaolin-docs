@@ -6,6 +6,7 @@ account: AI持续运维
 mode: repurpose+polish
 status: draft
 polish:
+  - 2026-11-02：第二批格式与 CDN 图片分发按范围验收完成，LaTeX 数学排版独立第三批；文章仍待发布。
   - 2026-11-01：轻排版候选稿，精简重复论述，待微信保存及手机预览验收。
 ---
 
@@ -85,6 +86,8 @@ VERSION=1.2.0 bash ./deploy.sh
 
 依赖关系可以简写为：v₁ → v₂；v₂ → v₃、v₄；v₃ → v₅，v₄ → v₆；v₅、v₆ 都成功后，才进入 v₇。这里假定两地检查任务都包含必要的部署动作。
 
+![两地并行发布的 DAG 依赖关系](https://media.xiaolin.fun/docs/img-pipeline-basics/wechat-dag-v1.png)
+
 这个流程可以直接用文字读出来：
 
 1. 先完成测试和镜像构建。
@@ -111,11 +114,34 @@ Shell 也能用后台任务、`wait` 和额外逻辑实现并行。困难在于�
 
 职责分开后，排查也更清楚。依赖配置错误，要检查流程定义；某个任务失败，要查看该任务的日志和脚本；执行环境缺工具，则需要检查执行节点。
 
-Jenkins、GitHub Actions、GitLab CI 等工具都可以承担流水线编排。这里以 Jenkinsfile 为例，下一篇再展开 GitHub Actions。
+Jenkins、GitHub Actions、GitLab CI 等工具都可以承担流水线编排。原文列举了多种工具，这里先保留三个常见例子：
+
+| 工具 | 流程定义方式 |
+| --- | --- |
+| Jenkins | 在 Jenkinsfile 中用 Groovy DSL 定义流程。 |
+| GitHub Actions | 在仓库的工作流文件中用 YAML 定义流程。 |
+| GitLab CI | 在 .gitlab-ci.yml 中用 YAML 定义流程。 |
+
+GitHub Actions 的工作流文件放在 `.github/workflows/*.yml`，GitLab CI 通常使用 `.gitlab-ci.yml`。这里以 Jenkinsfile 为例，下一篇再展开 GitHub Actions。
 
 ## Jenkinsfile：把流程定义放进 Git
 
 如果构建命令只保存在 Jenkins 页面里的文本框中，审查和迁移就需要额外安排。把流程写成仓库中的 Jenkinsfile，可以让它与业务代码一起查看差异、讨论修改和保留历史。
+
+原文中的仓库结构可以简写为：
+
+```text
+your-app/
+├── src/
+├── pom.xml
+├── Jenkinsfile
+└── README.md
+```
+
+脚本与流程定义的分工可以这样看：
+
+- job：封装一个完整目标，例如用 `app.sh` 管理应用部署。
+- step：完成具体动作，例如 `docker pull` 和 `docker run`。
 
 下面是一个最小结构示例。`deploy.sh` 与 `verify.sh` 是仓库中需要实际提供的脚本；示例假定 agent 已具备所需工具、网络权限与凭据配置，不是一份可直接用于生产的部署方案。
 
@@ -135,6 +161,60 @@ pipeline {
 
 这个例子只展示两个阶段的顺序关系。更复杂的流程可以继续声明并行分支，但不必在入门时一次引入全部语法。
 
+### 从整体结构逐层展开
+
+先看包含关系：pipeline → stages → stage → steps → 具体步骤。pipeline 包住整条流水线，stages 组织阶段，每个 stage 中的 steps 再列出具体动作。原文里的凭据绑定位于步骤内部，不是新的阶段。
+
+下面采用“整体骨架 + 局部展开”的方式讲解。局部代码用于说明各层职责，会重复展示上下文，不能按顺序拼接成一个文件；原文完整实现仍以站点为准。
+
+**整体：一条流水线包含多个阶段**
+
+先回看上面的最小示例：pipeline 定义整条流程，agent 指定执行环境，stages 中安排 Deploy 和 Verify 两个阶段。整体骨架说明先部署、再验证，暂时不展开部署细节。
+
+**第一层：stages 中安排 stage**
+
+下面截取 stages 里的一个阶段。stage 的名称帮助读者理解任务目标，steps 则列出这个阶段执行的动作。
+
+```groovy
+stage('Deploy') {
+  steps {
+    sh 'bash ./deploy.sh'
+  }
+}
+```
+
+**第二层：steps 中排列具体步骤**
+
+再展开 steps。这里的 sh 就是一个具体步骤，用来执行 Shell 命令。多个步骤可以按顺序排列，不需要再包一层名为 step 的容器。
+
+```groovy
+steps {
+  sh 'bash ./deploy.sh'
+  sh 'bash ./verify.sh'
+}
+```
+
+这段展示的是“同一个阶段内顺序执行两个步骤”的另一种组织方式；上面的整体示例将部署与验证分成两个阶段，两种安排不应同时照搬。
+
+**第三层：需要凭据时，再包住相关步骤**
+
+原文通过 withCredentials 将 SSH 凭据提供给内部步骤。下面只看它的包含位置：阶段中的 steps 包住凭据绑定，凭据绑定再包住使用密钥的 sh 步骤。
+
+```groovy
+withCredentials([sshUserPrivateKey(
+  credentialsId: 'app-key',
+  keyFileVariable: 'SSH_KEY'
+)]) {
+  sh 'bash ./deploy.sh'
+}
+```
+
+这段是结构片段，假定 deploy.sh 在内部读取 SSH_KEY 并完成远程部署。它不等于本文前面的本地部署脚本，也不是原文长命令的直接替代品；完整实现还需要明确目标主机、凭据与执行位置。
+
+**最后展开：sh 调用的脚本负责具体动作**
+
+到这一层，才需要阅读拉镜像、启动容器等部署命令。前文的最小部署脚本已经展示这些动作；Jenkinsfile 负责组织它们的执行顺序，脚本负责实现动作。完整配置放在站点，公众号正文聚焦各层如何配合。
+
 ### 流程进入 Git，环境仍需管理
 
 **Jenkinsfile 管流程结构，shell 管具体动作。** 二者配合，能让部署逻辑留在代码仓库，而不只留在某个人的终端或页面配置里。
@@ -151,11 +231,23 @@ Maven 编译、镜像构建会消耗 CPU、内存和磁盘。把这些工作直�
 
 可以先把职责分成两部分：构建与发布侧准备产物、调度部署；业务侧运行应用并提供服务。规模扩大后，再进一步把 Jenkins controller 的协调职责与 agent 的执行职责分开。
 
+两侧的职责和边界，可以放在一起看：
+
+| 分工与边界 | 具体安排 |
+| --- | --- |
+| 构建与发布侧 | 准备构建产物，调度部署任务。 |
+| 业务运行侧 | 运行应用，持续处理线上请求。 |
+| 资源隔离 | 避免编译与镜像构建争抢线上 CPU、内存和磁盘。 |
+| 故障影响 | 流水线平台故障会影响新版本发布，已运行的业务应尽量独立。 |
+| 权限与凭据 | 两侧分别按需授权；业务侧仍可能需要拉取镜像的凭据。 |
+
 这种分离需要靠部署和权限配置落实。业务服务器仍可能需要拉取镜像的凭据，不能仅因拆开了服务器，就认为安全边界已经自动建立。
 
 ## 运维左移：把交接内容变成可执行定义
 
 传统的交接方式，是开发提交应用和部署文档，运维读文档后执行。上线结果很大程度上依赖执行者有没有理解并记住每个细节。
+
+![传统运维交接与运维左移对比](https://media.xiaolin.fun/docs/img-pipeline-basics/infographic-traditional-ops.png)
 
 当部署脚本和 Jenkinsfile 与业务代码一起进入仓库，交接内容就多了一层可执行定义：代码告诉工具该做什么，人通过 review 检查目标环境、版本、凭据引用和验证条件。
 
@@ -168,6 +260,20 @@ Jenkinsfile 是流水线即代码的一种形式，与基础设施即代码共�
 ## 小结
 
 06 篇从一组重复的上线命令出发：先用 shell 固化单个任务，再用依赖关系组织多个任务，最后交给流水线引擎调度。Jenkinsfile 让流程定义进入 Git，便于审查与追溯。自动化减少了临场操作，但可靠发布仍依赖脚本、环境、凭据、健康检查和回滚设计。
+
+### 参考资料
+
+Jenkinsfile 语法参考：https://www.jenkins.io/doc/book/pipeline/syntax/
+
+基础设施即代码（IaC）概览：https://en.wikipedia.org/wiki/Infrastructure_as_code
+
+Terraform 文档：https://developer.hashicorp.com/terraform/docs
+
+GitHub Actions 文档：https://docs.github.com/en/actions
+
+Kubernetes 文档：https://kubernetes.io/docs/home/
+
+---
 
 下一篇，我们用 GitHub Actions，把这套流程放进实际项目。
 
