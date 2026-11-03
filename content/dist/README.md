@@ -119,7 +119,7 @@ Skill：`.agents/skills/creator-suite/wechat-publisher/SKILL.md`
    <!-- ![说明文字](https://media.xiaolin.fun/docs/img-ai-todo/why-no-ai-chatbox/02-miniapp-list.png) -->
    ```
 
-4. **公众号**：CDN 图需**下载后上传**微信后台，不能依赖外链。
+4. **公众号**：按 `wechat-publisher` v1.0.4 口径走**自有 CDN 外链 + Chrome 复制全文**，不要求转存微信素材库；如需脱离 CDN 的长期稳定，可自行下载图片上传后台，属可选增强，不作为发布门槛。
 5. **上传**：`pnpm run media:upload` → `pnpm run media:cdn-check` → 更新 Origin → 站点重新部署。
 
 范例：`content/dist/why-no-ai-chatbox/assets/README.md`

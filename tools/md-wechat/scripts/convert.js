@@ -11,6 +11,11 @@
  * - PlantUML 图表
  * - Infographic 信息图
  * - 扩展语法（删除线、高亮、下划线、Ruby注音等）
+ *
+ * 注意：本脚本只负责正文排版，渲染前会剥离 YAML frontmatter、`# 发布元数据`
+ * 与 `# 发布 checklist`，只保留 `# 正文` 之后的段落。正文中的图片与表格
+ * 不做公众号适配，需要图片/表格的稿件请走
+ * content/dist/pipeline-basics/render-wechat.mjs。
  */
 
 import { marked } from 'marked';
@@ -623,13 +628,346 @@ th {
 }
 `;
 
+const GRACE_THEME_CSS = `
+/**
+ * MD 优雅主题
+ */
+
+h1 {
+  font-size: calc(var(--md-font-size) * 1.4);
+  font-weight: bold;
+  color: #333;
+  margin: 2em 0 1em;
+  padding-bottom: 0.5em;
+  border-bottom: 2px solid var(--md-primary-color);
+}
+
+h2 {
+  font-size: calc(var(--md-font-size) * 1.3);
+  font-weight: bold;
+  color: #333;
+  margin: 1.8em 0 0.8em;
+  padding: 0.3em 0;
+  border-bottom: 1px solid #e8e8e8;
+}
+
+h3 {
+  font-size: calc(var(--md-font-size) * 1.15);
+  font-weight: bold;
+  color: #333;
+  margin: 1.5em 0 0.6em;
+}
+
+p {
+  margin: 1em 0;
+  line-height: 1.8;
+  color: #333;
+}
+
+blockquote {
+  margin: 1.2em 0;
+  padding: 1em 1.5em;
+  border-left: 4px solid var(--md-primary-color);
+  background: #f9f9f9;
+  color: #666;
+}
+
+pre {
+  margin: 1.2em 0;
+  padding: 1em;
+  background: #f6f8fa;
+  border-radius: 6px;
+  overflow-x: auto;
+}
+
+code {
+  font-family: 'SF Mono', 'Menlo', 'Consolas', monospace;
+  font-size: 0.9em;
+  color: #c7254e;
+  background: #f8f9fa;
+  padding: 2px 6px;
+  border-radius: 3px;
+}
+
+a {
+  color: var(--md-primary-color);
+  text-decoration: none;
+}
+
+strong {
+  color: var(--md-primary-color);
+}
+`;
+
+const SIMPLE_THEME_CSS = `
+/**
+ * MD 简洁主题
+ */
+
+h1 {
+  font-size: calc(var(--md-font-size) * 1.4);
+  font-weight: bold;
+  color: #333;
+  margin: 2em 0 1em;
+}
+
+h2 {
+  font-size: calc(var(--md-font-size) * 1.3);
+  font-weight: bold;
+  color: #333;
+  margin: 1.8em 0 0.8em;
+}
+
+h3 {
+  font-size: calc(var(--md-font-size) * 1.15);
+  font-weight: bold;
+  color: #333;
+  margin: 1.5em 0 0.6em;
+}
+
+p {
+  margin: 1em 0;
+  line-height: 1.8;
+  color: #333;
+}
+
+blockquote {
+  margin: 1.2em 0;
+  padding: 0.8em 1em;
+  border-left: 3px solid #ddd;
+  color: #666;
+}
+
+pre {
+  margin: 1.2em 0;
+  padding: 1em;
+  background: #f5f5f5;
+  border-radius: 4px;
+  overflow-x: auto;
+}
+
+code {
+  font-family: 'SF Mono', 'Menlo', 'Consolas', monospace;
+  font-size: 0.9em;
+  color: #c7254e;
+  background: #f8f9fa;
+  padding: 2px 6px;
+  border-radius: 3px;
+}
+
+a {
+  color: #0366d6;
+  text-decoration: none;
+}
+`;
+
+const TECH_CLEAN_THEME_CSS = `
+/**
+ * MD 技术简洁主题
+ * 
+ * 特点：极简配色，以灰度为主，标题层次通过字重和细微边框区分
+ * 设计理念：克制、专业、易读
+ */
+
+h1 {
+  font-size: calc(var(--md-font-size) * 1.4);
+  font-weight: 600;
+  color: #1a1a1a;
+  margin: 2em 0 1em;
+  padding-bottom: 0.5em;
+  border-bottom: 1px solid #e8e8e8;
+}
+
+h2 {
+  font-size: calc(var(--md-font-size) * 1.3);
+  font-weight: 600;
+  color: #1a1a1a;
+  margin: 1.8em 0 0.8em;
+}
+
+h3 {
+  font-size: calc(var(--md-font-size) * 1.15);
+  font-weight: 600;
+  color: #333;
+  margin: 1.5em 0 0.6em;
+}
+
+h4 {
+  font-size: calc(var(--md-font-size) * 1.05);
+  font-weight: 600;
+  color: #333;
+  margin: 1.2em 0 0.5em;
+}
+
+h5 {
+  font-size: var(--md-font-size);
+  font-weight: 600;
+  color: #666;
+  margin: 1em 0 0.4em;
+}
+
+h6 {
+  font-size: var(--md-font-size);
+  font-weight: 600;
+  color: #999;
+  margin: 1em 0 0.4em;
+}
+
+p {
+  margin: 1em 0;
+  line-height: 1.8;
+  color: #333;
+}
+
+blockquote {
+  margin: 1.2em 0;
+  padding: 0.8em 1em;
+  border-left: 3px solid #d9d9d9;
+  background: #fafafa;
+  color: #666;
+}
+
+blockquote p {
+  margin: 0.5em 0;
+}
+
+pre {
+  margin: 1.2em 0;
+  padding: 1em;
+  background: #f6f7f8;
+  border: 1px solid #e8e8e8;
+  border-radius: 4px;
+  overflow-x: auto;
+  font-size: 14px;
+  line-height: 1.6;
+}
+
+pre code {
+  background: none;
+  padding: 0;
+  color: inherit;
+  font-size: inherit;
+}
+
+code {
+  font-family: 'SF Mono', 'Menlo', 'Consolas', monospace;
+  font-size: 0.9em;
+  color: #c7254e;
+  background: #f8f9fa;
+  padding: 2px 6px;
+  border-radius: 3px;
+}
+
+ul, ol {
+  margin: 1em 0;
+  padding-left: 2em;
+  color: #333;
+}
+
+li {
+  margin: 0.4em 0;
+  line-height: 1.8;
+}
+
+a {
+  color: #1890ff;
+  text-decoration: none;
+}
+
+strong {
+  font-weight: 600;
+  color: #1a1a1a;
+}
+
+em {
+  font-style: italic;
+}
+
+img {
+  max-width: 100%;
+  height: auto;
+  margin: 1.5em 0;
+  border-radius: 4px;
+}
+
+table {
+  width: 100%;
+  margin: 1.5em 0;
+  border-collapse: collapse;
+  font-size: 14px;
+}
+
+th, td {
+  padding: 0.75em;
+  border: 1px solid #e8e8e8;
+  text-align: left;
+}
+
+th {
+  background: #fafafa;
+  font-weight: 600;
+  color: #333;
+}
+
+td {
+  color: #666;
+}
+
+hr {
+  border: none;
+  border-top: 1px solid #e8e8e8;
+  margin: 2em 0;
+}
+
+s, del {
+  text-decoration: line-through;
+  color: #999;
+}
+
+mark {
+  background: #fff3cd;
+  color: #333;
+  padding: 2px 4px;
+  border-radius: 2px;
+}
+
+.hljs-comment, .hljs-quote { 
+  color: #8c8c8c; 
+  font-style: italic;
+}
+
+.hljs-keyword, .hljs-selector-tag { 
+  color: #722ed1; 
+}
+
+.hljs-string, .hljs-attr { 
+  color: #13c2c2; 
+}
+
+.hljs-number, .hljs-literal { 
+  color: #fa8c16; 
+}
+
+.hljs-title, .hljs-type { 
+  color: #1890ff; 
+}
+`;
+
+const THEME_MAP = {
+  'default': DEFAULT_THEME_CSS,
+  'grace': GRACE_THEME_CSS,
+  'simple': SIMPLE_THEME_CSS,
+  'tech-clean': TECH_CLEAN_THEME_CSS
+};
+
 // ==================== 核心转换器 ====================
 
 class MDToWechatConverter {
   constructor(config = {}) {
     // 支持嵌套配置结构（从配置文件加载）
     this.config = {
-      // 从扁平配置或嵌套配置中提取
+      ...config,
+      // 从扁平配置或嵌套配置中提取（覆盖 spread 的值）
       theme: config.theme?.name || config.theme || 'default',
       primaryColor: config.style?.primaryColor || config.primaryColor || '#0F4C81',
       fontFamily: config.style?.fontFamily || config.fontFamily || '-apple-system-font, BlinkMacSystemFont, Helvetica Neue, PingFang SC, sans-serif',
@@ -647,7 +985,6 @@ class MDToWechatConverter {
       imageBorderRadius: config.image?.borderRadius || '4px',
       customCSS: config.customCSS || '',
       headingStyles: config.headingStyles || {},
-      ...config
     };
     
     this.setupMarked();
@@ -709,19 +1046,28 @@ class MDToWechatConverter {
     // 2. 渲染 Mermaid 图表
     html = await this.renderMermaidPlaceholders(html);
     
-    // 3. 生成 CSS
-    const css = this.generateCSS();
+    // 3. 生成并解析 CSS 变量（juice 不支持 var()）
+    let css = this.generateCSS();
+    css = resolveCSSVariables(css, this.config);
     
-    // 4. 包装 HTML
-    html = this.wrapHTML(html, css);
+    // 4. 构建文章 HTML 并用 juice 内联所有样式
+    const articleHTML = this.buildArticleHTML(html, css);
+    const inlinedHTML = juice(articleHTML, {
+      applyStyleTags: true,
+      removeStyleTags: true,
+      preserveMediaQueries: false,
+      preserveFontFaces: false,
+      webResources: { images: false, scripts: false, styles: false, links: false },
+    });
     
-    // 5. 清理不可见控制字符（安全处理）
-    html = html
-      .replace(/[\u200B\u200C\u200D\u2060]/g, '') // 移除零宽字符
-      .replace(/\u00A0/g, ' ')  // 替换不换行空格为普通空格
-      .replace(/^\uFEFF/, '');  // 移除 BOM
+    // 5. 包装为完整页面（含复制按钮）
+    const pageHTML = this.wrapPageHTML(inlinedHTML);
     
-    return html;
+    // 6. 清理不可见控制字符
+    return pageHTML
+      .replace(/[\u200B\u200C\u200D\u2060]/g, '')
+      .replace(/\u00A0/g, ' ')
+      .replace(/^\uFEFF/, '');
   }
   
   async renderMermaidPlaceholders(html) {
@@ -799,77 +1145,58 @@ section, p {
     }
     
     // 合并自定义 CSS
-    return BASE_CSS + cssVars + DEFAULT_THEME_CSS + headingCSS + textIndentCSS + justifyCSS + '\n' + this.config.customCSS;
+    const themeCSS = THEME_MAP[this.config.theme] || DEFAULT_THEME_CSS;
+    return BASE_CSS + cssVars + themeCSS + headingCSS + textIndentCSS + justifyCSS + '\n' + this.config.customCSS;
   }
   
-  wrapHTML(content, css) {
-    // 字数统计
+  buildArticleHTML(content, css) {
     let wordCountInfo = '';
     if (this.config.showWordCount) {
       const textOnly = content.replace(/<[^>]+>/g, '');
       const words = textOnly.length;
       const minutes = Math.max(1, Math.floor(words / 400));
-      wordCountInfo = `
-<blockquote style="border-left:4px solid ${this.config.primaryColor};padding:1em;background:#f7f7f7;">
-<p style="margin:0;">字数 ${words}，阅读大约需 ${minutes} 分钟</p>
-</blockquote>
-`;
+      wordCountInfo = `<blockquote style="border-left:4px solid ${this.config.primaryColor};padding:1em;background:#f7f7f7;"><p style="margin:0;">字数 ${words}，阅读大约需 ${minutes} 分钟</p></blockquote>`;
     }
     
-    // KaTeX CSS
-    const katexCSS = `
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
-`;
-    
+    return `<div id="wechat-article">
+<style>
+section {
+  font-family: ${this.config.fontFamily};
+  font-size: ${this.config.fontSize};
+  line-height: ${this.config.lineHeight};
+  text-align: left;
+  color: ${this.config.textColor};
+}
+section > :first-child { margin-top: 0 !important; }
+${css}
+</style>
+<section style="margin:0 auto;padding:${this.config.padding};max-width:100%;">
+${wordCountInfo}
+${content}
+</section>
+</div>`;
+  }
+  
+  wrapPageHTML(articleHTML) {
     return `<!DOCTYPE html>
 <html lang="zh-CN">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>微信公众号文章</title>
-  ${katexCSS}
-  <style>
-${css}
-  </style>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
 </head>
 <body style="margin:0;padding:0;background:${this.config.bgColor};">
 <div style="position:sticky;top:0;z-index:10;padding:10px;text-align:center;background:#ffffff;border-bottom:1px solid #e5e7eb;">
   <button id="copy-wechat" style="border:0;border-radius:6px;padding:9px 18px;background:${this.config.primaryColor};color:#fff;font-size:14px;cursor:pointer;">复制正文</button>
   <span id="copy-status" style="margin-left:10px;color:#667085;font-size:13px;">点击后粘贴到微信公众号编辑器</span>
 </div>
-<section id="wechat-article" style="
-  margin:0 auto;
-  padding:${this.config.padding};
-  font-family: ${this.config.fontFamily};
-  font-size: ${this.config.fontSize};
-  line-height: ${this.config.lineHeight};
-  max-width: 100%;
-  color: ${this.config.textColor};
-">
-${wordCountInfo}
-${content}
-</section>
+${articleHTML}
 <script>
 document.getElementById('copy-wechat').addEventListener('click', async () => {
   const article = document.getElementById('wechat-article');
   const status = document.getElementById('copy-status');
-  // 公众号编辑器会过滤页面级 CSS。复制前将关键排版属性写入节点，保证粘贴后仍保持布局。
-  const clone = article.cloneNode(true);
-  const selectors = 'h1,h2,h3,h4,p,blockquote,pre,pre code,code,table,thead,tbody,tr,th,td,ul,ol,li,hr,a,strong,em,img';
-  const properties = [
-    'display', 'width', 'max-width', 'margin', 'padding', 'font-family', 'font-size',
-    'font-weight', 'font-style', 'line-height', 'letter-spacing', 'color', 'background',
-    'border', 'border-left', 'border-bottom', 'border-collapse', 'text-align',
-    'text-decoration', 'vertical-align', 'white-space', 'overflow-x', 'box-sizing'
-  ];
-  const sourceNodes = Array.from(article.querySelectorAll(selectors));
-  clone.querySelectorAll(selectors).forEach((node, index) => {
-    const source = sourceNodes[index];
-    const computed = getComputedStyle(source);
-    const styles = properties.map((property) => property + ':' + computed.getPropertyValue(property)).join(';');
-    node.setAttribute('style', (node.getAttribute('style') || '') + ';' + styles);
-  });
-  const html = clone.innerHTML;
+  const html = article.innerHTML;
   const text = article.innerText;
   try {
     if (navigator.clipboard && window.ClipboardItem) {
@@ -897,6 +1224,46 @@ document.getElementById('copy-wechat').addEventListener('click', async () => {
   }
 }
 
+// ==================== CSS 变量解析 ====================
+
+/**
+ * 解析 CSS 中的变量定义，替换 var(--xxx) 为实际值
+ * juice 不支持 CSS 变量，必须在内联前预处理
+ */
+function resolveCSSVariables(css, config) {
+  const varMap = {
+    '--md-primary-color': config.primaryColor,
+    '--md-font-family': config.fontFamily,
+    '--md-font-size': config.fontSize,
+    '--md-text-color': config.textColor,
+    '--md-bg-color': config.bgColor,
+    '--md-line-height': String(config.lineHeight),
+    '--md-link-color': config.linkColor || config.primaryColor,
+    '--md-image-radius': config.imageBorderRadius,
+  };
+  
+  // 先从 :root 块中提取变量定义
+  const rootMatch = css.match(/:root\s*\{([^}]+)\}/);
+  if (rootMatch) {
+    const rootContent = rootMatch[1];
+    const varDefRegex = /(--[\w-]+)\s*:\s*([^;]+)/g;
+    let match;
+    while ((match = varDefRegex.exec(rootContent)) !== null) {
+      varMap[match[1]] = match[2].trim();
+    }
+  }
+  
+  // 替换所有 var(--xxx) 引用
+  let resolved = css.replace(/var\((--[\w-]+)\)/g, (_, name) => {
+    return varMap[name] || 'inherit';
+  });
+  
+  // 移除 :root 块（已无用）
+  resolved = resolved.replace(/:root\s*\{[^}]*\}/g, '');
+  
+  return resolved;
+}
+
 // ==================== 工具函数 ====================
 
 function escapeHtml(text) {
@@ -908,6 +1275,31 @@ function escapeHtml(text) {
     "'": '&#039;'
   };
   return text.replace(/[&<>"']/g, m => map[m]);
+}
+
+/**
+ * 剥离发布辅助内容，只保留公众号正文。
+ *
+ * wechat.md 同时承载发布元数据（标题备选、摘要、关键词）与正文，
+ * 直接交给 marked 会把内部字段渲染成文章标题，2026-10-28 生成的
+ * wechat.html 即为此类产物，不可直接粘贴到公众号。
+ */
+function prepareWechatMarkdown(markdownText) {
+  let body = markdownText.replace(/^---\r?\n[\s\S]*?\r?\n---\r?\n/, '');
+
+  // 从 `# 正文（粘贴到公众号后台）` 之后开始渲染
+  const bodyMarker = /^#\s*正文[^\n]*\r?\n?/m.exec(body);
+  if (bodyMarker) {
+    body = body.slice(bodyMarker.index + bodyMarker[0].length);
+  }
+
+  // 丢弃文末的内部发布 checklist
+  const checklistIndex = body.search(/^#\s*发布\s*checklist/m);
+  if (checklistIndex !== -1) {
+    body = body.slice(0, checklistIndex);
+  }
+
+  return body.trimStart();
 }
 
 async function loadConfig(configPath) {
@@ -1003,14 +1395,21 @@ program
       console.log(chalk.cyan('[INFO] 开始转换...'));
       if (Object.keys(config).length > 0) {
         console.log(chalk.gray(`  配置文件: ${options.config}`));
+        console.log(chalk.gray(`  主题: ${config.theme?.name || config.theme || 'default'}`));
         if (config.style?.primaryColor) {
           console.log(chalk.gray(`  主色调: ${config.style.primaryColor}`));
         }
       }
       
+      // 只渲染正文，避免 frontmatter 与发布元数据进入公众号正文
+      const bodyText = prepareWechatMarkdown(markdownText);
+      if (/!\[[^\]]*\]\(/.test(bodyText) || /^\s*\|.*\|\s*$/m.test(bodyText)) {
+        console.warn(chalk.yellow('[WARN] 正文含图片或表格：本脚本不做公众号适配，请改用 render-wechat.mjs 生成正式稿'));
+      }
+
       // 转换
       const converter = new MDToWechatConverter(config);
-      const html = await converter.convert(markdownText);
+      const html = await converter.convert(bodyText);
       
       // 确定输出路径
       let outputPath = options.output;

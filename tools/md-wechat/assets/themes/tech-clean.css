@@ -1,0 +1,227 @@
+/**
+ * MD 技术简洁主题
+ * 
+ * 特点：
+ * - 极简配色，以灰度为主
+ * - 标题层次通过字重和细微边框区分
+ * - 代码块简洁，无装饰
+ * - 适合专业技术文章
+ * 
+ * 设计理念：克制、专业、易读
+ */
+
+/* ==================== 一级标题 ==================== */
+h1 {
+  font-size: calc(var(--md-font-size) * 1.4);
+  font-weight: 600;
+  color: #1a1a1a;
+  margin: 2em 0 1em;
+  padding-bottom: 0.5em;
+  border-bottom: 1px solid #e8e8e8;
+}
+
+/* ==================== 二级标题 ==================== */
+h2 {
+  font-size: calc(var(--md-font-size) * 1.3);
+  font-weight: 600;
+  color: #1a1a1a;
+  margin: 1.8em 0 0.8em;
+}
+
+/* ==================== 三级标题 ==================== */
+h3 {
+  font-size: calc(var(--md-font-size) * 1.15);
+  font-weight: 600;
+  color: #333;
+  margin: 1.5em 0 0.6em;
+}
+
+/* ==================== 四级标题 ==================== */
+h4 {
+  font-size: calc(var(--md-font-size) * 1.05);
+  font-weight: 600;
+  color: #333;
+  margin: 1.2em 0 0.5em;
+}
+
+/* ==================== 五级标题 ==================== */
+h5 {
+  font-size: var(--md-font-size);
+  font-weight: 600;
+  color: #666;
+  margin: 1em 0 0.4em;
+}
+
+/* ==================== 六级标题 ==================== */
+h6 {
+  font-size: var(--md-font-size);
+  font-weight: 600;
+  color: #999;
+  margin: 1em 0 0.4em;
+}
+
+/* ==================== 段落 ==================== */
+p {
+  margin: 1em 0;
+  line-height: 1.8;
+  color: #333;
+}
+
+/* ==================== 引用块 ==================== */
+blockquote {
+  margin: 1.2em 0;
+  padding: 0.8em 1em;
+  border-left: 3px solid #d9d9d9;
+  background: #fafafa;
+  color: #666;
+}
+
+blockquote p {
+  margin: 0.5em 0;
+}
+
+/* ==================== 代码块 ==================== */
+pre {
+  margin: 1.2em 0;
+  padding: 1em;
+  background: #f6f7f8;
+  border: 1px solid #e8e8e8;
+  border-radius: 4px;
+  overflow-x: auto;
+  font-size: 14px;
+  line-height: 1.6;
+}
+
+pre code {
+  background: none;
+  padding: 0;
+  color: inherit;
+  font-size: inherit;
+}
+
+/* ==================== 行内代码 ==================== */
+code {
+  font-family: 'SF Mono', 'Menlo', 'Consolas', monospace;
+  font-size: 0.9em;
+  color: #c7254e;
+  background: #f8f9fa;
+  padding: 2px 6px;
+  border-radius: 3px;
+}
+
+/* ==================== 列表 ==================== */
+ul, ol {
+  margin: 1em 0;
+  padding-left: 2em;
+  color: #333;
+}
+
+li {
+  margin: 0.4em 0;
+  line-height: 1.8;
+}
+
+/* ==================== 链接 ==================== */
+a {
+  color: #1890ff;
+  text-decoration: none;
+}
+
+a:hover {
+  text-decoration: underline;
+}
+
+/* ==================== 强调 ==================== */
+strong {
+  font-weight: 600;
+  color: #1a1a1a;
+}
+
+em {
+  font-style: italic;
+}
+
+/* ==================== 图片 ==================== */
+img {
+  max-width: 100%;
+  height: auto;
+  margin: 1.5em 0;
+  border-radius: 4px;
+}
+
+/* ==================== 表格 ==================== */
+table {
+  width: 100%;
+  margin: 1.5em 0;
+  border-collapse: collapse;
+  font-size: 14px;
+}
+
+th, td {
+  padding: 0.75em;
+  border: 1px solid #e8e8e8;
+  text-align: left;
+}
+
+th {
+  background: #fafafa;
+  font-weight: 600;
+  color: #333;
+}
+
+td {
+  color: #666;
+}
+
+/* ==================== 分隔线 ==================== */
+hr {
+  border: none;
+  border-top: 1px solid #e8e8e8;
+  margin: 2em 0;
+}
+
+/* ==================== 删除线 ==================== */
+s, del {
+  text-decoration: line-through;
+  color: #999;
+}
+
+/* ==================== 高亮 ==================== */
+mark {
+  background: #fff3cd;
+  color: #333;
+  padding: 2px 4px;
+  border-radius: 2px;
+}
+
+/* ==================== 下划线 ==================== */
+u {
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+/* ==================== 代码高亮颜色（简洁版） ==================== */
+.hljs-comment, .hljs-quote { 
+  color: #8c8c8c; 
+  font-style: italic;
+}
+
+.hljs-keyword, .hljs-selector-tag { 
+  color: #722ed1; 
+}
+
+.hljs-string, .hljs-attr { 
+  color: #13c2c2; 
+}
+
+.hljs-number, .hljs-literal { 
+  color: #fa8c16; 
+}
+
+.hljs-title, .hljs-type { 
+  color: #1890ff; 
+}
+
+.hljs-meta, .hljs-regexp { 
+  color: #eb2f96; 
+}

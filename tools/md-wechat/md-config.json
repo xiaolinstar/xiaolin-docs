@@ -1,7 +1,7 @@
 {
   "version": "1.0.0",
   "theme": {
-    "name": "default"
+    "name": "tech-clean"
   },
   "style": {
     "fontFamily": "-apple-system-font,BlinkMacSystemFont, Helvetica Neue, PingFang SC, Hiragino Sans GB , Microsoft YaHei UI , Microsoft YaHei ,Arial,sans-serif",
