@@ -1,535 +1,298 @@
 ---
-origin: docs/sre/devops/foundation/pipeline-basics.md
-origin_url: https://xiaolinstar.cn/sre/devops/foundation/pipeline-basics.html
+origin: docs/sre/devops/foundation/06-pipeline-basics.md
+origin_url: https://xiaolinstar.cn/sre/devops/foundation/06-pipeline-basics.html
 slug: pipeline-basics
 account: AI持续运维
 mode: repurpose+polish
 status: ready
 polish:
-  - 标题系列化：DevOps 基础 06 ｜ 流水线基础：把运维动作写成自动化脚本
-  - 移除 origin 末尾「参考」区，公众号稿不展示外部链接
-  - 数学公式统一编译为 PNG-base64（KaTeX + Playwright），inline 用 1em 行高、block 用 0.6 scale
-  - 单字符数字 `$1$` → `1`，保留字符变量 `$n$`（避免 inline 公式带来的行高偏移）
-  - 代码块内公式触发器规避：`$n$` → `n`、`$SSH_KEY` → `<key-path>`、`${VERSION}` → `<version>`（KaTeX 不识别代码块上下文，inline 公式被错误转义）
-  - Jenkinsfile 示例占位符化：硬编码 `ubuntu@db` / `ubuntu@app` → `<target-host>`，新增演进提示段说明反模式（参数化 / Ansible / K8s 属后续主题）
-  - 「复杂度降级」段通顺性优化：句式调整为「是什么 → 状态描述 → 本篇预告」，删除「ssh 上去手敲」与「独立执行单元」语义重复
-  - 图片本地路径替换为 CDN（`/images/img-pipeline-basics/` → `https://media.xiaolin.fun/docs/img-pipeline-basics/`）
-  - 删除 origin 中可点击的站内锚点，公众号不跳转
+  - 2026-11-02：内容复审，压缩重复讲解，提前校验数据库配置，明确远程脚本边界；沿用已验收格式。
+  - 2026-11-02：第二批格式与 CDN 图片分发按范围验收完成，LaTeX 数学排版独立第三批；已发布。
+  - 2026-11-01：轻排版候选稿，精简重复论述，待微信保存及手机预览验收。
 ---
 
-# 发布元数据
+![AI持续运维站点鸟图](https://media.xiaolin.fun/docs/wechat-theme/ai-ops-mascot.png)
 
-## 标题备选（人工筛选）
+# DevOps 基础 06 ｜ 流水线基础：把运维动作写成自动化脚本
 
-1. DevOps 基础 06 ｜ 流水线基础：把运维动作写成自动化脚本（系列化）
-2. 流水线不是命令的搬运工：为什么手写 shell 永远写不出 DAG 并行
-3. 从 `deploy.sh` 到 Jenkinsfile：把上线动作从经验变成可审计的代码
+05 篇用 Docker 固化了运行环境，但上线时还有最后一步：人登录服务器，把部署命令再执行一遍。
 
-**选用**：1（系列化命名，沿用「DevOps 基础 NN ｜ 标题」格式）
+想象这样一个上线场景：周五晚上，小张把代码合进 main，通知老李上线。老李打开终端，拉取镜像、删除旧容器、启动新容器，再检查服务是否正常。一旦漏掉一步，就要回头排查、重新执行。
 
-## 摘要（110 字）
+Docker 统一了部署接口，却没有消除重复操作。Java、Python、Node.js 应用都可以装进镜像，但每周发两次版本，老李还是要敲两遍相同的命令。
 
-05 篇用 Docker 固化运行环境，但上线时仍要人工 SSH 逐条执行命令。本文从命令式 shell 脚本出发，讲清 Job、step、DAG 与流水线引擎的关系，再用 Jenkinsfile 把运维动作写进 Git，让构建、部署与审计从依赖个人经验变成可复现的自动化流程。
+**步骤已经标准化，下一步就是把它们自动化。** 这一篇从 shell 脚本出发，再看流水线引擎和 Jenkinsfile 分别解决什么问题。
 
-## 搜索关键词（4 个）
+## 先把重复命令写进文件
 
-DevOps 流水线、Jenkinsfile、DAG 任务依赖、Shell 自动化部署
+### 最小部署脚本
 
----
-
-# 正文（粘贴到公众号后台）
-
-# 06 ｜ 流水线基础：把运维动作写成自动化脚本
-
-05 篇用 Docker 把「运行环境」封装成不可变镜像，攻克了 03~04 篇留下的可迁移性与服务器污染两大死局。但 05 末尾自己也点明：**每一条部署路径的最后一步，依然要人去执行**。
-
-把 03~05 篇走过的几种部署模式摆在一起看，这条「人 → 服务器 → 命令序列」的链路从未消失：
-
-| 模式 | 上线步骤 | 执行主体 |
-| --- | --- | --- |
-| **进程模式（03~04）** | `ssh → cd → git pull → mvn package → systemctl restart → curl /health` | 人 ssh 进去逐条敲 |
-| **容器模式（05）** | `ssh → docker pull → docker run → curl /health` | 人 ssh 进去逐条敲 |
-
-两种模式**形式上等价**——都是从 SSH 登录开始，以健康检查收尾，**唯一的差别只是中间的「业务动作」换了一组命令**。漏一步、记错顺序、上线时心慌的问题**没有被容器化消解**，只是换了个执行现场。
-
-这一篇做两件事：
-
-1. **把重复命令固化成命令式 shell 脚本**——把「上次怎么做的」沉淀为「这次照着跑就行」，自动化运维的第一步；
-2. **介绍 Jenkinsfile**——把脚本搬进代码仓库，让每次 `git push` 自动触发整条流程，初步触及「**基础设施即代码**」（IaC）的思想。
-
-> **术语**：这里的「**命令式**」（imperative）指「一步步告诉系统**做什么、按什么顺序做**」——shell 脚本、`bash`、`python` 都属于命令式。与之相对的「**声明式**」（declarative）指「只描述**要什么**、让引擎自己决定怎么做」——K8s YAML、Terraform HCL、GitHub Actions YAML 是声明式。本篇的关键转折点是：**命令式脚本无法直接表达 DAG 拓扑与并行**——这是升级到流水线引擎的根本原因。
-
-## 命令式脚本：把动作序列固化进 shell
-
-把「上线步骤」写成一份 shell 脚本，是一切自动化的**最小可行起点**——一行命令能跑通的事，不要每次让人敲。shell 是典型的**命令式语言**：每一行是一条命令，shell 按书写顺序逐条执行，依赖靠 `&&`、`||`、`;` 串联。
-
-承接 05 篇的容器模式部署，可以把上线动作固化成一个 `deploy.sh`：
+最直接的做法，是把上线动作写成 `deploy.sh`。下面是一个简化示例，假定目标服务器已安装 Docker，已登录镜像仓库，并设置好 `DB_URL`。
 
 ```bash
 #!/usr/bin/env bash
 set -euo pipefail
-
-# 1. 拉取镜像
-docker pull your-registry/app:${VERSION:-latest}
-
-# 2. 停掉旧容器
-docker rm -f app || true
-
-# 3. 启动新容器
+: "${DB_URL:?DB_URL is required}"
+image="your-registry/app:${VERSION:?VERSION is required}"
+docker pull "$image"
+if docker container inspect app >/dev/null 2>&1; then
+  docker rm -f app
+fi
 docker run -d --name app -p 8080:8080 \
-  -e DB_URL="${DB_URL}" \
-  your-registry/app:${VERSION:-latest}
-
-# 4. 健康检查
+  -e DB_URL="${DB_URL:?DB_URL is required}" "$image"
 sleep 5
 curl -fsS http://localhost:8080/health
-echo "deploy ${VERSION:-latest} ok"
 ```
 
-部署时不再登录服务器手动敲命令，而是：
+### 执行与边界
+
+将上面的脚本保存为 deploy.sh，确认镜像地址和数据库配置已设置，再在目标服务器指定版本执行：
 
 ```bash
-ssh ubuntu@server "VERSION=1.2.0 ./deploy.sh"
+VERSION=1.2.0 bash ./deploy.sh
 ```
 
-**对比改动**：每次上线还是需要 SSH 一次，但**剩下的命令交给脚本**——人能记错的地方，脚本不会；人能漏掉的 `set -e`，脚本自带。
+这是帮助理解流程的示例，执行前需要替换镜像地址并提供配置。它会删除旧容器再启动新容器，存在中断窗口；固定等待 5 秒也不能保证服务已经就绪。生产环境还需要按应用特点设计就绪检查、重试和回滚。
 
-### 把 05 篇的 Job 接到命令式脚本上
+脚本带来的收益，是把多步操作封装为一次调用。执行者不必每次凭记忆输入命令，步骤的顺序也可以随文件一起检查和修改。
 
-05 篇的「最小生产变更」已经定义了 4 个 Job：
+这个变化可以记作 n → 1：将 n 个步骤封装为 1 次脚本调用。减少的是外部调用次数，脚本内部的步骤与失败风险并没有消失。
 
-- <img src="https://media.xiaolin.fun/docs/formulas/231bca9177cf3786.png" width="17" height="24" alt="公式" style="display:inline;vertical-align:middle;margin:0 2px;">（**DB**）：装 MySQL / 导入 schema / 启动服务
-- <img src="https://media.xiaolin.fun/docs/formulas/7fe2e985cfe76d52.png" width="17" height="24" alt="公式" style="display:inline;vertical-align:middle;margin:0 2px;">（**App**）：部署 Spring Boot
-- <img src="https://media.xiaolin.fun/docs/formulas/0b644149b7bf668a.png" width="17" height="24" alt="公式" style="display:inline;vertical-align:middle;margin:0 2px;">（**Nginx**）：写 `nginx.conf` / `nginx -s reload`
-- <img src="https://media.xiaolin.fun/docs/formulas/b94c84a11389fc38.png" width="17" height="24" alt="公式" style="display:inline;vertical-align:middle;margin:0 2px;">（**verify**）：`curl -fsS /api/health`
+> 但脚本不会自动变得可靠。`set -euo pipefail` 能暴露一部分错误，也有适用边界，不能替代健康检查与失败处理。
 
-**关键点**：自变量 <img src="https://media.xiaolin.fun/docs/formulas/e1903f4bbc892e8f.png" width="14" height="24" alt="公式" style="display:inline;vertical-align:middle;margin:0 2px;"> 的**范围**决定要跑哪些 Job——**不是每次都全量跑 4 个**。
+## 把部署拆成 job 和 step
 
-- 只改了前端代码 → 整个 App Job 都不用跑（DB 也不动）；
-- 只改了 `nginx.conf` → 只需要重载 Nginx，App / DB 都不需要动；
-- 只改了 DB schema → 才需要 <img src="https://media.xiaolin.fun/docs/formulas/231bca9177cf3786.png" width="17" height="24" alt="公式" style="display:inline;vertical-align:middle;margin:0 2px;">；同时改了 App → 还需要 <img src="https://media.xiaolin.fun/docs/formulas/7fe2e985cfe76d52.png" width="17" height="24" alt="公式" style="display:inline;vertical-align:middle;margin:0 2px;">。
+05 篇把生产变更拆成了数据库、应用、Nginx 和验证几个 job，分别记作 J₁、J₂、J₃、J₄。每个 job 面向一个目标，内部再包含多个 step。
 
-所以 05 篇的「4 个 Job」不是说每次上线都要全打一遍——而是**根据 <img src="https://media.xiaolin.fun/docs/formulas/e1903f4bbc892e8f.png" width="14" height="24" alt="公式" style="display:inline;vertical-align:middle;margin:0 2px;"> 的范围按需挑选**。
+下标只是任务编号。变更范围 x 决定需要哪些任务，不是每次都全量执行。
 
-**复杂度降级**：Job 内的串行步骤从 <img src="https://media.xiaolin.fun/docs/formulas/5df8cbed933fa009.png" width="14" height="24" alt="公式" style="display:inline;vertical-align:middle;margin:0 2px;"> 收编到 1。05 篇在单个 Job 内部留下 <img src="https://media.xiaolin.fun/docs/formulas/5df8cbed933fa009.png" width="14" height="24" alt="公式" style="display:inline;vertical-align:middle;margin:0 2px;"> 个串行步骤（ssh → pull → rm → run → sleep → curl……），每一步都是一次独立的执行单元：漏一步、记错顺序、心慌；本篇就是要把这 <img src="https://media.xiaolin.fun/docs/formulas/5df8cbed933fa009.png" width="14" height="24" alt="公式" style="display:inline;vertical-align:middle;margin:0 2px;"> 步收编到一个 shell 脚本里。
+例如，应用部署是一个 job；拉取镜像、启动容器、检查健康状态，是它内部的 step。先按完整目标拆分，再在目标内部明确步骤，流程就更容易检查。
 
-从外部看，整个 Job 就是一次脚本调用：
+不是每次发布都要跑全部 job。只改 Nginx 配置时，可以只重载 Nginx 并验证；涉及数据库结构与后端代码时，就需要检查两者的变更顺序。
+
+对于确实存在串行依赖的任务，可以先用 shell 串起来：
 
 ```bash
-#!/usr/bin/env bash
-# app.sh —— 一个 Job 内的 n 个步骤被收编到一个脚本里
-set -euo pipefail
-
-docker pull your-registry/app:${VERSION:-latest}
-docker rm -f app || true
-docker run -d --name app -p 8080:8080 \
-  -e DB_URL="${DB_URL}" \
-  your-registry/app:${VERSION:-latest}
-
-sleep 5
-curl -fsS http://localhost:8080/health
-echo "app ${VERSION:-latest} ok"
+./db.sh && ./app.sh && ./nginx.sh && ./verify.sh
 ```
 
-部署时只要：
+这条串行路径可以记作 J₁ → J₂ → J₃ → J₄。箭头表示执行依赖，前一个任务成功后，才开始后一个。
 
-```bash
-VERSION=1.2.0 ./app.sh
-```
+这种写法只表达一条串行路径，并依赖每个脚本正确报告成功或失败。
 
-所有 <img src="https://media.xiaolin.fun/docs/formulas/5df8cbed933fa009.png" width="14" height="24" alt="公式" style="display:inline;vertical-align:middle;margin:0 2px;"> 步都被收编到一个 `.sh` 文件里，对外只剩一次调用——人能记错的地方，脚本不会；`set -euo pipefail` 让脚本自带失败兜底。
+当流程涉及多台机器、多个环境和并行任务时，我们需要管理的就不再只是一串命令了。
 
-> 这就是命令式脚本的核心收益：把 <img src="https://media.xiaolin.fun/docs/formulas/5df8cbed933fa009.png" width="14" height="24" alt="公式" style="display:inline;vertical-align:middle;margin:0 2px;"> 步的实现细节封装到 1 次调用背后。
+## 从串行步骤走向依赖图
 
-多个 Job 之间用 `&&` 串联（前者失败则后者不启动）：
+假设镜像构建完成后，要分别推送到华东和华北。两地推送互不依赖，可以并行；每地推送成功后，各自部署并检查；两地检查都成功，才允许全量切流。
 
-```bash
-./db.sh 1.2.0 && ./app.sh 1.2.0 && ./nginx.sh 1.2.0 && ./verify.sh 1.2.0
-```
+图中的节点编号对应这些任务：v₁ 是单元测试，v₂ 是镜像构建；v₃、v₄ 分别向华东、华北推送镜像；v₅、v₆ 分别检查两地服务；v₇ 是全量切流。
 
-`&&` 仍然只表达**串行**——05 篇的「<img src="https://media.xiaolin.fun/docs/formulas/5124b17d6795498e.png" width="158" height="24" alt="公式" style="display:inline;vertical-align:middle;margin:0 2px;">」拓扑序，用命令式 shell 的串行原语压扁成一行。**单 Job 内部是命令式脚本，Job 之间的串联也是命令式脚本**——这是命令式自动化的全部内容。
+图中的两地健康检查任务包含必要的部署动作；推送成功本身不代表应用已经更新。
 
-### 对 shell 脚本的初步划分：Job 与 step
+![两地并行发布的 DAG 依赖关系](https://media.xiaolin.fun/docs/img-pipeline-basics/wechat-dag-v1.png)
 
-把上面的 4 个 Job 落到工程实践里，会自然长出两个粒度的拆分——**Job 与 step**：
+这个流程可以直接用文字读出来：
 
-- **Job**：对一个**完整目标**的封装——把「把 DB 起好」「把 App 部署完」这类业务动作打包成**一个独立的 shell 文件**（`db.sh` / `app.sh`）；
-- **step**：Job 内部更细的子动作——`docker pull`、`docker run`、`mysql ping`、`curl /health`。
+1. 先完成测试和镜像构建。
+2. 华东与华北各自执行推送、部署和检查，两条分支可以并行。
+3. 两条分支全部成功后，才能进入切流步骤。
 
-常见的划分原则有三条：
+这样的依赖关系，适合用有向无环图 DAG 表达。节点表示任务，有向边表示依赖。无环意味着任务不会形成相互等待的循环依赖，但并不保证任务运行时不会阻塞。
 
-1. **前后端分开**：`app.sh` 进一步拆成 `frontend.sh` 和 `backend.sh`——失败域隔离，前端没起好不会拖垮后端，可以单独重跑；
-2. **verify 内置到 Job 作为 last step**：每个 Job 跑完不是「无脑返回 0」，而是自己在最后用 `curl` 或 `mysql ping` 验证一下，确认**这个 Job 的约定结果**真的达成了；不像 04 篇那样「上线靠记忆」；
-3. **Job 之间用 `&&` 串联**：依赖关系靠命令式 shell 的串行原语表达——前面的 Job 没成功，后面的 Job 不会启动。
+用 vᵢ → vⱼ 表示节点依赖：vⱼ 要等待 vᵢ 完成；τ 表示一个满足依赖关系的拓扑序。同一张依赖图可能有多个合法拓扑序，彼此没有依赖的分支不必固定先后。
 
-举一个拆细后的例子（Job 内含多个 step，verify 作为 last step）：
+**并行的前提是没有直接或间接的先后依赖，并且资源与并发限制允许。** 不能只看两个节点之间有没有直接连线。
 
-```bash
-#!/usr/bin/env bash
-# app.sh —— 一个 Job 内部用 step 表达 + verify 内置
-set -euo pipefail
-
-# step 1: 拉镜像
-docker pull your-registry/app:${VERSION:-latest}
-
-# step 2: 停旧容器
-docker rm -f app || true
-
-# step 3: 起新容器
-docker run -d --name app -p 8080:8080 \
-  -e DB_URL="${DB_URL}" \
-  your-registry/app:${VERSION:-latest}
-
-# last step: verify（不是再写一个 verify.sh，而是把验证内置进来）
-sleep 5
-curl -fsS http://localhost:8080/health
-echo "app ${VERSION:-latest} ok"
-```
-
-把 Job / step 这套拆分明确化之后，命令式 shell 也就走到了尽头——它能解决「**单 Job 内的串行 step**」与「**Job 之间的串行串联**」，但两个更深层的诉求会撞上结构性边界。这两个边界，正是 06 篇要引入流水线引擎的动机。
-
-### 边界一：多机协作与并行拓扑
-
-业务从单台服务器扩到 5 台、10 台、100 台时，「同一份 `deploy.sh`」要在 <img src="https://media.xiaolin.fun/docs/formulas/208f5f43585f6ede.png" width="16" height="24" alt="公式" style="display:inline;vertical-align:middle;margin:0 2px;"> 台机器上各跑一次。命令式 shell 只能写 `for server in ...; do ssh ...; done`——这是**串行**展开，遇到慢的机器、慢的网络会拖垮整体进度。真实场景里这 <img src="https://media.xiaolin.fun/docs/formulas/208f5f43585f6ede.png" width="16" height="24" alt="公式" style="display:inline;vertical-align:middle;margin:0 2px;"> 台机器之间的部署**有并行机会**：先全量重启前 5 台、健康检查通过后再并行重启后 5 台。
-
-命令式 shell 想做的是「**按拓扑序执行**」——<img src="https://media.xiaolin.fun/docs/formulas/ecb484f1392c653e.png" width="17" height="24" alt="公式" style="display:inline;vertical-align:middle;margin:0 2px;"> 与 <img src="https://media.xiaolin.fun/docs/formulas/38ac7defb4284162.png" width="17" height="24" alt="公式" style="display:inline;vertical-align:middle;margin:0 2px;"> 没依赖就并行、<img src="https://media.xiaolin.fun/docs/formulas/6214bca7c3519c4e.png" width="17" height="24" alt="公式" style="display:inline;vertical-align:middle;margin:0 2px;"> 必须等 <img src="https://media.xiaolin.fun/docs/formulas/814b60f2a0961262.png" width="17" height="24" alt="公式" style="display:inline;vertical-align:middle;margin:0 2px;"> 与 <img src="https://media.xiaolin.fun/docs/formulas/0f814832ed64e357.png" width="17" height="24" alt="公式" style="display:inline;vertical-align:middle;margin:0 2px;">——但它只能用 `&` 把任务丢后台、用 `wait` 同步，**硬模拟**这种拓扑关系：
-
-```bash
-ssh h1 "./app.sh" &
-ssh h2 "./app.sh" &
-ssh h3 "./app.sh" &
-wait
-```
-
-`wait` 不知道谁依赖谁、谁等谁；每加一台机器都要再敲一行 `&` 和一行 `wait`——维护成本随机器数**指数级**上涨。
+Shell 也能用后台任务、`wait` 和额外逻辑实现并行。困难在于：依赖、退出状态、失败传播、取消和重试，都需要自己维护。流程越复杂，这部分调度代码就越难读。
 
 ![shell 命令流与 DAG 依赖图对比](https://media.xiaolin.fun/docs/img-pipeline-basics/infographic-shell-flow-vs-dag.png)
 
-**边界一的本质**：shell 脚本**无法有效建模生产变更的操作拓扑**。前者是「拓扑排序」（按依赖排出的命令序列）的命令式模拟，后者是「DAG」（直接表达依赖关系的数据结构）的声明式描述。两者的差别不在语法，在「能不能让工具直接看到依赖图」——**shell 给你一条命令流（并行与依赖靠人维护）；DAG 给你一张依赖图（引擎自己调度）。**
+任务调度之外，单步可靠性也会影响整体结果：假设每一步相互独立、失败率都为 p，n 步全部成功的概率就是 (1 − p)ⁿ。当 p = 0.01 时，5 步约为 95%，15 步约为 86%。这是特定假设下的估算，不代表真实任务的失败率一定相同或相互独立。
 
-引入流水线引擎的根本动机，就是把「按拓扑序执行」从「shell 里硬模拟」升级到「引擎读 DAG 自动调度」——下一节的 DAG 就是这条路的展开。
+流水线引擎把调度工作集中起来。人声明任务和依赖，引擎根据定义安排执行，并提供日志、状态和通知等能力。
 
-### 边界二：shell 脚本的健壮性危机
+## 引擎负责调度，脚本负责动作
 
-边界一是「能不能表达拓扑」，边界二是「**表达对了能不能稳定跑**」——这是代码层面的问题，与拓扑无关。
+流水线引擎通常承担几类工作：接收手动或 webhook 触发，解析流程定义，把任务交给执行节点，记录运行结果，并在结束时执行通知等操作。
 
-在终端里根据手册敲指令，是一种**随机应变**的过程：人可以读报错、现场判断、决定下一步——「这个文件不存在就跳过」「这一步报错就回滚」「看起来不对先 abort」。这种灵活是**人**提供的，不是命令本身提供的。
+它没有让脚本消失。拉镜像、部署和健康检查仍然可以写在 shell 文件里，引擎负责决定这些脚本何时运行、在哪里运行，以及失败后如何处理。
 
-**shell 脚本把这件事翻转了**——它意味着「所有操作预期都完成」：每一步都按事先写死的逻辑跑，没有人会现场救你。**三层后果**随之而来——
+职责分开后，排查也更清楚。依赖配置错误，要检查流程定义；某个任务失败，要查看该任务的日志和脚本；执行环境缺工具，则需要检查执行节点。
 
-**步骤越多，出错概率指数叠加**——<img src="https://media.xiaolin.fun/docs/formulas/5df8cbed933fa009.png" width="14" height="24" alt="公式" style="display:inline;vertical-align:middle;margin:0 2px;"> 个独立步骤，每个步骤的成功率 <img src="https://media.xiaolin.fun/docs/formulas/7033b4a3595850b9.png" width="53" height="24" alt="公式" style="display:inline;vertical-align:middle;margin:0 2px;">（如 <img src="https://media.xiaolin.fun/docs/formulas/3b8d0e0fb12441b4.png" width="67" height="24" alt="公式" style="display:inline;vertical-align:middle;margin:0 2px;">），整条流水线的成功率 <img src="https://media.xiaolin.fun/docs/formulas/fbf1bfb31df5bf45.png" width="61" height="24" alt="公式" style="display:inline;vertical-align:middle;margin:0 2px;"> **随 <img src="https://media.xiaolin.fun/docs/formulas/5df8cbed933fa009.png" width="14" height="24" alt="公式" style="display:inline;vertical-align:middle;margin:0 2px;"> 指数下降**。5 步约 <img src="https://media.xiaolin.fun/docs/formulas/3cd0a86582eec3ed.png" width="36" height="24" alt="公式" style="display:inline;vertical-align:middle;margin:0 2px;">，15 步就只剩 <img src="https://media.xiaolin.fun/docs/formulas/62b393561490538d.png" width="36" height="24" alt="公式" style="display:inline;vertical-align:middle;margin:0 2px;">。**步骤越多越脆弱**——这不是 shell 的错，是数学事实。
+Jenkins、GitHub Actions、GitLab CI 等工具都可以承担流水线编排。下面三种工具都能定义流程，但配置方式不同：
 
-**失败模式不可预测**——网络抖动、磁盘满、镜像拉取超时、API 限流、配置漂移……每一种都可能让一个步骤不按预期走。脚本不会停下来问你「下一步怎么办」，它只会按事先写好的逻辑硬跑，要么继续、要么 `exit 1`。
+| 工具 | 流程定义方式 |
+| --- | --- |
+| Jenkins | 在 Jenkinsfile 中用 Groovy DSL 定义流程。 |
+| GitHub Actions | 在仓库的工作流文件中用 YAML 定义流程。 |
+| GitLab CI | 在 .gitlab-ci.yml 中用 YAML 定义流程。 |
 
-**防御性编程 = 补丁代码**——现实里 shell 不可避免地演化出这些补丁：
+GitHub Actions 的工作流文件放在 `.github/workflows/*.yml`，GitLab CI 通常使用 `.gitlab-ci.yml`。这里以 Jenkinsfile 为例，下一篇再展开 GitHub Actions。
 
-```bash
-docker rm -f app || true            # 旧容器不存在也不能崩
-sleep 5 || true                     # sleep 失败？无所谓
-curl -fsS ... || curl -fsS ...      # 重试一次
-[ -f /tmp/xxx ] && rm -f /tmp/xxx   # 文件可能不存在
-set -euo pipefail                   # 任一步失败就退出
-```
+## Jenkinsfile：把流程定义放进 Git
 
-`|| true`、`set -e`、`&&` 串联……每出现一次新失败模式就加一条防御，**写到最后都是补丁代码**：核心逻辑被层层防御淹没，新人接手时已经看不出「这个脚本到底想干什么」。
+如果构建命令只保存在 Jenkins 页面里的文本框中，审查和迁移就需要额外安排。把流程写成仓库中的 Jenkinsfile，可以让它与业务代码一起查看差异、讨论修改和保留历史。
 
-**边界二的本质**：shell 把「**终端中的随机应变**」固化成「**事先写死的流程**」——步骤越多、健壮性越差、可读性越糟。**一般的流水线引擎也没有解决这个问题**——它能帮你跑得更快、跑得更自动，但每个 step 内部的 shell 仍然是 shell，**代码健壮性的债务最终仍要靠 shell 自身去还**。
-
-更深层的兜底（事务、迁移脚本、版本回滚、变更审批、灰度发布）要靠更上层的 IaC 体系（Terraform / K8s）——本篇点到为止，07 / 08 / 进阶篇会陆续展开。
-
-### 流水线引擎解决了哪个
-
-把这两个边界与 06 篇的命题对齐：
-
-- **边界一**：流水线引擎是「**解药**」——它用 DAG 拓扑替代硬模拟并行，用引擎调度替代手工 `&&`；
-- **边界二**：流水线引擎是「**配角**」——shell 脚本的健壮性仍要靠脚本自身、IaC 工具、组织流程来兜底。
-
-下一节展开——**流水线引擎如何面向 DAG 建模**，把边界一彻底解决。
-
-## 流水线引擎：面向 DAG 建模
-
-继续把**函数**拆细：**生产变更**很少是「一条直线」。它通常长得像这样——**有先后、有并行、有汇总**：
-
-<img src="https://media.xiaolin.fun/docs/formulas/mermaid-1.png" alt="DAG 流程图" width="600" height="585" style="display:block;width:100%;height:auto;margin:16px 0;border:1px solid #e8edf3;border-radius:6px;">
-
-
-这种「局部并行、整体有序」的拓扑，**线性箭头写不出来**——<img src="https://media.xiaolin.fun/docs/formulas/ecb484f1392c653e.png" width="17" height="24" alt="公式" style="display:inline;vertical-align:middle;margin:0 2px;"> 与 <img src="https://media.xiaolin.fun/docs/formulas/38ac7defb4284162.png" width="17" height="24" alt="公式" style="display:inline;vertical-align:middle;margin:0 2px;"> 之间没有依赖，可以同时跑；<img src="https://media.xiaolin.fun/docs/formulas/6214bca7c3519c4e.png" width="17" height="24" alt="公式" style="display:inline;vertical-align:middle;margin:0 2px;"> 必须等 <img src="https://media.xiaolin.fun/docs/formulas/814b60f2a0961262.png" width="17" height="24" alt="公式" style="display:inline;vertical-align:middle;margin:0 2px;"> 和 <img src="https://media.xiaolin.fun/docs/formulas/0f814832ed64e357.png" width="17" height="24" alt="公式" style="display:inline;vertical-align:middle;margin:0 2px;"> 都成功。
-
-把它抽象成数据，就是一张**有向无环图**（Directed Acyclic Graph, **DAG**）：
-
-- **节点 <img src="https://media.xiaolin.fun/docs/formulas/1ecb4cfa40a49357.png" width="14" height="24" alt="公式" style="display:inline;vertical-align:middle;margin:0 2px;">**：每一个具体动作（pull / build / test / deploy / check）；
-- **有向边 <img src="https://media.xiaolin.fun/docs/formulas/b910161616324ff7.png" width="59" height="24" alt="公式" style="display:inline;vertical-align:middle;margin:0 2px;">**：<img src="https://media.xiaolin.fun/docs/formulas/3ffb7729b3fd6e83.png" width="15" height="24" alt="公式" style="display:inline;vertical-align:middle;margin:0 2px;"> 必须在 <img src="https://media.xiaolin.fun/docs/formulas/1ecb4cfa40a49357.png" width="14" height="24" alt="公式" style="display:inline;vertical-align:middle;margin:0 2px;"> 完成后才能开始；
-- **无环**：从任意节点出发沿边走不会回到自己——保证不会死锁；
-- **拓扑序 <img src="https://media.xiaolin.fun/docs/formulas/1d8753b547c86999.png" width="14" height="24" alt="公式" style="display:inline;vertical-align:middle;margin:0 2px;">**：满足所有边方向的一个节点排列，是函数实际可执行的顺序。
-
-DAG 自然支持**并行**：没有边相连的节点之间没有依赖，可以并行执行；只有存在路径 <img src="https://media.xiaolin.fun/docs/formulas/b910161616324ff7.png" width="59" height="24" alt="公式" style="display:inline;vertical-align:middle;margin:0 2px;"> 时才有先后。这种「局部并行、整体有序」是现实工程里**最常见**的形态——比纯线性链条更接近真实流程。
-
-### 流水线引擎是什么
-
-**流水线引擎**（Pipeline Engine）是「读 DAG、按拓扑序调度执行」的中间层。它要做的事不复杂，归结起来五件：
-
-- **读**：解析一份声明文件（YAML / Groovy DSL），把节点和依赖关系建立成 DAG；
-- **调度**：按拓扑序决定节点执行顺序与并行度，自动起 worker；
-- **触发**：监听 webhook / 定时 / 手动，接收变更信号；
-- **运行**：把节点分发给合适的执行机（agent / runner），记录 stdout / stderr；
-- **收尾**：成功 / 失败 / 不稳定分别处理（post 块），发送通知。
-
-> **一句话定义**：流水线引擎 = 「**DAG 解析器 + 拓扑序执行器 + 触发与通知中心**」。
-
-它本质上就是为「shell 硬模拟并行 / 手工 `&&`」而生的替代品——引擎直接读 DAG、自动调度，把 06 篇的边界一彻底解决。
-
-### 流行的流水线工具一览
-
-| 工具 | 形态 | 声明语法 | 推荐场景 |
-| :--- | :--- | :--- | :--- |
-| **Jenkins** | 自托管 | Groovy DSL（Jenkinsfile） | 传统架构、深度定制、插件生态最丰富 |
-| **GitHub Actions** | SaaS | YAML（`.github/workflows/*.yml`） | 个人 / 开源项目首选，模板即开即用 |
-| **GitLab CI** | 自托管 / SaaS | YAML（`.gitlab-ci.yml`） | 与 GitLab 仓库一站式集成 |
-| **Tekton** | 自托管（K8s 原生） | YAML | K8s 深度用户，流水线即 K8s CRD |
-| **Argo CD** | 自托管（GitOps） | YAML / Kustomize | 云原生 GitOps 持续部署 |
-| **阿里云效 / 腾讯云 CNB** | SaaS | YAML | 国内云生态、企业研发协同 |
-
-> 07 篇会展开 **GitHub Actions** 作为托管式流水线的代表；本篇剩余以 **Jenkins** 为代表，介绍 Declarative Pipeline 与 Jenkinsfile。
-
-### 角色分工：人画 DAG，引擎跑剩下的一切
-
-到这里，06 篇的核心命题可以用一句话收束——**让运维工程师只关注「业务形状」（DAG 怎么画），剩下的工程实现全部交给流水线引擎。**
-
-具体来说，**人**（开发者 / SRE / 运维）关心的是：节点是什么（<img src="https://media.xiaolin.fun/docs/formulas/1ecb4cfa40a49357.png" width="14" height="24" alt="公式" style="display:inline;vertical-align:middle;margin:0 2px;">）、节点间依赖是什么（<img src="https://media.xiaolin.fun/docs/formulas/b910161616324ff7.png" width="59" height="24" alt="公式" style="display:inline;vertical-align:middle;margin:0 2px;">）、每个节点内部做什么 shell——这是「业务形状」；**流水线引擎**关心的是：DAG 解析、拓扑序计算、并行调度、agent 分发、日志记录、状态追踪、失败通知、凭据管理——这些「工程实现」的事。两者**互不越界**。
-
-这就是「**关注点分离**」（Separation of Concerns）在自动化运维里的最终落地——人描述「**要什么**」（DAG 是期望状态），引擎决定「**怎么做**」（调度、执行、可观测）。**人关心业务形状，引擎关心工程实现**——这是 06 篇从手动 `ssh` → shell 脚本 → DAG → 引擎整条递进的本质收益。
-
-## Jenkins：把运维动作托管给独立引擎
-
-前面的章节用 shell 脚本固化命令序列、用 DAG 把动作拓扑画出来、用流水线引擎解决「shell 硬模拟并行」的边界一，但**谁来运行这些脚本、跑得对不对、有没有日志、谁能在什么时候触发**，脚本自身回答不了。**Jenkins** 就是为这些问题而生的 CI/CD 引擎——本节先介绍 Jenkins 自身（是什么、5 项基本能力、典型架构），再讲它在 06 篇里的角色：从早期最小部署、Jenkinsfile 把脚本纳入仓库，到平面分离思考与 Master/Agent 演进，最后以运维左移收尾。
-
-### Jenkins 是什么
-
-**Jenkins** 是目前最流行的**自托管持续集成**（CI）**引擎**，由 Java 编写、2004 年开源、插件生态极其丰富。它的核心定位是——**把「构建 + 测试 + 部署」这套动作从开发者的笔记本剥离出来，集中到一个独立、可信、可审计的执行平台**。
-
-**5 项基本能力**：
-
-- **监听触发**：webhook（`git push`）、定时（cron 表达式）、手动点击、上下游任务触发；
-- **构建执行**：在 agent 上跑 shell / Maven / Gradle / Docker 等命令，串行或并行；
-- **日志收集**：所有 stdout / stderr 永久保留在控制台，可查询、可下载、可归档；
-- **结果通知**：邮件 / Slack / 企业微信 / Webhook——失败时按预设动作推；
-- **权限管理**：用户 / 角色 / 凭据（Credentials Store）——谁能触发、谁能批准、谁能改流水线。
-
-**典型架构**：**Master + Agent**——Master 只做调度（监听、解析、派发、收集、通知），Agent 才真正跑命令。这层分离让 Jenkins 能横向扩展，也能应对多语言、多环境的任务。
-
-Jenkins 不是唯一的 CI 引擎，但它有几个独特点——**自托管**（数据与构建都在自己的服务器上）、**插件生态最丰富**（1500+ 插件）、**声明文件 Groovy DSL**（Jenkinsfile，下几节展开）。理解了 Jenkins 就理解了「CI/CD 引擎」这件事的标准形态。
-
-
-### 早期最小方案：一台 CI 服务器兼顾构建与部署
-
-Jenkins 最早、最朴素的部署形态就是：一台专门的服务器，自居「CI server」，装 JDK / Maven / Git / SSH / Docker，监听 git push 的 webhook，自动跑构建并部署到生产。
-
-<img src="https://media.xiaolin.fun/docs/formulas/mermaid-2.png" alt="CI/CD 时序图" width="600" height="297" style="display:block;width:100%;height:auto;margin:16px 0;border:1px solid #e8edf3;border-radius:6px;">
-
-
-部署步骤大致是：
-
-1. 在 Jenkins 这台机器上：监听 `git push` → `git pull` 拉代码 → `mvn clean package` 打 jar → `docker build` 打镜像 → `docker push` 到 Registry；
-2. SSH 到生产服务器：`docker pull` → `docker rm -f app` → `docker run ...`。
-
-Jenkins 服务器装 JDK / Maven / Docker 是它的本职工作（构建 + 镜像）；生产服务器只跑容器，05 篇确立的「服务器回归本职」在这里被严格遵守。两者职责清晰、不交叉污染。这就是「独立使用一个虚拟机来部署和管理多台虚拟机和应用进程」的最朴素形态。
-
-
-### Jenkinsfile：把生产变更脚本提前写好
-
-早期最小方案已经能跑，但**运维动作如何沉淀**这件事仍然不优雅。
-
-在 CI 服务器上启动 Jenkins 服务（直接运行或 Docker 启动）后，运维人员通过浏览器登录到 Jenkins 提供的 Web UI 进行管理：
-
-- **手动写 shell**：构建步骤都写在 Jenkins UI 的文本框里，「Build Steps → Execute shell」里直接敲 `mvn package`、`docker build`、`ssh ... docker run` 等命令；
-- **手动配密钥**：数据库密码、SSH 私钥、镜像仓库 token 都在 Jenkins Credentials 界面里逐条添加；
-- **手动配环境变量**：每个 Job 的参数化构建、触发器、环境变量都在 UI 上点点填填。
-
-这套做法的痛点很直接：
-
-- **可迁移性极差**：所有配置绑死在 Jenkins 实例里——一旦 Jenkins 进程崩溃、服务迁移、Jenkins 升级失败需要重装，这些**手动敲的命令、配置的环境变量、添加的凭据全部丢失**；
-- **没有审计**：UI 上谁改了什么、什么时候改的——**没有可追溯记录**，多团队协作时尤其痛苦；
-- **没有 review**：构建步骤改了，没法走 PR review；改错了回滚只能凭记忆；
-- **没有版本管理**：配置改了就改了，**没有 diff、没有回滚**——退回到 04 篇之前那种「上线靠记忆」的状态。
-
-Jenkinsfile 就是为了解决这些问题——**把生产变更的脚本提前写好、纳入代码仓库**：
+流程文件与业务代码可以放在同一仓库：
 
 ```text
 your-app/
-├── src/                ← 应用代码
+├── src/
 ├── pom.xml
-├── Jenkinsfile         ← 流水线声明（与代码同仓库）
+├── Jenkinsfile
 └── README.md
 ```
 
-Jenkinsfile 是放在仓库根目录的文本文件，由 Jenkins 引擎读取并执行。它把原本散落在 UI 里的构建步骤**沉淀为一份可 review、可版本管理的代码**——这就是 06 篇开篇所说的「**把命令序列写进文件**」在 Jenkins 世界的具体落地。
+用这两个粒度阅读后面的流程：
 
-> 早期 UI 配置的真实样子：Blue Ocean 是 Jenkins 现代化的流水线编辑入口，下面是从 GitHub 仓库导入流水线的 UI——所有配置、shell 命令、密钥都手动点点填填。
+- job：封装一个完整目标，例如用 `app.sh` 管理应用部署。
+- step：完成具体动作，例如 `docker pull` 和 `docker run`。
 
-### Jenkinsfile vs shell 脚本：编码位置、部署、可迁移性
-
-Jenkinsfile **不是替代** shell 脚本，而是在 shell 脚本之上**加了一层结构化封装**——把「散落的命令」变成「可声明的流水线」。以 05 篇定义的 <img src="https://media.xiaolin.fun/docs/formulas/231bca9177cf3786.png" width="17" height="24" alt="公式" style="display:inline;vertical-align:middle;margin:0 2px;">（DB）+ <img src="https://media.xiaolin.fun/docs/formulas/7fe2e985cfe76d52.png" width="17" height="24" alt="公式" style="display:inline;vertical-align:middle;margin:0 2px;">（App）+ <img src="https://media.xiaolin.fun/docs/formulas/b94c84a11389fc38.png" width="17" height="24" alt="公式" style="display:inline;vertical-align:middle;margin:0 2px;">（verify）三件套为例，同一组生产变更用两种方式实现——
-
-**shell 散落方案**：在 Jenkins UI 的「Build Steps → Execute shell」文本框里手敲
-
-```bash
-ssh ubuntu@app << 'EOF'
-docker pull your-registry/app:${VERSION:-latest}
-docker rm -f app || true
-docker run -d --name app -p 8080:8080 \
-  -e DB_URL=jdbc:mysql://db:3306/app \
-  your-registry/app:${VERSION:-latest}
-EOF
-
-ssh ubuntu@db << 'EOF'
-docker pull mysql:8
-docker rm -f db || true
-docker run -d --name db -e MYSQL_ROOT_PASSWORD=xxx mysql:8
-EOF
-
-ssh ubuntu@app "curl -fsS http://localhost:8080/health"
-```
-
-**Jenkinsfile 方案**：放在仓库根目录 `your-app/Jenkinsfile`，与应用代码一起 review
+下面是一个最小结构示例。`deploy.sh` 与 `verify.sh` 是仓库中需要实际提供的脚本；示例假定 agent 已具备所需工具、网络权限与凭据配置，不是一份可直接用于生产的部署方案。
 
 ```groovy
 pipeline {
-    agent any
-    stages {
-        stage('DB') {
-            steps {
-                withCredentials([sshUserPrivateKey(credentialsId: 'db-key', keyFileVariable: 'SSH_KEY')]) {
-                    sh 'ssh -i <key-path> <target-host> "docker pull mysql:8 && docker rm -f db || true && docker run -d --name db mysql:8"'
-                }
-            }
-        }
-        stage('App') {
-            steps {
-                withCredentials([sshUserPrivateKey(credentialsId: 'app-key', keyFileVariable: 'SSH_KEY')]) {
-                    sh 'ssh -i <key-path> <target-host> "docker pull your-registry/app:<version> && docker rm -f app || true && docker run -d --name app -e DB_URL=jdbc:mysql://db:3306/app your-registry/app:<version>"'
-                }
-            }
-        }
-        stage('Verify') {
-            steps {
-                sh 'curl -fsS http://app:8080/health'
-            }
-        }
+  agent any
+  stages {
+    stage('Deploy') {
+      steps { sh 'bash ./deploy.sh' }
     }
+    stage('Verify') {
+      steps { sh 'bash ./verify.sh' }
+    }
+  }
 }
 ```
 
-两套实现**完成同样的事**，但 4 个维度上有本质区别：
+这个例子只展示两个阶段的顺序关系。更复杂的流程可以继续声明并行分支，但不必在入门时一次引入全部语法。
 
-**编码位置**：shell 在 Jenkins UI 的「Execute shell」文本框里，看不见、审不了、改动无历史；Jenkinsfile 在 `your-app/Jenkinsfile`，与应用代码同仓库，PR review 一并被审视。
+### 从整体结构逐层展开
 
-**可迁移性**：shell 方案换一台 Jenkins 就丢失（需要重新敲命令、配密钥、配环境变量）；Jenkinsfile 跟着 Git 走，Jenkins 进程崩溃，重装一台，`git clone` 拉回流水线，agent 镜像统一声明（`agent { docker { image 'maven:3.9' } }`），环境零差异。
+先看包含关系：pipeline → stages → stage → steps → 具体步骤。pipeline 包住整条流水线，stages 组织阶段，每个 stage 中的 steps 再列出具体动作。凭据绑定位于步骤内部，不是新的阶段。
 
-**部署动作**：shell 方案依赖「人记得点 Build Now」；Jenkinsfile 配合 webhook 自动触发，`git push` → Jenkins 自动跑完。
+下面采用“整体骨架 + 局部展开”的方式讲解。局部代码用于说明各层职责，包含重复上下文，不能顺序拼接成完整文件。
 
-**可审计性**：shell 方案 UI 改动无痕迹、谁改了什么无记录；Jenkinsfile 在 Git 仓库里，`git log` + PR review + commit author 全留痕，事故可追溯。
+上面的最小示例就是整体骨架：agent 指定执行环境，stages 安排部署和验证两个阶段。下面分别展开。
 
-**核心收益**：**编码位置 + 可迁移性 + 部署动作 + 可审计性**，这四点把 Jenkinsfile 从「shell 脚本的另一种写法」变成「**运维动作的代码化**」。
+**第一层：stages 中安排 stage**
 
-![Blue Ocean UI 创建流水线](https://media.xiaolin.fun/docs/img-cicd-taste/blue-ocean-pipeline.png)
+下面截取 stages 里的一个阶段。stage 的名称帮助读者理解任务目标，steps 则列出这个阶段执行的动作。
 
-### Jenkinsfile 部分解决边界二
+```groovy
+stage('Deploy') {
+  steps {
+    sh 'bash ./deploy.sh'
+  }
+}
+```
 
-回到 06 篇的边界二——**shell 脚本的健壮性危机**。Jenkinsfile **部分解决**了其中「**生产变更脚本的可迁移性**」子问题：把生产变更脚本从一个机器搬到另一个机器时面临的依赖 / 路径 / 凭据问题。
+**第二层：steps 中排列具体步骤**
 
-- **环境依赖**：单独 shell 脚本在不同机器上 Maven / JDK 版本可能不同 → Jenkins 服务器环境固定，构建工具链一致；
-- **路径差异**：脚本散落在 `/opt/scripts` 等各处 → Jenkinsfile 部署在仓库、统一 checkout；
-- **凭据管理**：密钥写在脚本里（提交 Git 会被看见） → Jenkins Credentials Store，Jenkinsfile 只引用 ID（如 `credentialsId: 'my-deploy-key'`）；
+再展开 steps。这里的 sh 就是一个具体步骤，用来执行 Shell 命令。多个步骤可以按顺序排列，不需要再包一层名为 step 的容器。
 
-  ![Jenkins 设置全局凭据](https://media.xiaolin.fun/docs/img-cicd-taste/global-credential.png)
-- **可追溯性**：脚本跑完即结束，没有执行历史 → Jenkins 控制台保留所有执行日志、状态、耗时；
-- **审计**：谁跑的、什么时候跑的、跑了什么 → 全部记录在 Jenkins，可查可改。
+```groovy
+steps {
+  sh 'bash ./deploy.sh'
+  sh 'bash ./verify.sh'
+}
+```
 
-> Jenkinsfile **没有完全解决**边界二——shell 节点内部的代码健壮性（步骤指数叠加、失败模式不可预测、补丁代码）**仍要脚本自身去还**。它只解决了「**给生产变更脚本一个稳定、可复现的运行环境**」——**部分解决**。
+这段展示的是“同一个阶段内顺序执行两个步骤”的另一种组织方式；上面的整体示例将部署与验证分成两个阶段，两种安排不应同时照搬。
 
-## 思考与架构演进
+**第三层：需要凭据时，再包住相关步骤**
 
-### 控制平面与业务平面
+原文通过 withCredentials 将 SSH 凭据提供给内部步骤。下面只看它的包含位置：阶段中的 steps 包住凭据绑定，凭据绑定再包住使用密钥的 sh 步骤。
 
-回过头看早期最小方案，**它其实已经暗含了一个重要的架构原则：把环境拆成两个平面**。
+```groovy
+withCredentials([sshUserPrivateKey(
+  credentialsId: 'app-key',
+  keyFileVariable: 'SSH_KEY'
+)]) {
+  sh 'bash ./remote-deploy.sh'
+}
+```
 
-以典型的 5 台服务器为例：
+这段是结构片段，这里的 remote-deploy.sh 是另需实现的远程任务脚本：读取 SSH_KEY，校验目标主机身份，再通过 SSH 调用部署动作。前面的 deploy.sh 在目标服务器本地执行，不能直接替代它。Jenkins 的 sh 首先在 agent 上执行，凭据绑定本身不会自动完成远程连接。
 
-- **控制平面（1 台）**：部署 Jenkins + CI 构建所需的依赖库（JDK / Maven / Git / SSH / Docker），承担 webhook 监听、代码拉取、镜像构建、部署调度——**不承载对外生产业务**；
-- **业务平面（4 台）**：每台只部署 Docker，只承载业务进程、提供服务——05 篇确立的「服务器回归本职」在这里被严格遵守。
+**最后展开：sh 调用的脚本负责具体动作**
 
-控制平面与业务平面的关键区分：
+前文的 deploy.sh 已展示拉镜像、启动容器和健康检查。读流程时先确认顺序与执行位置，排查任务失败时再进入对应脚本，不必把所有命令挤进 Jenkinsfile。
 
-- **职责分离**：控制平面负责「**如何跑**」（构建 + 部署 + 调度），业务平面负责「**跑什么**」（业务进程 + 服务）；
-- **资源隔离**：构建任务是 CPU / 内存密集型（`mvn package` / `docker build`），把它放在业务服务器上会与线上请求抢资源——05 篇的两难死局之一；
-- **故障隔离**：控制平面挂掉，业务平面仍能继续服务（只是新版本发布受影响）；业务平面挂掉，控制平面仍可重新部署；
-- **安全隔离**：凭据（SSH 密钥 / Registry token）只在控制平面持有，业务服务器不需要知道这些敏感信息。
+### 流程进入 Git，环境仍需管理
 
-> **架构上可以混部**（让一台服务器部分承担两种角色），**但不推荐**——单台故障同时影响控制 + 业务、构建资源争抢线上请求、凭据管理边界模糊，这些都是混部会复发的常见痛点。
+**Jenkinsfile 管流程结构，shell 管具体动作。** 二者配合，能让部署逻辑留在代码仓库，而不只留在某个人的终端或页面配置里。
 
-**Jenkins 是这个分离思想的具体物理体现**：它把「构建 + 部署」这件事从业务服务器剥离出来，集中到一个独立的、专门的平面。后续 Master / Agent、容器化 agent、K8s 流水线等更复杂的形态，都是在这个分离基础上的继续深化——**K8s 的 master / node 也是同一思想**：master 是控制平面、node 是业务平面（只部署 kubelet + 业务容器），与本节一脉相承。
+自动触发仍需要配置 webhook 或其他触发机制；凭据、插件、执行节点和工具链也需要单独管理。把 Jenkinsfile 放进 Git，不等于换一台 Jenkins 就能零配置复现环境。
 
-### 运维左移：把运维动作编程为基础设施，提交到 Git
+同样，运行日志的保留时间取决于配置；流程进入 Git，也不代表所有 Jenkins 管理操作都自动获得完整审计记录。
 
-传统运维的场景大致是这样的：
+## 构建与线上业务分开
 
-1. 开发完成后，由开发人员**交付一个运维文档**——或是对开发架构的基本介绍，或是最基础的部署步骤介绍；
-2. 没有特别添加的内容，**生产变更由运维重复执行**——读文档、手动 ssh、敲命令、记笔记；
-3. 如果有添加的内容，**更新运维文档**，再交付给运维。
+引入独立的流水线平台，还有一个收益：可以让构建任务与线上业务分开使用资源。
+
+Maven 编译、镜像构建会消耗 CPU、内存和磁盘。把这些工作直接放在生产业务服务器上，可能影响正在处理的请求。
+
+先划分两侧的职责，再考虑如何分配机器与权限：
+
+| 分工与边界 | 具体安排 |
+| --- | --- |
+| 构建与发布侧 | 准备构建产物，调度部署任务。 |
+| 业务运行侧 | 运行应用，持续处理线上请求。 |
+| 资源隔离 | 避免编译与镜像构建争抢线上 CPU、内存和磁盘。 |
+| 故障影响 | 流水线平台故障会影响新版本发布，已运行的业务应尽量独立。 |
+| 权限与凭据 | 两侧分别按需授权；业务侧仍可能需要拉取镜像的凭据。 |
+
+这些边界需要靠部署与授权落实。规模扩大后，还可以继续将 Jenkins controller 的协调职责与 agent 的执行职责分开。
+
+## 运维左移：把交接内容变成可执行定义
+
+传统的交接方式，是开发提交应用和部署文档，运维读文档后执行。上线结果很大程度上依赖执行者有没有理解并记住每个细节。
 
 ![传统运维交接与运维左移对比](https://media.xiaolin.fun/docs/img-pipeline-basics/infographic-traditional-ops.png)
 
-这套模式的核心特征是「**运维文档面向人**」——文档是载体、运维人员是执行者。**开发和运维是天然分开的两个角色**：**开发面向运维人员交付**，运维负责把开发交付的产物搬上生产。两个角色之间有一道**手动交接线**——开发把 jar 传给运维，运维手动 ssh、敲命令、记运维笔记。这条交接线是 06 篇所有问题的根源：
+当部署脚本和 Jenkinsfile 与业务代码一起进入仓库，交接内容就多了一层可执行定义：代码告诉工具该做什么，人通过 review 检查目标环境、版本、凭据引用和验证条件。
 
-- **交接靠记忆、靠文档**——没有可审计；
-- **部署靠人**——没有可迁移（换人 / 换机器都要重新积累）；
-- **故障排查靠经验**——没有可追溯。
+开发与运维仍然需要协作。开发可以维护应用相关的构建和检查逻辑；运维或平台人员审核生产权限、发布条件与回滚安排。职责可以调整，但不会因为有了流水线就自然消失。
 
-**运维左移的本质**：把「运维动作」**从运维的脑子里和跳板机上**，**搬到开发的代码仓库**——**开发直接编程好** Jenkinsfile / docker-compose.yml / Terraform 脚本，**作为基础设施**（Infrastructure as Code）**提交到 Git**。不是「运维消失了」，而是**运维的隐性经验变成了显性的基础设施代码**。
+Jenkinsfile 是流水线即代码的一种形式，与基础设施即代码共享版本管理和代码审查的思路，但不能替代 Terraform 等工具对基础设施资源的管理。
 
-落地路径压缩成 **写 → 存 → 跑 → 审** 四字——开发者把 Jenkinsfile / docker-compose / Terraform 与业务代码一起进 PR review（**写**），所有变更进 Git 历史可追溯（**存**），`git push` 触发 webhook、Jenkins 按 DAG 自动调度、一键执行（**跑**），触发者 / 审批者 / 执行者 / 结果——全部在 Jenkins 控制台可查（**审**）。
-
-走完这 4 步，前后变化是这样的——
-
-- **角色分工**：从「开发面向运维人员交付」→「**开发面向运维工具交付**」；
-- **上线步骤**：从「某个人脑子里的隐性知识」→「仓库里显性、可版本管理的代码」；
-- **事故排查**：从「经验 + 翻日志」→「Git 历史 + Jenkins 控制台 + 任务运行记录」。
-
-> **一句话收束**：**运维要做的工作，由开发直接编程好，作为基础设施提交到 Git**。传统运维的「运维手册面向人」，Jenkinsfile 把它变成了「运维程序面向程序」——**没有负责生产变更的运维，或者该工作被极大简化**。运维左移不是新理念，而是 shell 脚本化 + Jenkins 引擎 + Git 仓库这三件事累积到一定程度的必然结果——**先有自动化脚本（脚本可复用），再有自动化引擎（脚本可触发），再有自动化仓库（脚本可版本管理）**，三者合在一起，运维动作就从「上线那一刻的临时操作」变成「开发阶段的显性代码」。
-
-Jenkinsfile 不是完整的 IaC（完整 IaC 包括 Terraform、Ansible、K8s YAML 等），但**它的思想一致**——把基础设施 / 运维动作写进代码、用 Git 管理、用流水线执行。**先有 shell 脚本、再有 Jenkinsfile，再走向 Terraform / K8s**——是同一条路上从简单到完整的递进。
+回到开头的上线场景：老李需要做的，可以从逐条输入命令，变成检查变更、确认发布条件，再由引擎执行经过审查的流程。是否自动进入生产，则由团队明确的触发与审批规则决定。
 
 ## 小结
 
-06 篇沿着「**重复运维步骤可以自动化**」这条线索，做了五层递进——**自动化**把 05 篇手敲的命令固化进 shell 脚本，让重复动作从「人」搬到「文件」；**拓扑**要求从「线性序列」升级为「**DAG**（有序无环图）」来表达动作之间的依赖；**并行**是 DAG 的核心价值，**让引擎按拓扑序调度**，无依赖的动作天然并行，这是命令式 shell 做不到、需要外部引擎介入的根本原因；**引擎**层引入 **Jenkins 为代表**的流水线引擎，把脚本纳入代码仓库，由引擎按 DAG 自动调度，做到触发、日志、失败通知的闭环；**可迁移性**是最后一层——shell 脚本从一台机器搬到另一台就崩，**Jenkinsfile** 把生产变更脚本纳入仓库，**部分**解决可迁移性，让运维知识不再绑死 Jenkins 实例。
+06 篇从一组重复的上线命令出发：先用 shell 固化单个任务，再用依赖关系组织多个任务，最后交给流水线引擎调度。Jenkinsfile 让流程定义进入 Git，便于审查与追溯。自动化减少了临场操作，但可靠发布仍依赖脚本、环境、凭据、健康检查和回滚设计。
 
-贯穿 5 层的核心观察：**「上线要从一次生产变更落到一个结果」这件事没变**——变化的是抽象层级（手敲 → shell → DAG → 引擎 → 文件即基础设施）。
+## 延伸阅读：自动执行之后，如何可靠发布
 
-下一篇 07 篇 · GitHub Actions 是更现代的 CI/CD 流水线工具——云端托管、零运维、YAML 纯声明式，对新手入门、一人公司或中小型团队特别友好，是 Jenkins 的纯声明式替代方案。
+### 失败后重试，为什么可能越试越错
 
-## 思考
+本文把多步操作封装成脚本，但任务超时不代表它没有执行成功。直接重跑，可能重复创建资源或重复执行数据库变更。下一步值得了解的是幂等：如何让重复执行不产生额外副作用。
 
-1. 把上线步骤固化进 `deploy.sh` 之后，「幂等」具体怎么保证？脚本里哪一行最容易因为重跑而炸？
-2. 命令式 shell 脚本无法直接表达 DAG 拓扑——如果你手里只有 shell，要让 <img src="https://media.xiaolin.fun/docs/formulas/ecb484f1392c653e.png" width="17" height="24" alt="公式" style="display:inline;vertical-align:middle;margin:0 2px;"> 与 <img src="https://media.xiaolin.fun/docs/formulas/38ac7defb4284162.png" width="17" height="24" alt="公式" style="display:inline;vertical-align:middle;margin:0 2px;"> 并行、<img src="https://media.xiaolin.fun/docs/formulas/6214bca7c3519c4e.png" width="17" height="24" alt="公式" style="display:inline;vertical-align:middle;margin:0 2px;"> 等 <img src="https://media.xiaolin.fun/docs/formulas/814b60f2a0961262.png" width="17" height="24" alt="公式" style="display:inline;vertical-align:middle;margin:0 2px;"> 与 <img src="https://media.xiaolin.fun/docs/formulas/0f814832ed64e357.png" width="17" height="24" alt="公式" style="display:inline;vertical-align:middle;margin:0 2px;">，你会怎么写？这种写法有哪些脆弱点？
-3. Jenkinsfile 文档自称为 "Declarative Pipeline"，但 `steps { sh '...' }` 内部仍然是命令式 shell。这种「顶层声明、内部命令」的混合范式，给你带来哪些便利、又埋下哪些隐患？相比之下，**真正纯声明式的 GitHub Actions YAML** 又是怎么解决的？
+推荐阅读文末资料中的 Making retries safe with idempotent APIs。它以 API 为例说明重试与副作用的关系；先理解“结果未知”与“安全重试”，再思考如何应用到部署任务，不必在本篇深入其具体实现。
 
-## 参考
+### 流水线跑成功，为什么还不能立即全量发布
 
-1. [Jenkinsfile 语法参考](https://www.jenkins.io/doc/book/pipeline/syntax/)
-2. [Jenkins Pipeline：Declarative vs Scripted](https://www.jenkins.io/doc/book/pipeline/#declarative-versus-scripted-pipeline-syntax)
-3. [基础设施即代码（IaC）概览](https://en.wikipedia.org/wiki/Infrastructure_as_code)
-4. [Terraform 文档](https://developer.hashicorp.com/terraform/docs)
-5. [GitHub Actions 文档](https://docs.github.com/en/actions)
-6. [Kubernetes 文档](https://kubernetes.io/docs/home/)
+本文的 DAG 最后汇聚到全量切流，但检查通过不代表新版本在真实流量下没有问题。金丝雀发布先让少量流量使用新版本，观察后逐步扩大，并保留退回旧版本的路径。
+
+推荐阅读文末资料中的 Canary Release。本篇先理解控制影响范围的思路：何时扩大流量、观察什么、何时停止；具体实现留到后续。
+
+### 参考资料
+
+Jenkinsfile 语法参考：https://www.jenkins.io/doc/book/pipeline/syntax/
+
+基础设施即代码（IaC）概览：https://en.wikipedia.org/wiki/Infrastructure_as_code
+
+幂等 API 与安全重试：https://aws.amazon.com/builders-library/making-retries-safe-with-idempotent-APIs/
+
+GitHub Actions 文档：https://docs.github.com/en/actions
+
+Canary Release：https://martinfowler.com/bliki/CanaryRelease.html
 
 ---
 
-# 发布 checklist
+下一篇，我们用 GitHub Actions，把这套流程放进实际项目。
 
-- [ ] 标题已单独填入公众号后台：DevOps 基础 06 ｜ 流水线基础：把运维动作写成自动化脚本
-- [ ] 摘要已填入公众号后台
-- [ ] 正文已直接粘贴到公众号编辑器（从「# 正文（粘贴到公众号后台）」段起）
-- [ ] 正文 4 张图已在后台单独上传（infographic-shell-flow-vs-dag、infographic-traditional-ops、blue-ocean-pipeline、global-credential）
-- [ ] 后台手机端预览排版正常（公式图片行高、表格不撑破）
-- [ ] 公众号名片已插入文末
-- [ ] 发布后将 `meta.yaml` → `platforms.wechat.status` 更新为 `published`
+你现在的部署流程里，还有哪一步依赖某个人记住？
+
+本文的完整图示与示例见站点原文，点击文末“阅读原文”查看。
