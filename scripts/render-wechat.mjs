@@ -40,6 +40,7 @@ const yaml = (await import(path.join(__dirname, '../tools/md-wechat/node_modules
 const meta = fs.existsSync(metaPath) ? yaml.load(fs.readFileSync(metaPath, 'utf8')) : {};
 
 const summary = meta.summary || data.summary || '';
+if ([...summary].length > 120) console.warn(`警告: 摘要 ${[...summary].length} 字，超出 SLA（120 字）`);
 const originUrl = data.origin_url || meta.origin_url || '';
 const slug = meta.slug || path.basename(dir);
 
@@ -99,7 +100,7 @@ for (const token of bodyTokens) {
   }
   if (token.type === 'fence') {
     const lines = token.content.trimEnd().split('\n');
-    if (lines.length > 15) console.warn(`警告: 代码块 ${lines.length} 行，超出 SLA（15 行）`);
+    if (lines.length > 20) console.warn(`警告: 代码块 ${lines.length} 行，超出 SLA（20 行）`);
     const maxLineLen = Math.max(...lines.map(line => [...line].length));
     if (maxLineLen > 72) console.warn(`警告: 代码行最长 ${maxLineLen} 字符，超出 SLA（72）`);
   }
@@ -124,7 +125,19 @@ md.renderer.rules.fence = (ts, i) => {
     const kind = classes.split(/\s+/).find(c => c.startsWith('hljs-'))?.slice(5);
     return `<span style="color:${highlightColors[kind] ?? '#333'};">`;
   });
-  return `<pre style="${styles.codeBlock}"><code style="${styles.codeContent}">${code}</code></pre>\n`;
+  // 替换 span 标签之间的空格为 &nbsp;（仅空格，不含换行）
+  const withNbsp = code.replace(/<\/span>( +)<span/g, (_, space) => {
+    return '</span>' + '&nbsp;'.repeat(space.length) + '<span';
+  });
+  // 替换行首前导空格为 &nbsp;
+  const withLeadingNbsp = withNbsp.split('\n').map(line => {
+    const match = line.match(/^( +)/);
+    if (match) {
+      return '&nbsp;'.repeat(match[1].length) + line.trimStart();
+    }
+    return line;
+  }).join('\n');
+  return `<pre style="${styles.codeBlock}"><code style="${styles.codeContent}">${withLeadingNbsp}</code></pre>\n`;
 };
 
 // 标题渲染
@@ -184,13 +197,18 @@ for (let i = 0; i < bodyTokens.length; i++) {
       if (['strong_open', 'strong_close'].includes(child.type)) child.meta = { listBold: true };
     }
   }
-  const ref = inReferences && token.content.match(/^\[(\d+)\]\s*(.+?)$/);
+  const ref = inReferences && token.content.match(/^\[(\d+)\]\s*(.+?)$/m);
   if (ref) {
-    referenceNumber++;
-    const urlMatch = bodyTokens[i + 1]?.content?.match(/^(https:\/\/\S+)$/);
-    if (urlMatch) {
-      token.meta = { reference: { number: referenceNumber, title: ref[2], url: urlMatch[1] } };
-      token.children[0].meta = token.meta;
+    // 从 children 中提取标题和 URL（格式：text + softbreak + text）
+    const children = token.children ?? [];
+    const titleChild = children.find(c => c.type === 'text' && c.content.startsWith('['));
+    const urlChild = children.find(c => c.type === 'text' && c.content.startsWith('https://'));
+    if (titleChild && urlChild) {
+      referenceNumber++;
+      const title = titleChild.content.replace(/^\[\d+\]\s*/, '');
+      const url = urlChild.content;
+      token.meta = { reference: { number: referenceNumber, title, url } };
+      titleChild.meta = token.meta;
     }
   }
 }
@@ -245,12 +263,12 @@ if (/<svg|<a\s/.test(article)) {
 // 生成页面
 const page = `<!doctype html>
 <html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>${esc(h1Title)}</title>
-<style>body{margin:0;background:#eee;font-family:-apple-system,BlinkMacSystemFont,"PingFang SC",sans-serif;color:#333}.controls{max-width:720px;margin:20px auto;padding:20px;background:#fff}button{padding:10px 18px;cursor:pointer}textarea{display:block;box-sizing:border-box;width:100%;min-height:65px;margin:8px 0 16px;font:14px/1.6 sans-serif}.preview{box-sizing:border-box;width:100%;max-width:407px;margin:20px auto;padding:20px 16px;background:#fff}.preview section{min-width:0}#status{line-height:1.7;font-size:14px;color:#555}@media(max-width:430px){.preview{margin:0 auto}.controls{margin:0 auto}}</style></head>
+<style>body{margin:0;background:#eee;font-family:-apple-system,BlinkMacSystemFont,"PingFang SC",sans-serif;color:#333}.controls{max-width:720px;margin:20px auto;padding:20px;background:#fff}button{padding:10px 18px;cursor:pointer}.copy-btn{padding:4px 10px;margin-left:8px;font-size:12px;cursor:pointer;background:#f0f0f0;border:1px solid #ccc;border-radius:3px}.copy-btn:hover{background:#e0e0e0}.field{margin:12px 0}.field-label{font-weight:600;margin-bottom:4px;color:#555;display:flex;align-items:center}.field-content{font-size:14px;line-height:1.6;color:#333;word-break:break-word}.preview{box-sizing:border-box;width:100%;max-width:407px;margin:20px auto;padding:20px 16px;background:#fff}.preview section{min-width:0}#status{line-height:1.7;font-size:14px;color:#555}@media(max-width:430px){.preview{margin:0 auto}.controls{margin:0 auto}}</style></head>
 <body><aside class="controls"><h1 style="font-size:20px">${esc(slug)} 发布候选稿</h1>
 <p>渲染自: ${esc(path.basename(inputFile))}</p>
-<label>标题<textarea readonly>${esc(h1Title)}</textarea></label>
-<p><strong>摘要：</strong>${esc(summary)}</p>
-${originUrl ? `<p><strong>后台原文链接：</strong>${esc(originUrl)}</p>` : ''}
+<div class="field"><div class="field-label">标题<button class="copy-btn" onclick="copyField('title')">复制</button></div><div id="title" class="field-content">${esc(h1Title)}</div></div>
+<div class="field"><div class="field-label">摘要<button class="copy-btn" onclick="copyField('summary')">复制</button></div><div id="summary" class="field-content">${esc(summary)}</div></div>
+${originUrl ? `<div class="field"><div class="field-label">后台原文链接<button class="copy-btn" onclick="copyField('originUrl')">复制</button></div><div id="originUrl" class="field-content">${esc(originUrl)}</div></div>` : ''}
 <p id="image-status" role="status">正在检查正文图片加载状态…</p>
 <button id="copy">复制正文</button>
 <p id="status" role="status">复制后在公众号正文区普通粘贴，勿选择"粘贴为纯文本"。</p>
@@ -268,6 +286,7 @@ const refreshPictureStatus=()=>{
 };
 for(const img of articlePictures){img.addEventListener('load',refreshPictureStatus);img.addEventListener('error',refreshPictureStatus);img.title='点击查看原图';img.addEventListener('click',()=>window.open(img.src,'_blank','noopener,noreferrer'))}
 refreshPictureStatus();
+async function copyField(id){const el=document.getElementById(id),btn=el.previousElementSibling.querySelector('.copy-btn'),text=el.textContent;try{await navigator.clipboard.writeText(text);btn.textContent='已复制';setTimeout(()=>btn.textContent='复制',1500)}catch(e){const r=document.createRange();r.selectNode(el);getSelection().removeAllRanges();getSelection().addRange(r);document.execCommand('copy');getSelection().removeAllRanges();btn.textContent='已复制';setTimeout(()=>btn.textContent='复制',1500)}}
 document.getElementById('copy').onclick=async()=>{
   const a=document.getElementById('article'),s=document.getElementById('status');
   const pictures=[...a.querySelectorAll('img')];
