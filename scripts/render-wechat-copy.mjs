@@ -86,7 +86,7 @@ async function precompileAll(sourceBody) {
 }
 
 const input = process.argv[2] ?? 'content/dist/delivery-start/wechat.md';
-const output = process.argv[3] ?? input.replace(/\.md$/, '-copy.html');
+const output = process.argv[3] ?? input.replace(/\.md$/, '.html');
 const source = fs.readFileSync(input, 'utf8');
 const flattenMarkdownTables = (text) => text.replace(/(^|\n)((?:\|[^\n]+\|\n)+)/g, (full, prefix, block) => {
   const lines = block.trim().split('\n').map((line) => line.trim()).filter(Boolean);
