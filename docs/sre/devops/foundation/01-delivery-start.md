@@ -72,22 +72,22 @@ nginx -v
 常用命令一览：
 
 ```bash
-# 启动
+# Start
 sudo systemctl start nginx
 
-# 停止
+# Stop
 sudo systemctl stop nginx
 
-# 重启（断开所有连接，仅在必要时用）
+# Restart (disconnects all connections, use only when necessary)
 sudo systemctl restart nginx
 
-# 查看状态
+# Check status
 sudo systemctl status nginx
 
-# 重新加载配置（不中断服务，**生产环境首选**）
+# Reload config without interrupting service (preferred in production)
 sudo systemctl reload nginx
 
-# 测试配置文件语法
+# Test config syntax
 nginx -t
 ```
 
@@ -118,24 +118,24 @@ Nginx 最关键的是配置文件，安装后的目录结构如下：
 
 ```text
 /etc/nginx/
-├── nginx.conf              # 主配置文件
-├── conf.d/                 # 站点配置目录（默认为空）
-├── sites-available/        # 可用站点配置
-│   └── default             # 默认站点配置
-└── sites-enabled/          # 已启用站点（符号链接）
+├── nginx.conf              # Main config file
+├── conf.d/                 # Site config directory (empty by default)
+├── sites-available/        # Available site configs
+│   └── default             # Default site config
+└── sites-enabled/          # Enabled sites (symlinks)
     └── default -> ../sites-available/default
 
 /var/www/
 └── html/
-    └── index.nginx-debian.html  # 默认首页
+    └── index.nginx-debian.html  # Default homepage
 ```
 
 `nginx.conf` 的核心内容：
 
 ```nginx
 http {
-    include /etc/nginx/conf.d/*.conf;        # 加载自定义站点配置
-    include /etc/nginx/sites-enabled/*;      # 加载已启用站点配置
+    include /etc/nginx/conf.d/*.conf;        # Load custom site configs
+    include /etc/nginx/sites-enabled/*;      # Load enabled site configs
 }
 ```
 
@@ -143,13 +143,13 @@ http {
 
 ```nginx
 server {
-    listen 80 default_server;                      # IPv4 监听端口
-    listen [::]:80 default_server;                 # IPv6 监听端口
+    listen 80 default_server;                      # IPv4 listen port
+    listen [::]:80 default_server;                 # IPv6 listen port
 
-    root /var/www/html;                            # 静态资源目录
-    index index.html index.htm index.nginx-debian.html;  # 默认首页（按优先级）
+    root /var/www/html;                            # Static resource directory
+    index index.html index.htm index.nginx-debian.html;  # Default homepage (by priority)
 
-    server_name _;                                 # 匹配所有域名
+    server_name _;                                 # Match all domain names
 }
 ```
 
@@ -256,30 +256,30 @@ VitePress 需要 Node.js v18+ 环境，推荐使用 pnpm（一个快速、节省
 **安装与初始化**：
 
 ```bash
-# 安装 pnpm（如果尚未安装）
+# Install pnpm (if not already installed)
 npm install -g pnpm
 
-# 创建项目目录
+# Create project directory
 mkdir vitepress-demo
 cd vitepress-demo
 
-# 安装 VitePress
+# Install VitePress
 pnpm add -D vitepress
 
-# 初始化项目（交互式配置）
+# Initialize project (interactive configuration)
 npx vitepress init
 ```
 
 **三个核心命令**（对应开发的不同阶段）：
 
 ```bash
-# 本地调试：开发时使用，支持热更新
+# Local development with hot reload
 pnpm run docs:dev
 
-# 构建：生成静态资源
+# Build for production
 pnpm run docs:build
 
-# 预览验证：本地预览构建结果
+# Preview build result locally
 pnpm run docs:preview
 ```
 

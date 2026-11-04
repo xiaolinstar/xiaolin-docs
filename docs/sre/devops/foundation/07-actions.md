@@ -46,9 +46,9 @@ GitHub Actions 让仓库里配置的事件触发一段自动化。它同时提�
 ```
 .github/
 └── workflows/
-    ├── page.yml           # VitePress Pages 部署
-    ├── greetings.yml      # Issue / PR 自动欢迎
-    └── cron-daily.yml     # 每天定时任务
+    ├── page.yml           # VitePress Pages deployment
+    ├── greetings.yml      # Issue / PR auto greeting
+    └── cron-daily.yml     # Daily scheduled task
 ```
 
 GitHub 官方提供 5 大类 workflow 模板：**部署、安全、持续集成、自动化、Pages**。多数场景可以从模板起步再改。
@@ -114,15 +114,15 @@ const basePath = process.env.GITHUB_ACTIONS === 'true' ? '/xiaolin-docs/' : '/'
 ```yaml
 name: VitePress-Website Github Pages Deploy
 on:
-  push:                    # 触发一：push 到 main
+  push:                    # Trigger 1: push to main
     branches:
       - main
-  workflow_dispatch:       # 触发二：手动按钮
+  workflow_dispatch:       # Trigger 2: manual button
 
 env:
   TZ: Asia/Shanghai
 
-# 默认只允许构建读取仓库；部署权限在 deploy Job 中单独声明
+# Default: only build can read repo; deploy permissions declared separately in deploy job
 permissions:
   contents: read
 

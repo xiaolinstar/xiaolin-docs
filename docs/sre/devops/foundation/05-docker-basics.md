@@ -120,10 +120,10 @@ Docker 把这套动作收成一句 `docker run -d -p 80:80 nginx:1.27-alpine`：
 ### 1. `docker pull`：拉取不可变镜像模板
 
 ```bash
-# 拉取公共仓库镜像（生产环境务必显式锁定版本 tag，严禁裸用 latest）
+# Pull image from public registry (always pin version tag in production, never use bare latest)
 docker pull nginx:1.27-alpine
 
-# 从国内云厂商拉取构建好的业务镜像
+# Pull built business image from domestic cloud registry
 docker pull registry.cn-hangzhou.aliyuncs.com/your-org/spring-app:1.0.0
 ```
 
@@ -153,30 +153,30 @@ docker run -d \
 ### 3. `docker ps`：查看容器运行时状态
 
 ```bash
-# 查看当前正在运行中的容器
+# List currently running containers
 docker ps
 
-# 查看全部容器（包含已停止、异常崩溃退出的容器）
+# List all containers (including stopped and crashed ones)
 docker ps -a
 ```
 
 ### 4. `docker stop` 与 `docker rm`：优雅停服与实例销毁
 
 ```bash
-# 优雅停止（向容器主进程发送 SIGTERM 信号，等待 10 秒后若未退出则发送 SIGKILL）
+# Graceful stop (SIGTERM, then SIGKILL after 10s if still running)
 docker stop my-app
 
-# 销毁容器实例（释放容器写时复制层与端口占用）
+# Remove container instance (release CoW layer and port binding)
 docker rm my-app
 
-# 临时排查或 CI 测试场景：容器退出后自动销毁
+# Ephemeral debug / CI run: auto-remove on exit
 docker run --rm -p 80:80 nginx:1.27-alpine
 ```
 
 ### 5. `docker rmi`：清理本地旧镜像
 
 ```bash
-# 清理废弃的旧版本镜像以释放宿主机磁盘空间
+# Remove stale image to reclaim host disk space
 docker rmi nginx:1.27-alpine
 ```
 
@@ -215,8 +215,9 @@ EXPOSE 8080
 在项目根目录执行构建并推送到私有 Registry：
 
 ```bash
-docker build -t registry.cn-hangzhou.aliyuncs.com/xiaolin-docs/spring-app:1.0.0 .
-docker push registry.cn-hangzhou.aliyuncs.com/xiaolin-docs/spring-app:1.0.0
+REG=registry.cn-hangzhou.aliyuncs.com/xiaolin-docs
+docker build -t $REG/spring-app:1.0.0 .
+docker push $REG/spring-app:1.0.0
 ```
 
 **构建一次，任何机器拉取这条镜像跑出的进程都 100% 等价**——这就是视角 1 里 03 篇「环境异构、低可移植」问题的物理消除点。
@@ -289,8 +290,9 @@ Docker 化的关键不是把所有 step 替换成"等价 step"，而是**把每�
 
 视角 1 给出了形式化映射，本视角给出 Y' 的实操形态——三条 `docker run` 完整命令：
 
+**MySQL**（先启动，被 Spring Boot 引用）：
+
 ```bash
-# v_1' MySQL：先启动（被 Spring Boot 引用）
 docker run -d \
   --name mysql \
   -e MYSQL_ROOT_PASSWORD=rootpass \
@@ -298,8 +300,11 @@ docker run -d \
   -v mysql_data:/var/lib/mysql \
   --restart always \
   mysql:8
+```
 
-# v_2' Spring Boot：依赖 MySQL，等 MySQL 就绪后启动
+**Spring Boot**（依赖 MySQL，等 MySQL 就绪后启动）：
+
+```bash
 docker run -d \
   --name spring-app \
   -e SPRING_PROFILES_ACTIVE=prod \
@@ -307,8 +312,11 @@ docker run -d \
   -e DB_PORT=3306 \
   -p 8080:8080 \
   registry.cn-hangzhou.aliyuncs.com/xiaolin-docs/spring-app:1.0.0
+```
 
-# v_3' Nginx：暴露公网 + 反代 Spring Boot
+**Nginx**（暴露公网 + 反代 Spring Boot）：
+
+```bash
 docker run -d \
   --name nginx \
   -p 80:80 \
@@ -333,19 +341,20 @@ location /api/ {
 把视角 2 的 Spring Boot 从 `1.0.0` 升级到 `1.0.1`——在两层粒度下，这等价于**只重新执行 $J'_2$ 这一个 job**，$J'_1$ 与 $J'_3$ 保持不变：
 
 ```bash
-# 1) 拉新业务镜像
-docker pull registry.cn-hangzhou.aliyuncs.com/xiaolin-docs/spring-app:1.0.1
+# 1) Pull new business image
+REG=registry.cn-hangzhou.aliyuncs.com/xiaolin-docs
+docker pull $REG/spring-app:1.0.1
 
-# 2) 销毁旧 Spring Boot 容器
+# 2) Remove old Spring Boot container
 docker stop spring-app && docker rm spring-app
 
-# 3) 拉起新容器（参数复用视角 3 那一长串）
+# 3) Start new container (reuse flags from Perspective 2)
 docker run -d \
   --name spring-app \
   -e SPRING_PROFILES_ACTIVE=prod \
   -e DB_HOST=mysql \
   -p 8080:8080 \
-  registry.cn-hangzhou.aliyuncs.com/xiaolin-docs/spring-app:1.0.1
+  $REG/spring-app:1.0.1
 ```
 
 回退（应用出问题时秒回 `1.0.0`）：

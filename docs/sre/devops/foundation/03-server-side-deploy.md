@@ -172,41 +172,41 @@ Spring 生态的脚手架——开箱即用，约定大于配置（starter）、
 启动命令示例：
 
 ```bash
-# Spring Boot（通常监听 8080）
+# Spring Boot (listens on 8080 by default)
 java -jar app.jar
 
-# Flask（生产用 gunicorn；若前置有 Nginx 反代，推荐仅绑定 127.0.0.1 提升安全性）
-# `app:app` 指向 Flask 应用对象（通常在 wsgi.py 或 app.py 中定义）
+# Flask (use gunicorn in production; bind to 127.0.0.1 when behind Nginx reverse proxy)
+# `app:app` refers to the Flask app object (usually defined in wsgi.py or app.py)
 gunicorn -w 4 -b 127.0.0.1:8000 app:app
 ```
 
-进程从“前台调试”切换到“后台挂稳”的方式：
+进程从”前台调试”切换到”后台挂稳”的方式：
 
 ```bash
-# 1. 临时调试：终端关了就退出
+# 1. Temporary debug: exits when terminal closes
 java -jar app.jar
 
-# 2. 临时后台：终端关了仍在跑（日志默认落到当前目录 nohup.out）
+# 2. Temporary background: keeps running after terminal closes (logs to nohup.out by default)
 nohup java -jar app.jar &
 
-# 3. 后台脱离终端：日志重定向到指定文件
+# 3. Background with detached terminal: redirect logs to specified file
 nohup java -jar app.jar > /var/log/myapp.log 2>&1 &
 ```
 
 启动后的最小验证与排查闭环：
 
 ```bash
-# 1. 验证进程在跑
+# 1. Verify process is running
 ps -ef | grep java          # Spring Boot
 ps -ef | grep gunicorn      # Flask
 
-# 2. 验证端口与健康检查
-curl -I http://127.0.0.1:8080     # Spring Boot 健康检查
+# 2. Verify port and health check
+curl -I http://127.0.0.1:8080     # Spring Boot health check
 curl -I http://127.0.0.1:8000     # Flask / Gunicorn
 
-# 3. 排查时抓日志
-journalctl -u myapp -n 100 -f     # systemd 方式
-tail -f /var/log/myapp.log        # nohup 方式
+# 3. Check logs for troubleshooting
+journalctl -u myapp -n 100 -f     # systemd approach
+tail -f /var/log/myapp.log        # nohup approach
 ```
 
 ![进程生命周期：启动、后台运行、验证与日志回环](/images/img-server-side-deploy/diagram-process-lifecycle-wechat.png)
@@ -251,7 +251,7 @@ WantedBy=multi-user.target
 ```
 
 ```bash
-# 重载配置并启动自启
+# Reload config and enable auto-start on boot
 sudo systemctl daemon-reload
 sudo systemctl enable --now myapp
 sudo systemctl status myapp

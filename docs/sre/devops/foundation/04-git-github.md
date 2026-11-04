@@ -182,15 +182,15 @@ GitHub 解决两件事：
 在使用 `git push` 推送到远程仓库前，需要确保本地已经完成了初始化并提交了至少一次 commit：
 
 ```bash
-# 1. 在本地项目根目录初始化并提交代码
+# 1. Initialize and commit code in local project root
 git init
 git add .
 git commit -m "feat: initial commit"
 
-# 2. 关联远程仓库（请将下面的地址替换为你自己的 GitHub 仓库 URL）
+# 2. Link remote repository (replace with your own GitHub repo URL)
 git remote add origin https://github.com/your-username/your-repo.git
 
-# 3. 推送到远程主分支
+# 3. Push to remote main branch
 git push -u origin main
 ```
 
@@ -205,10 +205,10 @@ git push -u origin main
 有了 GitHub，02 篇的 scp 部署可以升级为：
 
 ```bash
-# 服务器上
+# On the server
 git clone https://github.com/your-username/your-repo.git
 cd your-repo
-# 构建 + 部署……
+# Build + deploy...
 ```
 
 每次更新，服务器上 `git pull` 就拿到最新代码——不再需要手动 scp。

@@ -163,8 +163,8 @@ sudo cp -r ~/dist/* /var/www/html/
 复制完成后做两步最小验证：
 
 ```bash
-ls /var/www/html/                                  # 确认 index.html 等静态资源已就位
-curl -s -o /dev/null -w "%{http_code}\n" http://your-public-IP   # 应返回 200
+ls /var/www/html/                                  # Verify index.html and static resources are in place
+curl -s -o /dev/null -w "%{http_code}\n" http://your-public-IP   # Should return 200
 ```
 
 两步都通过就不需要重启 Nginx，刷新浏览器访问 `http://your-public-IP`，看到你的网站了——这就是发布到公网。
