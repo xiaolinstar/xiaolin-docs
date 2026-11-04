@@ -1,0 +1,21 @@
+slug: docker-compose
+origin: docs/sre/devops/foundation/08-docker-compose.md
+origin_url: https://xiaolinstar.cn/sre/devops/foundation/08-docker-compose.html
+title: DevOps 基础 08 ｜ 多服务容器编排：Docker Compose
+pillar: 云原生
+series_ref: devops-basics
+created: 2026-11-04
+updated: 2026-11-04
+summary: 微服务拆成多个容器后，用 Compose 把服务拓扑、网络、存储和配置写进 YAML 随源码管理。一条 up 启动整个应用，一条 down 清理干净，是单机多容器部署的终点。
+platforms:
+  wechat:
+    account: AI持续运维
+    status: ready
+    output: wechat.md
+    origin_sync: generated
+    title_selected: DevOps 基础 08 ｜ 多服务容器编排：Docker Compose
+    search_keywords:
+      - Docker Compose
+      - 多服务编排
+      - 容器化部署
+      - 基础设施即代码

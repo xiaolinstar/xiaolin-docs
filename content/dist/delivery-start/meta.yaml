@@ -6,6 +6,7 @@ pillar: 云原生
 series_ref: devops-basics          # 指向 content/series.yaml
 created: 2026-08-10
 updated: 2026-08-10
+summary: 编程有 Hello World，运维的 Hello World 是把网站送上服务器。这篇从一行 HTML 出发，讲清 Nginx 安装、配置、静态资源代理，再用 VitePress 完成文档站构建与发布。
 platforms:
   wechat:
     account: AI持续运维

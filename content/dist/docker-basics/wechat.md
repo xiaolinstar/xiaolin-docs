@@ -32,6 +32,8 @@ Docker 容器、Dockerfile 镜像构建、容器化部署、不可变基础设�
 
 # 正文（粘贴到公众号后台）
 
+![AI持续运维站点鸟图](https://media.xiaolin.fun/docs/wechat-theme/ai-ops-mascot.png)
+
 # 05 ｜ 容器 Docker：让服务器回归本职
 
 04 篇（Git 与 GitHub）用 Commit 锁定了代码的每一次变更版本——但当 `git pull` 拉下来的源码回到服务器，依然要 `mvn package`，依然要装 JDK，依然要面对 03 篇已暴露的「服务器变脏」与「环境强耦合」。

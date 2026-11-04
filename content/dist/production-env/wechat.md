@@ -33,6 +33,7 @@ polish:
 
 # 正文（粘贴到公众号后台）
 
+![AI持续运维站点鸟图](https://media.xiaolin.fun/docs/wechat-theme/ai-ops-mascot.png)
 
 在上一篇文章中，已经在本地用 Nginx 跑通了静态站点。然而，`http://localhost` 只有你自己的电脑能访问。如果想让网站发布到互联网，需要将它部署到生产环境。
 

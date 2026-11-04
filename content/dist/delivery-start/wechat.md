@@ -12,6 +12,8 @@ polish:
   - 「引入 VitePress」段补 1 处「内容好写样式难调，认同 VitePress 关注内容不关注格式」（不预设亲历）
 ---
 
+![AI持续运维站点鸟图](https://media.xiaolin.fun/docs/wechat-theme/ai-ops-mascot.png)
+
 # 发布元数据
 
 ## 标题备选（人工筛选）

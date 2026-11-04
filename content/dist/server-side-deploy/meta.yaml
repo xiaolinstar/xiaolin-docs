@@ -6,7 +6,7 @@ pillar: 云原生
 series_ref: devops-basics
 created: 2026-08-16
 updated: 2026-08-16
-summary: 静态网站上线后，真正麻烦的是后端服务：它有运行时、依赖和必须长期存活的进程。本文以 Spring Boot 与 Flask 为例，拆解构建位置、进程保活和多组件依赖三类问题，并用 systemd 跑通裸机部署的最小验证闭环，也为容器化铺路。
+summary: 静态网站上线后，后端服务有运行时、依赖和必须长期存活的进程。以 Spring Boot 与 Flask 为例，拆解构建位置、进程保活和多组件依赖，用 systemd 跑通裸机部署。
 platforms:
   wechat:
     account: AI持续运维

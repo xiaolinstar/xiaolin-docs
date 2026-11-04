@@ -6,7 +6,7 @@ pillar: 云原生
 series_ref: devops-basics
 created: 2026-08-29
 updated: 2026-10-01
-summary: 04 篇用 Git 锁定了代码版本，但源码回到服务器后，仍然要装 JDK、跑构建、面对环境差异。本文从服务器构建与本地编译两条路线的困境出发，讲清容器与虚拟机的本质区别、镜像与容器的命令流转，再用 Dockerfile 和三件套编排把「环境 + 产物」一起交付。
+summary: 源码回到服务器后，仍要装 JDK、跑构建、面对环境差异。从服务器构建与本地编译两条路线的困境出发，讲清容器与虚拟机的区别、镜像与容器的流转，用 Dockerfile 交付环境 + 产物。
 platforms:
   wechat:
     account: AI持续运维
