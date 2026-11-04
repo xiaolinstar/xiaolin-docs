@@ -279,15 +279,20 @@ Jenkinsfile 是流水线即代码的一种形式，与基础设施即代码共�
 
 ### 参考资料
 
-Jenkinsfile 语法参考：https://www.jenkins.io/doc/book/pipeline/syntax/
+[1] Jenkinsfile 语法参考
+https://www.jenkins.io/doc/book/pipeline/syntax/
 
-基础设施即代码（IaC）概览：https://en.wikipedia.org/wiki/Infrastructure_as_code
+[2] 基础设施即代码（IaC）概览
+https://en.wikipedia.org/wiki/Infrastructure_as_code
 
-幂等 API 与安全重试：https://aws.amazon.com/builders-library/making-retries-safe-with-idempotent-APIs/
+[3] 幂等 API 与安全重试
+https://aws.amazon.com/builders-library/making-retries-safe-with-idempotent-APIs/
 
-GitHub Actions 文档：https://docs.github.com/en/actions
+[4] GitHub Actions 文档
+https://docs.github.com/en/actions
 
-Canary Release：https://martinfowler.com/bliki/CanaryRelease.html
+[5] Canary Release
+https://martinfowler.com/bliki/CanaryRelease.html
 
 ---
 

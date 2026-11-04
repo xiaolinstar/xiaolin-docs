@@ -1,11 +1,11 @@
 <!doctype html>
 <html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>DevOps 基础 06 ｜ 流水线基础：把运维动作写成自动化脚本</title>
-<style>body{margin:0;background:#eee;font-family:-apple-system,BlinkMacSystemFont,"PingFang SC",sans-serif;color:#333}.controls{max-width:720px;margin:20px auto;padding:20px;background:#fff}button{padding:10px 18px;cursor:pointer}textarea{display:block;box-sizing:border-box;width:100%;min-height:65px;margin:8px 0 16px;font:14px/1.6 sans-serif}.preview{box-sizing:border-box;width:100%;max-width:407px;margin:20px auto;padding:20px 16px;background:#fff}.preview section{min-width:0}#status{line-height:1.7;font-size:14px;color:#555}@media(max-width:430px){.preview{margin:0 auto}.controls{margin:0 auto}}</style></head>
+<style>body{margin:0;background:#eee;font-family:-apple-system,BlinkMacSystemFont,"PingFang SC",sans-serif;color:#333}.controls{max-width:720px;margin:20px auto;padding:20px;background:#fff}button{padding:10px 18px;cursor:pointer}.copy-btn{padding:4px 10px;margin-left:8px;font-size:12px;cursor:pointer;background:#f0f0f0;border:1px solid #ccc;border-radius:3px}.copy-btn:hover{background:#e0e0e0}.field{margin:12px 0}.field-label{font-weight:600;margin-bottom:4px;color:#555;display:flex;align-items:center}.field-content{font-size:14px;line-height:1.6;color:#333;word-break:break-word}.preview{box-sizing:border-box;width:100%;max-width:407px;margin:20px auto;padding:20px 16px;background:#fff}.preview section{min-width:0}#status{line-height:1.7;font-size:14px;color:#555}@media(max-width:430px){.preview{margin:0 auto}.controls{margin:0 auto}}</style></head>
 <body><aside class="controls"><h1 style="font-size:20px">pipeline-basics 发布候选稿</h1>
 <p>渲染自: wechat.md</p>
-<label>标题<textarea readonly>DevOps 基础 06 ｜ 流水线基础：把运维动作写成自动化脚本</textarea></label>
-<label>摘要<textarea readonly></textarea></label>
-<label>后台原文链接<textarea readonly>https://xiaolinstar.cn/sre/devops/foundation/06-pipeline-basics.html</textarea></label>
+<div class="field"><div class="field-label">标题<button class="copy-btn" onclick="copyField('title')">复制</button></div><div id="title" class="field-content">DevOps 基础 06 ｜ 流水线基础：把运维动作写成自动化脚本</div></div>
+<div class="field"><div class="field-label">摘要<button class="copy-btn" onclick="copyField('summary')">复制</button></div><div id="summary" class="field-content">从 Docker 之后仍需手动执行的上线步骤出发，梳理 shell 脚本、任务依赖和流水线引擎的关系，再用 Jenkinsfile 说明如何把部署流程放进 Git。目标是减少临场操作，同时保留对运行环境、失败处理和生产审批的必要判断。</div></div>
+<div class="field"><div class="field-label">后台原文链接<button class="copy-btn" onclick="copyField('originUrl')">复制</button></div><div id="originUrl" class="field-content">https://xiaolinstar.cn/sre/devops/foundation/06-pipeline-basics.html</div></div>
 <p id="image-status" role="status">正在检查正文图片加载状态…</p>
 <button id="copy">复制正文</button>
 <p id="status" role="status">复制后在公众号正文区普通粘贴，勿选择"粘贴为纯文本"。</p>
@@ -18,17 +18,17 @@
 <section style="width:100%;max-width:320px;margin:26px auto 16px;text-align:center;"><p style="margin:0;text-align:center;line-height:1.4;"><span style="display:inline-block;margin-right:8px;vertical-align:middle;font-family:Arial,Helvetica,sans-serif;font-size:20px;line-height:1.15;font-weight:700;color:#175da4;text-align:center;">01</span><span style="display:inline-block;max-width:80%;vertical-align:middle;font-family:'PingFang SC','Heiti SC','Microsoft YaHei',sans-serif;font-size:15px;line-height:1.55;font-weight:700;color:#175da4;text-align:center;word-wrap:break-word;">先把重复命令写进文件</span></p><section style="margin:3px 0 0;border-top:3px solid #b8c6cf;height:0;font-size:0;line-height:0;"></section></section>
 <p style="margin:20px 0 10px;font-size:15px;line-height:1.6;font-weight:700;color:#334e68;text-align:left;"><strong style="font-weight:700;color:#334e68;">最小部署脚本</strong></p>
 <p style="margin:0 0 15px;font-size:15px;line-height:1.8;color:#333;text-align:left;word-wrap:break-word;">最直接的做法，是把上线动作写成 <code style="font-family:Menlo,Consolas,monospace;font-size:14px;line-height:inherit;color:#334e68;background:#f3f4f5;padding:0 3px;border-radius:3px;white-space:normal;word-break:normal;overflow-wrap:anywhere;">deploy.sh</code>。下面是一个简化示例，假定目标服务器已安装 Docker，已登录镜像仓库，并设置好 <code style="font-family:Menlo,Consolas,monospace;font-size:14px;line-height:inherit;color:#334e68;background:#f3f4f5;padding:0 3px;border-radius:3px;white-space:normal;word-break:normal;overflow-wrap:anywhere;">DB_URL</code>。</p>
-<pre style="box-sizing:border-box;max-width:100%;margin:16px 0;padding:12px 10px;background:#f7f7f7;border:0;text-align:left;font-family:Menlo,Consolas,monospace;font-size:13px;line-height:1.6;color:#333;white-space:pre-wrap;word-break:normal;overflow-wrap:anywhere;tab-size:2;"><code style="font-family:Menlo,Consolas,monospace;font-size:13px;line-height:1.6;color:#333;white-space:pre-wrap;word-break:normal;overflow-wrap:anywhere;tab-size:2;"><span style="color:#526b56;">>#!/usr/bin/env bash</span>
-<span style="color:#005cc5;">>set</span> -euo pipefail
-: <span style="color:#a33a20;">>&quot;<span style="color:#333;">>${DB_URL:?DB_URL is required}</span>&quot;</span>
-image=<span style="color:#a33a20;">>&quot;your-registry/app:<span style="color:#333;">>${VERSION:?VERSION is required}</span>&quot;</span>
-docker pull <span style="color:#a33a20;">>&quot;<span style="color:#333;">>$image</span>&quot;</span>
-<span style="color:#005cc5;">>if</span> docker container inspect app &gt;/dev/null 2&gt;&amp;1; <span style="color:#005cc5;">>then</span>
-  docker <span style="color:#005cc5;">>rm</span> -f app
-<span style="color:#005cc5;">>fi</span>
-docker run -d --name app -p 8080:8080 \
-  -e DB_URL=<span style="color:#a33a20;">>&quot;<span style="color:#333;">>${DB_URL:?DB_URL is required}</span>&quot;</span> <span style="color:#a33a20;">>&quot;<span style="color:#333;">>$image</span>&quot;</span>
-<span style="color:#005cc5;">>sleep</span> 5
+<pre style="box-sizing:border-box;max-width:100%;margin:16px 0;padding:12px 10px;background:#f7f7f7;border:0;text-align:left;font-family:Menlo,Consolas,monospace;font-size:13px;line-height:1.6;color:#333;white-space:pre-wrap;word-break:normal;overflow-wrap:anywhere;tab-size:2;"><code style="font-family:Menlo,Consolas,monospace;font-size:13px;line-height:1.6;color:#333;white-space:pre-wrap;word-break:normal;overflow-wrap:anywhere;tab-size:2;"><span style="color:#526b56;">#!/usr/bin/env&nbsp;bash</span>
+<span style="color:#005cc5;">set</span>&nbsp;-euo&nbsp;pipefail
+:&nbsp;<span style="color:#a33a20;">&quot;<span style="color:#333;">${DB_URL:?DB_URL&nbsp;is&nbsp;required}</span>&quot;</span>
+image=<span style="color:#a33a20;">&quot;your-registry/app:<span style="color:#333;">${VERSION:?VERSION&nbsp;is&nbsp;required}</span>&quot;</span>
+docker&nbsp;pull&nbsp;<span style="color:#a33a20;">&quot;<span style="color:#333;">$image</span>&quot;</span>
+<span style="color:#005cc5;">if</span>&nbsp;docker&nbsp;container&nbsp;inspect&nbsp;app&nbsp;&gt;/dev/null&nbsp;2&gt;&amp;1;&nbsp;<span style="color:#005cc5;">then</span>
+&nbsp;&nbsp;docker&nbsp;<span style="color:#005cc5;">rm</span>&nbsp;-f&nbsp;app
+<span style="color:#005cc5;">fi</span>
+docker&nbsp;run&nbsp;-d&nbsp;--name&nbsp;app&nbsp;-p&nbsp;8080:8080&nbsp;\
+&nbsp;&nbsp;-e&nbsp;DB_URL=<span style="color:#a33a20;">&quot;<span style="color:#333;">${DB_URL:?DB_URL&nbsp;is&nbsp;required}</span>&quot;</span>&nbsp;<span style="color:#a33a20;">&quot;<span style="color:#333;">$image</span>&quot;</span>
+<span style="color:#005cc5;">sleep</span> 5
 curl -fsS http://localhost:8080/health
 </code></pre>
 <p style="margin:20px 0 10px;font-size:15px;line-height:1.6;font-weight:700;color:#334e68;text-align:left;"><strong style="font-weight:700;color:#334e68;">执行与边界</strong></p>
@@ -115,11 +115,11 @@ curl -fsS http://localhost:8080/health
 <pre style="box-sizing:border-box;max-width:100%;margin:16px 0;padding:12px 10px;background:#f7f7f7;border:0;text-align:left;font-family:Menlo,Consolas,monospace;font-size:13px;line-height:1.6;color:#333;white-space:pre-wrap;word-break:normal;overflow-wrap:anywhere;tab-size:2;"><code style="font-family:Menlo,Consolas,monospace;font-size:13px;line-height:1.6;color:#333;white-space:pre-wrap;word-break:normal;overflow-wrap:anywhere;tab-size:2;">pipeline {
   agent any
   stages {
-    stage(<span style="color:#a33a20;">>&#x27;Deploy&#x27;</span>) {
-      steps { sh <span style="color:#a33a20;">>&#x27;bash ./deploy.sh&#x27;</span> }
-    }
-    stage(<span style="color:#a33a20;">>&#x27;Verify&#x27;</span>) {
-      steps { sh <span style="color:#a33a20;">>&#x27;bash ./verify.sh&#x27;</span> }
+    stage(<span style="color:#a33a20;">&#x27;Deploy&#x27;</span>)&nbsp;{
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;steps&nbsp;{&nbsp;sh&nbsp;<span style="color:#a33a20;">&#x27;bash&nbsp;./deploy.sh&#x27;</span>&nbsp;}
+&nbsp;&nbsp;&nbsp;&nbsp;}
+&nbsp;&nbsp;&nbsp;&nbsp;stage(<span style="color:#a33a20;">&#x27;Verify&#x27;</span>)&nbsp;{
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;steps&nbsp;{&nbsp;sh&nbsp;<span style="color:#a33a20;">&#x27;bash&nbsp;./verify.sh&#x27;</span> }
     }
   }
 }
@@ -131,27 +131,27 @@ curl -fsS http://localhost:8080/health
 <p style="margin:0 0 15px;font-size:15px;line-height:1.8;color:#333;text-align:left;word-wrap:break-word;">上面的最小示例就是整体骨架：agent 指定执行环境，stages 安排部署和验证两个阶段。下面分别展开。</p>
 <p style="margin:0 0 15px;font-size:15px;line-height:1.8;color:#333;text-align:left;word-wrap:break-word;"><strong style="font-weight:700;color:#222;">第一层：stages 中安排 stage</strong></p>
 <p style="margin:0 0 15px;font-size:15px;line-height:1.8;color:#333;text-align:left;word-wrap:break-word;">下面截取 stages 里的一个阶段。stage 的名称帮助读者理解任务目标，steps 则列出这个阶段执行的动作。</p>
-<pre style="box-sizing:border-box;max-width:100%;margin:16px 0;padding:12px 10px;background:#f7f7f7;border:0;text-align:left;font-family:Menlo,Consolas,monospace;font-size:13px;line-height:1.6;color:#333;white-space:pre-wrap;word-break:normal;overflow-wrap:anywhere;tab-size:2;"><code style="font-family:Menlo,Consolas,monospace;font-size:13px;line-height:1.6;color:#333;white-space:pre-wrap;word-break:normal;overflow-wrap:anywhere;tab-size:2;">stage(<span style="color:#a33a20;">>&#x27;Deploy&#x27;</span>) {
-  steps {
-    sh <span style="color:#a33a20;">>&#x27;bash ./deploy.sh&#x27;</span>
+<pre style="box-sizing:border-box;max-width:100%;margin:16px 0;padding:12px 10px;background:#f7f7f7;border:0;text-align:left;font-family:Menlo,Consolas,monospace;font-size:13px;line-height:1.6;color:#333;white-space:pre-wrap;word-break:normal;overflow-wrap:anywhere;tab-size:2;"><code style="font-family:Menlo,Consolas,monospace;font-size:13px;line-height:1.6;color:#333;white-space:pre-wrap;word-break:normal;overflow-wrap:anywhere;tab-size:2;">stage(<span style="color:#a33a20;">&#x27;Deploy&#x27;</span>)&nbsp;{
+&nbsp;&nbsp;steps&nbsp;{
+&nbsp;&nbsp;&nbsp;&nbsp;sh&nbsp;<span style="color:#a33a20;">&#x27;bash&nbsp;./deploy.sh&#x27;</span>
   }
 }
 </code></pre>
 <p style="margin:0 0 15px;font-size:15px;line-height:1.8;color:#333;text-align:left;word-wrap:break-word;"><strong style="font-weight:700;color:#222;">第二层：steps 中排列具体步骤</strong></p>
 <p style="margin:0 0 15px;font-size:15px;line-height:1.8;color:#333;text-align:left;word-wrap:break-word;">再展开 steps。这里的 sh 就是一个具体步骤，用来执行 Shell 命令。多个步骤可以按顺序排列，不需要再包一层名为 step 的容器。</p>
 <pre style="box-sizing:border-box;max-width:100%;margin:16px 0;padding:12px 10px;background:#f7f7f7;border:0;text-align:left;font-family:Menlo,Consolas,monospace;font-size:13px;line-height:1.6;color:#333;white-space:pre-wrap;word-break:normal;overflow-wrap:anywhere;tab-size:2;"><code style="font-family:Menlo,Consolas,monospace;font-size:13px;line-height:1.6;color:#333;white-space:pre-wrap;word-break:normal;overflow-wrap:anywhere;tab-size:2;">steps {
-  sh <span style="color:#a33a20;">>&#x27;bash ./deploy.sh&#x27;</span>
-  sh <span style="color:#a33a20;">>&#x27;bash ./verify.sh&#x27;</span>
+  sh <span style="color:#a33a20;">&#x27;bash&nbsp;./deploy.sh&#x27;</span>
+&nbsp;&nbsp;sh&nbsp;<span style="color:#a33a20;">&#x27;bash&nbsp;./verify.sh&#x27;</span>
 }
 </code></pre>
 <p style="margin:0 0 15px;font-size:15px;line-height:1.8;color:#333;text-align:left;word-wrap:break-word;">这段展示的是“同一个阶段内顺序执行两个步骤”的另一种组织方式；上面的整体示例将部署与验证分成两个阶段，两种安排不应同时照搬。</p>
 <p style="margin:0 0 15px;font-size:15px;line-height:1.8;color:#333;text-align:left;word-wrap:break-word;"><strong style="font-weight:700;color:#222;">第三层：需要凭据时，再包住相关步骤</strong></p>
 <p style="margin:0 0 15px;font-size:15px;line-height:1.8;color:#333;text-align:left;word-wrap:break-word;">原文通过 withCredentials 将 SSH 凭据提供给内部步骤。下面只看它的包含位置：阶段中的 steps 包住凭据绑定，凭据绑定再包住使用密钥的 sh 步骤。</p>
 <pre style="box-sizing:border-box;max-width:100%;margin:16px 0;padding:12px 10px;background:#f7f7f7;border:0;text-align:left;font-family:Menlo,Consolas,monospace;font-size:13px;line-height:1.6;color:#333;white-space:pre-wrap;word-break:normal;overflow-wrap:anywhere;tab-size:2;"><code style="font-family:Menlo,Consolas,monospace;font-size:13px;line-height:1.6;color:#333;white-space:pre-wrap;word-break:normal;overflow-wrap:anywhere;tab-size:2;">withCredentials([sshUserPrivateKey(
-  <span style="color:#a33a20;">>credentialsId:</span> <span style="color:#a33a20;">>&#x27;app-key&#x27;</span>,
-  <span style="color:#a33a20;">>keyFileVariable:</span> <span style="color:#a33a20;">>&#x27;SSH_KEY&#x27;</span>
-)]) {
-  sh <span style="color:#a33a20;">>&#x27;bash ./remote-deploy.sh&#x27;</span>
+  <span style="color:#a33a20;">credentialsId:</span>&nbsp;<span style="color:#a33a20;">&#x27;app-key&#x27;</span>,
+&nbsp;&nbsp;<span style="color:#a33a20;">keyFileVariable:</span>&nbsp;<span style="color:#a33a20;">&#x27;SSH_KEY&#x27;</span>
+)])&nbsp;{
+&nbsp;&nbsp;sh&nbsp;<span style="color:#a33a20;">&#x27;bash&nbsp;./remote-deploy.sh&#x27;</span>
 }
 </code></pre>
 <p style="margin:0 0 15px;font-size:15px;line-height:1.8;color:#333;text-align:left;word-wrap:break-word;">这段是结构片段，这里的 remote-deploy.sh 是另需实现的远程任务脚本：读取 SSH_KEY，校验目标主机身份，再通过 SSH 调用部署动作。前面的 deploy.sh 在目标服务器本地执行，不能直接替代它。Jenkins 的 sh 首先在 agent 上执行，凭据绑定本身不会自动完成远程连接。</p>
@@ -213,11 +213,11 @@ curl -fsS http://localhost:8080/health
 <p style="margin:0 0 15px;font-size:15px;line-height:1.8;color:#333;text-align:left;word-wrap:break-word;">本文的 DAG 最后汇聚到全量切流，但检查通过不代表新版本在真实流量下没有问题。金丝雀发布先让少量流量使用新版本，观察后逐步扩大，并保留退回旧版本的路径。</p>
 <p style="margin:0 0 15px;font-size:15px;line-height:1.8;color:#333;text-align:left;word-wrap:break-word;">推荐阅读文末资料中的 Canary Release。本篇先理解控制影响范围的思路：何时扩大流量、观察什么、何时停止；具体实现留到后续。</p>
 <p style="margin:20px 0 10px;font-size:15px;line-height:1.6;font-weight:700;color:#334e68;text-align:left;"><strong style="font-weight:700;color:#334e68;">参考资料</strong></p>
-<p style="margin:0 0 15px;font-size:15px;line-height:1.8;color:#333;text-align:left;word-wrap:break-word;">Jenkinsfile 语法参考：https://www.jenkins.io/doc/book/pipeline/syntax/</p>
-<p style="margin:0 0 15px;font-size:15px;line-height:1.8;color:#333;text-align:left;word-wrap:break-word;">基础设施即代码（IaC）概览：https://en.wikipedia.org/wiki/Infrastructure_as_code</p>
-<p style="margin:0 0 15px;font-size:15px;line-height:1.8;color:#333;text-align:left;word-wrap:break-word;">幂等 API 与安全重试：https://aws.amazon.com/builders-library/making-retries-safe-with-idempotent-APIs/</p>
-<p style="margin:0 0 15px;font-size:15px;line-height:1.8;color:#333;text-align:left;word-wrap:break-word;">GitHub Actions 文档：https://docs.github.com/en/actions</p>
-<p style="margin:0 0 15px;font-size:15px;line-height:1.8;color:#333;text-align:left;word-wrap:break-word;">Canary Release：https://martinfowler.com/bliki/CanaryRelease.html</p>
+<p style="margin:0 0 8px;font-size:13px;line-height:1.6;color:#555;text-align:left;word-wrap:break-word;"><span style="font-size:13px;font-weight:400;color:#555;">[1] Jenkinsfile 语法参考</span><br><span style="font-size:13px;font-weight:400;color:#666;word-break:normal;overflow-wrap:anywhere;">https://www.jenkins.io/doc/book/pipeline/syntax/</span></p>
+<p style="margin:0 0 8px;font-size:13px;line-height:1.6;color:#555;text-align:left;word-wrap:break-word;"><span style="font-size:13px;font-weight:400;color:#555;">[2] 基础设施即代码（IaC）概览</span><br><span style="font-size:13px;font-weight:400;color:#666;word-break:normal;overflow-wrap:anywhere;">https://en.wikipedia.org/wiki/Infrastructure_as_code</span></p>
+<p style="margin:0 0 8px;font-size:13px;line-height:1.6;color:#555;text-align:left;word-wrap:break-word;"><span style="font-size:13px;font-weight:400;color:#555;">[3] 幂等 API 与安全重试</span><br><span style="font-size:13px;font-weight:400;color:#666;word-break:normal;overflow-wrap:anywhere;">https://aws.amazon.com/builders-library/making-retries-safe-with-idempotent-APIs/</span></p>
+<p style="margin:0 0 8px;font-size:13px;line-height:1.6;color:#555;text-align:left;word-wrap:break-word;"><span style="font-size:13px;font-weight:400;color:#555;">[4] GitHub Actions 文档</span><br><span style="font-size:13px;font-weight:400;color:#666;word-break:normal;overflow-wrap:anywhere;">https://docs.github.com/en/actions</span></p>
+<p style="margin:0 0 8px;font-size:13px;line-height:1.6;color:#555;text-align:left;word-wrap:break-word;"><span style="font-size:13px;font-weight:400;color:#555;">[5] Canary Release</span><br><span style="font-size:13px;font-weight:400;color:#666;word-break:normal;overflow-wrap:anywhere;">https://martinfowler.com/bliki/CanaryRelease.html</span></p>
 <section style="box-sizing:border-box;width:100%;height:0;margin:16px 0;border:0;border-top:1px solid #dce2e8;font-size:0;line-height:0;"></section>
 <p style="margin:0 0 15px;font-size:15px;line-height:1.8;color:#333;text-align:left;word-wrap:break-word;">下一篇，我们用 GitHub Actions，把这套流程放进实际项目。</p>
 <p style="margin:0 0 15px;font-size:15px;line-height:1.8;color:#333;text-align:left;word-wrap:break-word;">你现在的部署流程里，还有哪一步依赖某个人记住？</p>
@@ -235,6 +235,7 @@ const refreshPictureStatus=()=>{
 };
 for(const img of articlePictures){img.addEventListener('load',refreshPictureStatus);img.addEventListener('error',refreshPictureStatus);img.title='点击查看原图';img.addEventListener('click',()=>window.open(img.src,'_blank','noopener,noreferrer'))}
 refreshPictureStatus();
+async function copyField(id){const el=document.getElementById(id),btn=el.previousElementSibling.querySelector('.copy-btn'),text=el.textContent;try{await navigator.clipboard.writeText(text);btn.textContent='已复制';setTimeout(()=>btn.textContent='复制',1500)}catch(e){const r=document.createRange();r.selectNode(el);getSelection().removeAllRanges();getSelection().addRange(r);document.execCommand('copy');getSelection().removeAllRanges();btn.textContent='已复制';setTimeout(()=>btn.textContent='复制',1500)}}
 document.getElementById('copy').onclick=async()=>{
   const a=document.getElementById('article'),s=document.getElementById('status');
   const pictures=[...a.querySelectorAll('img')];

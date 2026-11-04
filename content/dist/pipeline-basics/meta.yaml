@@ -8,7 +8,7 @@ pillar: 云原生
 series_ref: devops-basics
 created: 2026-08-30
 updated: 2026-11-03
-summary: 这一篇，我从 Docker 之后仍需手动执行的上线步骤出发，梳理 shell 脚本、任务依赖和流水线引擎的关系，再用 Jenkinsfile 说明如何把部署流程放进 Git。我的目标是减少临场操作，同时保留对运行环境、失败处理和生产审批的必要判断。
+summary: 从 Docker 之后仍需手动执行的上线步骤出发，梳理 shell 脚本、任务依赖和流水线引擎的关系，再用 Jenkinsfile 说明如何把部署流程放进 Git。目标是减少临场操作，同时保留对运行环境、失败处理和生产审批的必要判断。
 platforms:
   wechat:
     account: AI持续运维
