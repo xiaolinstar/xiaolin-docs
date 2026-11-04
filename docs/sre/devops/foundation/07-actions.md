@@ -1,8 +1,8 @@
 ---
 title: 07 ｜ GitHub Actions：托管式流水线实战
-description: 把 GitHub Actions 的核心概念（workflow / event / jobs / actions / runners）与两个实战案例（Greetings 模板 + VitePress Pages 部署）合并展示——托管式流水线的代表，对个人开发者和开源项目尤其友好。
+description: 从 06 篇的 Jenkinsfile 出发，把 GitHub Actions 的核心概念（workflow / event / jobs / actions / runners）与两个实战案例（Greetings 模板 + VitePress Pages 部署）合并展示；再用 gh CLI 和 AI Agent 说明如何管理流水线——托管式流水线的代表，对个人开发者和开源项目尤其友好。
 date: 2026-07-15
-updated: 2026-07-15
+updated: 2026-11-03
 category: SRE 运维
 tags:
   - DevOps
@@ -11,7 +11,7 @@ tags:
   - IaC
 ---
 
-06 篇讲了 Jenkinsfile——用 Groovy DSL 描述「手动命令 → 声明式动作链」。GitHub Actions 是**托管式流水线**的另一代表：用 YAML 配置、无需自建执行服务器、模板即开即用。两者语法不同，「**声明式动作链 + 运维左移**」的思想完全一致。
+06 篇结尾预告：下一篇重点看 YAML 配置、触发条件和执行环境如何配合。GitHub Actions 就是这条线的展开——用 YAML 描述「手动命令 → 声明式动作链」，用 GitHub 托管 Runner 提供执行环境，模板即开即用。跟 06 篇的 Jenkinsfile 语法不同，「**声明式动作链 + 运维左移**」的思想完全一致。
 
 这一篇把核心概念与两个实战合并：一篇就能上手 GitHub Actions。
 
@@ -131,7 +131,7 @@ jobs:
       contents: read
     steps:
       - name: Checkout
-        uses: actions/checkout@v6
+        uses: actions/checkout@v7
 
       - name: Setup Pages
         uses: actions/configure-pages@v6
@@ -143,7 +143,7 @@ jobs:
           run_install: false
 
       - name: Setup Node
-        uses: actions/setup-node@v6
+        uses: actions/setup-node@v7
         with:
           node-version: 24
           cache: 'pnpm'
@@ -190,21 +190,6 @@ jobs:
 - 不需要手动建 Token（用默认的 `secrets.GITHUB_TOKEN` + Pages 专用权限）
 - 推送代码即部署——`git push` 完看 Actions 面板，部署进度实时滚动
 
-## 自动化与托管式执行
-
-GitHub Actions + GitHub Pages 一起用，达成**两层自动化**：
-
-- **流水线引擎**：解析 Workflow，响应 Event，按 `needs` 调度 Jobs 和 Steps，记录执行状态；
-- **托管执行环境**：GitHub 提供 Runner，负责实际运行构建、测试和部署命令。开发者不需要维护 CI Server，但仍需维护 Workflow、权限、依赖和发布配置。
-
-| 维度 | 自动化效果 |
-| --- | --- |
-| **构建** | 推送代码 → 自动装依赖 + 构建 |
-| **部署** | 构建完 → 自动上传制品 → 自动部署到 Pages |
-| **默认域名 / HTTPS** | 由 GitHub Pages 提供；自定义域名需要单独配置 |
-| **静态资源分发** | 由 GitHub Pages 提供 |
-| **执行环境** | 使用 GitHub 托管 Runner，按任务提供执行环境 |
-
 对比手动部署通常需要依次完成的 7 类动作，**`git push` 一行**即可触发后续流程：
 
 | 手动部署 | GitHub Actions |
@@ -217,9 +202,7 @@ GitHub Actions + GitHub Pages 一起用，达成**两层自动化**：
 | 6. 启动容器 | 6. 查看运行日志和状态 |
 | 7. 健康检查 |  |
 
-左侧是人按顺序执行的 7 类动作，右侧是一次 `git push` 之后由 Workflow、Runner 和 Pages 服务协同完成的生产变更自动化。用表格表达步骤，更适合复制、阅读和微信公众号等不完整支持 Mermaid 的场景。
-
-开发人员把生产变更写进 Workflow；构建、部署和结果记录交给 GitHub Actions 执行，但权限、依赖和失败处理仍需要持续维护。
+左侧是人按顺序执行的 7 类动作，右侧是一次 `git push` 之后由 Workflow、Runner 和 Pages 服务协同完成的生产变更自动化。
 
 ## 实战经验
 
@@ -228,60 +211,36 @@ GitHub Actions + GitHub Pages 一起用，达成**两层自动化**：
 - **凭据管理**：用 `secrets.GITHUB_TOKEN` + `permissions:` 显式声明权限，不要给过多权限
 - **失败调试**：Actions 面板 → 点击失败任务 → 看 stdout 日志
 
-## 用 `gh` 和 AI Agent 管理流水线
+## 用 AI Agent 管理流水线
 
-GitHub Actions 不只可以在网页中操作，也可以通过 GitHub CLI（`gh`）管理。AI Agent 可以根据需求创建或修改 `.github/workflows/*.yml`，再使用 `gh` 触发运行、观察结果，并根据日志修复问题。`gh` 主要负责 Workflow 和运行记录管理，不替代 YAML 静态检查工具。推荐保留人工确认环节：Agent 负责读代码、改 YAML 和分析日志，真正推送或部署前由人审查权限、触发条件和目标环境。
+GitHub Actions 不只可以在网页中操作，也可以通过 GitHub CLI（`gh`）管理。AI Agent 可以安装 `gh` 相关 skill，直接读取 Workflow 配置、触发运行、分析日志并修复问题。
 
-### 查看与触发 Workflow
+![gh-cli skill 安装界面](https://media.xiaolin.fun/docs/img-github-actions/gh-cli.png)
 
-```bash
-# 查看仓库中的 Workflow
-gh workflow list
+::: details 📐 截图说明
 
-# 查看某个 Workflow 的配置和状态
-gh workflow view page.yml
+通过 `npx skills add` 从 GitHub 仓库安装 gh-cli skill，AI Agent 即可掌握 100+ 条 gh 子命令，无需人工逐条输入。
 
-# 手动触发 Workflow
-gh workflow run page.yml --ref main
-
-# 查看最近的运行记录
-gh run list --workflow page.yml --limit 10
-```
-
-拿到运行编号后，可以继续查看实时状态和失败日志：
-
-```bash
-gh run watch RUN_ID
-gh run view RUN_ID --log-failed
-```
-
-修改 Workflow 后，先做本地检查，再触发远程运行：
-
-```bash
-# 检查 GitHub Actions Workflow 语法（需要提前安装 actionlint）
-actionlint .github/workflows/page.yml
-
-# 检查项目构建
-pnpm run docs:build
-```
+:::
 
 ### Agent 修复 Workflow 的典型闭环
 
 ```text
 需求：构建失败 / 部署失败
   → Agent 读取 .github/workflows/page.yml
-  → gh run list / gh run view 定位失败 Job
+  → Agent 使用 gh 定位失败 Job 和日志
   → Agent 修改 YAML 或脚本
-  → actionlint 检查 Workflow，pnpm run docs:build 检查项目构建
+  → Agent 执行本地检查（actionlint、构建验证）
   → 人工审查权限、Secrets、环境和目标分支
   → 提交并推送修复
-  → gh workflow run 重新触发
-  → gh run watch / gh run view --log-failed 验证结果
+  → Agent 重新触发并验证结果
 ```
 
-除了运行 Workflow，`gh workflow enable page.yml` 和 `gh workflow disable page.yml` 还可以切换 Workflow 状态。涉及生产部署时，应重点复核 `permissions`、`environment`、Secrets、分支限制和 `pull_request_target` 等安全边界。
+人负责审查安全边界（`permissions`、`environment`、Secrets、分支限制），Agent 负责读代码、改 YAML、分析日志和执行验证。涉及生产部署时，推送和触发权限仍应由人确认后执行。
 
-Agent 可以生成补丁、运行检查和整理失败日志，但不应默认拥有生产推送权限。提交、推送、修改 Secrets、调整部署环境保护规则等动作，应由具备相应权限的人确认后执行。
+## 流程旁白
+
+本篇以 GitHub 托管 Runner 为主，重点展示 YAML 配置和触发条件。对于自托管 Runner、私有网络依赖或大规模并发等场景，需要根据实际需求调整执行环境和权限配置。AI Agent 管理流水线是工程化实践的延伸，核心仍是理解 Workflow 结构和权限边界。
 
 ## 小结
 
@@ -299,6 +258,20 @@ GitHub Actions 是托管式流水线代表：YAML 配置、无需自建执行服
 1. GitHub Actions 和 Jenkinsfile 各自适合什么场景？什么情况下你会选托管式（Actions），什么情况下选自托管（Jenkins）？
 2. 流水线里如果要在多个 job 间传递数据（比如 build 完的制品给 deploy 用），Actions 用什么机制？Jenkins 用什么机制？
 3. `permissions` 字段为什么要**显式声明**而不是默认全开？最小权限原则在这里为什么重要？
+
+## 延伸阅读：从单个流水线到工程化实践
+
+### 模板与复用，避免重复造轮子
+
+本文的 Greetings 和 Pages 部署都从官方模板起步。当多个仓库需要相似的 CI/CD 流程，或同一仓库里多个 workflow 有共同步骤时，GitHub Actions 提供两种复用方式：**Composite Actions**（把多个 step 打包成一个 action）和 **Reusable Workflows**（整个 workflow 被另一个调用）。前者适合步骤级复用，后者适合流程级复用，Marketplace 里的第三方 action 也是复用，但引入前要审查权限和来源。
+
+推荐阅读 [GitHub Docs: Reusing workflows](https://docs.github.com/en/actions/sharing-automations/reusing-workflows)。本篇先理解复用的场景和边界，具体语法在需要时再查。
+
+### Runner 执行模型：Serverless 与自托管
+
+GitHub 提供的托管 Runner 按任务提供和回收执行环境，体验接近 Serverless——无需维护 CI 服务器，冷启动快，适合多数开源和企业项目。但有场景需要自托管 Runner：构建依赖私有网络、需要特定硬件（GPU、大内存）、或希望减少冷启动时间。自托管意味着自己维护执行环境的安全更新、网络隔离和容量规划，不能简单等同于"在自己的机器上跑"。选择托管还是自托管，本质是在运维成本和执行灵活性之间权衡。
+
+推荐阅读 [GitHub Docs: About self-hosted runners](https://docs.github.com/en/actions/hosting-your-own-runners/managing-self-hosted-runners/about-self-hosted-runners)。先理解自托管的运维责任，再决定是否值得引入。
 
 ## 参考
 

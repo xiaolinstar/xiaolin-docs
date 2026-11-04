@@ -7,7 +7,7 @@ description: GitHub CLI (gh) comprehensive reference for repositories, issues, p
 
 Comprehensive reference for GitHub CLI (gh) - work seamlessly with GitHub from the command line.
 
-**Version:** 2.85.0 (current as of January 2026)
+**Version:** 2.103.3 (current as of October 2026)
 
 ## Prerequisites
 
