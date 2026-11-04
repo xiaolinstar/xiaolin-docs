@@ -189,7 +189,7 @@ for (let i = 0; i < bodyTokens.length; i++) {
     const urlMatch = bodyTokens[i + 1]?.content?.match(/^(https:\/\/\S+)$/);
     if (urlMatch) {
       token.meta = { reference: { number: referenceNumber, title: ref[2], url: urlMatch[1] } };
-      token.children[0].meta['meta'] = token.meta;
+      token.children[0].meta = token.meta;
     }
   }
 }
