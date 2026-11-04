@@ -1,0 +1,21 @@
+slug: actions
+origin: docs/sre/devops/foundation/07-actions.md
+origin_url: https://xiaolinstar.cn/sre/devops/foundation/07-actions.html
+title: DevOps 基础 07 ｜ GitHub Actions：托管式流水线实战
+pillar: 云原生
+series_ref: devops-basics
+created: 2026-11-04
+updated: 2026-11-04
+summary: 这一篇，我从 06 篇的 Jenkinsfile 出发，把 GitHub Actions 的核心概念与两个实战案例合并展示——Greetings 模板上手事件驱动，VitePress Pages 部署跑通完整 CI/CD。对个人开发者和小型团队来说，GitHub Actions 功能强大、语法简单、免费额度充足，与 GitHub 生态原生集成，是轻量开箱即用的流水线方案。
+platforms:
+  wechat:
+    account: AI持续运维
+    status: ready
+    output: wechat.md
+    origin_sync: generated
+    title_selected: DevOps 基础 07 ｜ GitHub Actions：托管式流水线实战
+    search_keywords:
+      - GitHub Actions
+      - 托管式流水线
+      - VitePress Pages 部署
+      - AI Agent 管理 CI/CD

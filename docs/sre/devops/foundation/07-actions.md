@@ -2,7 +2,7 @@
 title: 07 ｜ GitHub Actions：托管式流水线实战
 description: 从 06 篇的 Jenkinsfile 出发，把 GitHub Actions 的核心概念（workflow / event / jobs / actions / runners）与两个实战案例（Greetings 模板 + VitePress Pages 部署）合并展示；再用 gh CLI 和 AI Agent 说明如何管理流水线——托管式流水线的代表，对个人开发者和开源项目尤其友好。
 date: 2026-07-15
-updated: 2026-11-03
+updated: 2026-11-04
 category: SRE 运维
 tags:
   - DevOps
@@ -12,6 +12,8 @@ tags:
 ---
 
 06 篇结尾预告：下一篇重点看 YAML 配置、触发条件和执行环境如何配合。GitHub Actions 就是这条线的展开——用 YAML 描述「手动命令 → 声明式动作链」，用 GitHub 托管 Runner 提供执行环境，模板即开即用。跟 06 篇的 Jenkinsfile 语法不同，「**声明式动作链 + 运维左移**」的思想完全一致。
+
+对于个人开发者和小型团队，GitHub Actions 已经足够好用：功能强大、语法简单、免费额度充足，与 GitHub 仓库和 GHCR 容器镜像服务原生集成，不需要额外搭建和维护 CI/CD 服务器。这也是我专门写这篇的原因——越来越多个人开发者和一人公司需要轻量、开箱即用的流水线方案。
 
 这一篇把核心概念与两个实战合并：一篇就能上手 GitHub Actions。
 
@@ -95,7 +97,7 @@ on:
 
 ## 实战二：VitePress Pages 自动化部署
 
-这是本项目（xiaolin-docs）实际用的 pipeline——完成生产变更自动化，无需自建 CI/CD 服务器，也无需手动创建 Token。
+这是 xiaolin-docs 项目实际用的 pipeline（站点：https://xiaolinstar.cn，GitHub Pages：https://xiaolinstar.github.io/xiaolin-docs/）——无需自建 CI/CD 服务器，也无需手动创建 Token。
 
 ### 1. 修改 URL 配置
 
@@ -184,25 +186,19 @@ jobs:
 
 `deploy` 用 `needs: build` 显式依赖 `build`——这就是 06 篇说的 `stages` 思想，只是语法更 YAML 化。首次使用 GitHub Pages 时，仍需在仓库 Settings → Pages → Build and deployment → Source 中选择 GitHub Actions；完成后，后续推送才会按该 Workflow 自动发布。
 
-### 4. 为什么「生产变更自动化」
+### 4. 流水线策略：事件触发 + 作业编排
 
-- 首次需要在仓库 Pages 设置中选择 GitHub Actions；之后由 Workflow 自动构建和发布
-- 不需要手动建 Token（用默认的 `secrets.GITHUB_TOKEN` + Pages 专用权限）
-- 推送代码即部署——`git push` 完看 Actions 面板，部署进度实时滚动
+这个 Pages 部署案例体现了 GitHub Actions 的核心思想——**把标准作业编排为流水线，由事件触发执行**。
 
-对比手动部署通常需要依次完成的 7 类动作，**`git push` 一行**即可触发后续流程：
+- **标准作业**：checkout、install、build、deploy，每一步都是可复用的原子操作
+- **编排为流水线**：用 YAML 定义 Jobs 之间的依赖关系（`needs: build`），形成 DAG
+- **事件触发**：`push` 到 main 分支、手动点击 `workflow_dispatch`、定时 `schedule`，都可以启动同一条流水线
 
-| 手动部署 | GitHub Actions |
-| --- | --- |
-| 1. 本地构建 | 1. `git push` 触发 Workflow |
-| 2. 推送仓库 | 2. Workflow 编排 Jobs |
-| 3. 登录服务器 | 3. 托管 Runner 执行构建与部署 |
-| 4. 拉取镜像 | 4. 自动上传 Pages 制品 |
-| 5. 创建网络 | 5. 自动发布到 Pages |
-| 6. 启动容器 | 6. 查看运行日志和状态 |
-| 7. 健康检查 |  |
+![流水线策略：事件触发 → 作业编排 → 标准执行](https://media.xiaolin.fun/docs/img-github-actions/infographic-pipeline-strategy.png)
 
-左侧是人按顺序执行的 7 类动作，右侧是一次 `git push` 之后由 Workflow、Runner 和 Pages 服务协同完成的生产变更自动化。
+首次使用需要在仓库 Pages 设置中选择 GitHub Actions；之后由 Workflow 自动构建和发布。不需要手动建 Token（用默认的 `secrets.GITHUB_TOKEN` + Pages 专用权限），推送代码即部署——`git push` 完看 Actions 面板，部署进度实时滚动。
+
+对比手动部署通常需要依次完成的 7 类动作（本地构建、推送仓库、登录服务器、拉取镜像、创建网络、启动容器、健康检查），**`git push` 一行**即可触发后续流程。这就是流水线策略的价值：把重复的标准作业交给引擎编排，人只负责定义触发条件和审查安全边界。
 
 ## 实战经验
 
