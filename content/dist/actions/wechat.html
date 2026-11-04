@@ -1,11 +1,11 @@
 <!doctype html>
 <html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>DevOps 基础 07 ｜ GitHub Actions：托管式流水线实战</title>
-<style>body{margin:0;background:#eee;font-family:-apple-system,BlinkMacSystemFont,"PingFang SC",sans-serif;color:#333}.controls{max-width:720px;margin:20px auto;padding:20px;background:#fff}button{padding:10px 18px;cursor:pointer}textarea{display:block;box-sizing:border-box;width:100%;min-height:65px;margin:8px 0 16px;font:14px/1.6 sans-serif}.preview{box-sizing:border-box;width:100%;max-width:407px;margin:20px auto;padding:20px 16px;background:#fff}.preview section{min-width:0}#status{line-height:1.7;font-size:14px;color:#555}@media(max-width:430px){.preview{margin:0 auto}.controls{margin:0 auto}}</style></head>
+<style>body{margin:0;background:#eee;font-family:-apple-system,BlinkMacSystemFont,"PingFang SC",sans-serif;color:#333}.controls{max-width:720px;margin:20px auto;padding:20px;background:#fff}button{padding:10px 18px;cursor:pointer}.copy-btn{padding:4px 10px;margin-left:8px;font-size:12px;cursor:pointer;background:#f0f0f0;border:1px solid #ccc;border-radius:3px}.copy-btn:hover{background:#e0e0e0}.field{margin:12px 0}.field-label{font-weight:600;margin-bottom:4px;color:#555;display:flex;align-items:center}.field-content{font-size:14px;line-height:1.6;color:#333;word-break:break-word}.preview{box-sizing:border-box;width:100%;max-width:407px;margin:20px auto;padding:20px 16px;background:#fff}.preview section{min-width:0}#status{line-height:1.7;font-size:14px;color:#555}@media(max-width:430px){.preview{margin:0 auto}.controls{margin:0 auto}}</style></head>
 <body><aside class="controls"><h1 style="font-size:20px">actions 发布候选稿</h1>
 <p>渲染自: wechat.md</p>
-<label>标题<textarea readonly>DevOps 基础 07 ｜ GitHub Actions：托管式流水线实战</textarea></label>
-<label>摘要<textarea readonly></textarea></label>
-<label>后台原文链接<textarea readonly>https://xiaolinstar.cn/sre/devops/foundation/07-actions.html</textarea></label>
+<div class="field"><div class="field-label">标题<button class="copy-btn" onclick="copyField('title')">复制</button></div><div id="title" class="field-content">DevOps 基础 07 ｜ GitHub Actions：托管式流水线实战</div></div>
+<div class="field"><div class="field-label">摘要<button class="copy-btn" onclick="copyField('summary')">复制</button></div><div id="summary" class="field-content">两个实战上手 GitHub Actions：Greetings 模板演示事件驱动，VitePress Pages 部署跑通 CI/CD。对个人开发者，GitHub Actions 语法简单、免费额度充足，与 GitHub 生态原生集成。</div></div>
+<div class="field"><div class="field-label">后台原文链接<button class="copy-btn" onclick="copyField('originUrl')">复制</button></div><div id="originUrl" class="field-content">https://xiaolinstar.cn/sre/devops/foundation/07-actions.html</div></div>
 <p id="image-status" role="status">正在检查正文图片加载状态…</p>
 <button id="copy">复制正文</button>
 <p id="status" role="status">复制后在公众号正文区普通粘贴，勿选择"粘贴为纯文本"。</p>
@@ -27,73 +27,71 @@
 <section style="width:100%;max-width:320px;margin:26px auto 16px;text-align:center;"><p style="margin:0;text-align:center;line-height:1.4;"><span style="display:inline-block;margin-right:8px;vertical-align:middle;font-family:Arial,Helvetica,sans-serif;font-size:20px;line-height:1.15;font-weight:700;color:#175da4;text-align:center;">02</span><span style="display:inline-block;max-width:80%;vertical-align:middle;font-family:'PingFang SC','Heiti SC','Microsoft YaHei',sans-serif;font-size:15px;line-height:1.55;font-weight:700;color:#175da4;text-align:center;word-wrap:break-word;">实战一：Greetings 模板</span></p><section style="margin:3px 0 0;border-top:3px solid #b8c6cf;height:0;font-size:0;line-height:0;"></section></section>
 <p style="margin:0 0 15px;font-size:15px;line-height:1.8;color:#333;text-align:left;word-wrap:break-word;">在官方模板里，Greetings 工作流的作用是「新用户开 issue 或 PR 时，自动发送欢迎消息」。</p>
 <p style="margin:0 0 15px;font-size:15px;line-height:1.8;color:#333;text-align:left;word-wrap:break-word;">下面是精简后的核心配置：</p>
-<pre style="box-sizing:border-box;max-width:100%;margin:16px 0;padding:12px 10px;background:#f7f7f7;border:0;text-align:left;font-family:Menlo,Consolas,monospace;font-size:13px;line-height:1.6;color:#333;white-space:pre-wrap;word-break:normal;overflow-wrap:anywhere;tab-size:2;"><code style="font-family:Menlo,Consolas,monospace;font-size:13px;line-height:1.6;color:#333;white-space:pre-wrap;word-break:normal;overflow-wrap:anywhere;tab-size:2;"><span style="color:#333;">>name:</span> <span style="color:#a33a20;">>Greetings</span>
-
-<span style="color:#333;">>on:</span> [<span style="color:#a33a20;">>pull_request_target</span>, <span style="color:#a33a20;">>issues</span>]
-
-<span style="color:#333;">>jobs:</span>
-  <span style="color:#333;">>greeting:</span>
-    <span style="color:#333;">>runs-on:</span> <span style="color:#a33a20;">>ubuntu-latest</span>
-    <span style="color:#333;">>permissions:</span>
-      <span style="color:#333;">>issues:</span> <span style="color:#a33a20;">>write</span>
-      <span style="color:#333;">>pull-requests:</span> <span style="color:#a33a20;">>write</span>
-    <span style="color:#333;">>steps:</span>
-      <span style="color:#333;">>-</span> <span style="color:#333;">>uses:</span> <span style="color:#a33a20;">>actions/first-interaction@v1</span>
-        <span style="color:#333;">>with:</span>
-          <span style="color:#333;">>repo-token:</span> <span style="color:#a33a20;">>${{</span> <span style="color:#a33a20;">>secrets.GITHUB_TOKEN</span> <span style="color:#a33a20;">>}}</span>
-          <span style="color:#333;">>issue-message:</span> <span style="color:#a33a20;">>&quot;Welcome! Thanks for your first issue.&quot;</span>
-          <span style="color:#333;">>pr-message:</span> <span style="color:#a33a20;">>&quot;Welcome! Thanks for your first PR.&quot;</span>
+<pre style="box-sizing:border-box;max-width:100%;margin:16px 0;padding:12px 10px;background:#f7f7f7;border:0;text-align:left;font-family:Menlo,Consolas,monospace;font-size:13px;line-height:1.6;color:#333;white-space:pre-wrap;word-break:normal;overflow-wrap:anywhere;tab-size:2;"><code style="font-family:Menlo,Consolas,monospace;font-size:13px;line-height:1.6;color:#333;white-space:pre-wrap;word-break:normal;overflow-wrap:anywhere;tab-size:2;"><span style="color:#333;">name:</span>&nbsp;<span style="color:#a33a20;">Greetings</span>
+<span style="color:#333;">on:</span> [<span style="color:#a33a20;">pull_request_target</span>, <span style="color:#a33a20;">issues</span>]
+<span style="color:#333;">jobs:</span>
+&nbsp;&nbsp;<span style="color:#333;">greeting:</span>
+&nbsp;&nbsp;&nbsp;&nbsp;<span style="color:#333;">runs-on:</span>&nbsp;<span style="color:#a33a20;">ubuntu-latest</span>
+&nbsp;&nbsp;&nbsp;&nbsp;<span style="color:#333;">permissions:</span>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span style="color:#333;">issues:</span>&nbsp;<span style="color:#a33a20;">write</span>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span style="color:#333;">pull-requests:</span>&nbsp;<span style="color:#a33a20;">write</span>
+&nbsp;&nbsp;&nbsp;&nbsp;<span style="color:#333;">steps:</span>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span style="color:#333;">-</span>&nbsp;<span style="color:#333;">uses:</span>&nbsp;<span style="color:#a33a20;">actions/first-interaction@v1</span>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span style="color:#333;">with:</span>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span style="color:#333;">repo-token:</span>&nbsp;<span style="color:#a33a20;">${{</span>&nbsp;<span style="color:#a33a20;">secrets.GITHUB_TOKEN</span>&nbsp;<span style="color:#a33a20;">}}</span>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span style="color:#333;">issue-message:</span>&nbsp;<span style="color:#a33a20;">&quot;Welcome! Thanks for your first issue.&quot;</span>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span style="color:#333;">pr-message:</span>&nbsp;<span style="color:#a33a20;">&quot;Welcome! Thanks for your first PR.&quot;</span>
 </code></pre>
 <p style="margin:0 0 15px;font-size:15px;line-height:1.8;color:#333;text-align:left;word-wrap:break-word;">这里有几个关键点：<code style="font-family:Menlo,Consolas,monospace;font-size:14px;line-height:inherit;color:#334e68;background:#f3f4f5;padding:0 3px;border-radius:3px;white-space:normal;word-break:normal;overflow-wrap:anywhere;">secrets.GITHUB_TOKEN</code> 是 GitHub 提供的默认密钥，无需额外配置。提交后创建一个 issue，工作流自动跑，issue 里自动出现欢迎消息。执行时身份是 <code style="font-family:Menlo,Consolas,monospace;font-size:14px;line-height:inherit;color:#334e68;background:#f3f4f5;padding:0 3px;border-radius:3px;white-space:normal;word-break:normal;overflow-wrap:anywhere;">github-actions[bot]</code>。</p>
 <p style="margin:16px 0;padding:0;text-align:center;"><img width="1200" height="675" loading="eager" referrerpolicy="no-referrer" src="https://media.xiaolin.fun/docs/img-github-actions-workflows/greeting-issue.png" alt="create-issue" style="display:block;box-sizing:border-box;width:100%;max-width:100%;height:auto;margin:0 auto 6px;"><span style="display:block;font-size:13px;line-height:1.6;color:#666;text-align:center;">create-issue</span></p>
 <p style="margin:0 0 15px;font-size:15px;line-height:1.8;color:#333;text-align:left;word-wrap:break-word;">如果只想在 <code style="font-family:Menlo,Consolas,monospace;font-size:14px;line-height:inherit;color:#334e68;background:#f3f4f5;padding:0 3px;border-radius:3px;white-space:normal;word-break:normal;overflow-wrap:anywhere;">opened</code> 类型时触发、不要 PR 消息，可以修改触发条件：</p>
-<pre style="box-sizing:border-box;max-width:100%;margin:16px 0;padding:12px 10px;background:#f7f7f7;border:0;text-align:left;font-family:Menlo,Consolas,monospace;font-size:13px;line-height:1.6;color:#333;white-space:pre-wrap;word-break:normal;overflow-wrap:anywhere;tab-size:2;"><code style="font-family:Menlo,Consolas,monospace;font-size:13px;line-height:1.6;color:#333;white-space:pre-wrap;word-break:normal;overflow-wrap:anywhere;tab-size:2;"><span style="color:#333;">>on:</span>
-  <span style="color:#333;">>issues:</span>
-    <span style="color:#333;">>types:</span>
-      <span style="color:#333;">>-</span> <span style="color:#a33a20;">>opened</span>
+<pre style="box-sizing:border-box;max-width:100%;margin:16px 0;padding:12px 10px;background:#f7f7f7;border:0;text-align:left;font-family:Menlo,Consolas,monospace;font-size:13px;line-height:1.6;color:#333;white-space:pre-wrap;word-break:normal;overflow-wrap:anywhere;tab-size:2;"><code style="font-family:Menlo,Consolas,monospace;font-size:13px;line-height:1.6;color:#333;white-space:pre-wrap;word-break:normal;overflow-wrap:anywhere;tab-size:2;"><span style="color:#333;">on:</span>
+&nbsp;&nbsp;<span style="color:#333;">issues:</span>
+&nbsp;&nbsp;&nbsp;&nbsp;<span style="color:#333;">types:</span>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span style="color:#333;">-</span>&nbsp;<span style="color:#a33a20;">opened</span>
 </code></pre>
 <p style="margin:0 0 15px;font-size:15px;line-height:1.8;color:#333;text-align:left;word-wrap:break-word;"><code style="font-family:Menlo,Consolas,monospace;font-size:14px;line-height:inherit;color:#334e68;background:#f3f4f5;padding:0 3px;border-radius:3px;white-space:normal;word-break:normal;overflow-wrap:anywhere;">pull_request_target</code> 会在目标仓库的权限上下文中运行，适合需要向 Issue 或 PR 写入评论的场景。模板只解决 50% 的事，改一改触发条件和文案，就能贴合自己仓库。</p>
 <section style="width:100%;max-width:320px;margin:26px auto 16px;text-align:center;"><p style="margin:0;text-align:center;line-height:1.4;"><span style="display:inline-block;margin-right:8px;vertical-align:middle;font-family:Arial,Helvetica,sans-serif;font-size:20px;line-height:1.15;font-weight:700;color:#175da4;text-align:center;">03</span><span style="display:inline-block;max-width:80%;vertical-align:middle;font-family:'PingFang SC','Heiti SC','Microsoft YaHei',sans-serif;font-size:15px;line-height:1.55;font-weight:700;color:#175da4;text-align:center;word-wrap:break-word;">实战二：VitePress Pages 自动化部署</span></p><section style="margin:3px 0 0;border-top:3px solid #b8c6cf;height:0;font-size:0;line-height:0;"></section></section>
 <p style="margin:0 0 15px;font-size:15px;line-height:1.8;color:#333;text-align:left;word-wrap:break-word;">这是我站点实际用的 pipeline（站点：https://xiaolinstar.cn，GitHub Pages：https://xiaolinstar.github.io/xiaolin-docs/）——无需自建 CI/CD 服务器，也无需手动创建 Token。</p>
 <p style="margin:20px 0 10px;font-size:15px;line-height:1.6;font-weight:700;color:#334e68;text-align:left;"><strong style="font-weight:700;color:#334e68;">1. 修改 URL 配置</strong></p>
 <p style="margin:0 0 15px;font-size:15px;line-height:1.8;color:#333;text-align:left;word-wrap:break-word;">GitHub Pages 默认域名带仓库前缀。在 VitePress 配置里加一行：</p>
-<pre style="box-sizing:border-box;max-width:100%;margin:16px 0;padding:12px 10px;background:#f7f7f7;border:0;text-align:left;font-family:Menlo,Consolas,monospace;font-size:13px;line-height:1.6;color:#333;white-space:pre-wrap;word-break:normal;overflow-wrap:anywhere;tab-size:2;"><code style="font-family:Menlo,Consolas,monospace;font-size:13px;line-height:1.6;color:#333;white-space:pre-wrap;word-break:normal;overflow-wrap:anywhere;tab-size:2;"><span style="color:#005cc5;">>const</span> basePath = process.<span style="color:#333;">>env</span>.<span style="color:#333;">>GITHUB_ACTIONS</span> === <span style="color:#a33a20;">>&#x27;true&#x27;</span>
-  ? <span style="color:#a33a20;">>&#x27;/xiaolin-docs/&#x27;</span> : <span style="color:#a33a20;">>&#x27;/&#x27;</span>
+<pre style="box-sizing:border-box;max-width:100%;margin:16px 0;padding:12px 10px;background:#f7f7f7;border:0;text-align:left;font-family:Menlo,Consolas,monospace;font-size:13px;line-height:1.6;color:#333;white-space:pre-wrap;word-break:normal;overflow-wrap:anywhere;tab-size:2;"><code style="font-family:Menlo,Consolas,monospace;font-size:13px;line-height:1.6;color:#333;white-space:pre-wrap;word-break:normal;overflow-wrap:anywhere;tab-size:2;"><span style="color:#005cc5;">const</span> basePath = process.<span style="color:#333;">env</span>.<span style="color:#333;">GITHUB_ACTIONS</span> === <span style="color:#a33a20;">&#x27;true&#x27;</span>
+&nbsp;&nbsp;? <span style="color:#a33a20;">&#x27;/xiaolin-docs/&#x27;</span> : <span style="color:#a33a20;">&#x27;/&#x27;</span>
 </code></pre>
 <p style="margin:0 0 15px;font-size:15px;line-height:1.8;color:#333;text-align:left;word-wrap:break-word;"><code style="font-family:Menlo,Consolas,monospace;font-size:14px;line-height:inherit;color:#334e68;background:#f3f4f5;padding:0 3px;border-radius:3px;white-space:normal;word-break:normal;overflow-wrap:anywhere;">process.env.GITHUB_ACTIONS === 'true'</code> 表示当前在 GitHub Actions 里跑，本地 <code style="font-family:Menlo,Consolas,monospace;font-size:14px;line-height:inherit;color:#334e68;background:#f3f4f5;padding:0 3px;border-radius:3px;white-space:normal;word-break:normal;overflow-wrap:anywhere;">pnpm run docs:dev</code> 时走 <code style="font-family:Menlo,Consolas,monospace;font-size:14px;line-height:inherit;color:#334e68;background:#f3f4f5;padding:0 3px;border-radius:3px;white-space:normal;word-break:normal;overflow-wrap:anywhere;">/</code>，不影响本地预览。</p>
 <p style="margin:20px 0 10px;font-size:15px;line-height:1.6;font-weight:700;color:#334e68;text-align:left;"><strong style="font-weight:700;color:#334e68;">2. 流水线配置</strong></p>
 <p style="margin:0 0 15px;font-size:15px;line-height:1.8;color:#333;text-align:left;word-wrap:break-word;">完整的 <code style="font-family:Menlo,Consolas,monospace;font-size:14px;line-height:inherit;color:#334e68;background:#f3f4f5;padding:0 3px;border-radius:3px;white-space:normal;word-break:normal;overflow-wrap:anywhere;">page.yml</code> 较长，这里展示关键结构。整个流水线分两个 Job：build 负责 checkout、安装依赖、构建文档并上传制品；deploy 负责拉取制品并部署到 GitHub Pages。</p>
 <p style="margin:0 0 15px;font-size:15px;line-height:1.8;color:#333;text-align:left;word-wrap:break-word;">build Job 的核心步骤：</p>
-<pre style="box-sizing:border-box;max-width:100%;margin:16px 0;padding:12px 10px;background:#f7f7f7;border:0;text-align:left;font-family:Menlo,Consolas,monospace;font-size:13px;line-height:1.6;color:#333;white-space:pre-wrap;word-break:normal;overflow-wrap:anywhere;tab-size:2;"><code style="font-family:Menlo,Consolas,monospace;font-size:13px;line-height:1.6;color:#333;white-space:pre-wrap;word-break:normal;overflow-wrap:anywhere;tab-size:2;"><span style="color:#333;">>jobs:</span>
-  <span style="color:#333;">>build:</span>
-    <span style="color:#333;">>runs-on:</span> <span style="color:#a33a20;">>ubuntu-latest</span>
-    <span style="color:#333;">>steps:</span>
-      <span style="color:#333;">>-</span> <span style="color:#333;">>uses:</span> <span style="color:#a33a20;">>actions/checkout@v7</span>
-      <span style="color:#333;">>-</span> <span style="color:#333;">>uses:</span> <span style="color:#a33a20;">>actions/configure-pages@v6</span>
-      <span style="color:#333;">>-</span> <span style="color:#333;">>uses:</span> <span style="color:#a33a20;">>pnpm/action-setup@v6</span>
-        <span style="color:#333;">>with:</span>
-          <span style="color:#333;">>version:</span> <span style="color:#a33a20;">>&#x27;11.10.0&#x27;</span>
-      <span style="color:#333;">>-</span> <span style="color:#333;">>uses:</span> <span style="color:#a33a20;">>actions/setup-node@v7</span>
-        <span style="color:#333;">>with:</span>
-          <span style="color:#333;">>node-version:</span> <span style="color:#005cc5;">>24</span>
-          <span style="color:#333;">>cache:</span> <span style="color:#a33a20;">>&#x27;pnpm&#x27;</span>
-      <span style="color:#333;">>-</span> <span style="color:#333;">>run:</span> <span style="color:#a33a20;">>pnpm</span> <span style="color:#a33a20;">>install</span>
-      <span style="color:#333;">>-</span> <span style="color:#333;">>run:</span> <span style="color:#a33a20;">>pnpm</span> <span style="color:#a33a20;">>run</span> <span style="color:#a33a20;">>docs:build</span>
-      <span style="color:#333;">>-</span> <span style="color:#333;">>uses:</span> <span style="color:#a33a20;">>actions/upload-pages-artifact@v5</span>
-        <span style="color:#333;">>with:</span>
-          <span style="color:#333;">>path:</span> <span style="color:#a33a20;">>docs/.vitepress/dist</span>
+<pre style="box-sizing:border-box;max-width:100%;margin:16px 0;padding:12px 10px;background:#f7f7f7;border:0;text-align:left;font-family:Menlo,Consolas,monospace;font-size:13px;line-height:1.6;color:#333;white-space:pre-wrap;word-break:normal;overflow-wrap:anywhere;tab-size:2;"><code style="font-family:Menlo,Consolas,monospace;font-size:13px;line-height:1.6;color:#333;white-space:pre-wrap;word-break:normal;overflow-wrap:anywhere;tab-size:2;"><span style="color:#333;">jobs:</span>
+&nbsp;&nbsp;<span style="color:#333;">build:</span>
+&nbsp;&nbsp;&nbsp;&nbsp;<span style="color:#333;">runs-on:</span>&nbsp;<span style="color:#a33a20;">ubuntu-latest</span>
+&nbsp;&nbsp;&nbsp;&nbsp;<span style="color:#333;">steps:</span>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span style="color:#333;">-</span>&nbsp;<span style="color:#333;">uses:</span>&nbsp;<span style="color:#a33a20;">actions/checkout@v7</span>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span style="color:#333;">-</span>&nbsp;<span style="color:#333;">uses:</span>&nbsp;<span style="color:#a33a20;">actions/configure-pages@v6</span>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span style="color:#333;">-</span>&nbsp;<span style="color:#333;">uses:</span>&nbsp;<span style="color:#a33a20;">pnpm/action-setup@v6</span>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span style="color:#333;">with:</span>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span style="color:#333;">version:</span>&nbsp;<span style="color:#a33a20;">&#x27;11.10.0&#x27;</span>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span style="color:#333;">-</span>&nbsp;<span style="color:#333;">uses:</span>&nbsp;<span style="color:#a33a20;">actions/setup-node@v7</span>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span style="color:#333;">with:</span>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span style="color:#333;">node-version:</span>&nbsp;<span style="color:#005cc5;">24</span>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span style="color:#333;">cache:</span>&nbsp;<span style="color:#a33a20;">&#x27;pnpm&#x27;</span>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span style="color:#333;">-</span>&nbsp;<span style="color:#333;">run:</span>&nbsp;<span style="color:#a33a20;">pnpm</span>&nbsp;<span style="color:#a33a20;">install</span>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span style="color:#333;">-</span>&nbsp;<span style="color:#333;">run:</span>&nbsp;<span style="color:#a33a20;">pnpm</span>&nbsp;<span style="color:#a33a20;">run</span>&nbsp;<span style="color:#a33a20;">docs:build</span>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span style="color:#333;">-</span>&nbsp;<span style="color:#333;">uses:</span>&nbsp;<span style="color:#a33a20;">actions/upload-pages-artifact@v5</span>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span style="color:#333;">with:</span>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span style="color:#333;">path:</span>&nbsp;<span style="color:#a33a20;">docs/.vitepress/dist</span>
 </code></pre>
 <p style="margin:0 0 15px;font-size:15px;line-height:1.8;color:#333;text-align:left;word-wrap:break-word;">deploy Job 依赖 build 完成：</p>
-<pre style="box-sizing:border-box;max-width:100%;margin:16px 0;padding:12px 10px;background:#f7f7f7;border:0;text-align:left;font-family:Menlo,Consolas,monospace;font-size:13px;line-height:1.6;color:#333;white-space:pre-wrap;word-break:normal;overflow-wrap:anywhere;tab-size:2;"><code style="font-family:Menlo,Consolas,monospace;font-size:13px;line-height:1.6;color:#333;white-space:pre-wrap;word-break:normal;overflow-wrap:anywhere;tab-size:2;">  <span style="color:#333;">>deploy:</span>
-    <span style="color:#333;">>needs:</span> <span style="color:#a33a20;">>build</span>
-    <span style="color:#333;">>runs-on:</span> <span style="color:#a33a20;">>ubuntu-latest</span>
-    <span style="color:#333;">>permissions:</span>
-      <span style="color:#333;">>pages:</span> <span style="color:#a33a20;">>write</span>
-      <span style="color:#333;">>id-token:</span> <span style="color:#a33a20;">>write</span>
-    <span style="color:#333;">>environment:</span>
-      <span style="color:#333;">>name:</span> <span style="color:#a33a20;">>github-pages</span>
-    <span style="color:#333;">>steps:</span>
-      <span style="color:#333;">>-</span> <span style="color:#333;">>uses:</span> <span style="color:#a33a20;">>actions/deploy-pages@v5</span>
+<pre style="box-sizing:border-box;max-width:100%;margin:16px 0;padding:12px 10px;background:#f7f7f7;border:0;text-align:left;font-family:Menlo,Consolas,monospace;font-size:13px;line-height:1.6;color:#333;white-space:pre-wrap;word-break:normal;overflow-wrap:anywhere;tab-size:2;"><code style="font-family:Menlo,Consolas,monospace;font-size:13px;line-height:1.6;color:#333;white-space:pre-wrap;word-break:normal;overflow-wrap:anywhere;tab-size:2;">&nbsp;&nbsp;<span style="color:#333;">deploy:</span>
+&nbsp;&nbsp;&nbsp;&nbsp;<span style="color:#333;">needs:</span>&nbsp;<span style="color:#a33a20;">build</span>
+&nbsp;&nbsp;&nbsp;&nbsp;<span style="color:#333;">runs-on:</span>&nbsp;<span style="color:#a33a20;">ubuntu-latest</span>
+&nbsp;&nbsp;&nbsp;&nbsp;<span style="color:#333;">permissions:</span>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span style="color:#333;">pages:</span>&nbsp;<span style="color:#a33a20;">write</span>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span style="color:#333;">id-token:</span>&nbsp;<span style="color:#a33a20;">write</span>
+&nbsp;&nbsp;&nbsp;&nbsp;<span style="color:#333;">environment:</span>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span style="color:#333;">name:</span>&nbsp;<span style="color:#a33a20;">github-pages</span>
+&nbsp;&nbsp;&nbsp;&nbsp;<span style="color:#333;">steps:</span>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span style="color:#333;">-</span>&nbsp;<span style="color:#333;">uses:</span>&nbsp;<span style="color:#a33a20;">actions/deploy-pages@v5</span>
 </code></pre>
 <p style="margin:0 0 15px;font-size:15px;line-height:1.8;color:#333;text-align:left;word-wrap:break-word;"><code style="font-family:Menlo,Consolas,monospace;font-size:14px;line-height:inherit;color:#334e68;background:#f3f4f5;padding:0 3px;border-radius:3px;white-space:normal;word-break:normal;overflow-wrap:anywhere;">deploy</code> 用 <code style="font-family:Menlo,Consolas,monospace;font-size:14px;line-height:inherit;color:#334e68;background:#f3f4f5;padding:0 3px;border-radius:3px;white-space:normal;word-break:normal;overflow-wrap:anywhere;">needs: build</code> 显式依赖 <code style="font-family:Menlo,Consolas,monospace;font-size:14px;line-height:inherit;color:#334e68;background:#f3f4f5;padding:0 3px;border-radius:3px;white-space:normal;word-break:normal;overflow-wrap:anywhere;">build</code>——这就是 06 篇说的 stages 思想，只是语法更 YAML 化。</p>
 <p style="margin:20px 0 10px;font-size:15px;line-height:1.6;font-weight:700;color:#334e68;text-align:left;"><strong style="font-weight:700;color:#334e68;">3. 流水线策略：事件触发 + 作业编排</strong></p>
@@ -123,16 +121,11 @@
 <p style="margin:0 0 15px;font-size:15px;line-height:1.8;color:#333;text-align:left;word-wrap:break-word;">GitHub 提供的托管 Runner 按任务提供和回收执行环境，体验接近 Serverless——无需维护 CI 服务器，冷启动快，适合多数开源和企业项目。但有场景需要自托管 Runner：构建依赖私有网络、需要特定硬件（GPU、大内存）、或希望减少冷启动时间。自托管意味着自己维护执行环境的安全更新、网络隔离和容量规划，不能简单等同于在自己的机器上跑。选择托管还是自托管，本质是在运维成本和执行灵活性之间权衡。</p>
 <p style="margin:0 0 15px;font-size:15px;line-height:1.8;color:#333;text-align:left;word-wrap:break-word;">推荐阅读 GitHub Docs: About self-hosted runners。先理解自托管的运维责任，再决定是否值得引入。</p>
 <p style="margin:20px 0 10px;font-size:15px;line-height:1.6;font-weight:700;color:#334e68;text-align:left;"><strong style="font-weight:700;color:#334e68;">参考资料</strong></p>
-<p style="margin:0 0 15px;font-size:15px;line-height:1.8;color:#333;text-align:left;word-wrap:break-word;">[1] 了解 GitHub Actions
-https://docs.github.com/zh/actions/get-started/understand-github-actions</p>
-<p style="margin:0 0 15px;font-size:15px;line-height:1.8;color:#333;text-align:left;word-wrap:break-word;">[2] GitHub Actions 工作流语法
-https://docs.github.com/zh/actions/reference/workflows-and-actions/workflow-syntax-for-github-actions</p>
-<p style="margin:0 0 15px;font-size:15px;line-height:1.8;color:#333;text-align:left;word-wrap:break-word;">[3] GitHub Pages 快速入门
-https://docs.github.com/zh/pages/quickstart</p>
-<p style="margin:0 0 15px;font-size:15px;line-height:1.8;color:#333;text-align:left;word-wrap:break-word;">[4] Reusing workflows
-https://docs.github.com/en/actions/sharing-automations/reusing-workflows</p>
-<p style="margin:0 0 15px;font-size:15px;line-height:1.8;color:#333;text-align:left;word-wrap:break-word;">[5] About self-hosted runners
-https://docs.github.com/en/actions/hosting-your-own-runners/managing-self-hosted-runners/about-self-hosted-runners</p>
+<p style="margin:0 0 8px;font-size:13px;line-height:1.6;color:#555;text-align:left;word-wrap:break-word;"><span style="font-size:13px;font-weight:400;color:#555;">[1] 了解 GitHub Actions</span><br><span style="font-size:13px;font-weight:400;color:#666;word-break:normal;overflow-wrap:anywhere;">https://docs.github.com/zh/actions/get-started/understand-github-actions</span></p>
+<p style="margin:0 0 8px;font-size:13px;line-height:1.6;color:#555;text-align:left;word-wrap:break-word;"><span style="font-size:13px;font-weight:400;color:#555;">[2] GitHub Actions 工作流语法</span><br><span style="font-size:13px;font-weight:400;color:#666;word-break:normal;overflow-wrap:anywhere;">https://docs.github.com/zh/actions/reference/workflows-and-actions/workflow-syntax-for-github-actions</span></p>
+<p style="margin:0 0 8px;font-size:13px;line-height:1.6;color:#555;text-align:left;word-wrap:break-word;"><span style="font-size:13px;font-weight:400;color:#555;">[3] GitHub Pages 快速入门</span><br><span style="font-size:13px;font-weight:400;color:#666;word-break:normal;overflow-wrap:anywhere;">https://docs.github.com/zh/pages/quickstart</span></p>
+<p style="margin:0 0 8px;font-size:13px;line-height:1.6;color:#555;text-align:left;word-wrap:break-word;"><span style="font-size:13px;font-weight:400;color:#555;">[4] Reusing workflows</span><br><span style="font-size:13px;font-weight:400;color:#666;word-break:normal;overflow-wrap:anywhere;">https://docs.github.com/en/actions/sharing-automations/reusing-workflows</span></p>
+<p style="margin:0 0 8px;font-size:13px;line-height:1.6;color:#555;text-align:left;word-wrap:break-word;"><span style="font-size:13px;font-weight:400;color:#555;">[5] About self-hosted runners</span><br><span style="font-size:13px;font-weight:400;color:#666;word-break:normal;overflow-wrap:anywhere;">https://docs.github.com/en/actions/hosting-your-own-runners/managing-self-hosted-runners/about-self-hosted-runners</span></p>
 <section style="box-sizing:border-box;width:100%;height:0;margin:16px 0;border:0;border-top:1px solid #dce2e8;font-size:0;line-height:0;"></section>
 <p style="margin:0 0 15px;font-size:15px;line-height:1.8;color:#333;text-align:left;word-wrap:break-word;">下一篇是 08 篇《多服务容器编排》：07 把托管式流水线跑通，但应用拓扑还停留在单容器心智。当你的应用需要 Nginx 反代加 API 加数据库一起协作时，多个容器如何用一份声明式 YAML 一起管理？那是 Docker Compose 的领域，也是 DevOps 基础篇的收口篇。</p>
 <p style="margin:0 0 15px;font-size:15px;line-height:1.8;color:#333;text-align:left;word-wrap:break-word;">你的流水线里，还有哪一步依赖某个人记住？</p>
@@ -150,6 +143,7 @@ const refreshPictureStatus=()=>{
 };
 for(const img of articlePictures){img.addEventListener('load',refreshPictureStatus);img.addEventListener('error',refreshPictureStatus);img.title='点击查看原图';img.addEventListener('click',()=>window.open(img.src,'_blank','noopener,noreferrer'))}
 refreshPictureStatus();
+async function copyField(id){const el=document.getElementById(id),btn=el.previousElementSibling.querySelector('.copy-btn'),text=el.textContent;try{await navigator.clipboard.writeText(text);btn.textContent='已复制';setTimeout(()=>btn.textContent='复制',1500)}catch(e){const r=document.createRange();r.selectNode(el);getSelection().removeAllRanges();getSelection().addRange(r);document.execCommand('copy');getSelection().removeAllRanges();btn.textContent='已复制';setTimeout(()=>btn.textContent='复制',1500)}}
 document.getElementById('copy').onclick=async()=>{
   const a=document.getElementById('article'),s=document.getElementById('status');
   const pictures=[...a.querySelectorAll('img')];

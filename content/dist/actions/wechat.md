@@ -46,9 +46,7 @@ GitHub 官方提供 5 大类 workflow 模板：部署、安全、持续集成、
 
 ```yaml
 name: Greetings
-
 on: [pull_request_target, issues]
-
 jobs:
   greeting:
     runs-on: ubuntu-latest

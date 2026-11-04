@@ -6,7 +6,7 @@ pillar: 云原生
 series_ref: devops-basics
 created: 2026-11-04
 updated: 2026-11-04
-summary: 这一篇，我从 06 篇的 Jenkinsfile 出发，把 GitHub Actions 的核心概念与两个实战案例合并展示——Greetings 模板上手事件驱动，VitePress Pages 部署跑通完整 CI/CD。对个人开发者和小型团队来说，GitHub Actions 功能强大、语法简单、免费额度充足，与 GitHub 生态原生集成，是轻量开箱即用的流水线方案。
+summary: 两个实战上手 GitHub Actions：Greetings 模板演示事件驱动，VitePress Pages 部署跑通 CI/CD。对个人开发者，GitHub Actions 语法简单、免费额度充足，与 GitHub 生态原生集成。
 platforms:
   wechat:
     account: AI持续运维
