@@ -36,7 +36,8 @@ for (const lang of languages) {
 // 读取 wechat.md 和 meta.yaml
 const { content, data } = matter(fs.readFileSync(inputPath, 'utf8'));
 const metaPath = path.join(dir, 'meta.yaml');
-const meta = fs.existsSync(metaPath) ? matter(fs.readFileSync(metaPath, 'utf8')).data : {};
+const yaml = (await import(path.join(__dirname, '../tools/md-wechat/node_modules/js-yaml/dist/js-yaml.mjs'))).default;
+const meta = fs.existsSync(metaPath) ? yaml.load(fs.readFileSync(metaPath, 'utf8')) : {};
 
 const summary = meta.summary || data.summary || '';
 const originUrl = data.origin_url || meta.origin_url || '';
@@ -119,7 +120,7 @@ md.renderer.rules.fence = (ts, i) => {
   const highlighted = hljs.getLanguage(language)
     ? hljs.highlight(token.content, { language, ignoreIllegals: true }).value
     : esc(token.content);
-  const code = highlighted.replace(/<span class="([^"]+)"/g, (_, classes) => {
+  const code = highlighted.replace(/<span class="([^"]+)">/g, (_, classes) => {
     const kind = classes.split(/\s+/).find(c => c.startsWith('hljs-'))?.slice(5);
     return `<span style="color:${highlightColors[kind] ?? '#333'};">`;
   });
@@ -248,8 +249,8 @@ const page = `<!doctype html>
 <body><aside class="controls"><h1 style="font-size:20px">${esc(slug)} 发布候选稿</h1>
 <p>渲染自: ${esc(path.basename(inputFile))}</p>
 <label>标题<textarea readonly>${esc(h1Title)}</textarea></label>
-<label>摘要<textarea readonly>${esc(summary)}</textarea></label>
-${originUrl ? `<label>后台原文链接<textarea readonly>${esc(originUrl)}</textarea></label>` : ''}
+<p><strong>摘要：</strong>${esc(summary)}</p>
+${originUrl ? `<p><strong>后台原文链接：</strong>${esc(originUrl)}</p>` : ''}
 <p id="image-status" role="status">正在检查正文图片加载状态…</p>
 <button id="copy">复制正文</button>
 <p id="status" role="status">复制后在公众号正文区普通粘贴，勿选择"粘贴为纯文本"。</p>
