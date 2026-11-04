@@ -6,11 +6,15 @@
 
 ## [1.0.5] - 2026-11-04
 
-### 文章结构规范与延伸阅读降级策略（PATCH）
+### 渲染脚本统一与文章结构规范（PATCH）
 
+- 统一公众号渲染脚本为 `scripts/render-wechat.mjs`，基于 06 篇精心设计的样式与 SLA 验证。
+- 删除旧的 `scripts/render-wechat-copy.mjs` 和各篇本地渲染脚本。
+- 输出文件从 `wechat-copy.html` 改为 `wechat.html`。
+- 支持代码语言：bash、groovy、yaml、typescript、javascript、json。
 - `sre-article-style` 新增 §8 文章结构规范：定义 Origin 标准结构（引言 → 正文 → 流程旁白 → 小结 → 思考 → 延伸阅读 → 参考），确保跨篇一致性。
 - `wechat-publisher` Generate 步骤新增第 5 步：保留延伸阅读与参考资料，按降级策略调整格式。
-- `wechat-publisher` 新增「延伸阅读与参考资料的降级策略」章节：延伸阅读保留 2 个主题，URL 放入参考资料统一列出；参考资料 3–5 条，编号 + 标题 + URL。
+- `wechat-publisher` 新增「延伸阅读与参考资料的降级策略」章节。
 - `wechat-publisher` wechat.md 结构模板更新：明确尾部顺序为「小结 → 延伸阅读 → 参考资料 → 分隔线 → 下篇预告 → 具体问题 → 原文入口」。
 
 ## [1.0.4] - 2026-11-02

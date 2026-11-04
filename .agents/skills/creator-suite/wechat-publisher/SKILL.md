@@ -256,12 +256,9 @@ npx mmdc -i diagram.mmd -o diagram.png -w 1200 -b transparent
 #### 渲染脚本
 
 ```bash
-# 公式渲染（KaTeX SVG → PNG）
-node scripts/render-wechat-copy.mjs <wechat.md>
+# 渲染公众号预览 HTML
+node scripts/render-wechat.mjs <wechat.md>
 
-# Mermaid 渲染
-npx mmdc -i <input.mmd> -o <output.png>
-
-# 校验
+# 校验渲染结果
 node scripts/check-wechat-render.mjs
 ```
