@@ -1,6 +1,6 @@
 ---
 title: 05 ｜ 容器 Docker：让服务器回归本职
-description: 剖析传统物理机部署的两难死局，以"路线对比 + 共同根源"收口；用极简语言引入 Docker 容器（与虚拟机的本质区别），给出 5 大核心命令 + Docker Hub + Dockerfile 工具集，并通过扩写实战贯穿章节，落地"容器化解低可移植性"这条主线。
+description: 剖析传统物理机部署的两难，引入 Docker 容器，给出 5 大核心命令与 Dockerfile。
 date: 2026-07-15
 updated: 2026-08-16
 category: SRE 运维

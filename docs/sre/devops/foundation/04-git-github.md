@@ -1,6 +1,6 @@
 ---
 title: 04 ｜ Git 与 GitHub：版本管理与云端仓库
-description: 回应 03 篇的“没有版本追踪”痛点——Git 给变更拍快照，让生产发布的输入代码有了不可篡改的精确锚点；GitHub 让快照离开本地硬盘，任何机器都能拉取同一份代码。
+description: 回应 03 篇的版本追踪痛点——Git 给变更拍快照，GitHub 让快照离开本地硬盘。
 date: 2026-07-10
 updated: 2026-08-10
 category: SRE 运维

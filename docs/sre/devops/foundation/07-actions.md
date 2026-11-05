@@ -1,6 +1,6 @@
 ---
 title: 07 ｜ GitHub Actions：托管式流水线实战
-description: 从 06 篇的 Jenkinsfile 出发，把 GitHub Actions 的核心概念（workflow / event / jobs / actions / runners）与两个实战案例（Greetings 模板 + VitePress Pages 部署）合并展示；再用 gh CLI 和 AI Agent 说明如何管理流水线——托管式流水线的代表，对个人开发者和开源项目尤其友好。
+description: 从 Jenkinsfile 到 GitHub Actions，用 YAML 定义事件触发的声明式流水线，覆盖事件驱动与完整 CI/CD 两个实战。
 date: 2026-07-15
 updated: 2026-11-04
 category: SRE 运维

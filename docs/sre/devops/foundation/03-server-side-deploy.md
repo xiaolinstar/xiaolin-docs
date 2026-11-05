@@ -1,6 +1,6 @@
 ---
 title: 03 ｜ 服务端应用部署：依赖、运行时与进程保活
-description: 从静态站点升级到带运行时的服务端应用，以 Spring Boot 与 Flask 双栈示例展开“构建策略 / 进程生命周期 / 进程保活”三个新维度，为容器化铺路。
+description: 从静态站点升级到带运行时的服务端应用，以 Spring Boot 与 Flask 示例展开构建策略与进程保活。
 date: 2026-07-10
 updated: 2026-08-04
 category: SRE 运维

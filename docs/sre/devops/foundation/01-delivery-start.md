@@ -1,6 +1,6 @@
 ---
 title: 01 ｜ Nginx 静态资源代理
-description: 从本地 index.html 开始理解 Nginx 静态资源代理，再用 VitePress 完成文档站点的安装、调试、构建与本地发布闭环。
+description: 从本地 index.html 理解 Nginx 静态资源代理，再用 VitePress 完成文档站点的安装、构建与本地发布闭环。
 date: 2026-03-06
 updated: 2026-07-08
 category: SRE 运维
