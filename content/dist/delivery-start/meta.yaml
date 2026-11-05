@@ -1,6 +1,6 @@
 slug: delivery-start
-origin: docs/sre/devops/foundation/delivery-start.md
-origin_url: https://xiaolinstar.cn/sre/devops/foundation/delivery-start.html
+origin: docs/sre/devops/foundation/01-delivery-start.md
+origin_url: https://xiaolinstar.cn/sre/devops/foundation/01-delivery-start.html
 title: DevOps 基础 01 ｜ Nginx 静态资源代理
 pillar: 云原生
 series_ref: devops-basics          # 指向 content/series.yaml

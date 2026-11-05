@@ -16,7 +16,11 @@ env:
   FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true # 强制使用 Node.js 24
 
 jobs:
+  quality:
+    uses: ./.github/workflows/quality.yml
+
   build-and-push-image:
+    needs: quality
     runs-on: ubuntu-latest
 
 
@@ -45,9 +49,6 @@ jobs:
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
 
-      - name: Check local documentation links
-        run: pnpm run docs:check-links
-
       - name: Build documentation
         run: pnpm run docs:build
 
@@ -64,6 +65,9 @@ jobs:
         uses: docker/metadata-action@v6
         with:
           images: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
+          tags: |
+            type=ref,event=branch
+            type=sha,format=long
 
 
       # 构建镜像，并推送到 ghcr.io

@@ -11,10 +11,9 @@ coscli.log
 
 volumes/website/logs/
 volumes/website/geoip
-.qoder/**/__pycache__/
-.qoder/**/*.pyc
-scripts/__pycache__/
-scripts/**/*.pyc
+# Python 编译缓存
+__pycache__/
+*.pyc
 cert/
 
 # 环境变量配置文件

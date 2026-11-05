@@ -2,8 +2,8 @@
 account: AI持续运维
 status: ready
 sync: origin
-origin: docs/sre/devops/exception-07.md
-origin_url: https://xiaolinstar.cn/sre/devops/exception-07.html
+origin: docs/sre/devops/exception/exception-07.md
+origin_url: https://xiaolinstar.cn/sre/devops/exception/exception-07.html
 series: Exception 异常架构 07/08
 ---
 
@@ -35,7 +35,7 @@ Python、后端、异常处理、错误码、Flask
 
 # 发布说明
 
-- **正文**：与 Origin 一致，复制 `docs/sre/devops/exception-07.md`（代码块完整保留）
+- **正文**：与 Origin 一致，复制 `docs/sre/devops/exception/exception-07.md`（代码块完整保留）
 - **文末**：系列目录 + 站点链接
 
 ---

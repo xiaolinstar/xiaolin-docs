@@ -77,12 +77,15 @@ try {
   // 检查 Compose 课程的完整基础配置与合并后的构建/健康配置。
   const composeDir = path.join(temp, 'compose')
   fs.mkdirSync(composeDir)
-  fs.writeFileSync(path.join(composeDir, '.env'), blocks('intermediate/environment.md', 'dotenv')[0])
-  fs.writeFileSync(path.join(composeDir, 'runtime.env'), blocks('intermediate/environment.md', 'dotenv')[1])
-  const network = yaml.load(blocks('intermediate/compose-network.md', 'yaml')[0])
+  fs.writeFileSync(path.join(composeDir, '.env'), blocks('intermediate/13-environment-runtime.md', 'dotenv')[0])
+  fs.writeFileSync(path.join(composeDir, 'runtime.env'), blocks('intermediate/13-environment-runtime.md', 'dotenv')[1])
+  const network = yaml.load(blocks('intermediate/10-compose-network.md', 'yaml').find(code => {
+    const doc = yaml.load(code)
+    return doc?.services?.web && doc?.services?.db && doc?.networks?.edge && doc?.networks?.backend
+  }))
   const configured = structuredClone(network)
-  configured.services.web = yaml.load(blocks('intermediate/environment.md', 'yaml')[0]).web
-  const additions = yaml.load(blocks('intermediate/compose-health.md', 'yaml')[0])
+  configured.services.web = yaml.load(blocks('intermediate/13-environment-runtime.md', 'yaml')[0]).web
+  const additions = yaml.load(blocks('intermediate/15-compose-health.md', 'yaml')[0])
   for (const name of ['web', 'db']) Object.assign(configured.services[name], additions.services[name])
   for (const [name, doc] of [['network', network], ['configured', configured]]) {
     const file = path.join(composeDir, `${name}.yaml`)
@@ -91,7 +94,7 @@ try {
     counts.compose++
   }
   if (haveActionlint) {
-    const workflow = yaml.load(blocks('intermediate/ci-pipeline.md', 'yaml')[0])
+    const workflow = yaml.load(blocks('intermediate/17-ci-pipeline.md', 'yaml')[0])
     const steps = workflow.jobs.build.steps
     const gate = yaml.load(blocks('advanced/quality-gate.md', 'yaml')[0])
     const sbom = yaml.load(blocks('advanced/sha-SBOM.md', 'yaml')[0])
@@ -107,11 +110,11 @@ try {
   const lab = path.join(temp, 'lab')
   fs.mkdirSync(path.join(lab, 'k8s/base'), { recursive: true })
   for (const [i, name] of ['deployment.yaml', 'service.yaml', 'ingress.yaml'].entries()) {
-    fs.writeFileSync(path.join(lab, 'k8s/base', name), blocks('intermediate/16-k8s-app-deploy.md', 'yaml')[i])
+    fs.writeFileSync(path.join(lab, 'k8s/base', name), blocks('intermediate/19-k8s-app-deploy.md', 'yaml')[i])
   }
-  fs.writeFileSync(path.join(lab, 'k8s/base/configmap.yaml'), blocks('intermediate/17-configmap-secret.md', 'yaml')[0])
-  fs.writeFileSync(path.join(lab, 'k8s/base/kustomization.yaml'), blocks('intermediate/18-env-separation.md', 'yaml')[0])
-  const generator = blocks('intermediate/18-env-separation.md', 'bash').find(code => code.includes("python3 - <<'CODE'"))
+  fs.writeFileSync(path.join(lab, 'k8s/base/configmap.yaml'), blocks('intermediate/20-configmap-secret.md', 'yaml')[0])
+  fs.writeFileSync(path.join(lab, 'k8s/base/kustomization.yaml'), blocks('intermediate/21-env-separation.md', 'yaml')[0])
+  const generator = blocks('intermediate/21-env-separation.md', 'bash').find(code => code.includes("python3 - <<'CODE'"))
     .split("python3 - <<'CODE'\n")[1].split('\nCODE')[0]
   const image = 'ghcr.io/example/delivery-demo@sha256:' + 'a'.repeat(64)
   const generated = spawnSync('python3', ['-c', generator], { cwd: lab, env: { ...process.env, IMAGE_REF: image }, encoding: 'utf8' })

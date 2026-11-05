@@ -2,8 +2,8 @@
 account: AI持续运维
 status: ready
 sync: origin
-origin: docs/sre/devops/exception-08.md
-origin_url: https://xiaolinstar.cn/sre/devops/exception-08.html
+origin: docs/sre/devops/exception/exception-08.md
+origin_url: https://xiaolinstar.cn/sre/devops/exception/exception-08.html
 series: Exception 异常架构 08/08（系列终篇）
 ---
 
@@ -35,7 +35,7 @@ Python、Flask、异常处理、后端、架构设计
 
 # 发布说明
 
-- **正文**：与 Origin 一致，复制 `docs/sre/devops/exception-08.md`（handler 代码完整保留）
+- **正文**：与 Origin 一致，复制 `docs/sre/devops/exception/exception-08.md`（handler 代码完整保留）
 - **文末**：强调系列完结 + 专栏目录链接
 
 ---

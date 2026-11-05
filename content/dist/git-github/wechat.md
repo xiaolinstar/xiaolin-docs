@@ -1,6 +1,6 @@
 ---
-origin: docs/sre/devops/foundation/git-github.md
-origin_url: https://xiaolinstar.cn/sre/devops/foundation/git-github.html
+origin: docs/sre/devops/foundation/04-git-github.md
+origin_url: https://xiaolinstar.cn/sre/devops/foundation/04-git-github.html
 slug: git-github
 account: AI持续运维
 mode: repurpose+polish
@@ -42,7 +42,7 @@ Git、GitHub、Git 版本管理、SSH 密钥配置
 
 # 正文（粘贴到公众号后台）
 
-正文由 `docs/sre/devops/foundation/git-github.md` 同步生成。请打开 `wechat-copy.html`，点击「一键复制正文」后粘贴到公众号编辑器。
+正文由 `docs/sre/devops/foundation/04-git-github.md` 同步生成。请打开 `wechat.html`，点击「一键复制正文」后粘贴到公众号编辑器。
 
 ---
 
@@ -50,7 +50,7 @@ Git、GitHub、Git 版本管理、SSH 密钥配置
 
 - [ ] 标题已单独填入公众号后台：DevOps 基础 04 ｜ Git 与 GitHub：版本管理与云端仓库
 - [ ] 摘要已填入公众号后台
-- [ ] 正文已从 `wechat-copy.html` 一键复制并粘贴
+- [ ] 正文已从 `wechat.html` 一键复制并粘贴
 - [ ] 正文信息图已成功粘贴
 - [ ] 封面图已上传
 - [ ] 后台手机端预览排版正常

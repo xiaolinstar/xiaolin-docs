@@ -4,6 +4,7 @@ import markdownItTaskListPlus from "markdown-it-task-list-plus"
 import markdownItKatexModule from '@vscode/markdown-it-katex'
 import llms from 'vitepress-plugin-llms'
 import { glossaryPlugin } from './glossary/plugin'
+import { canonicalUrl } from './siteUrls'
 
 // CJS 默认导出在 ESM 下可能包在 .default
 const markdownItKatex =
@@ -29,6 +30,7 @@ export default withMermaid({
     description: "SRE、DevOps 与 AI 技术实践平台",
     srcExclude: [
         '**/wechat/**',
+        '**/_archive/**',
         '**/_archived/**',
         '**/superpowers/**',
         '**/glossary/**',
@@ -41,9 +43,11 @@ export default withMermaid({
             include: ['cytoscape', 'cytoscape-cose-bilkent', 'dayjs']
         }
     },
+    transformHead({ pageData }) {
+        return [['link', { rel: 'canonical', href: canonicalUrl(pageData.relativePath) }]]
+    },
     head: [
     ['link', { rel: 'icon', href: asset('sparrow.svg') }],
-    ['link', { rel: 'canonical', href: 'https://www.xiaolinstar.cn' }],
     ['script', {}, `
       window._hmt = window._hmt || [];
       (function() {

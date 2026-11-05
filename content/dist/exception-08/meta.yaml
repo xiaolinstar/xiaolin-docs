@@ -1,6 +1,6 @@
 slug: exception-08
-origin: docs/sre/devops/exception-08.md
-origin_url: https://xiaolinstar.cn/sre/devops/exception-08.html
+origin: docs/sre/devops/exception/exception-08.md
+origin_url: https://xiaolinstar.cn/sre/devops/exception/exception-08.html
 title: Exception异常编程实践：全局异常处理器与项目集成（08）
 pillar: 云原生
 created: 2026-03-06

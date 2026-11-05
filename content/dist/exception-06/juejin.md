@@ -2,8 +2,8 @@
 account: AI持续运维
 status: ready
 sync: origin
-origin: docs/sre/devops/exception-06.md
-origin_url: https://xiaolinstar.cn/sre/devops/exception-06.html
+origin: docs/sre/devops/exception/exception-06.md
+origin_url: https://xiaolinstar.cn/sre/devops/exception/exception-06.html
 series: Exception 异常架构 06/08
 ---
 
@@ -35,7 +35,7 @@ Python、后端、异常处理、Flask、架构设计
 
 # 发布说明
 
-- **正文**：与 Origin 一致，复制 `docs/sre/devops/exception-06.md`（保留代码块）
+- **正文**：与 Origin 一致，复制 `docs/sre/devops/exception/exception-06.md`（保留代码块）
 - **文末**：系列目录 https://xiaolinstar.cn/sre/devops/
 
 ---

@@ -27,6 +27,7 @@ content/
 content/dist/{slug}/
 ├── meta.yaml              # 溯源：origin 路径、系列引用、平台、发布状态
 ├── wechat.md              # 公众号（AI持续运维）
+├── wechat.html            # 唯一正式 HTML，更新时覆盖
 ├── juejin.md              # 掘金
 ├── zhihu.md               # 知乎（可选）
 ├── xiaohongshu.md         # 小红书文案 + 组图规划
@@ -37,6 +38,12 @@ content/dist/{slug}/
     ├── README.md          # 截图 manifest：文件名、CDN、插入位置、状态
     └── …                  # 小图可选提交 Git；大图走 COS
 ```
+
+每篇文章只保留一份正式 HTML，统一命名为 `wechat.html`。更新时覆盖该文件，不保留其他 HTML 版本；Markdown 原稿、`meta.yaml` 和图片保留。
+
+校验命令：`pnpm run docs:check-dist`。检查来源文件、来源 URL、HTML 命名与产物结构；零份 HTML 会报错。链接会列为公众号预览确认项。
+
+`render-wechat-native.mjs` 与 `render-wechat-origin.mjs` 默认输出 `wechat.html`；输入 `docs/` 原文时，通过 `meta.yaml` 定位唯一分发目录，不向站点源码写入 HTML。
 
 ## meta.yaml 示例
 
@@ -88,9 +95,9 @@ series_ref: devops-basics    # 指向 content/series.yaml 的 id
 
 | Slug | Origin | Output |
 |------|--------|--------|
-| `exception-06` | `docs/sre/devops/exception-06.md` | `wechat.md`、`juejin.md` |
-| `exception-07` | `docs/sre/devops/exception-07.md` | `wechat.md`、`juejin.md` |
-| `exception-08` | `docs/sre/devops/exception-08.md` | `wechat.md`、`juejin.md` |
+| `exception-06` | `docs/sre/devops/exception/exception-06.md` | `wechat.md`、`juejin.md` |
+| `exception-07` | `docs/sre/devops/exception/exception-07.md` | `wechat.md`、`juejin.md` |
+| `exception-08` | `docs/sre/devops/exception/exception-08.md` | `wechat.md`、`juejin.md` |
 | `harness-engineering` | `docs/ai/theory/harness-engineering.md` | `wechat.md`、`juejin.md`、`zhihu.md`、`xiaohongshu.md`、`bilibili.md`、`douyin.md` |
 
 转换脚本：`docs/sre/devops/convert_for_wechat.py`（exception 系列）→ 再经 **wechat-publisher** 补标题 / 摘要 / 引流。

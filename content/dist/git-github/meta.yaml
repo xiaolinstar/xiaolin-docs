@@ -1,6 +1,6 @@
 slug: git-github
-origin: docs/sre/devops/foundation/git-github.md
-origin_url: https://xiaolinstar.cn/sre/devops/foundation/git-github.html
+origin: docs/sre/devops/foundation/04-git-github.md
+origin_url: https://xiaolinstar.cn/sre/devops/foundation/04-git-github.html
 title: DevOps 基础 04 ｜ Git 与 GitHub：版本管理与云端仓库
 pillar: 云原生
 series_ref: devops-basics

@@ -1,6 +1,6 @@
 ---
-origin: docs/sre/devops/foundation/delivery-start.md
-origin_url: https://xiaolinstar.cn/sre/devops/foundation/delivery-start.html
+origin: docs/sre/devops/foundation/01-delivery-start.md
+origin_url: https://xiaolinstar.cn/sre/devops/foundation/01-delivery-start.html
 slug: delivery-start
 account: AI持续运维
 mode: repurpose+polish
@@ -378,7 +378,7 @@ Nginx 静态资源代理的核心很简单：
 
 ---
 
-完整版与延伸阅读 → https://xiaolinstar.cn/sre/devops/foundation/delivery-start.html
+完整版与延伸阅读 → https://xiaolinstar.cn/sre/devops/foundation/01-delivery-start.html
 
 关注 **AI持续运维**，获取更多 Vibe Coding · 云原生 · 独立产品实践。
 

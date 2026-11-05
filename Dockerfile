@@ -9,14 +9,15 @@ ENV VITE_BAIDU_ANALYTICS_ID=${BAIDU_ANALYTICS_ID}
 # 设置工作目录
 WORKDIR /app
 
-# 复制所有文件到工作目录
-COPY . .
-
 # 安装 pnpm 11.x（与当前锁文件和 node_modules 版本保持一致）
 RUN npm install -g pnpm@11.1.3
 
-# 安装依赖
+# 先复制依赖清单，让文章更新复用依赖安装缓存
+COPY package.json pnpm-lock.yaml pnpm-workspace.yaml ./
 RUN pnpm install --frozen-lockfile
+
+# 复制站点源码（本地文件由 .dockerignore 排除）
+COPY . .
 
 # 安装Git，lastUpdated=true需要
 # 使用官方 Alpine 镜像源（避免腾讯云镜像源 IO 错误）

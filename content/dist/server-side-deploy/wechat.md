@@ -1,6 +1,6 @@
 ---
-origin: docs/sre/devops/foundation/server-side-deploy.md
-origin_url: https://xiaolinstar.cn/sre/devops/foundation/server-side-deploy.html
+origin: docs/sre/devops/foundation/03-server-side-deploy.md
+origin_url: https://xiaolinstar.cn/sre/devops/foundation/03-server-side-deploy.html
 slug: server-side-deploy
 account: AI持续运维
 mode: repurpose+polish

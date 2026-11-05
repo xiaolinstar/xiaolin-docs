@@ -1,6 +1,28 @@
-docs/.vitepress/cache
+# 本地配置、密钥与运行数据
+.env
+.env.*
+cert/
+**/node_modules/
+**/__pycache__/
+**/*.pyc
+.pnpm-store/
+.idea/
+.vscode/
+.claude/
+.cursor/
+.screenshots/
+coscli_output/
+*.log
 
-/node_modules/
-/docs/.vitepress/dist/
-.idea
+# 分发稿、参考资料和本地工具不参与站点构建
+content/
+references/
+tools/
+vibe_images/
+volumes/website/logs/
+volumes/website/geoip/
+docs/.vitepress/cache/
+docs/.vitepress/dist/
 .gitignore
+
+# 保留 .git：VitePress lastUpdated 需要提交时间

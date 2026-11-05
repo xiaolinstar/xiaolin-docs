@@ -6,6 +6,7 @@ on:
   workflow_run:
     # 当 CI 流水线成功完成后自动触发
     workflows: ["CI Pipeline, To GitHub Container Registry"]
+    branches: [main, release]
     types:
       - completed
 
@@ -42,7 +43,7 @@ jobs:
           EXPECTED_REVISION: ${{ github.event.workflow_run.head_sha || github.sha }}
         run: |
           set -euo pipefail
-          image="ghcr.io/${IMAGE_NAME}:main"
+          image="ghcr.io/${IMAGE_NAME}:sha-${EXPECTED_REVISION}"
           timeout 300 docker pull "$image"
           actual_revision=$(docker image inspect "$image" --format '{{ index .Config.Labels "org.opencontainers.image.revision" }}')
           test "$actual_revision" = "$EXPECTED_REVISION"
@@ -68,22 +69,25 @@ jobs:
           script: |
             set -eu
             cd ${{ env.SERVER_DIR }}
-            git pull --ff-only
+            expected_revision="${{ github.event.workflow_run.head_sha || github.sha }}"
+            git fetch origin "$expected_revision"
+            # 读取镜像对应提交的配置，避免工作区最新配置与镜像错配。
+            compose_file=$(mktemp "$PWD/.deploy-compose.XXXXXX")
+            git show "$expected_revision:compose.yaml" > "$compose_file"
 
             # Runner 已完成下载，经 SSH 传输后本地加载，绕开服务器的仓库下载链路。
             archive_dir="/tmp/xiaolin-deploy-${{ github.run_id }}"
-            trap 'rm -f "$archive_dir/release-image.tar.gz"; rmdir "$archive_dir"' EXIT
+            trap 'rm -f "$compose_file" "$archive_dir/release-image.tar.gz"; rmdir "$archive_dir"' EXIT
             docker load -i "$archive_dir/release-image.tar.gz"
-            export DEPLOY_IMAGE=ghcr.io/xiaolinstar/xiaolin-docs:main
+            export DEPLOY_IMAGE="ghcr.io/${{ env.IMAGE_NAME }}:sha-${expected_revision}"
 
             # 再次验证服务器实际加载的镜像版本。
-            expected_revision="${{ github.event.workflow_run.head_sha || github.sha }}"
             actual_revision=$(docker image inspect "$DEPLOY_IMAGE" --format '{{ index .Config.Labels "org.opencontainers.image.revision" }}')
             test "$actual_revision" = "$expected_revision"
 
             # 原地更新，并等待健康检查通过后才报告成功。
-            docker compose -f compose.yaml up -d --wait --wait-timeout 120
-            docker compose -f compose.yaml exec -T xiaolin-website wget -qO- http://127.0.0.1:8080/healthz >/dev/null
+            docker compose --project-directory "$PWD" -f "$compose_file" up -d --wait --wait-timeout 120
+            docker compose --project-directory "$PWD" -f "$compose_file" exec -T xiaolin-website wget -qO- http://127.0.0.1:8080/healthz >/dev/null
             echo "Deployment completed successfully!"
 
       - name: Probe production website

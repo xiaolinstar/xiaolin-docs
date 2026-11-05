@@ -21,6 +21,8 @@ alwaysApply: true
 
 ## 内容创作
 
+分发 HTML 维护规则：`content/dist/{slug}/` 每篇文章只保留一份正式 HTML，统一命名为 `wechat.html`；更新时覆盖该文件，不保留其他 HTML 版本。Markdown 原稿、`meta.yaml` 和图片保留。
+
 Origin 在 `docs/`，分发稿在 `content/dist/{slug}/`（不上站）。写文 / 分发前读取：
 
 | 任务 | Skill |

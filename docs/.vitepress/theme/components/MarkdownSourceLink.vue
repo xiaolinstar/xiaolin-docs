@@ -1,23 +1,13 @@
 <script setup lang="ts">
-import { useRoute } from 'vitepress'
+import { useRoute, useData } from 'vitepress'
+import { markdownSourceUrl } from '../../siteUrls'
 import { computed } from 'vue'
 
 const route = useRoute()
 
-const markdownUrl = computed(() => {
-  const path = route.path
-  let mdPath = path
-  if (path.endsWith('/')) {
-    mdPath = path + 'index.md'
-  } else if (path.endsWith('.html')) {
-    mdPath = path.replace(/\.html$/, '.md')
-  } else {
-    mdPath = path + '.md'
-  }
-  
-  const fullUrl = `https://xiaolinstar.cn${mdPath}`
-  return fullUrl
-})
+const { site } = useData()
+const markdownUrl = computed(() => markdownSourceUrl(route.path, site.value.base))
+
 </script>
 
 <template>

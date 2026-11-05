@@ -1,9 +1,10 @@
 import fs from 'node:fs/promises';
 import path from 'node:path';
 import MarkdownIt from 'markdown-it';
+import { resolveWechatOutput } from './lib/wechat-output.mjs';
 
 const input = process.argv[2];
-const output = process.argv[3] ?? input?.replace(/\.md$/, '-wechat.html');
+const output = resolveWechatOutput(input, process.argv[3]);
 if (!input || !output) throw new Error('用法：node scripts/render-wechat-native.mjs <wechat.md> [output.html]');
 
 const source = await fs.readFile(input, 'utf8');
@@ -53,5 +54,6 @@ html = html.replace(/\sclass="[^"]*"/gi, '').replace(/\sid="[^"]*"/gi, '');
 
 const title = markdown.match(/^#\s+(.+)$/m)?.[1]?.trim() ?? path.basename(input, '.md');
 const page = `<!doctype html><html><head><meta charset="utf-8"><title>微信公众号文章</title></head><body style="margin:0;padding:0;background:#fff;"><div style="padding:10px;text-align:center;border-bottom:1px solid #eee;"><button id="copy-wechat" style="border:0;border-radius:4px;padding:9px 18px;background:#f56700;color:#fff;font-size:14px;">复制正文</button><span id="copy-status" style="margin-left:10px;color:#667085;font-size:13px;">点击后粘贴到微信公众号编辑器</span></div><section id="wechat-article" style="margin:0 auto;padding:18px 16px;max-width:760px;font-family:-apple-system-font,BlinkMacSystemFont,'Helvetica Neue','PingFang SC','Microsoft YaHei',Arial,sans-serif;color:#333;">${html}</section><script>document.getElementById('copy-wechat').onclick=async()=>{const a=document.getElementById('wechat-article'),s=document.getElementById('copy-status'),h=a.innerHTML,t=a.innerText;try{await navigator.clipboard.write([new ClipboardItem({'text/html':new Blob([h],{type:'text/html'}),'text/plain':new Blob([t],{type:'text/plain'})})]);s.textContent='已复制，打开公众号正文区粘贴'}catch(e){s.textContent='复制失败，请选中正文后按 Cmd/Ctrl+C'}};</script></body></html>`;
+await fs.mkdir(path.dirname(output), { recursive: true });
 await fs.writeFile(output, page, 'utf8');
 console.log(`[OK] 公众号原生 HTML 已生成：${output}`);

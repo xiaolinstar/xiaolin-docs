@@ -1,9 +1,10 @@
 import fs from 'node:fs';
 import path from 'node:path';
 import MarkdownIt from 'markdown-it';
+import { resolveWechatOutput } from './lib/wechat-output.mjs';
 
 const input = process.argv[2];
-const output = process.argv[3] ?? input?.replace(/\.md$/, '-wechat.html');
+const output = resolveWechatOutput(input, process.argv[3]);
 if (!input || !output) throw new Error('用法：node scripts/render-wechat-origin.mjs <origin.md> [output.html]');
 
 const source = fs.readFileSync(input, 'utf8');

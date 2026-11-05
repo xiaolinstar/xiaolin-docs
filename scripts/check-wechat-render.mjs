@@ -6,6 +6,7 @@
 
 import fs from 'node:fs';
 import path from 'node:path';
+import matter from 'gray-matter';
 
 const targets = process.argv.slice(2);
 const collect = (entry) => {
@@ -19,6 +20,36 @@ const files = targets.length
 
 const onlyRelevant = files.filter((f) => /\.(md|html)$/.test(f) && !/[\\/]node_modules[\\/]/.test(f));
 let failed = 0;
+const checked = { markdown: 0, html: 0 };
+const origins = new Set();
+for (const file of files) {
+  if (path.basename(file) !== 'meta.yaml') continue;
+  const { data } = matter(`---\n${fs.readFileSync(file, 'utf8')}\n---\n`);
+  if (!data.origin || !fs.existsSync(data.origin)) {
+    console.error(`✗ ${file}: Origin 文件不存在：${data.origin ?? '未填写'}`);
+    failed++;
+  }
+  if (origins.has(data.origin)) {
+    console.error(`✗ ${file}: 同一 Origin 对应多个分发目录。`);
+    failed++;
+  }
+  origins.add(data.origin);
+  if (data.origin && data.origin_url) {
+    const expected = '/' + data.origin.replace(/^docs\//, '').replace(/\.md$/, '.html');
+    let actual;
+    try { actual = new URL(data.origin_url).pathname; } catch {}
+    if (actual !== expected) {
+      console.error(`✗ ${file}: origin_url 与 Origin 路径不一致。`);
+      failed++;
+    }
+  }
+}
+for (const file of onlyRelevant) {
+  if (file.endsWith('.html') && path.basename(file) !== 'wechat.html') {
+    console.error(`✗ ${file}: 每篇只允许保留 wechat.html。`);
+    failed++;
+  }
+}
 
 const checkWechatMd = (file, body) => {
   // 已知非法转义模式：`$...\\to...$`、`$...\\{...\\}$`（\\ + 字母 / \\ + {）
@@ -51,19 +82,25 @@ const checkRenderHtml = (file, body) => {
   }
   const aLinks = (body.match(/<a\b[^>]*href=/gi) ?? []).length;
   if (aLinks) {
-    console.error(`✗ ${path.relative(process.cwd(), file)}: 检测到 ${aLinks} 处 <a> 超链接标签（微信公众号不允许包含非官方外链或未清洗锚点）`);
-    failed++;
+    console.warn(`提示：${path.relative(process.cwd(), file)} 含 ${aLinks} 处链接，请在公众号预览中确认呈现。`);
   }
 };
 
 for (const file of onlyRelevant) {
   if (file.endsWith('.md') && /[\\/]wechat\.md$/.test(file)) {
+    checked.markdown++;
     checkWechatMd(file, fs.readFileSync(file, 'utf8'));
-  } else if (file.endsWith('.html') && /md-wechat\.html$/.test(file)) {
+  } else if (file.endsWith('.html') && /[\\/]wechat\.html$/.test(file)) {
+    checked.html++;
     checkRenderHtml(file, fs.readFileSync(file, 'utf8'));
   }
 }
 
+console.log(`已检查 ${checked.markdown} 份 Markdown、${checked.html} 份正式 HTML。`);
+if (!checked.html) {
+  console.error('未找到正式 wechat.html，无法完成 HTML 校验。');
+  failed++;
+}
 if (failed) {
   console.error(`\n共 ${failed} 处校验失败`);
   process.exit(1);

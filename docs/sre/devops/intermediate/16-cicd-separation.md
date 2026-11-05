@@ -75,9 +75,9 @@ on:
 permissions:
   contents: read       # 只读部署配置
   id-token: write      # 用于 OIDC 认证到目标环境
-environment: production # 触发环境审批（如果配置了保护）
 jobs:
   deploy:
+    environment: production # 触发环境审批（如果配置了保护）
     if: ${{ github.event.workflow_run.conclusion == 'success' }}
     runs-on: ubuntu-latest
     steps:

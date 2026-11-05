@@ -29,6 +29,9 @@ importers:
       gray-matter:
         specifier: ^4.0.3
         version: 4.0.3
+      js-yaml:
+        specifier: 3.14.2
+        version: 3.14.2
       katex:
         specifier: ^0.16.21
         version: 0.16.47

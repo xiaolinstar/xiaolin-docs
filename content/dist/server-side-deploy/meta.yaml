@@ -1,6 +1,6 @@
 slug: server-side-deploy
-origin: docs/sre/devops/foundation/server-side-deploy.md
-origin_url: https://xiaolinstar.cn/sre/devops/foundation/server-side-deploy.html
+origin: docs/sre/devops/foundation/03-server-side-deploy.md
+origin_url: https://xiaolinstar.cn/sre/devops/foundation/03-server-side-deploy.html
 title: DevOps 基础 03 ｜ 服务端应用部署：依赖、运行时与进程保活
 pillar: 云原生
 series_ref: devops-basics

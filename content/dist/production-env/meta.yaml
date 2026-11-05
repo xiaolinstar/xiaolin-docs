@@ -1,6 +1,6 @@
 slug: production-env
-origin: docs/sre/devops/foundation/production-env.md
-origin_url: https://xiaolinstar.cn/sre/devops/foundation/production-env.html
+origin: docs/sre/devops/foundation/02-production-env.md
+origin_url: https://xiaolinstar.cn/sre/devops/foundation/02-production-env.html
 title: DevOps 基础 02 ｜ 生产环境：公网服务器与手动发布
 pillar: 云原生
 series_ref: devops-basics

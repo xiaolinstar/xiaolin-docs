@@ -1,6 +1,6 @@
 ---
-origin: docs/sre/devops/foundation/production-env.md
-origin_url: https://xiaolinstar.cn/sre/devops/foundation/production-env.html
+origin: docs/sre/devops/foundation/02-production-env.md
+origin_url: https://xiaolinstar.cn/sre/devops/foundation/02-production-env.html
 slug: production-env
 account: AI持续运维
 mode: repurpose+polish
