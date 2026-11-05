@@ -82,14 +82,16 @@
 ```
 content/dist/{slug}/
 ├── meta.yaml      # 更新 platforms.wechat
-└── wechat.md      # 完整结构见 SKILL.md
+├── wechat.md      # 纯正文与 frontmatter，结构见 SKILL.md
+├── wechat.html    # 唯一正式 HTML
+└── wechat-review.json # 静态检查与人工认可记录
 ```
 
 `meta.yaml` 示例：
 
 ```yaml
 slug: delivery-start
-origin: docs/sre/devops/foundation/delivery-start.md
+origin: docs/sre/devops/foundation/01-delivery-start.md
 title: DevOps 基础 01 ｜ Nginx 静态资源代理
 series_ref: devops-basics          # 指向 content/series.yaml
 pillar: 云原生
@@ -131,13 +133,12 @@ cd docs/sre/devops && python3 convert_for_wechat.py {filename}
 
 ### 2.2 润色记录
 
-更新 frontmatter：
+更新 frontmatter 中的润色记录；发布状态写入 `meta.yaml` 的 `platforms.wechat.status`，审核结果另存 `wechat-review.json`，见 [审核流程](review-workflow.md)：
 
 ```yaml
 mode: repurpose+polish
 polish:
   - "2026-06-25: 压缩结对编程痛点段，保留野马比喻"
-status: draft   # 完成后台验收且用户确认可发后设为 ready
 ```
 
 ### 2.3 发布 checklist（Polish 后核对）

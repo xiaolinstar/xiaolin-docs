@@ -1,6 +1,8 @@
 import fs from 'node:fs/promises';
 import path from 'node:path';
 import MarkdownIt from 'markdown-it';
+import matter from 'gray-matter';
+import { reviewWechat } from './lib/wechat-review.mjs';
 import { resolveWechatOutput } from './lib/wechat-output.mjs';
 
 const input = process.argv[2];
@@ -8,7 +10,13 @@ const output = resolveWechatOutput(input, process.argv[3]);
 if (!input || !output) throw new Error('用法：node scripts/render-wechat-native.mjs <wechat.md> [output.html]');
 
 const source = await fs.readFile(input, 'utf8');
-const markdown = source.replace(/^---\n[\s\S]*?\n---\n?/, '');
+const { content: markdown, data } = matter(source);
+const metaPath = path.join(path.dirname(input), 'meta.yaml');
+const meta = await fs.readFile(metaPath, 'utf8').then(text => matter(`---\n${text}\n---\n`).data).catch(error => {
+  if (error.code === 'ENOENT') return {};
+  throw error;
+});
+reviewWechat({ source, content: markdown, summary: meta.summary || data.summary || '', meta, output, engine: 'native' });
 // 普通换行不转换为 <br>。公众号会重新处理列表节点，保留 <br> 容易造成列表项被拆行。
 const md = new MarkdownIt({ html: false, breaks: false, linkify: true });
 let html = md.render(markdown);
@@ -35,7 +43,7 @@ const styles = {
 
 for (const [tag, style] of Object.entries(styles)) {
   const re = new RegExp(`<${tag}(\\s[^>]*)?>`, 'gi');
-  html = html.replace(re, (_, attrs = '') => `<${tag} style="${style}">`);
+  html = html.replace(re, (_, attrs = '') => `<${tag}${attrs} style="${style}">`);
 }
 html = html.replace(/<h([1-3]) style="([^"]*)">([\s\S]*?)<\/h\1>/gi, (_, level, style, content) =>
   `<section style="margin:0;"><p style="${style}">${content}</p></section>`

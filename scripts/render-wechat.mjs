@@ -5,7 +5,8 @@ import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import MarkdownIt from 'markdown-it';
 import matter from 'gray-matter';
-import assert from 'node:assert/strict';
+import { reviewWechat } from './lib/wechat-review.mjs';
+import { resolveWechatOutput } from './lib/wechat-output.mjs';
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
@@ -40,7 +41,8 @@ const yaml = (await import(path.join(__dirname, '../tools/md-wechat/node_modules
 const meta = fs.existsSync(metaPath) ? yaml.load(fs.readFileSync(metaPath, 'utf8')) : {};
 
 const summary = meta.summary || data.summary || '';
-if ([...summary].length > 120) console.warn(`警告: 摘要 ${[...summary].length} 字，超出 SLA（120 字）`);
+const outputPath = resolveWechatOutput(inputPath);
+reviewWechat({ source: fs.readFileSync(inputPath, 'utf8'), content, summary, meta, output: outputPath, engine: 'standard' });
 const originUrl = data.origin_url || meta.origin_url || '';
 const slug = meta.slug || path.basename(dir);
 
@@ -56,9 +58,6 @@ if (tokens[0]?.type === 'paragraph_open' && tokens[1]?.type === 'inline'
   headTokens = tokens.slice(0, 3);
   bodyStart = 3;
 }
-assert(headTokens.length, '缺少开头抬头图');
-assert.equal(tokens[bodyStart]?.type, 'heading_open');
-assert.equal(tokens[bodyStart]?.tag, 'h1');
 const h1Title = tokens[bodyStart + 1]?.content || '';
 const bodyTokens = [...headTokens, ...tokens.slice(bodyStart + 3)];
 
@@ -299,7 +298,6 @@ document.getElementById('copy').onclick=async()=>{
 </script></body></html>`;
 
 // 输出
-const outputPath = path.join(dir, 'wechat.html');
 fs.writeFileSync(outputPath, page);
 console.log(JSON.stringify({
   output: outputPath,

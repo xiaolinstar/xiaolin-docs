@@ -43,6 +43,8 @@ content/dist/{slug}/
 
 校验命令：`pnpm run docs:check-dist`。检查来源文件、来源 URL、HTML 命名与产物结构；零份 HTML 会报错。链接会列为公众号预览确认项。
 
+新渲染稿同时生成 `wechat-review.json`，记录“不通过／通过／人工通过”。未获认可的 SLA 例外或结构错误不会覆盖正式 HTML；人工认可绑定稿件及规则版本。已有报告会在分发检查中核对有效性；历史无报告稿件暂沿用原产物检查，不等于已通过新静态预检。操作步骤见 [审核流程](../../.agents/skills/creator-suite/wechat-publisher/references/review-workflow.md)。
+
 `render-wechat-native.mjs` 与 `render-wechat-origin.mjs` 默认输出 `wechat.html`；输入 `docs/` 原文时，通过 `meta.yaml` 定位唯一分发目录，不向站点源码写入 HTML。
 
 ## meta.yaml 示例

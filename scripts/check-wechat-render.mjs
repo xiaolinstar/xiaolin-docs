@@ -7,6 +7,7 @@
 import fs from 'node:fs';
 import path from 'node:path';
 import matter from 'gray-matter';
+import { reviewWechat } from './lib/wechat-review.mjs';
 
 const targets = process.argv.slice(2);
 const collect = (entry) => {
@@ -23,6 +24,23 @@ let failed = 0;
 const checked = { markdown: 0, html: 0 };
 const origins = new Set();
 for (const file of files) {
+  if (path.basename(file) === 'wechat-review.json') {
+    try {
+      const report = JSON.parse(fs.readFileSync(file, 'utf8'));
+      const dir = path.dirname(file);
+      const source = fs.readFileSync(path.join(dir, 'wechat.md'), 'utf8');
+      const { content, data } = matter(source);
+      const metaPath = path.join(dir, 'meta.yaml');
+      const meta = fs.existsSync(metaPath) ? matter(`---\n${fs.readFileSync(metaPath, 'utf8')}\n---\n`).data : {};
+      const current = reviewWechat({ source, content, summary: meta.summary || data.summary || '', meta,
+        output: path.join(dir, 'wechat.html'), engine: report.engine, writeReport: false });
+      if (current.source_hash !== report.source_hash || current.policy_hash !== report.policy_hash
+        || current.status !== report.status) throw new Error('审核报告已过期，请重新渲染。');
+    } catch (error) {
+      console.error(`✗ ${file}: ${error.message}`);
+      failed++;
+    }
+  }
   if (path.basename(file) !== 'meta.yaml') continue;
   const { data } = matter(`---\n${fs.readFileSync(file, 'utf8')}\n---\n`);
   if (!data.origin || !fs.existsSync(data.origin)) {

@@ -36,7 +36,7 @@ docs/ Origin（权威原文，上站）
 ## Generate（从 Origin 生成）
 
 1. 读 `docs/{path}.md` + brand-voice
-2. **内容降级**（按 §内容降级策略逐条处理）：公式→PNG、Mermaid→PNG、复杂表格→叙述段落、代码块精简、VitePress 容器→普通段落
+2. **内容降级**：先核对格式集合与 SLA；简单公式沿用 Unicode，复杂公式不自动转换；表格、代码等超限先进入审核，不自行删改。
 3. 转换正文：去内链、图片上传提醒、保留个人细节
 4. 生成标题 ×3、摘要（≤120 字，含标点）、文末收尾（见下方约定）
    - 生成 4 个搜索关键词：1 个主关键词 + 3 个长尾关键词，并同步写入 `meta.yaml` 的 `search_keywords`
@@ -51,7 +51,7 @@ docs/ Origin（权威原文，上站）
 cd docs/sre/devops && python3 convert_for_wechat.py exception-06.md
 ```
 
-**范例**：`content/dist/harness-engineering/wechat.md`
+**正文布局范例**：`content/dist/pipeline-basics/wechat.md`。历史稿的状态字段不作为新模板复制，发布状态以 `meta.yaml` 为准。
 
 ---
 
@@ -59,7 +59,7 @@ cd docs/sre/devops && python3 convert_for_wechat.py exception-06.md
 
 用户要求「润色 / 优化 wechat.md」时，在已生成文件上修改，不默认覆盖 Origin 重生成。
 
-- 更新 frontmatter：`mode: repurpose+polish`、`polish:` 记录；尚未完成后台验收时保持 `status: draft`，通过验收且用户确认可发后才设为 `ready`。
+- 更新 frontmatter 的 `mode: repurpose+polish`、`polish:` 记录；发布状态统一写入 `meta.yaml` 的 `platforms.wechat.status`，与静态审核结果分开。后台验收未完成时保持 `draft`，通过且用户确认可发后才设为 `ready`。
 - 保留 ≥3 处个人真实细节；遵守 brand-voice 禁区
 - 检查内容降级是否到位：公式图片对齐、表格是否已改写为叙述、代码块是否精简
 - 通读降级后的段落衔接，确保改写处与上下文语气一致
@@ -68,37 +68,43 @@ cd docs/sre/devops && python3 convert_for_wechat.py exception-06.md
 
 ## wechat.md 结构
 
+`wechat.md` 只承载正文与 YAML frontmatter。抬头图后紧跟唯一文章 H1，正文仅使用 H2/H3；发布元数据、checklist 和尾部操作说明不作为正文标题。
+
 ```markdown
 ---
-origin: docs/...
-slug: ...
+origin: docs/sre/devops/foundation/01-delivery-start.md
+origin_url: https://xiaolinstar.cn/sre/devops/foundation/01-delivery-start.html
+slug: delivery-start
 account: AI持续运维
-mode: repurpose | repurpose+polish
-status: draft | ready | published
+mode: repurpose
 polish: []
 ---
 
-# 发布元数据
-## 标题备选（选 1）
-## 摘要（≤120 字，含标点）
+![AI持续运维站点鸟图](https://media.xiaolin.fun/docs/wechat-theme/ai-ops-mascot.png)
 
-# 正文（粘贴到公众号后台）
+# DevOps 基础 01 ｜ Nginx 静态资源代理
+
+正文从具体场景开始。
 
 ## 小结
 
-## 延伸阅读（保留 Origin 内容，按降级策略调整格式）
+## 延伸阅读
 
-## 参考资料（保留 Origin 内容，URL 单独列出）
+保留 Origin 的相关主题，没有则省略。
+
+## 参考资料
+
+[1] 参考标题
+https://example.com/reference
 
 ---
 
-# 文末收尾
-## 下篇预告（系列文章）
-## 具体问题（与本文相关）
-## 原文入口
-
-# 发布 checklist
+已确定的下篇预告、具体问题与原文入口说明，以普通段落呈现；没有下一篇则省略预告。
 ```
+
+标题备选、选定标题、关键词、发布状态与 checklist 放入 `meta.yaml` 的 `platforms.wechat`；摘要沿用现有顶层 `summary` 字段。正文不复制这些操作信息。历史稿不批量迁移，发布状态以 `meta.yaml` 为准。
+
+唯一正式 HTML 为 `wechat.html`，检查报告为 `wechat-review.json`。“不通过／通过／人工通过”及人工认可步骤见 [审核流程](references/review-workflow.md)。
 
 **文章结构规范**：Origin 应包含「流程旁白 → 小结 → 思考 → 延伸阅读 → 参考」；公众号稿保留「小结 → 延伸阅读 → 参考资料」，「思考」部分可融入正文或省略，尾部追加「下篇预告 + 问题 + 原文入口」。详见 [format-collection.md](references/format-collection.md) 尾部顺序规则。
 
@@ -143,7 +149,7 @@ polish: []
 
 - 每一种渲染格式都应维护 SLA（服务要求），明确适用内容、容量边界、可读性目标和验收条件；具体要求集中维护在格式集合中。尚未定义 SLA 的新格式，先与用户确认要求，再进入试验。
 - 生成或改写前，先检查 Origin 是否符合相应格式的 SLA；渲染中发现超限也按同一规则处理。若原文超过 SLA，停止受影响内容的转换，列出原文位置、超出项、当前阈值及阅读影响，与用户共同评审，决定修改 Skill 的 SLA 规范还是修改文章原文，确认后再继续。
-- 未经该评审，不自动放宽 SLA，不擅自删减、拆分、改写或替换超限内容来绕过限制；原文修改与规范修改均以用户决定为准。已明确授权的处理方案可直接执行。
+- 未经该评审，不自动放宽 SLA，不擅自删减、拆分、改写或替换超限内容来绕过限制。作者可修改稿件、修改规范，或明确认可当前稿件的具体 SLA 例外（人工通过）；结构错误不可豁免。认可记录绑定稿件及规则哈希，修改后须重新核对，见 [审核流程](references/review-workflow.md)。
 
 ### 代码示例的语言
 
@@ -206,7 +212,7 @@ npx mmdc -i diagram.mmd -o diagram.png -w 1200 -b transparent
 
 #### 3. 复杂表格 → 叙述性段落
 
-3 列以上或内容过长的表格，用自然语言重新组织信息——不是简单转 bullet list，而是改写为流畅的对比叙述。
+3 列以上或内容超限时先提交审核。作者授权改写后，可用自然语言重新组织为流畅的对比叙述。
 
 **改写示例**：
 
@@ -221,12 +227,12 @@ npx mmdc -i diagram.mmd -o diagram.png -w 1200 -b transparent
 降级后：
 > 进程模式和容器模式的上线流程本质相同——都是 SSH 登录后逐条执行命令，区别只在中间的业务动作：前者跑 `mvn package` 构建，后者跑 `docker pull` 拉镜像。执行主体始终是人。
 
-简单对比表（2-3 列、≤5 行）保留原样，公众号能正常渲染。
+默认仅使用格式集合中已验收的两列表格，内容预算与显示目标以格式集合为准。
 
 #### 4. 代码块 → 精简为核心示例
 
 - 保留 ≤20 行的关键片段，展示核心逻辑
-- 超过 20 行的代码块：截取最关键部分 + 文字说明完整逻辑
+- 超过 20 行或单行超过 72 字符：提交审核；可讨论保留本次例外、修改原文或经授权拆解，不自动截取
 - 删除冗余注释和占位符
 - 引导读者去站点查看完整版本
 

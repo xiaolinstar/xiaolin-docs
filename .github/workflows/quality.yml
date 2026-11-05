@@ -40,4 +40,5 @@ jobs:
           pnpm run docs:check-devops
           pnpm run docs:check-dist
           pnpm run test:glossary
+          pnpm run test:wechat
           actionlint -shellcheck= -pyflakes=
