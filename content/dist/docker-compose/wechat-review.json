@@ -1,0 +1,11 @@
+{
+  "status": "passed",
+  "source_hash": "1485ccdcc5c68f69c9605f1664f0080d1d994a64a3923d8554fd03a7b1e2278b",
+  "policy_hash": "b9a919edfbe66e69a2c3bd9b678bacd21e0d10d73908026db4a806cce4d27a66",
+  "engine": "standard",
+  "checked_at": "2026-11-05T13:44:55.295Z",
+  "issues": [],
+  "approval": null,
+  "approval_valid": false,
+  "scope": "静态检查：正文结构、摘要 120 字、代码 20 行/72 字符、图注 40 字；其余格式及微信端显示仍需人工核对。"
+}

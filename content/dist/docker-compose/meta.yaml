@@ -6,7 +6,7 @@ pillar: 云原生
 series_ref: devops-basics
 created: 2026-11-04
 updated: 2026-11-04
-summary: 微服务拆成多个容器后，用 Compose 把服务拓扑、网络、存储和配置写进 YAML 随源码管理。一条 up 启动整个应用，一条 down 清理干净，是单机多容器部署的终点。
+summary: 微服务拆成多个容器后，用 Compose 把服务拓扑、网络、存储写进 YAML 随源码管理。一条 up 启动整个应用，是单机多容器部署的终点。
 platforms:
   wechat:
     account: AI持续运维
